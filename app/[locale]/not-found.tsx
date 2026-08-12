@@ -11,8 +11,10 @@ export default async function NotFound() {
   return (
     <section className="hero-wash flex min-h-[70vh] items-center py-24">
       <Container className="flex flex-col items-center text-center">
-        <span className="font-display text-6xl font-bold text-brand">404</span>
-        <h1 className="mt-4 text-2xl font-bold text-ink">{c.notFound.title}</h1>
+        <span className="font-display text-6xl text-caramel-grad">404</span>
+        <h1 className="font-display mt-4 text-2xl text-ink">
+          {c.notFound.title}
+        </h1>
         <p className="mt-3 max-w-md text-ink-dim">{c.notFound.body}</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/" className="btn btn-primary">

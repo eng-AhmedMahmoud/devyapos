@@ -57,30 +57,50 @@ export const en: SiteContent = {
     ],
   },
 
+  marquee: [
+    "Point of sale",
+    "Live kitchen display",
+    "Online ordering",
+    "Recipe-costed inventory",
+    "Loyalty and points",
+    "Delivery zones",
+    "Shifts and cash drawer",
+    "Food-cost reporting",
+    "Paymob and cash",
+    "Unlimited branches",
+    "Arabic and English",
+  ],
+
   pain: {
     eyebrow: "The daily reality",
     title: "The restaurant is busy — so where is the profit going?",
-    sub: "This was never a menu problem. Every part of your restaurant is running on its own.",
+    sub: "This was never a menu problem. Every part of your restaurant is running on its own — and each of these has exactly one line that cancels it.",
+    beforeLabel: "Today",
+    afterLabel: "With Sufra",
     items: [
       {
         icon: "coins",
         title: "Aggregators take a quarter of the bill",
         body: "You pay commission on every order, and the customer stays theirs — their name, their number, their repeat business.",
+        fix: "A branded ordering channel, zero commission, and the customer data is yours.",
       },
       {
         icon: "link",
         title: "Three systems that never talk",
         body: "The register is one app, the online menu another, stock lives in a spreadsheet. Month-end reconciliation is manual and the gap shows up late.",
+        fix: "One system, one database — the number on the receipt is the number in the report.",
       },
       {
         icon: "printer",
         title: "The kitchen still runs on paper",
         body: "Tickets get lost, modifiers never arrive, orders run late — and the customer is the first one to notice.",
+        fix: "A live kitchen display with a new-order chime and a delay counter per ticket.",
       },
       {
         icon: "warn",
         title: "You don't know what a cup really costs",
         body: "You price on instinct. Waste and ingredient usage eat the margin, and no single number tells you where it went.",
+        fix: "A costed recipe per size, automatic deduction, and food-cost reporting per branch.",
       },
     ],
   },

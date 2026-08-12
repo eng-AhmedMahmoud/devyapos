@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans_Arabic, Poppins } from "next/font/google";
+import { Baloo_Bhaijaan_2, Cairo } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -7,22 +7,22 @@ import { routing } from "@/i18n/routing";
 import { buildMetadata } from "@/lib/meta";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { themeBootScript } from "@/components/ThemeToggle";
 import "../globals.css";
 
-/* Type pairing mirrors the category leader: IBM Plex Sans Arabic carries the
-   Arabic UI (and has a complete Latin set, so mixed strings stay on one
-   metric), Poppins handles numerals, the wordmark and Latin display text. */
-const arabic = IBM_Plex_Sans_Arabic({
-  variable: "--font-arabic",
+/* House type, inherited from the BóHub brand site: Cairo for body copy and
+   Baloo Bhaijaan 2 for display. Both cover Arabic and Latin, so a mixed string
+   ("إشعارات Push") stays on one metric and headlines get a real rounded
+   display cut in either script rather than bolded body text. */
+const cairo = Cairo({
+  variable: "--font-cairo",
   subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const latin = Poppins({
-  variable: "--font-latin",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const baloo = Baloo_Bhaijaan_2({
+  variable: "--font-display",
+  subsets: ["arabic", "latin"],
   display: "swap",
 });
 
@@ -54,8 +54,13 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${arabic.variable} ${latin.variable} h-full antialiased`}
+      className={`${cairo.variable} ${baloo.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Applies the stored theme before first paint — see ThemeToggle. */}
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <Header />

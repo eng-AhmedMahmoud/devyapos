@@ -38,19 +38,23 @@ export default async function FeaturesPage({
       {c.featuresPage.groups.map((group, i) => (
         <section
           key={group.title}
-          className={i % 2 ? "bg-surface-2 py-16 sm:py-20" : "bg-surface py-16 sm:py-20"}
+          className={i % 2 ? "band-cream py-16 sm:py-20" : "bg-bg py-16 sm:py-20"}
         >
           <Container>
             <Reveal>
               <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-bold text-ink sm:text-3xl">
+                <span className="kicker">
+                  <span className="pearl" aria-hidden="true" />
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h2 className="font-display mt-2 text-2xl text-ink sm:text-3xl">
                   {group.title}
                 </h2>
                 <p className="max-w-2xl text-ink-dim">{group.body}</p>
               </div>
             </Reveal>
             <div className="mt-9">
-              <FeatureGrid items={group.items} columns={2} />
+              <FeatureGrid items={group.items} variant="even" />
             </div>
           </Container>
         </section>

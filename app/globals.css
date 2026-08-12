@@ -3,84 +3,210 @@
 /*
  * Sufra — SaaS marketing site.
  *
- * Palette and section rhythm are lifted from the category leader we are
- * competing against (menutap.online): a single hot-orange primary (#f55905)
- * on an otherwise neutral slate scale, light sections (white / slate-50)
- * alternating with two deep slate-950 bands (the "pain" section and the
- * footer). Arabic is the default locale and the site is RTL-first, so every
- * directional rule below uses logical properties.
+ * The palette is the house palette, inherited from the BóHub brand site in
+ * this monorepo (web-app/app/globals.css): deep maroon chrome, terracotta
+ * caramel display, gold highlights, peach/cream surfaces, espresso bands, and
+ * the boba-pearl motif. Nothing here is borrowed from a competitor.
+ *
+ * Every colour is a semantic token defined twice — once for light, once for
+ * dark — so components never branch on theme. Arabic is the default locale and
+ * the site is RTL-first, so all directional rules use logical properties.
  */
-:root {
-  /* Brand primary — the exact orange the incumbent trained this market on. */
-  --brand: #f55905;
-  --brand-600: #e04e02;
-  --brand-700: #b93f02;
-  --brand-300: #fca86c;
-  --brand-100: #ffe2cf;
-  --brand-50: #fff5f0;
 
-  /* Neutral canvas — Tailwind slate, kept as tokens so bands stay consistent. */
-  --bg: #ffffff;
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — white canvas, warm cream for alternating bands. */
+  --bg: #fffdfb;
   --surface: #ffffff;
-  --surface-2: #f8fafc;
-  --line: #e2e8f0;
-  --ink: #0f172a;
-  --ink-2: #334155;
-  --ink-dim: #64748b;
+  --surface-2: #faf3ea;
+  --surface-3: #fdecdc;
+  --line: #efe1d1;
+  --line-soft: #f6ece0;
 
-  /* Dark bands (pain section + footer). */
-  --dark: #020617;
-  --dark-2: #0f172a;
-  --dark-line: #1e293b;
-  --dark-ink: #f8fafc;
-  --dark-ink-dim: #94a3b8;
+  /* Type */
+  --ink: #45241d;
+  --ink-2: #6b4436;
+  --ink-dim: #9a7261;
 
-  /* Accent hues used only for feature-icon tiles, never for chrome. */
-  --sky: #0ea5e9;
-  --violet: #8b5cf6;
-  --amber: #eab308;
-  --rose: #ef4444;
-  --emerald: #10b981;
-  --blue: #3b82f6;
+  /* Brand chrome — the maroon of the BóHub nav and cart. */
+  --brand: #853d3f;
+  --brand-hover: #692e30;
+  --brand-soft: #f7eae8;
+  --on-brand: #fff6ee;
 
-  --radius: 0.75rem;
+  /* Warm accents */
+  --caramel: #c16733;
+  --gold: #c8853c;
+  --pink: #f97aa0;
+  --mint: #226b43;
+
+  /* Espresso bands — the dark interruptions between cream sections. */
+  --espresso: #2f1410;
+  --espresso-2: #421f1a;
+  --espresso-line: #573029;
+  --on-espresso: #fdf3ea;
+  --on-espresso-dim: #c6a897;
+
+  /* Boba pearl gradient stops */
+  --pearl-hi: #c58a4a;
+  --pearl-lo: #4a311f;
+
+  --ok: #226b43;
+  --danger: #b3362a;
+
+  --shadow-warm: 0 1px 2px rgba(69, 36, 29, 0.05),
+    0 14px 34px -18px rgba(69, 36, 29, 0.28);
+  --shadow-lift: 0 2px 4px rgba(69, 36, 29, 0.06),
+    0 26px 52px -24px rgba(133, 61, 63, 0.42);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* The dark theme is the same espresso family, not a neutral grey. */
+  --bg: #1b0e0c;
+  --surface: #241412;
+  --surface-2: #2c1a17;
+  --surface-3: #34201b;
+  --line: #4a2c26;
+  --line-soft: #3a231e;
+
+  --ink: #fdf3ea;
+  --ink-2: #e5cfc1;
+  --ink-dim: #b3907d;
+
+  /* Maroon lifted until it clears contrast against an espresso page. */
+  --brand: #c9605f;
+  --brand-hover: #dc706d;
+  --brand-soft: #3a1d1c;
+  --on-brand: #24100f;
+
+  --caramel: #dd8a4c;
+  --gold: #dda45c;
+  --pink: #f992b1;
+  --mint: #4ba871;
+
+  /* Bands go deeper than the page so they still separate. */
+  --espresso: #120807;
+  --espresso-2: #1d0f0d;
+  --espresso-line: #3d221d;
+  --on-espresso: #fdf3ea;
+  --on-espresso-dim: #b3907d;
+
+  --pearl-hi: #d9a267;
+  --pearl-lo: #2a1a10;
+
+  --ok: #4ba871;
+  --danger: #e2695c;
+
+  --shadow-warm: 0 1px 2px rgba(0, 0, 0, 0.4),
+    0 14px 34px -18px rgba(0, 0, 0, 0.7);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45),
+    0 26px 52px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* Visitors who never touch the toggle follow their OS. The toggle writes
+   data-theme, and the rule above wins over this one by specificity. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --bg: #1b0e0c;
+    --surface: #241412;
+    --surface-2: #2c1a17;
+    --surface-3: #34201b;
+    --line: #4a2c26;
+    --line-soft: #3a231e;
+
+    --ink: #fdf3ea;
+    --ink-2: #e5cfc1;
+    --ink-dim: #b3907d;
+
+    --brand: #c9605f;
+    --brand-hover: #dc706d;
+    --brand-soft: #3a1d1c;
+    --on-brand: #24100f;
+
+    --caramel: #dd8a4c;
+    --gold: #dda45c;
+    --pink: #f992b1;
+    --mint: #4ba871;
+
+    --espresso: #120807;
+    --espresso-2: #1d0f0d;
+    --espresso-line: #3d221d;
+    --on-espresso: #fdf3ea;
+    --on-espresso-dim: #b3907d;
+
+    --pearl-hi: #d9a267;
+    --pearl-lo: #2a1a10;
+
+    --ok: #4ba871;
+    --danger: #e2695c;
+
+    --shadow-warm: 0 1px 2px rgba(0, 0, 0, 0.4),
+      0 14px 34px -18px rgba(0, 0, 0, 0.7);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45),
+      0 26px 52px -24px rgba(0, 0, 0, 0.85);
+  }
 }
 
 @theme inline {
-  --color-brand: var(--brand);
-  --color-brand-600: var(--brand-600);
-  --color-brand-700: var(--brand-700);
-  --color-brand-300: var(--brand-300);
-  --color-brand-100: var(--brand-100);
-  --color-brand-50: var(--brand-50);
-
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-ink-dim: var(--ink-dim);
 
-  --color-dark: var(--dark);
-  --color-dark-2: var(--dark-2);
-  --color-dark-line: var(--dark-line);
-  --color-dark-ink: var(--dark-ink);
-  --color-dark-ink-dim: var(--dark-ink-dim);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
 
-  --color-sky: var(--sky);
-  --color-violet: var(--violet);
-  --color-amber: var(--amber);
-  --color-rose: var(--rose);
-  --color-emerald: var(--emerald);
-  --color-blue: var(--blue);
+  --color-caramel: var(--caramel);
+  --color-gold: var(--gold);
+  --color-pink: var(--pink);
+  --color-mint: var(--mint);
 
-  --font-sans: var(--font-latin);
+  --color-espresso: var(--espresso);
+  --color-espresso-2: var(--espresso-2);
+  --color-espresso-line: var(--espresso-line);
+  --color-on-espresso: var(--on-espresso);
+  --color-on-espresso-dim: var(--on-espresso-dim);
+
+  --color-ok: var(--ok);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-cairo);
+}
+
+/*
+ * `dark:` follows the explicit choice first and the OS only when no choice has
+ * been made — the same precedence the custom properties above use. Almost
+ * nothing needs it (theming happens through the tokens), but the theme toggle's
+ * own icon has to swap without JS.
+ */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+      @slot;
+    }
+  }
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: 6rem;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
 }
@@ -93,16 +219,14 @@ body {
 body {
   background: var(--bg);
   color: var(--ink);
-  /* Arabic face first: it carries the default locale and has a full Latin set,
-     so mixed strings ("إشعارات Push") stay on one metric. */
-  font-family: var(--font-arabic), var(--font-latin), system-ui, sans-serif;
+  font-family: var(--font-cairo), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
 
 ::selection {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 
 button,
@@ -132,68 +256,112 @@ textarea,
 
 /* ------------------------------------------------------------- typography */
 
-/* Latin display face (Poppins) for numerals, product names and the wordmark —
-   Arabic body copy keeps IBM Plex Sans Arabic. */
+/* Display face — Baloo Bhaijaan 2 carries both scripts, so Arabic headlines
+   get a real rounded display cut instead of bolded body Cairo. */
 .font-display {
-  font-family: var(--font-latin), system-ui, sans-serif;
-  font-feature-settings: "tnum";
+  font-family: var(--font-display), var(--font-cairo), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
 }
 
-/* Section eyebrow pill — the incumbent's small orange chip above every H2. */
-.eyebrow {
-  display: inline-block;
-  padding: 0.3rem 0.85rem;
-  border-radius: 9999px;
-  background: var(--brand-50);
-  color: var(--brand);
+.text-caramel-grad {
+  background: linear-gradient(
+    115deg,
+    var(--caramel) 8%,
+    var(--gold) 52%,
+    var(--brand) 96%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Section label — a pearl followed by small caps, replacing the pill chip. */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-.eyebrow-dark {
-  background: rgba(245, 89, 5, 0.14);
-  color: var(--brand-300);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--caramel);
 }
 
-/* Two-tone headline: second line paints in the brand orange. */
-.headline-accent {
-  color: var(--brand);
+/* ---------------------------------------------------------------- pearls */
+
+/* Boba pearl — the recurring brand motif, reused from the BóHub site. */
+.pearl {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--pearl-hi),
+    var(--pearl-lo) 80%
+  );
+}
+.pearl-lg {
+  width: 1rem;
+  height: 1rem;
 }
 
-/* ---------------------------------------------------------------- surfaces */
-
-/* Hero wash — slate-50 → white with a soft orange bloom behind the headline. */
-.hero-wash {
-  background:
-    radial-gradient(
-      ellipse 70% 55% at 50% 0%,
-      rgba(245, 89, 5, 0.1) 0%,
-      transparent 62%
-    ),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 72%);
+.pearl-grid {
+  background-image: radial-gradient(var(--line) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
 }
-
-/* Dot texture for the dark bands. */
-.dot-grid-dark {
+.pearl-grid-dark {
   background-image: radial-gradient(
-    rgba(248, 250, 252, 0.07) 1.5px,
+    rgba(253, 243, 234, 0.08) 1.5px,
     transparent 1.5px
   );
   background-size: 26px 26px;
 }
 
+/* ---------------------------------------------------------------- surfaces */
+
+/* Hero wash — peach radials melting into the page background. */
+.hero-wash {
+  background:
+    radial-gradient(
+      ellipse 60% 55% at 82% 18%,
+      color-mix(in srgb, var(--caramel) 16%, transparent) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 55% 50% at 12% 8%,
+      color-mix(in srgb, var(--pink) 14%, transparent) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 78%);
+}
+
+.band-cream {
+  background: var(--surface-2);
+}
+
+.band-espresso {
+  background: var(--espresso);
+  color: var(--on-espresso);
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 1rem;
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 12px 32px -18px rgba(15, 23, 42, 0.22);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-warm);
 }
-.card-dark {
-  background: rgba(248, 250, 252, 0.04);
-  border: 1px solid var(--dark-line);
-  border-radius: 1rem;
+.card-flat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+}
+.card-espresso {
+  background: color-mix(in srgb, var(--on-espresso) 5%, transparent);
+  border: 1px solid var(--espresso-line);
+  border-radius: 1.25rem;
 }
 
 .lift {
@@ -203,22 +371,20 @@ textarea,
     border-color 0.35s ease;
 }
 .lift:hover {
-  transform: translateY(-6px);
-  border-color: var(--brand-300);
-  box-shadow:
-    0 2px 4px rgba(15, 23, 42, 0.05),
-    0 24px 48px -22px rgba(245, 89, 5, 0.4);
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--caramel) 55%, transparent);
+  box-shadow: var(--shadow-lift);
 }
 
-/* Feature-icon tile — the hue is passed in as --tile from the component. */
+/* Icon tile — hue supplied per card via --tile. */
 .icon-tile {
   display: grid;
   place-items: center;
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: 0.75rem;
+  border-radius: 0.9rem;
   color: var(--tile, var(--brand));
-  background: color-mix(in srgb, var(--tile, var(--brand)) 12%, transparent);
+  background: color-mix(in srgb, var(--tile, var(--brand)) 14%, transparent);
 }
 
 /* ----------------------------------------------------------------- buttons */
@@ -228,9 +394,9 @@ textarea,
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 0.75rem;
-  padding: 0.8rem 1.4rem;
-  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.85rem 1.5rem;
+  font-weight: 700;
   font-size: 0.95rem;
   line-height: 1;
   transition:
@@ -242,13 +408,12 @@ textarea,
 }
 .btn-primary {
   background: var(--brand);
-  color: #fff;
-  box-shadow: 0 10px 24px -12px rgba(245, 89, 5, 0.75);
+  color: var(--on-brand);
+  box-shadow: 0 12px 26px -14px color-mix(in srgb, var(--brand) 85%, transparent);
 }
 .btn-primary:hover {
-  background: var(--brand-600);
+  background: var(--brand-hover);
   transform: translateY(-2px);
-  box-shadow: 0 16px 32px -14px rgba(245, 89, 5, 0.8);
 }
 .btn-ghost {
   background: transparent;
@@ -256,18 +421,26 @@ textarea,
   border: 1px solid var(--line);
 }
 .btn-ghost:hover {
-  border-color: var(--brand-300);
-  color: var(--brand);
+  border-color: var(--caramel);
+  color: var(--caramel);
 }
-.btn-on-dark {
-  background: #fff;
-  color: var(--ink);
+.btn-on-espresso {
+  background: var(--on-espresso);
+  color: var(--espresso);
 }
-.btn-on-dark:hover {
-  background: var(--brand-50);
+.btn-on-espresso:hover {
+  background: color-mix(in srgb, var(--on-espresso) 88%, var(--gold));
+  transform: translateY(-2px);
+}
+.btn-outline-espresso {
+  border: 1px solid color-mix(in srgb, var(--on-espresso) 38%, transparent);
+  color: var(--on-espresso);
+}
+.btn-outline-espresso:hover {
+  background: color-mix(in srgb, var(--on-espresso) 10%, transparent);
 }
 
-/* Arrow glyph inside CTAs points "forward" in both writing directions. */
+/* Directional glyphs point "forward" in both writing directions. */
 [dir="rtl"] .flip-rtl {
   transform: scaleX(-1);
 }
@@ -275,30 +448,29 @@ textarea,
 /* ------------------------------------------------------------------ header */
 
 .site-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  inset-inline: 0;
   z-index: 50;
-  background: transparent;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
   border-bottom: 1px solid transparent;
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease,
-    border-color 0.3s ease,
-    backdrop-filter 0.3s ease;
+    border-color 0.3s ease;
 }
 .site-header[data-scrolled="true"] {
-  background: color-mix(in srgb, #ffffff 88%, transparent);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   border-bottom-color: var(--line);
-  box-shadow: 0 14px 34px -26px rgba(15, 23, 42, 0.5);
+  box-shadow: 0 14px 34px -26px rgba(69, 36, 29, 0.55);
 }
 
+/* Nav underline grows from centre, identical in LTR and RTL. */
 .nav-link {
   position: relative;
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink-2);
   transition: color 0.2s ease;
 }
@@ -309,12 +481,12 @@ textarea,
 .nav-link::after {
   content: "";
   position: absolute;
-  bottom: -0.4rem;
+  bottom: -0.45rem;
   left: 50%;
   width: 100%;
   height: 2px;
   border-radius: 9999px;
-  background: var(--brand);
+  background: linear-gradient(90deg, var(--caramel), var(--pink));
   transform: translateX(-50%) scaleX(0);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -323,12 +495,11 @@ textarea,
   transform: translateX(-50%) scaleX(1);
 }
 
-/* Mobile drawer — slides from the inline-end edge in both directions. */
 .nav-scrim {
   position: fixed;
   inset: 0;
   z-index: 60;
-  background: rgba(2, 6, 23, 0.5);
+  background: rgba(47, 20, 16, 0.5);
   backdrop-filter: blur(2px);
   opacity: 0;
   visibility: hidden;
@@ -362,10 +533,95 @@ textarea,
   transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* --------------------------------------------------------------- devices */
+
+/* Ledger rule — the strike used on the "before" column of the problem list. */
+.ledger-strike {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--danger) 60%, transparent);
+  text-decoration-thickness: 2px;
+}
+
+/* Flow pipeline connector: a dotted rail behind the stage bubbles. */
+.flow-rail {
+  background-image: linear-gradient(
+    90deg,
+    var(--line) 50%,
+    transparent 50%
+  );
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+}
+
+/* Marquee ribbon on the espresso band. */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+}
+.marquee-track {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  animation: marquee-slide 38s linear infinite;
+}
+@keyframes marquee-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+/* The ribbon itself is forced to LTR flow so the two tracks always sit in the
+   direction of travel; each phrase carries dir="auto" so Arabic still shapes
+   and orders correctly inside its own item. Reversing the animation for RTL
+   instead leaves a gap, because the trailing track ends up behind the leader. */
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Live-ticket pulse in the kitchen mock. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--caramel) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Soft blurred brand blobs behind the hero visual. */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(58px);
+  opacity: 0.34;
+  animation: blob-float 15s ease-in-out infinite;
+}
+@keyframes blob-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1.4rem, -1.2rem);
+  }
+}
+
 /* ------------------------------------------------------------------ motion */
 
-/* Scroll reveal — components/Reveal.tsx arms these via IntersectionObserver.
-   Content starts visible for no-JS and crawlers. */
 .reveal-armed {
   opacity: 0;
   transform: translateY(24px);
@@ -379,10 +635,9 @@ textarea,
 }
 
 /* Above-the-fold entrance. The scroll-reveal path hides its element until an
-   observer fires, which means the hero would depend on hydration to become
-   visible — unacceptable for the largest paint on the page. This runs off a
-   plain CSS animation present in the server HTML, so it starts at first paint
-   and finishes whether or not the JS ever arrives. */
+   observer fires, which would make the hero depend on hydration to become
+   visible. This runs off a CSS animation present in the server HTML, so it
+   starts at first paint whether or not the JS ever arrives. */
 @keyframes reveal-rise {
   from {
     opacity: 0;
@@ -397,61 +652,6 @@ textarea,
   animation: reveal-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Logo marquee for the customer band. */
-.marquee {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
-}
-.marquee-track {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  min-width: 100%;
-  animation: marquee-slide 34s linear infinite;
-}
-@keyframes marquee-slide {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-[dir="rtl"] .marquee-track {
-  animation-direction: reverse;
-}
-
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Live-order pulse used by the KDS mock in the product tour. */
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(245, 89, 5, 0.45);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(245, 89, 5, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(245, 89, 5, 0);
-  }
-}
-.pulse-ring {
-  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -462,6 +662,7 @@ textarea,
   }
   .marquee-track,
   .pulse-ring,
+  .blob,
   .reveal-now {
     animation: none;
   }

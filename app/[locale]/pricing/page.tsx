@@ -34,8 +34,8 @@ export default async function PricingPage({
         sub={c.pricing.sub}
       />
       {/* The plan grid carries its own billing toggle; the page hero already
-          said everything the section head would have repeated. */}
-      <div className="bg-surface pt-4 pb-20 sm:pb-24">
+          said everything a section head would have repeated. */}
+      <div className="bg-bg pt-10 pb-20 sm:pb-24">
         <Pricing compact />
       </div>
       <Compare />

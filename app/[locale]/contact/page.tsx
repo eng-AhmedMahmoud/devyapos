@@ -43,7 +43,7 @@ export default async function ContactPage({
         sub={c.contact.sub}
       />
 
-      <section className="bg-surface pt-6 pb-20 sm:pb-24">
+      <section className="bg-bg pt-10 pb-20 sm:pb-24">
         <Container>
           <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
             <Reveal>
@@ -52,7 +52,7 @@ export default async function ContactPage({
 
             <Reveal delay={100}>
               <div className="flex flex-col gap-4">
-                <h2 className="text-lg font-semibold text-ink">
+                <h2 className="font-display text-lg text-ink">
                   {c.contact.channels.title}
                 </h2>
                 {c.contact.channels.items.map((item, i) => (

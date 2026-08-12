@@ -1,7 +1,7 @@
 import Reveal from "./Reveal";
 import { Container } from "./Section";
 
-/** Compact hero for interior pages — same wash as the home hero, less height. */
+/** Compact hero for interior pages — same peach wash as home, start-aligned. */
 export default function PageHero({
   badge,
   title,
@@ -12,13 +12,21 @@ export default function PageHero({
   sub: string;
 }) {
   return (
-    <section className="hero-wash pt-28 pb-14 sm:pt-36 sm:pb-16">
-      <Container className="flex flex-col items-center text-center">
+    <section className="hero-wash relative overflow-hidden py-16 sm:py-20">
+      <span
+        aria-hidden="true"
+        className="blob -top-20 h-64 w-64 bg-caramel"
+        style={{ insetInlineEnd: "-3rem" }}
+      />
+      <Container className="relative">
         <Reveal immediate>
-          <span className="eyebrow">{badge}</span>
+          <span className="kicker">
+            <span className="pearl" aria-hidden="true" />
+            {badge}
+          </span>
         </Reveal>
         <Reveal immediate delay={60}>
-          <h1 className="mt-5 max-w-3xl text-3xl leading-tight font-bold tracking-tight text-balance text-ink sm:text-5xl">
+          <h1 className="font-display mt-5 max-w-3xl text-[2.2rem] text-balance text-ink sm:text-5xl">
             {title}
           </h1>
         </Reveal>

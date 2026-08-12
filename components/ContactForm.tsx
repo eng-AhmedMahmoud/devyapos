@@ -78,7 +78,7 @@ export default function ContactForm() {
           value={values.message}
           onChange={set("message")}
           placeholder={f.messagePlaceholder}
-          className="resize-y rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-brand"
+          className="resize-y rounded-xl border border-line bg-surface-2 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-caramel"
         />
       </label>
 
@@ -100,7 +100,7 @@ function Input({
       <span className="text-sm font-medium text-ink-2">{label}</span>
       <input
         {...props}
-        className="rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-brand"
+        className="rounded-xl border border-line bg-surface-2 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-caramel"
       />
     </label>
   );

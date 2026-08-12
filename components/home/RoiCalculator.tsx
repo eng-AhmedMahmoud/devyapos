@@ -17,11 +17,10 @@ const SHIFT_RATE = 0.3;
 /**
  * Commission calculator — the strongest conversion lever on this page.
  *
- * The incumbent argues retention in the abstract. A restaurant owner who drags
- * a slider and watches six figures of annual commission appear has done the
- * arguing themselves, and the subscription price stops being a cost and starts
- * being a rounding error against it. Every assumption is printed under the
- * result so the number survives scrutiny.
+ * An owner who drags a slider and watches six figures of annual commission
+ * appear has made the argument themselves, and the subscription stops being a
+ * cost and becomes a rounding error against it. Every assumption is printed
+ * under the result so the number survives scrutiny.
  */
 export default function RoiCalculator() {
   const locale = useLocale();
@@ -43,19 +42,14 @@ export default function RoiCalculator() {
   }, [orders, aov, commission, branches]);
 
   return (
-    <section id="roi" className="dot-grid-dark bg-dark py-20 sm:py-24">
+    <section id="roi" className="bg-bg py-20 sm:py-24">
       <Container>
-        <SectionHead
-          eyebrow={c.roi.eyebrow}
-          title={c.roi.title}
-          sub={c.roi.sub}
-          tone="dark"
-        />
+        <SectionHead kicker={c.roi.eyebrow} title={c.roi.title} sub={c.roi.sub} />
 
         <Reveal delay={100}>
-          <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+          <div className="mt-12 grid gap-5 lg:grid-cols-[1fr_1fr]">
             {/* Inputs */}
-            <div className="card-dark flex flex-col gap-6 p-6 sm:p-8">
+            <div className="card flex flex-col gap-6 p-6 sm:p-8">
               <Field
                 label={c.roi.fields.orders}
                 hint={c.roi.hints.orders}
@@ -98,49 +92,48 @@ export default function RoiCalculator() {
               />
             </div>
 
-            {/* Results */}
+            {/* Results — the headline number sits on the espresso card so it
+                carries the weight of the section on its own. */}
             <div className="flex flex-col gap-4">
-              <div className="rounded-2xl border border-brand/40 bg-brand/10 p-6">
-                <p className="text-sm text-dark-ink-dim">{c.roi.results.paid}</p>
-                <p className="font-display mt-1 text-4xl font-bold text-brand-300">
+              <div className="band-espresso pearl-grid-dark rounded-3xl p-6 sm:p-8">
+                <p className="text-sm text-on-espresso-dim">
+                  {c.roi.results.paid}
+                </p>
+                <p className="font-display mt-2 text-4xl text-gold sm:text-5xl">
                   {formatEgp(locale, result.paid)}{" "}
                   <span className="text-xl">{c.pricing.currency}</span>
                 </p>
+                <dl className="mt-6 grid gap-4 border-t border-espresso-line pt-5 sm:grid-cols-2">
+                  <Metric
+                    label={c.roi.results.recovered}
+                    value={`${formatEgp(locale, result.recovered)} ${c.pricing.currency}`}
+                  />
+                  <Metric
+                    label={c.roi.results.cost}
+                    value={`${formatEgp(locale, result.cost)} ${c.pricing.currency}`}
+                  />
+                  <Metric
+                    label={c.roi.results.net}
+                    value={`${formatEgp(locale, result.net)} ${c.pricing.currency}`}
+                    tone={result.net >= 0 ? "good" : "bad"}
+                  />
+                  <Metric
+                    label={c.roi.results.payback}
+                    value={
+                      result.paybackDays > 0
+                        ? `${formatNumber(locale, result.paybackDays)} ${c.roi.results.paybackUnit}`
+                        : "—"
+                    }
+                  />
+                </dl>
               </div>
 
-              <div className="card-dark grid gap-4 p-6 sm:grid-cols-2">
-                <Metric
-                  label={c.roi.results.recovered}
-                  value={`${formatEgp(locale, result.recovered)} ${c.pricing.currency}`}
-                />
-                <Metric
-                  label={c.roi.results.cost}
-                  value={`${formatEgp(locale, result.cost)} ${c.pricing.currency}`}
-                />
-                <Metric
-                  label={c.roi.results.net}
-                  value={`${formatEgp(locale, result.net)} ${c.pricing.currency}`}
-                  tone={result.net >= 0 ? "good" : "bad"}
-                />
-                <Metric
-                  label={c.roi.results.payback}
-                  value={
-                    result.paybackDays > 0
-                      ? `${formatNumber(locale, result.paybackDays)} ${c.roi.results.paybackUnit}`
-                      : "—"
-                  }
-                />
-              </div>
-
-              <p className="text-xs leading-relaxed text-dark-ink-dim">
+              <p className="text-xs leading-relaxed text-ink-dim">
                 {c.roi.assumption}
               </p>
-              <p className="text-xs text-dark-ink-dim opacity-70">{c.roi.note}</p>
+              <p className="text-xs text-ink-dim opacity-75">{c.roi.note}</p>
 
-              <Link
-                href="/contact"
-                className="btn btn-on-dark mt-auto self-start"
-              >
+              <Link href="/contact" className="btn btn-primary mt-auto self-start">
                 {c.roi.cta}
                 <Arrow width={16} height={16} className="flip-rtl" />
               </Link>
@@ -175,12 +168,12 @@ function Field({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between gap-3">
-        <label htmlFor={id} className="text-sm font-medium text-dark-ink">
+        <label htmlFor={id} className="text-sm font-semibold text-ink">
           {label}
         </label>
-        <span className="font-display text-sm font-bold text-brand-300">
+        <span className="font-display text-base text-brand">
           {formatNumber(locale, value)}{" "}
-          <span className="font-normal text-dark-ink-dim">{hint}</span>
+          <span className="text-xs font-normal text-ink-dim">{hint}</span>
         </span>
       </div>
       <input
@@ -191,7 +184,7 @@ function Field({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-dark-line accent-[var(--brand)]"
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-line accent-[var(--brand)]"
       />
     </div>
   );
@@ -208,18 +201,18 @@ function Metric({
 }) {
   return (
     <div>
-      <p className="text-xs text-dark-ink-dim">{label}</p>
-      <p
-        className={`font-display mt-1 text-lg font-bold ${
+      <dt className="text-xs text-on-espresso-dim">{label}</dt>
+      <dd
+        className={`font-display mt-1 text-lg ${
           tone === "good"
-            ? "text-emerald"
+            ? "text-mint"
             : tone === "bad"
-              ? "text-rose"
-              : "text-dark-ink"
+              ? "text-danger"
+              : "text-on-espresso"
         }`}
       >
         {value}
-      </p>
+      </dd>
     </div>
   );
 }

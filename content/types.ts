@@ -35,6 +35,11 @@ export interface Feature extends Card {
   hue: Hue;
 }
 
+/** A problem paired with the line that cancels it, for the before/after ledger. */
+export interface Pain extends Card {
+  fix: string;
+}
+
 export interface Step {
   n: string;
   title: string;
@@ -94,7 +99,16 @@ export interface SiteContent {
     trust: string;
     stats: Stat[];
   };
-  pain: { eyebrow: string; title: string; sub: string; items: Card[] };
+  /** Scrolling ribbon of capability phrases on the espresso band. */
+  marquee: string[];
+  pain: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    beforeLabel: string;
+    afterLabel: string;
+    items: Pain[];
+  };
   bridge: { eyebrow: string; title: string; sub: string; chips: string[] };
   features: {
     eyebrow: string;

@@ -1,39 +1,53 @@
 import { brand } from "@/lib/brand";
 
 /**
- * Wordmark lockup. The mark is a cloche (سفرة = the laid table) drawn as a
- * dome over a plate line — pure SVG so it stays crisp on any background and
- * costs no image request.
+ * Wordmark lockup.
+ *
+ * The mark is the house motif — a cup with boba pearls — rather than a generic
+ * SaaS glyph, so the marketing site reads as the same family as the product it
+ * sells. Pure SVG on brand tokens, so it re-tints with the theme and costs no
+ * image request.
  */
 export default function Logo({
-  tone = "light",
+  tone = "auto",
   className = "",
 }: {
-  tone?: "light" | "dark";
+  tone?: "auto" | "espresso";
   className?: string;
 }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <svg
         viewBox="0 0 32 32"
-        width={30}
-        height={30}
+        width={32}
+        height={32}
         aria-hidden="true"
         className="shrink-0"
       >
-        <rect width="32" height="32" rx="9" fill="var(--brand)" />
+        <rect width="32" height="32" rx="10" fill="var(--brand)" />
+        {/* Cup */}
         <path
-          d="M8 20.5h16M16 9.4v1.6M9.8 20.2a6.2 6.2 0 0 1 12.4 0"
+          d="M9.8 11.2h12.4l-1.5 11.1a2.4 2.4 0 0 1-2.4 2.1h-4.6a2.4 2.4 0 0 1-2.4-2.1L9.8 11.2Z"
           fill="none"
-          stroke="#fff"
-          strokeWidth="2"
+          stroke="var(--on-brand)"
+          strokeWidth="1.9"
+          strokeLinejoin="round"
+        />
+        {/* Straw */}
+        <path
+          d="M19.4 11.2 21.9 5.9"
+          fill="none"
+          stroke="var(--on-brand)"
+          strokeWidth="1.9"
           strokeLinecap="round"
         />
-        <circle cx="16" cy="8.4" r="1.5" fill="#fff" />
+        {/* Boba pearls */}
+        <circle cx="13.9" cy="20.2" r="1.55" fill="var(--gold)" />
+        <circle cx="17.9" cy="21" r="1.55" fill="var(--gold)" />
       </svg>
       <span
-        className={`font-display text-lg font-semibold tracking-tight ${
-          tone === "dark" ? "text-dark-ink" : "text-ink"
+        className={`font-display text-xl ${
+          tone === "espresso" ? "text-on-espresso" : "text-ink"
         }`}
       >
         {brand.wordmark}

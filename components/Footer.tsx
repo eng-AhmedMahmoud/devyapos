@@ -10,15 +10,17 @@ export default async function Footer() {
   const year = 2026;
 
   return (
-    <footer className="dot-grid-dark bg-dark text-dark-ink-dim">
+    <footer className="band-espresso pearl-grid-dark">
       <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div className="flex flex-col gap-4">
-            <Logo tone="dark" />
-            <p className="max-w-xs text-sm leading-relaxed">{c.footer.blurb}</p>
+            <Logo tone="espresso" />
+            <p className="max-w-xs text-sm leading-relaxed text-on-espresso-dim">
+              {c.footer.blurb}
+            </p>
             <a
               href={`mailto:${brand.email}`}
-              className="text-sm font-medium text-brand-300 transition-colors hover:text-brand"
+              className="text-sm font-bold text-gold transition-colors hover:text-on-espresso"
             >
               {brand.email}
             </a>
@@ -26,13 +28,13 @@ export default async function Footer() {
 
           {c.footer.cols.map((col) => (
             <div key={col.title} className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-dark-ink">{col.title}</h3>
+              <h3 className="text-sm font-bold text-on-espresso">{col.title}</h3>
               <ul className="flex flex-col gap-2.5">
                 {col.links.map((l) => (
                   <li key={`${col.title}-${l.label}`}>
                     <Link
                       href={l.href}
-                      className="text-sm transition-colors hover:text-brand-300"
+                      className="text-sm text-on-espresso-dim transition-colors hover:text-gold"
                     >
                       {l.label}
                     </Link>
@@ -43,7 +45,7 @@ export default async function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-dark-line pt-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-espresso-line pt-6 text-xs text-on-espresso-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {brand.wordmark}. {c.footer.legal}
           </p>
@@ -51,7 +53,7 @@ export default async function Footer() {
             {c.footer.madeBy}{" "}
             <a
               href={brand.parent.url}
-              className="font-semibold text-brand-300 transition-colors hover:text-brand"
+              className="font-bold text-gold transition-colors hover:text-on-espresso"
               target="_blank"
               rel="noreferrer"
             >

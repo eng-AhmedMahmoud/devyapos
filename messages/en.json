@@ -4,6 +4,8 @@
     "closeMenu": "Close menu",
     "skipToContent": "Skip to content",
     "switchLanguage": "العربية",
-    "home": "Home"
+    "home": "Home",
+    "themeDark": "Dark theme",
+    "themeLight": "Light theme"
   }
 }

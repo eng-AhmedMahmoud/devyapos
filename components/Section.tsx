@@ -16,35 +16,43 @@ export function Container({
 }
 
 /**
- * Centred section header: orange eyebrow pill, H2, optional lede.
- * `tone="dark"` swaps the palette for the two dark bands.
+ * Section header. The label is a boba pearl followed by small caps — the house
+ * motif doing the job a coloured chip would do elsewhere.
+ *
+ * `align` defaults to `start` because this site sets its sections left/right
+ * aligned rather than stacking everything down the centre line.
  */
 export function SectionHead({
-  eyebrow,
+  kicker,
   title,
   sub,
-  tone = "light",
-  align = "center",
+  tone = "page",
+  align = "start",
+  className = "",
 }: {
-  eyebrow?: string;
+  kicker?: string;
   title: string;
   sub?: string;
-  tone?: "light" | "dark";
+  tone?: "page" | "espresso";
   align?: "center" | "start";
+  className?: string;
 }) {
-  const dark = tone === "dark";
+  const espresso = tone === "espresso";
   return (
     <Reveal
       className={`flex flex-col gap-4 ${
         align === "center" ? "items-center text-center" : "items-start text-start"
-      }`}
+      } ${className}`}
     >
-      {eyebrow ? (
-        <span className={`eyebrow ${dark ? "eyebrow-dark" : ""}`}>{eyebrow}</span>
+      {kicker ? (
+        <span className="kicker">
+          <span className="pearl" aria-hidden="true" />
+          {kicker}
+        </span>
       ) : null}
       <h2
-        className={`max-w-3xl text-3xl leading-tight font-bold text-balance sm:text-4xl ${
-          dark ? "text-dark-ink" : "text-ink"
+        className={`font-display max-w-3xl text-3xl text-balance sm:text-[2.6rem] ${
+          espresso ? "text-on-espresso" : "text-ink"
         }`}
       >
         {title}
@@ -52,7 +60,7 @@ export function SectionHead({
       {sub ? (
         <p
           className={`max-w-2xl text-base leading-relaxed text-pretty sm:text-lg ${
-            dark ? "text-dark-ink-dim" : "text-ink-dim"
+            espresso ? "text-on-espresso-dim" : "text-ink-dim"
           }`}
         >
           {sub}
