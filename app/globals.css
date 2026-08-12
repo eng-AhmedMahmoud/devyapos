@@ -1,0 +1,475 @@
+@import "tailwindcss";
+
+/*
+ * Sufra — SaaS marketing site.
+ *
+ * Palette and section rhythm are lifted from the category leader we are
+ * competing against (menutap.online): a single hot-orange primary (#f55905)
+ * on an otherwise neutral slate scale, light sections (white / slate-50)
+ * alternating with two deep slate-950 bands (the "pain" section and the
+ * footer). Arabic is the default locale and the site is RTL-first, so every
+ * directional rule below uses logical properties.
+ */
+:root {
+  /* Brand primary — the exact orange the incumbent trained this market on. */
+  --brand: #f55905;
+  --brand-600: #e04e02;
+  --brand-700: #b93f02;
+  --brand-300: #fca86c;
+  --brand-100: #ffe2cf;
+  --brand-50: #fff5f0;
+
+  /* Neutral canvas — Tailwind slate, kept as tokens so bands stay consistent. */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --line: #e2e8f0;
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-dim: #64748b;
+
+  /* Dark bands (pain section + footer). */
+  --dark: #020617;
+  --dark-2: #0f172a;
+  --dark-line: #1e293b;
+  --dark-ink: #f8fafc;
+  --dark-ink-dim: #94a3b8;
+
+  /* Accent hues used only for feature-icon tiles, never for chrome. */
+  --sky: #0ea5e9;
+  --violet: #8b5cf6;
+  --amber: #eab308;
+  --rose: #ef4444;
+  --emerald: #10b981;
+  --blue: #3b82f6;
+
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-300: var(--brand-300);
+  --color-brand-100: var(--brand-100);
+  --color-brand-50: var(--brand-50);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-dim: var(--ink-dim);
+
+  --color-dark: var(--dark);
+  --color-dark-2: var(--dark-2);
+  --color-dark-line: var(--dark-line);
+  --color-dark-ink: var(--dark-ink);
+  --color-dark-ink-dim: var(--dark-ink-dim);
+
+  --color-sky: var(--sky);
+  --color-violet: var(--violet);
+  --color-amber: var(--amber);
+  --color-rose: var(--rose);
+  --color-emerald: var(--emerald);
+  --color-blue: var(--blue);
+
+  --font-sans: var(--font-latin);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  /* Arabic face first: it carries the default locale and has a full Latin set,
+     so mixed strings ("إشعارات Push") stay on one metric. */
+  font-family: var(--font-arabic), var(--font-latin), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+button,
+a,
+select,
+label,
+summary,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+@media (pointer: coarse) {
+  button:not(:disabled):active,
+  [role="button"]:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ------------------------------------------------------------- typography */
+
+/* Latin display face (Poppins) for numerals, product names and the wordmark —
+   Arabic body copy keeps IBM Plex Sans Arabic. */
+.font-display {
+  font-family: var(--font-latin), system-ui, sans-serif;
+  font-feature-settings: "tnum";
+}
+
+/* Section eyebrow pill — the incumbent's small orange chip above every H2. */
+.eyebrow {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  background: var(--brand-50);
+  color: var(--brand);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.eyebrow-dark {
+  background: rgba(245, 89, 5, 0.14);
+  color: var(--brand-300);
+}
+
+/* Two-tone headline: second line paints in the brand orange. */
+.headline-accent {
+  color: var(--brand);
+}
+
+/* ---------------------------------------------------------------- surfaces */
+
+/* Hero wash — slate-50 → white with a soft orange bloom behind the headline. */
+.hero-wash {
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 50% 0%,
+      rgba(245, 89, 5, 0.1) 0%,
+      transparent 62%
+    ),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 72%);
+}
+
+/* Dot texture for the dark bands. */
+.dot-grid-dark {
+  background-image: radial-gradient(
+    rgba(248, 250, 252, 0.07) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 26px 26px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 32px -18px rgba(15, 23, 42, 0.22);
+}
+.card-dark {
+  background: rgba(248, 250, 252, 0.04);
+  border: 1px solid var(--dark-line);
+  border-radius: 1rem;
+}
+
+.lift {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+.lift:hover {
+  transform: translateY(-6px);
+  border-color: var(--brand-300);
+  box-shadow:
+    0 2px 4px rgba(15, 23, 42, 0.05),
+    0 24px 48px -22px rgba(245, 89, 5, 0.4);
+}
+
+/* Feature-icon tile — the hue is passed in as --tile from the component. */
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  color: var(--tile, var(--brand));
+  background: color-mix(in srgb, var(--tile, var(--brand)) 12%, transparent);
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.8rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 10px 24px -12px rgba(245, 89, 5, 0.75);
+}
+.btn-primary:hover {
+  background: var(--brand-600);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -14px rgba(245, 89, 5, 0.8);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover {
+  border-color: var(--brand-300);
+  color: var(--brand);
+}
+.btn-on-dark {
+  background: #fff;
+  color: var(--ink);
+}
+.btn-on-dark:hover {
+  background: var(--brand-50);
+}
+
+/* Arrow glyph inside CTAs points "forward" in both writing directions. */
+[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* ------------------------------------------------------------------ header */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    backdrop-filter 0.3s ease;
+}
+.site-header[data-scrolled="true"] {
+  background: color-mix(in srgb, #ffffff 88%, transparent);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  border-bottom-color: var(--line);
+  box-shadow: 0 14px 34px -26px rgba(15, 23, 42, 0.5);
+}
+
+.nav-link {
+  position: relative;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color 0.2s ease;
+}
+.nav-link:hover,
+.nav-link[data-active="true"] {
+  color: var(--brand);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -0.4rem;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  border-radius: 9999px;
+  background: var(--brand);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-link:hover::after,
+.nav-link[data-active="true"]::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Mobile drawer — slides from the inline-end edge in both directions. */
+.nav-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(2, 6, 23, 0.5);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+.nav-scrim.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease;
+}
+.nav-drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: 70;
+  width: min(20rem, 86vw);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.34s;
+}
+[dir="rtl"] .nav-drawer {
+  transform: translateX(-100%);
+}
+.nav-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------ motion */
+
+/* Scroll reveal — components/Reveal.tsx arms these via IntersectionObserver.
+   Content starts visible for no-JS and crawlers. */
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Above-the-fold entrance. The scroll-reveal path hides its element until an
+   observer fires, which means the hero would depend on hydration to become
+   visible — unacceptable for the largest paint on the page. This runs off a
+   plain CSS animation present in the server HTML, so it starts at first paint
+   and finishes whether or not the JS ever arrives. */
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal-now {
+  animation: reveal-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Logo marquee for the customer band. */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+.marquee-track {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  animation: marquee-slide 34s linear infinite;
+}
+@keyframes marquee-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+[dir="rtl"] .marquee-track {
+  animation-direction: reverse;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Live-order pulse used by the KDS mock in the product tour. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 89, 5, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 89, 5, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 89, 5, 0);
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal-armed {
+    opacity: 1;
+    transform: none;
+  }
+  .marquee-track,
+  .pulse-ring,
+  .reveal-now {
+    animation: none;
+  }
+  .lift,
+  .btn,
+  .site-header,
+  .nav-drawer,
+  .nav-scrim {
+    transition-duration: 0.01ms;
+  }
+}
