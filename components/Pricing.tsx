@@ -70,7 +70,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
           </div>
         </Reveal>
 
-        <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {c.pricing.plans.map((plan, i) => {
             const monthly =
               plan.price === null

@@ -16,7 +16,7 @@ export const en: SiteContent = {
     pricing: {
       title: "Pricing | Sufra",
       description:
-        "Free forever plan, and Growth at 399 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
+        "A 14-day free trial, and Growth at 399 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
     about: {
       title: "About Sufra | Why we built this",
@@ -39,7 +39,7 @@ export const en: SiteContent = {
       { label: "About", href: "/about" },
     ],
     login: "Log in",
-    cta: "Start free",
+    cta: "Try it free",
   },
 
   hero: {
@@ -47,9 +47,9 @@ export const en: SiteContent = {
     line1: "Run the whole restaurant",
     line2: "from one system",
     sub: "Register + live kitchen display + your own online ordering + loyalty + recipe-costed inventory. Arabic and English, priced in EGP, unlimited branches — from under 13 EGP a day per branch.",
-    ctaPrimary: "Start free — forever",
+    ctaPrimary: "Start your free trial",
     ctaSecondary: "See it running",
-    trust: "Free forever plan • No credit card • Live the same day",
+    trust: "14-day free trial • No credit card • Live the same day",
     stats: [
       { value: "10", label: "branches running on it" },
       { value: "402", label: "items and sizes in the catalog" },
@@ -266,7 +266,7 @@ export const en: SiteContent = {
         body: "The register starts, the kitchen sees tickets, customers order online. After day one you're looking at your real numbers.",
       },
     ],
-    cta: "Start now — free",
+    cta: "Start your free trial",
   },
 
   compare: {
@@ -289,7 +289,7 @@ export const en: SiteContent = {
       { label: "Multi-branch with separate stock", us: true, them: "partial" },
       { label: "Paymob + cash on pickup", us: true, them: true },
       { label: "Full bilingual RTL", us: true, them: true },
-      { label: "Free forever plan", us: true, them: false },
+      { label: "On-premise or your-own-server hosting", us: true, them: false },
       { label: "Menu and data migration", us: "Free", them: "Paid" },
       { label: "Price per branch per month", us: "399 EGP", them: "500 EGP" },
     ],
@@ -350,7 +350,7 @@ export const en: SiteContent = {
   pricing: {
     eyebrow: "Pricing",
     title: "Clear prices — and zero commission on your orders",
-    sub: "Start free forever. Pay when the system is already making you money.",
+    sub: "Try every feature for 14 days. Pay when the system is already making you money.",
     monthly: "Monthly",
     yearly: "Yearly",
     save: "Save 30%",
@@ -360,22 +360,6 @@ export const en: SiteContent = {
     compareLink: "See the full comparison",
     plans: [
       {
-        id: "free",
-        name: "Free",
-        tagline: "Get your digital presence up today",
-        price: 0,
-        priceLabel: "Free",
-        features: [
-          "Branded digital QR menu",
-          "Online ordering page (one branch)",
-          "Unlimited items and sizes",
-          "Pickup + cash payment",
-          "Full Arabic/English",
-          "Basic sales reporting",
-        ],
-        cta: "Start free",
-      },
-      {
         id: "growth",
         name: "Growth",
         tagline: "The whole restaurant runs from here",
@@ -383,14 +367,17 @@ export const en: SiteContent = {
         badge: "Most chosen",
         featured: true,
         features: [
-          "Everything in Free",
+          "Branded digital QR menu",
+          "Online ordering site — zero commission",
+          "Unlimited items and sizes",
           "Full POS + shifts and drawer",
           "Live kitchen display (KDS)",
           "Zoned delivery with fees",
-          "Paymob payments + coupons",
+          "Paymob + cash + coupons",
           "Loyalty, points and tiers",
           "Customer notifications and campaigns",
           "Sales and staff reporting",
+          "Full Arabic/English",
           "WhatsApp support on business days",
         ],
         cta: "Try 14 days free",
@@ -429,7 +416,7 @@ export const en: SiteContent = {
         cta: "Book a call",
       },
     ],
-    note: "Prices are in EGP per branch, excluding VAT. Change or cancel any time — you drop to the free plan without losing your data.",
+    note: "Prices are in EGP per branch, excluding VAT. The trial runs 14 days with every feature and no credit card. Change or cancel any time, and export all of your data before you go.",
     founding: "Founding offer: the first 50 restaurants lock this price for the life of their subscription.",
   },
 
@@ -439,8 +426,8 @@ export const en: SiteContent = {
     sub: "If yours isn't here, message us on WhatsApp — a human answers.",
     items: [
       {
-        q: "Is the free plan actually free?",
-        a: "Yes, free forever rather than a trial. You get a QR menu and an online ordering page for one branch with unlimited items. Move up to Growth when you need the register, the kitchen screen and loyalty.",
+        q: "Is there a free trial?",
+        a: "Yes — 14 days with every feature of the Growth plan and no credit card. We load your menu before the trial starts, so you are testing on your own data rather than on a demo.",
       },
       {
         q: "Do I have to buy new hardware?",
@@ -475,10 +462,10 @@ export const en: SiteContent = {
 
   cta: {
     title: "Ready to run the whole restaurant from one system?",
-    sub: "Start on the free plan today, or book a 15-minute demo and we'll show it running on your own menu.",
-    primary: "Start free now",
+    sub: "Start your free trial today, or book a 15-minute demo and we'll show it running on your own menu.",
+    primary: "Start your free trial",
     secondary: "Book a 15-min demo",
-    trust: "No credit card • Free migration • Cancel any time",
+    trust: "14 days free • No credit card • Free migration • Cancel any time",
   },
 
   notFound: {
@@ -595,7 +582,7 @@ export const en: SiteContent = {
     ],
     plansTitle: "The plans, briefly",
     plansSub:
-      "Free forever to start, Growth for a working restaurant, and Scale for when margin becomes the game.",
+      "Growth for a working restaurant, Scale for when margin becomes the game, Enterprise for chains — all of them starting with a 14-day trial.",
     ctaTitle: "Want to see it on your own menu?",
     ctaBody:
       "Send us your menu, we'll load it into the system and show it running — no commitment.",
