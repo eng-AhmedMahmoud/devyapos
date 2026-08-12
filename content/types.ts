@@ -210,6 +210,9 @@ export interface SiteContent {
     timeline: Step[];
     plansTitle: string;
     plansSub: string;
+    builtByTitle: string;
+    builtByBody: string;
+    builtByCta: string;
     ctaTitle: string;
     ctaBody: string;
   };
@@ -224,6 +227,7 @@ export interface SiteContent {
       phone: string;
       message: string;
       submit: string;
+      submitEmail: string;
       hint: string;
       messagePlaceholder: string;
     };

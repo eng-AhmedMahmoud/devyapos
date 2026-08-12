@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { getContent } from "@/content";
-import { whatsappLink } from "@/lib/brand";
+import { brand, whatsappLink } from "@/lib/brand";
 import { Whatsapp } from "./icons";
 
 /**
@@ -31,9 +31,9 @@ export default function ContactForm() {
   const set = (key: keyof typeof values) => (e: { target: { value: string } }) =>
     setValues((v) => ({ ...v, [key]: e.target.value }));
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const lines = [
+  /** The filled form as plain text, shared by both send routes. */
+  function compose() {
+    return [
       c.contact.waTemplate,
       "",
       `${f.name}: ${values.name}`,
@@ -41,8 +41,28 @@ export default function ContactForm() {
       `${f.branches}: ${values.branches}`,
       `${f.phone}: ${values.phone}`,
       values.message ? `${f.message}: ${values.message}` : "",
-    ].filter(Boolean);
-    window.open(whatsappLink(lines.join("\n")), "_blank", "noopener,noreferrer");
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    window.open(whatsappLink(compose()), "_blank", "noopener,noreferrer");
+  }
+
+  /**
+   * Email route. Native form validation only runs for the submit button, so
+   * this checks the form itself before opening the mail client — otherwise a
+   * half-filled draft lands in the inbox.
+   */
+  function onEmail(e: React.MouseEvent<HTMLButtonElement>) {
+    const form = e.currentTarget.form;
+    if (form && !form.reportValidity()) return;
+    const subject = `${c.contact.badge} — ${values.restaurant || values.name}`;
+    window.location.href = `mailto:${brand.email}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(compose())}`;
   }
 
   return (
@@ -82,10 +102,15 @@ export default function ContactForm() {
         />
       </label>
 
-      <button type="submit" className="btn btn-primary mt-1">
-        <Whatsapp width={18} height={18} />
-        {f.submit}
-      </button>
+      <div className="mt-1 flex flex-col gap-3 sm:flex-row">
+        <button type="submit" className="btn btn-primary">
+          <Whatsapp width={18} height={18} />
+          {f.submit}
+        </button>
+        <button type="button" onClick={onEmail} className="btn btn-ghost">
+          {f.submitEmail}
+        </button>
+      </div>
       <p className="text-xs leading-relaxed text-ink-dim">{f.hint}</p>
     </form>
   );

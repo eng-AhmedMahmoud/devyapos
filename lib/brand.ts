@@ -14,10 +14,16 @@ export const brand = {
   wordmark: "Sufra",
   domain: "sufra.dev",
   url: "https://sufra.dev",
-  email: "hello@sufra.dev",
-  /** E.164, no plus — used to build wa.me deep links. */
-  whatsapp: "201000000000",
-  parent: { name: "Devya", url: "https://devya.dev" },
+  email: "devya.solutions@gmail.com",
+  /** E.164, no plus — used to build wa.me deep links and tel: hrefs. */
+  whatsapp: "201055930032",
+  /** Same number, grouped for display. */
+  phoneDisplay: "+20 105 593 0032",
+  /**
+   * The studio that built and runs the platform. The public URL is devya.dev
+   * — the company is Devya Solutions, but the domain is NOT devya.solutions.
+   */
+  parent: { name: "Devya Solutions", url: "https://devya.dev" },
   /** The flagship reference deployment this whole platform was proven on. */
   flagship: { name: { ar: "بوهَب", en: "BóHub" }, url: "https://bohubegy.com" },
   social: {
@@ -33,4 +39,14 @@ export const brand = {
 /** wa.me link with a prefilled, locale-aware first message. */
 export function whatsappLink(message: string) {
   return `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(message)}`;
+}
+
+/** `tel:` href for the same business number the WhatsApp CTAs use. */
+export const telLink = `tel:+${brand.whatsapp}`;
+
+/** `mailto:` href for the business inbox, optionally with a subject. */
+export function mailtoLink(subject?: string) {
+  return subject
+    ? `mailto:${brand.email}?subject=${encodeURIComponent(subject)}`
+    : `mailto:${brand.email}`;
 }

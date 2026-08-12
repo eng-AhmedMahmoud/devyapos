@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand } from "@/lib/brand";
+import { brand, mailtoLink, telLink } from "@/lib/brand";
 import Logo from "./Logo";
 
 export default async function Footer() {
@@ -18,12 +18,24 @@ export default async function Footer() {
             <p className="max-w-xs text-sm leading-relaxed text-on-espresso-dim">
               {c.footer.blurb}
             </p>
-            <a
-              href={`mailto:${brand.email}`}
-              className="text-sm font-bold text-gold transition-colors hover:text-on-espresso"
-            >
-              {brand.email}
-            </a>
+            {/* Both routes spelled out; `dir="ltr"` keeps the number and the
+                address from being reordered inside the Arabic column. */}
+            <div className="flex flex-col gap-1.5">
+              <a
+                href={telLink}
+                dir="ltr"
+                className="w-fit text-sm font-bold text-gold transition-colors hover:text-on-espresso"
+              >
+                {brand.phoneDisplay}
+              </a>
+              <a
+                href={mailtoLink()}
+                dir="ltr"
+                className="w-fit text-sm font-bold text-gold transition-colors hover:text-on-espresso"
+              >
+                {brand.email}
+              </a>
+            </div>
           </div>
 
           {c.footer.cols.map((col) => (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand } from "@/lib/brand";
+import { brand, mailtoLink, telLink } from "@/lib/brand";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import { Arrow, Icon } from "@/components/icons";
@@ -170,6 +170,70 @@ export default async function AboutPage({
                 {c.pricing.compareLink}
                 <Arrow width={16} height={16} className="flip-rtl" />
               </Link>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Builder credit — who stands behind the product, stated plainly.
+          A restaurant buying an operating system wants to know the studio
+          exists and can be reached, so the contact routes sit right here. */}
+      <section className="band-espresso pearl-grid-dark py-16 sm:py-20">
+        <Container>
+          <Reveal>
+            <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+              <div>
+                <span className="kicker text-gold">
+                  <span className="pearl" aria-hidden="true" />
+                  {a.builtByTitle}
+                </span>
+                <h2 className="font-display mt-5 text-2xl text-balance text-on-espresso sm:text-3xl">
+                  {brand.parent.name}
+                </h2>
+                <p className="mt-4 max-w-xl leading-relaxed text-on-espresso-dim">
+                  {a.builtByBody}
+                </p>
+                <a
+                  href={brand.parent.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-gold transition-colors hover:text-on-espresso"
+                >
+                  {a.builtByCta}
+                  <Arrow width={16} height={16} className="flip-rtl" />
+                </a>
+              </div>
+
+              <dl className="card-espresso flex flex-col gap-3 p-6 text-sm">
+                <div className="flex items-baseline justify-between gap-4">
+                  <dt className="text-on-espresso-dim">
+                    {c.contact.channels.items[1].title}
+                  </dt>
+                  <dd>
+                    <a
+                      href={telLink}
+                      dir="ltr"
+                      className="font-bold text-gold transition-colors hover:text-on-espresso"
+                    >
+                      {brand.phoneDisplay}
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-4">
+                  <dt className="text-on-espresso-dim">
+                    {c.contact.channels.items[2].title}
+                  </dt>
+                  <dd>
+                    <a
+                      href={mailtoLink(c.meta.contact.title)}
+                      dir="ltr"
+                      className="font-bold text-gold transition-colors hover:text-on-espresso"
+                    >
+                      {brand.email}
+                    </a>
+                  </dd>
+                </div>
+              </dl>
             </div>
           </Reveal>
         </Container>

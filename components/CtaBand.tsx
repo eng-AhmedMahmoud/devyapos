@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand, whatsappLink } from "@/lib/brand";
+import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
 import { Arrow, Whatsapp } from "./icons";
 import Reveal from "./Reveal";
 import { Container } from "./Section";
@@ -35,8 +35,24 @@ export default async function CtaBand() {
                 <p className="mt-5 text-sm text-on-espresso-dim">
                   {c.cta.trust}
                 </p>
-                <p className="mt-1 text-xs text-on-espresso-dim opacity-75">
-                  {brand.email}
+                {/* Both direct routes, clickable — some buyers will never fill
+                    in a form but will happily send an email or dial. */}
+                <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-espresso-dim">
+                  <a
+                    href={mailtoLink(c.cta.title)}
+                    dir="ltr"
+                    className="font-bold text-gold transition-colors hover:text-on-espresso"
+                  >
+                    {brand.email}
+                  </a>
+                  <span aria-hidden="true">·</span>
+                  <a
+                    href={telLink}
+                    dir="ltr"
+                    className="font-bold text-gold transition-colors hover:text-on-espresso"
+                  >
+                    {brand.phoneDisplay}
+                  </a>
                 </p>
               </div>
 

@@ -583,6 +583,10 @@ export const en: SiteContent = {
     plansTitle: "The plans, briefly",
     plansSub:
       "Growth for a working restaurant, Scale for when margin becomes the game, Enterprise for chains — all of them starting with a 14-day trial.",
+    builtByTitle: "Who builds it",
+    builtByBody:
+      "Sufra is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
+    builtByCta: "devya.dev",
     ctaTitle: "Want to see it on your own menu?",
     ctaBody:
       "Send us your menu, we'll load it into the system and show it running — no commitment.",
@@ -599,7 +603,8 @@ export const en: SiteContent = {
       phone: "Mobile number",
       message: "Anything we should know",
       submit: "Send on WhatsApp",
-      hint: "The form opens a WhatsApp conversation with these details — nothing is stored on this site.",
+      submitEmail: "Send by email",
+      hint: "The form opens WhatsApp or your email client with these details — nothing is stored on this site.",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
     },
@@ -610,6 +615,11 @@ export const en: SiteContent = {
           icon: "bell",
           title: "WhatsApp",
           body: "Fastest route — a reply the same business day.",
+        },
+        {
+          icon: "users",
+          title: "Call us",
+          body: "Reach the business line during working hours.",
         },
         {
           icon: "link",
