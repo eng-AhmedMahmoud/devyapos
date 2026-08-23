@@ -234,6 +234,15 @@ export interface SiteContent {
     channels: { title: string; items: Card[] };
     waTemplate: string;
   };
+  /** Captions for the product-screenshot gallery on /features. `src` lives in
+   *  the page, not here — the copy is translated, the file paths are not. */
+  gallery: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    items: { alt: string; caption: string }[];
+  };
+
   featuresPage: {
     badge: string;
     title: string;

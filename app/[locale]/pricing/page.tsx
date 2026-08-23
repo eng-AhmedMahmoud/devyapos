@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { buildMetadata } from "@/lib/meta";
-import Compare from "@/components/home/Compare";
 import CtaBand from "@/components/CtaBand";
 import Faq from "@/components/Faq";
 import PageHero from "@/components/PageHero";
@@ -38,7 +37,6 @@ export default async function PricingPage({
       <div className="bg-bg pt-10 pb-20 sm:pb-24">
         <Pricing compact />
       </div>
-      <Compare />
       <Faq />
       <CtaBand />
     </>

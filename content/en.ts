@@ -23,6 +23,16 @@ export const en: SiteContent = {
       description:
         "Sufra was built inside a working restaurant — now 21 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
+    howItWorks: {
+      title: "How it works | Sufra",
+      description:
+        "One order, four screens: register or phone to kitchen display in under a second, stock deducting itself, and the cost report ready at close. Plus what it takes to switch.",
+    },
+    compare: {
+      title: "Sufra vs enterprise POS platforms | Pricing compared",
+      description:
+        "Enterprise restaurant platforms bill per terminal and charge again per module. See the feature-by-feature comparison, and work out what aggregator commission is costing you a year.",
+    },
     contact: {
       title: "Contact | Sufra",
       description:
@@ -33,8 +43,8 @@ export const en: SiteContent = {
   nav: {
     links: [
       { label: "Features", href: "/features" },
-      { label: "How it works", href: "/#how" },
-      { label: "Compare", href: "/#compare" },
+      { label: "How it works", href: "/how-it-works" },
+      { label: "Compare", href: "/compare" },
       { label: "Pricing", href: "/pricing" },
       { label: "About", href: "/about" },
     ],
@@ -637,6 +647,18 @@ export const en: SiteContent = {
       ],
     },
     waTemplate: "Hi Sufra! I'd like to know more about the system for my restaurant.",
+  },
+
+  gallery: {
+    eyebrow: "The real thing",
+    title: "Screens from a live deployment",
+    sub: "Not renders. These are captures from the BóHub chain running Sufra across 21 branches.",
+    items: [
+      { alt: "Taking payment on the register", caption: "Split payment, cash and card on one ticket" },
+      { alt: "A printed thermal receipt", caption: "Bilingual ESC/POS receipt off the branch printer" },
+      { alt: "The reporting console", caption: "Food cost and sales, per branch, per day" },
+      { alt: "Branch settings on the tablet shell", caption: "Printer and branch setup on the iPad shell" },
+    ],
   },
 
   featuresPage: {

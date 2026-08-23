@@ -1,36 +1,32 @@
 import { setRequestLocale } from "next-intl/server";
 import CaseStudy from "@/components/home/CaseStudy";
-import Compare from "@/components/home/Compare";
 import Features from "@/components/home/Features";
-import Flow from "@/components/home/Flow";
 import Hero from "@/components/home/Hero";
 import Ledger from "@/components/home/Ledger";
 import Marquee from "@/components/home/Marquee";
-import RoiCalculator from "@/components/home/RoiCalculator";
-import Steps from "@/components/home/Steps";
 import Testimonials from "@/components/home/Testimonials";
-import Tour from "@/components/home/Tour";
 import CtaBand from "@/components/CtaBand";
-import Faq from "@/components/Faq";
-import Pricing from "@/components/Pricing";
 
 /**
- * The section order is the argument, and the surface alternates
- * page / espresso / cream so no two neighbours share a background:
+ * The home page argues once and then hands off.
  *
- *   hero        — asymmetric: promise on the reading edge, order flow opposite
- *   marquee     — espresso ribbon; states the platform's scope in one glance
- *   ledger      — each problem paired with the line that cancels it
- *   flow        — the pipeline drawn, since "connected" is a claim about shape
- *   features    — bento grid of what actually does it
- *   tour        — the four screens, so "system" stops being abstract
- *   steps       — adoption cost, made to look trivial
- *   compare     — category reframe: a QR menu is not a restaurant system
- *   roi         — the visitor computes the loss themselves; price stops mattering
- *   case study  — authority on verifiable numbers, not invented quotes
- *   pricing     — read against the anchor two sections above it
- *   faq         — remove the last objections
- *   cta         — ask, with the risk reversal repeated
+ * It used to run fourteen sections because "How it works" and "Compare" were
+ * `/#` anchors rather than pages, so everything had to live here — the tour,
+ * the adoption steps, the comparison, the ROI calculator, pricing and the FAQ
+ * all stacked below the fold, each competing with the next. A visitor landing
+ * from a pricing search still had to scroll past the whole argument.
+ *
+ * Now each of those has a route, and this page keeps only the through-line:
+ *
+ *   hero      — the promise
+ *   marquee   — the scope, in one glance
+ *   ledger    — each problem paired with the line that cancels it
+ *   features  — what actually does it
+ *   caseStudy — proof, on numbers read from production
+ *   testimonials — hides itself until real quotes exist
+ *   cta       — the ask
+ *
+ * Depth lives at /how-it-works, /compare, /features and /pricing.
  */
 export default async function HomePage({
   params,
@@ -45,16 +41,9 @@ export default async function HomePage({
       <Hero />
       <Marquee />
       <Ledger />
-      <Flow />
       <Features />
-      <Tour />
-      <Steps />
-      <Compare />
-      <RoiCalculator />
       <CaseStudy />
       <Testimonials />
-      <Pricing />
-      <Faq />
       <CtaBand />
     </>
   );
