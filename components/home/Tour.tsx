@@ -6,21 +6,25 @@ import { getContent } from "@/content";
 import { Check } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
+import IpadFrame from "@/components/IpadFrame";
 
 /**
  * Product tour — a vertical rail of surfaces on the reading edge, the selected
  * screen drawn opposite it.
  *
- * Screenshots go stale the moment the UI moves, and a marketing page should not
- * ship hundreds of kilobytes of PNG to prove a layout. These mocks are CSS on
- * brand tokens, so they weigh nothing, re-tint with the theme, and stay honest
- * about what each screen actually shows.
+ * Three of the four surfaces now show the real product in an iPad frame —
+ * captures of the live BóHub deployment, shipped as WebP (the whole set is
+ * ~580 KB, and only the selected tab decodes). The customer storefront keeps
+ * its CSS mock because no screenshot of it exists yet, and inventing one would
+ * be the sort of thing this file's original comment was right to avoid.
  */
 export default function Tour() {
   const locale = useLocale();
   const c = getContent(locale);
   const [active, setActive] = useState(c.tour.tabs[0].id);
   const tab = c.tour.tabs.find((t) => t.id === active) ?? c.tour.tabs[0];
+  /* Bound once so the presence check narrows the type for the render below. */
+  const shot = SHOTS[tab.id];
 
   return (
     <section className="band-cream py-20 sm:py-24">
@@ -92,7 +96,17 @@ export default function Tour() {
                   ))}
                 </ul>
               </div>
-              <Mock id={tab.id} />
+              {shot ? (
+                <IpadFrame
+                  src={shot}
+                  /* The tab title is already translated and describes exactly
+                     what the capture shows, so it doubles as the alt text
+                     rather than adding a parallel string to both locales. */
+                  alt={tab.title}
+                />
+              ) : (
+                <Mock id={tab.id} />
+              )}
             </div>
           </Reveal>
         </div>
@@ -100,6 +114,16 @@ export default function Tour() {
     </section>
   );
 }
+
+/**
+ * Real captures per surface. A tab with no entry falls back to its CSS mock —
+ * `shop` has none, so the storefront stays drawn rather than faked.
+ */
+const SHOTS: Record<string, string | undefined> = {
+  pos: "/screenshots/pos-order.webp",
+  kds: "/screenshots/pos-kds.webp",
+  admin: "/screenshots/admin-dashboard.webp",
+};
 
 /* ------------------------------------------------------------------ mocks */
 

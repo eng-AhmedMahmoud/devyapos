@@ -21,7 +21,7 @@ export const en: SiteContent = {
     about: {
       title: "About Sufra | Why we built this",
       description:
-        "Sufra was built inside a working restaurant — ten branches, a real menu, real rush hours. The story, the principles, and the plans.",
+        "Sufra was built inside a working restaurant — now 21 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
     contact: {
       title: "Contact | Sufra",
@@ -51,8 +51,8 @@ export const en: SiteContent = {
     ctaSecondary: "See it running",
     trust: "14-day free trial • No credit card • Live the same day",
     stats: [
-      { value: "10", label: "branches running on it" },
-      { value: "402", label: "items and sizes in the catalog" },
+      { value: "21", label: "branches running on it" },
+      { value: "679", label: "items and sizes in the catalog" },
       { value: "< 1s", label: "register to kitchen screen" },
     ],
   },
@@ -271,10 +271,10 @@ export const en: SiteContent = {
 
   compare: {
     eyebrow: "Comparison",
-    title: "A QR menu is not a restaurant system",
-    sub: "Menu-and-loyalty tools solve part of the picture. Sufra runs the whole picture.",
+    title: "Enterprise power, without the enterprise invoice",
+    sub: "The big platforms — Foodics and the like — do the job, then bill per terminal and charge again for each module. Sufra gives you the whole system for a flat price per branch, and the parts you need changed, we change.",
     us: "Sufra",
-    them: "Menu & loyalty tools",
+    them: "Enterprise POS platforms",
     rows: [
       { label: "Digital QR menu", us: true, them: true },
       { label: "Loyalty, points and tiers", us: true, them: true },
@@ -291,9 +291,12 @@ export const en: SiteContent = {
       { label: "Full bilingual RTL", us: true, them: true },
       { label: "On-premise or your-own-server hosting", us: true, them: false },
       { label: "Menu and data migration", us: "Free", them: "Paid" },
-      { label: "Price per branch per month", us: "399 EGP", them: "500 EGP" },
+      { label: "Custom features built for your chain", us: true, them: false },
+      { label: "Workflow changed to match how you work", us: true, them: false },
+      { label: "Billing model", us: "Flat, per branch", them: "Per terminal + modules" },
+      { label: "Price per branch per month", us: "399 EGP", them: "Quote only" },
     ],
-    note: "Based on the published pricing and feature lists of the menu-and-loyalty tools commonly sold in the Egyptian market at time of writing.",
+    note: "Sufra's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
   },
 
   roi: {
@@ -327,14 +330,14 @@ export const en: SiteContent = {
   },
 
   caseStudy: {
-    eyebrow: "Built inside a working restaurant",
-    title: "Sufra isn't slideware — ten branches run on it",
-    body: "The platform was built and hardened on the BóHub chain: a real menu, real branches, real rush hours. Every feature here came out of something that actually broke during a shift.",
+    eyebrow: "Our first client, still our toughest",
+    title: "Sufra isn't slideware — 21 branches run on it daily",
+    body: "BóHub was the first chain to put Sufra on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 21 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
     stats: [
-      { value: "10", label: "branches" },
-      { value: "18", label: "menu categories" },
-      { value: "134", label: "products" },
-      { value: "268", label: "size variants" },
+      { value: "21", label: "live branches" },
+      { value: "249", label: "products" },
+      { value: "430", label: "size variants" },
+      { value: "29", label: "menu categories" },
     ],
     link: "See the system architecture",
   },
@@ -517,7 +520,7 @@ export const en: SiteContent = {
       "It started as one project: build a complete system for an Egyptian bubble-tea chain with ten branches. Not a QR menu, not an ordering page — the whole thing: register, kitchen display, storefront, inventory and reporting.",
       "The moment it went into the branches, the real problem became obvious. It was never any single tool. It was that the market sells restaurants pieces: a menu tool, a loyalty tool, register software, and a spreadsheet for stock. Each piece works alone and they contradict each other together.",
       "What we learned there — that money must be stored as whole piasters, that Arabic has to be a first-class language rather than a translation, that an order must reach the kitchen in under a second, and that every cup needs a known cost — became the product's principles.",
-      "Sufra is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs ten branches right now.",
+      "Sufra is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 21 branches right now.",
     ],
     principlesTitle: "The principles we build on",
     principlesSub: "Engineering decisions made once that protect you every day.",
@@ -555,9 +558,9 @@ export const en: SiteContent = {
     ],
     numbersTitle: "The system today",
     numbers: [
-      { value: "10", label: "branches on the platform" },
-      { value: "134", label: "products in the live catalog" },
-      { value: "268", label: "costed size variants" },
+      { value: "21", label: "branches on the platform" },
+      { value: "249", label: "products in the live catalog" },
+      { value: "430", label: "costed size variants" },
       { value: "4", label: "apps over one database" },
       { value: "2", label: "first-class languages (AR/EN)" },
       { value: "14%", label: "VAT computed automatically" },
