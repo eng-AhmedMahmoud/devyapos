@@ -6,15 +6,19 @@ import CtaBand from "@/components/CtaBand";
 import FeatureGrid from "@/components/FeatureGrid";
 import PageHero from "@/components/PageHero";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
+import { SHOTS } from "@/lib/screenshots";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
 
-/** Paths pair by index with `gallery.items` in the content tree. */
+/** Pairs by index with `gallery.items`; aspects come from the manifest. */
 const GALLERY = [
-  "/screenshots/pos-payment.webp",
-  "/screenshots/pos-receipt-print.webp",
-  "/screenshots/admin-reports.webp",
-  "/screenshots/shell-settings.webp",
+  SHOTS.posOrder,
+  SHOTS.kds,
+  SHOTS.shopMenu,
+  SHOTS.adminDashboard,
+  SHOTS.adminReports,
+  SHOTS.adminMenu,
+  SHOTS.adminInventory,
 ];
 
 export async function generateMetadata({
@@ -88,13 +92,10 @@ export default async function FeaturesPage({
           <div className="mt-9">
             <ScreenshotCarousel
               ariaLabel={c.gallery.title}
-              items={GALLERY.map((src, i) => ({
-                src,
+              items={GALLERY.map((shot, i) => ({
+                src: shot.src,
                 alt: c.gallery.items[i].alt,
                 caption: c.gallery.items[i].caption,
-                ...(src.includes("shell-settings")
-                  ? { orientation: "portrait" as const }
-                  : {}),
               }))}
             />
           </div>

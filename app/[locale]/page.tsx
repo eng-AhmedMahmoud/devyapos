@@ -4,6 +4,7 @@ import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import Ledger from "@/components/home/Ledger";
 import Marquee from "@/components/home/Marquee";
+import Showcase from "@/components/home/Showcase";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBand from "@/components/CtaBand";
 
@@ -22,6 +23,7 @@ import CtaBand from "@/components/CtaBand";
  *   marquee   — the scope, in one glance
  *   ledger    — each problem paired with the line that cancels it
  *   features  — what actually does it
+ *   showcase  — the product itself, so the claims stop being abstract
  *   caseStudy — proof, on numbers read from production
  *   testimonials — hides itself until real quotes exist
  *   cta       — the ask
@@ -42,6 +44,7 @@ export default async function HomePage({
       <Marquee />
       <Ledger />
       <Features />
+      <Showcase />
       <CaseStudy />
       <Testimonials />
       <CtaBand />

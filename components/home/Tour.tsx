@@ -8,6 +8,7 @@ import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 import IpadFrame from "@/components/IpadFrame";
 import ScrollLift from "@/components/ScrollLift";
+import { SHOTS } from "@/lib/screenshots";
 
 /**
  * Product tour — a vertical rail of surfaces on the reading edge, the selected
@@ -26,7 +27,7 @@ export default function Tour() {
   const [active, setActive] = useState(c.tour.tabs[0].id);
   const tab = c.tour.tabs.find((t) => t.id === active) ?? c.tour.tabs[0];
   /* Bound once so the presence check narrows the type for the render below. */
-  const shot = SHOTS[tab.id];
+  const shot = TAB_SHOTS[tab.id];
 
   return (
     <section className="band-cream py-20 sm:py-24">
@@ -123,11 +124,11 @@ export default function Tour() {
  * Real captures per surface. A tab with no entry falls back to its CSS mock —
  * `shop` has none, so the storefront stays drawn rather than faked.
  */
-const SHOTS: Record<string, string | undefined> = {
-  pos: "/screenshots/pos-order.webp",
-  kds: "/screenshots/pos-kds.webp",
-  shop: "/screenshots/shop-menu.webp",
-  admin: "/screenshots/admin-dashboard.webp",
+const TAB_SHOTS: Record<string, string | undefined> = {
+  pos: SHOTS.posOrder.src,
+  kds: SHOTS.kds.src,
+  shop: SHOTS.shopMenu.src,
+  admin: SHOTS.adminDashboard.src,
 };
 
 /* ------------------------------------------------------------------ mocks */

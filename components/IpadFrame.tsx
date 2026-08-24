@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ASPECT_BY_SRC, DIMS_BY_SRC } from "@/lib/screenshots";
 import type { CSSProperties } from "react";
 
 /**
@@ -46,6 +47,16 @@ export type IpadFrameProps = {
   /** Describes the screen contents — pass a translated string. */
   alt: string;
   orientation?: IpadOrientation;
+  /**
+   * Screen aspect as width/height, when the capture is not 4:3.
+   *
+   * The frame was built for 4:3 captures, but a browser window rarely gives
+   * exactly that. Forcing one meant either cropping the sides off (losing a
+   * sidebar or a totals column) or letterboxing. Passing the capture's real
+   * aspect lets the screen match it, so the shot fills the glass edge to edge
+   * and nothing is lost. Defaults to the orientation's native 4:3.
+   */
+  aspect?: number;
   /** Layout classes for the wrapper (margins, grid placement). */
   className?: string;
   /** Override the desktop cap, e.g. "42rem". Any CSS length. */
@@ -66,13 +77,18 @@ export default function IpadFrame({
   src,
   alt,
   orientation = "landscape",
+  aspect,
   className = "",
   maxWidth,
   sizes,
   priority = false,
   quality,
 }: IpadFrameProps) {
-  const native = NATIVE[orientation];
+  // next/image lays the image out at the ratio of the width/height it is
+  // GIVEN, not the ratio of the bytes. Feeding it the orientation constant
+  // meant a wide capture was declared 4:3 and boxed to match, which is what
+  // put the black bars back after the crop was fixed. Real dimensions first.
+  const native = DIMS_BY_SRC[src] ?? NATIVE[orientation];
   const portrait = orientation === "portrait";
 
   const deviceStyle = {
@@ -128,10 +144,17 @@ export default function IpadFrame({
         </span>
 
         <div
-          className={`relative w-full overflow-hidden ${
-            portrait ? "aspect-[3/4]" : "aspect-[4/3]"
-          }`}
-          style={screenStyle}
+          className="relative w-full overflow-hidden"
+          style={{
+            ...screenStyle,
+            // Inline rather than a Tailwind aspect-[] class: the ratio comes
+            // from the capture at runtime, so it cannot be a static class name.
+            // Explicit prop wins; otherwise the manifest knows what this
+            // capture was actually shot at; 4:3 only as a last resort.
+            aspectRatio: String(
+              aspect ?? ASPECT_BY_SRC[src] ?? (portrait ? 3 / 4 : 4 / 3),
+            ),
+          }}
         >
           <Image
             src={src}
@@ -141,7 +164,11 @@ export default function IpadFrame({
             sizes={sizes ?? SIZES[orientation]}
             priority={priority}
             quality={quality}
-            className="h-full w-full object-cover"
+            /* `contain`, not `cover`. A capture whose aspect is not exactly
+               4:3 gets letterboxed against the screen fill rather than having
+               its edges sliced off — losing a sidebar or a totals column is
+               far worse on a product screenshot than a thin margin. */
+            className="h-full w-full object-contain"
           />
           {/* Glass sheen. Decorative only, and kept faint enough that dense UI
               text underneath stays readable. */}

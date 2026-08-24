@@ -21,7 +21,7 @@ export const en: SiteContent = {
     about: {
       title: "About Sufra | Why we built this",
       description:
-        "Sufra was built inside a working restaurant — now 21 branches, a real menu, real rush hours. The story, the principles, and the plans.",
+        "Sufra was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
     howItWorks: {
       title: "How it works | Sufra",
@@ -61,7 +61,7 @@ export const en: SiteContent = {
     ctaSecondary: "See it running",
     trust: "14-day free trial • No credit card • Live the same day",
     stats: [
-      { value: "21", label: "branches running on it" },
+      { value: "25", label: "branches running on it" },
       { value: "679", label: "items and sizes in the catalog" },
       { value: "< 1s", label: "register to kitchen screen" },
     ],
@@ -341,10 +341,10 @@ export const en: SiteContent = {
 
   caseStudy: {
     eyebrow: "Our first client, still our toughest",
-    title: "Sufra isn't slideware — 21 branches run on it daily",
-    body: "BóHub was the first chain to put Sufra on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 21 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
+    title: "Sufra isn't slideware — 25 branches run on it daily",
+    body: "BóHub was the first chain to put Sufra on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
     stats: [
-      { value: "21", label: "live branches" },
+      { value: "25", label: "live branches" },
       { value: "249", label: "products" },
       { value: "430", label: "size variants" },
       { value: "29", label: "menu categories" },
@@ -530,7 +530,7 @@ export const en: SiteContent = {
       "It started as one project: build a complete system for an Egyptian bubble-tea chain with ten branches. Not a QR menu, not an ordering page — the whole thing: register, kitchen display, storefront, inventory and reporting.",
       "The moment it went into the branches, the real problem became obvious. It was never any single tool. It was that the market sells restaurants pieces: a menu tool, a loyalty tool, register software, and a spreadsheet for stock. Each piece works alone and they contradict each other together.",
       "What we learned there — that money must be stored as whole piasters, that Arabic has to be a first-class language rather than a translation, that an order must reach the kitchen in under a second, and that every cup needs a known cost — became the product's principles.",
-      "Sufra is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 21 branches right now.",
+      "Sufra is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 25 branches right now.",
     ],
     principlesTitle: "The principles we build on",
     principlesSub: "Engineering decisions made once that protect you every day.",
@@ -568,7 +568,7 @@ export const en: SiteContent = {
     ],
     numbersTitle: "The system today",
     numbers: [
-      { value: "21", label: "branches on the platform" },
+      { value: "25", label: "branches on the platform" },
       { value: "249", label: "products in the live catalog" },
       { value: "430", label: "costed size variants" },
       { value: "4", label: "apps over one database" },
@@ -652,12 +652,15 @@ export const en: SiteContent = {
   gallery: {
     eyebrow: "The real thing",
     title: "Screens from a live deployment",
-    sub: "Not renders. These are captures from the BóHub chain running Sufra across 21 branches.",
+    sub: "Not renders. These are captures from the BóHub chain running Sufra across 25 branches.",
     items: [
-      { alt: "Taking payment on the register", caption: "Split payment, cash and card on one ticket" },
-      { alt: "A printed thermal receipt", caption: "Bilingual ESC/POS receipt off the branch printer" },
-      { alt: "The reporting console", caption: "Food cost and sales, per branch, per day" },
-      { alt: "Branch settings on the tablet shell", caption: "Printer and branch setup on the iPad shell" },
+      { alt: "Taking an order on the register", caption: "The register: a live ticket, sizes and totals as you tap" },
+      { alt: "The kitchen display screen", caption: "Kitchen display: every ticket, with a delay counter running" },
+      { alt: "The branded ordering site", caption: "Your own ordering site — your name, your photography" },
+      { alt: "The admin dashboard", caption: "Revenue, orders and payment mix across every branch" },
+      { alt: "The reporting console", caption: "Daily report: channel, payment method and status" },
+      { alt: "Menu management", caption: "Categories, products and ingredients in one place" },
+      { alt: "Branch inventory", caption: "Stock per branch, deducting itself as orders complete" },
     ],
   },
 
