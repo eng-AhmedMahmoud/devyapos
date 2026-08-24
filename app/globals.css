@@ -674,3 +674,16 @@ textarea,
     transition-duration: 0.01ms;
   }
 }
+
+/* Scroll-linked lift — see components/ScrollLift.tsx. The element renders at
+   rest and only animates once JS sets data-armed, so a no-JS visitor never
+   sees a permanently dimmed, shrunken mockup. */
+.scroll-lift[data-armed="true"] {
+  opacity: calc(0.45 + 0.55 * var(--p));
+  transform: translate3d(0, calc((1 - var(--p)) * 34px), 0)
+             scale(calc(0.955 + 0.045 * var(--p)));
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-lift[data-armed="true"] { opacity: 1; transform: none; }
+}

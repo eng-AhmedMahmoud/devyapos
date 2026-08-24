@@ -7,16 +7,18 @@ import { Check } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 import IpadFrame from "@/components/IpadFrame";
+import ScrollLift from "@/components/ScrollLift";
 
 /**
  * Product tour — a vertical rail of surfaces on the reading edge, the selected
  * screen drawn opposite it.
  *
- * Three of the four surfaces now show the real product in an iPad frame —
- * captures of the live BóHub deployment, shipped as WebP (the whole set is
- * ~580 KB, and only the selected tab decodes). The customer storefront keeps
- * its CSS mock because no screenshot of it exists yet, and inventing one would
- * be the sort of thing this file's original comment was right to avoid.
+ * All four surfaces show the real product in an iPad frame — captures of the
+ * live BóHub deployment, shipped as WebP, and only the selected tab decodes.
+ * The storefront was the last to keep a CSS mock; rather than fake one, the
+ * shop app was run locally against the seeded database and photographed.
+ *
+ * `Mock` stays as the fallback for any tab added later that has no capture yet.
  */
 export default function Tour() {
   const locale = useLocale();
@@ -97,13 +99,15 @@ export default function Tour() {
                 </ul>
               </div>
               {shot ? (
-                <IpadFrame
-                  src={shot}
+                <ScrollLift>
+                  <IpadFrame
+                    src={shot}
                   /* The tab title is already translated and describes exactly
                      what the capture shows, so it doubles as the alt text
                      rather than adding a parallel string to both locales. */
-                  alt={tab.title}
-                />
+                    alt={tab.title}
+                  />
+                </ScrollLift>
               ) : (
                 <Mock id={tab.id} />
               )}
@@ -122,6 +126,7 @@ export default function Tour() {
 const SHOTS: Record<string, string | undefined> = {
   pos: "/screenshots/pos-order.webp",
   kds: "/screenshots/pos-kds.webp",
+  shop: "/screenshots/shop-menu.webp",
   admin: "/screenshots/admin-dashboard.webp",
 };
 

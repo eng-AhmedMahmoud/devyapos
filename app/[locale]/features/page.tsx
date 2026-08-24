@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import FeatureGrid from "@/components/FeatureGrid";
 import PageHero from "@/components/PageHero";
-import ScreenshotShowcase from "@/components/ScreenshotShowcase";
+import ScreenshotCarousel from "@/components/ScreenshotCarousel";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
 
@@ -86,7 +86,7 @@ export default async function FeaturesPage({
             </div>
           </Reveal>
           <div className="mt-9">
-            <ScreenshotShowcase
+            <ScreenshotCarousel
               ariaLabel={c.gallery.title}
               items={GALLERY.map((src, i) => ({
                 src,
