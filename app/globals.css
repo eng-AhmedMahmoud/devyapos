@@ -17,13 +17,16 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces — white canvas, warm cream for alternating bands. */
-  --bg: #fffdfb;
-  --surface: #ffffff;
-  --surface-2: #faf3ea;
-  --surface-3: #fdecdc;
-  --line: #efe1d1;
-  --line-soft: #f6ece0;
+  /* Surfaces — warm sand, not white. The previous values sat between #fff and
+     #faf3ea, which on a bright screen read as one flat white sheet: the cards
+     lost their edges and the alternating bands stopped alternating. Each step
+     is now deep enough to be seen against its neighbour. */
+  --bg: #f6efe6;
+  --surface: #fffaf4;
+  --surface-2: #efe4d6;
+  --surface-3: #e7d8c6;
+  --line: #d9c5ae;
+  --line-soft: #e6d6c2;
 
   /* Type */
   --ink: #45241d;
@@ -686,4 +689,60 @@ textarea,
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-lift[data-armed="true"] { opacity: 1; transform: none; }
+}
+
+/* ── FAQ accordion ──────────────────────────────────────────────────────────
+   height:auto cannot be transitioned, and measuring it in JS makes the panel
+   jump whenever the text reflows. A grid track can: 0fr -> 1fr interpolates
+   with no measured value and no layout thrash. */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.faq-item[open] .faq-answer { grid-template-rows: 1fr; }
+.faq-answer > * { min-height: 0; }
+
+/* The chevron and the card border follow the same curve so the whole control
+   reads as one movement rather than three. */
+.faq-item summary { transition: background-color 200ms ease; }
+.faq-item[open] summary { background: color-mix(in oklab, var(--surface-2) 60%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-answer { transition: none; }
+}
+
+/* ── Ledger reveal ──────────────────────────────────────────────────────────
+   Each row crosses the fold as a pair: the problem settles first, then the
+   line that cancels it arrives from the reading edge a beat later, so the
+   before/after relationship is carried by the motion, not just the arrow.
+
+   Driven by Reveal's own classes rather than new JS. The hidden state hangs
+   off `.reveal-armed`, which only exists once JS has run — so a no-JS visitor
+   or a crawler sees the finished row, never a blank one. Logical properties
+   throughout: in Arabic the fix must enter from the left. */
+.ledger-problem,
+.ledger-fix,
+.ledger-arrow {
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    scale 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.reveal-armed .ledger-problem { opacity: 0; translate: 0 14px; }
+.reveal-armed .ledger-fix { opacity: 0; translate: var(--fix-from, 28px) 0; }
+.reveal-armed .ledger-arrow { opacity: 0; scale: 0.7; }
+[dir="rtl"] .reveal-armed .ledger-fix { --fix-from: -28px; }
+
+/* The fix lands after the problem, and the arrow only once both have settled. */
+.reveal-in .ledger-fix { transition-delay: 150ms; }
+.reveal-in .ledger-arrow { transition-delay: 290ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger-problem,
+  .ledger-fix,
+  .ledger-arrow { transition: none; }
+  .reveal-armed .ledger-problem,
+  .reveal-armed .ledger-fix,
+  .reveal-armed .ledger-arrow { opacity: 1; translate: none; scale: 1; }
 }

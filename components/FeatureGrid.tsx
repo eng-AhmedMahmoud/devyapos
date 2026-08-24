@@ -38,7 +38,10 @@ export default function FeatureGrid({
       }
     >
       {items.map((f, i) => {
-        const wide = bento && (i === 0 || i === 5);
+        // 0, 5 and the LAST tile are double-width. Nine tiles with two wide
+        // ones fill eleven of twelve cells in a three-column grid, leaving one
+        // hole beside the final card; widening the last closes it exactly.
+        const wide = bento && (i === 0 || i === 5 || i === items.length - 1);
         return (
           <Reveal
             as="li"

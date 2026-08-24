@@ -53,6 +53,10 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
+      /* Dark is the brand's default, not the visitor's OS preference. The boot
+         script below still lets a stored choice win, and the toggle overwrites
+         this attribute at runtime. */
+      data-theme="dark"
       dir={locale === "ar" ? "rtl" : "ltr"}
       className={`${cairo.variable} ${baloo.variable} h-full antialiased`}
       suppressHydrationWarning

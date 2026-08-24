@@ -243,6 +243,20 @@ export interface SiteContent {
     items: { alt: string; caption: string }[];
   };
 
+  /** Copy for the four-second register recording on the home page. As with
+   *  `gallery`, the file paths are not translated and live in the manifest. */
+  promo: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    /** The stages the clip walks through, shown beneath the device. */
+    steps: string[];
+    /** Accessible description of the recording. */
+    alt: string;
+    /** Accessible name for the reduced-motion play button. */
+    play: string;
+  };
+
   featuresPage: {
     badge: string;
     title: string;

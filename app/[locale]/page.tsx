@@ -1,9 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
-import CaseStudy from "@/components/home/CaseStudy";
 import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import Ledger from "@/components/home/Ledger";
 import Marquee from "@/components/home/Marquee";
+import Promo from "@/components/home/Promo";
 import Showcase from "@/components/home/Showcase";
 import Testimonials from "@/components/home/Testimonials";
 import CtaBand from "@/components/CtaBand";
@@ -22,9 +22,9 @@ import CtaBand from "@/components/CtaBand";
  *   hero      — the promise
  *   marquee   — the scope, in one glance
  *   ledger    — each problem paired with the line that cancels it
+ *   promo     — four seconds of the register actually being operated
  *   features  — what actually does it
  *   showcase  — the product itself, so the claims stop being abstract
- *   caseStudy — proof, on numbers read from production
  *   testimonials — hides itself until real quotes exist
  *   cta       — the ask
  *
@@ -43,9 +43,9 @@ export default async function HomePage({
       <Hero />
       <Marquee />
       <Ledger />
+      <Promo />
       <Features />
       <Showcase />
-      <CaseStudy />
       <Testimonials />
       <CtaBand />
     </>

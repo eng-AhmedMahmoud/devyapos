@@ -54,6 +54,20 @@ export const SHOTS = {
   },
 } as const satisfies Record<string, Shot>;
 
+/**
+ * The promo recording. Kept here with the stills for one reason: the tablet
+ * frame sizes its glass from an aspect number, and an aspect that disagrees
+ * with the file letterboxes the clip exactly the way the hardcoded 4:3 used to
+ * letterbox the screenshots. 1450x840 is the capture viewport it was shot at.
+ */
+export const PROMO_CLIP = {
+  src: "/video/pos-demo.mp4",
+  poster: "/video/pos-demo-poster.webp",
+  width: 1450,
+  height: 840,
+  aspect: 1450 / 840,
+} as const;
+
 /** Lookup by path, so IpadFrame can size itself from `src` alone. */
 export const ASPECT_BY_SRC: Record<string, number> = Object.fromEntries(
   Object.values(SHOTS).map((s) => [s.src, s.aspect]),

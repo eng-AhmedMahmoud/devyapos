@@ -664,6 +664,15 @@ export const en: SiteContent = {
     ],
   },
 
+  promo: {
+    eyebrow: "Four seconds",
+    title: "A whole order, from first tap to receipt number",
+    sub: "Taken from the running system, not a mockup: pick the item, choose the size, take the cash, issue the number.",
+    steps: ["Pick the item", "Choose the size", "Take the cash", "Order number"],
+    alt: "Recording of the register: two items added, payment taken, order number issued",
+    play: "Play the recording",
+  },
+
   featuresPage: {
     badge: "Full capabilities",
     title: "Everything that runs your restaurant — in detail",

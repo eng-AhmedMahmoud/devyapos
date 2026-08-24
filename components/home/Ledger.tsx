@@ -40,7 +40,7 @@ export default async function Ledger() {
           {c.pain.items.map((item, i) => (
             <Reveal key={item.title} delay={i * 70}>
               <article className="card-flat grid gap-5 p-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
-                <div className="flex items-start gap-4">
+                <div className="ledger-problem flex items-start gap-4">
                   <span
                     className="icon-tile shrink-0"
                     style={{ ["--tile" as string]: "var(--danger)" }}
@@ -61,10 +61,10 @@ export default async function Ledger() {
                   width={20}
                   height={20}
                   aria-hidden="true"
-                  className="flip-rtl hidden shrink-0 text-caramel lg:block"
+                  className="ledger-arrow flip-rtl hidden shrink-0 text-caramel lg:block"
                 />
 
-                <div className="flex items-start gap-4 rounded-2xl bg-surface-2 p-4 lg:bg-transparent lg:p-0">
+                <div className="ledger-fix flex items-start gap-4 rounded-2xl bg-surface-2 p-4 lg:bg-transparent lg:p-0">
                   <Check
                     width={20}
                     height={20}

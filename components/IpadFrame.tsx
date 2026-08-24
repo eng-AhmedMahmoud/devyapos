@@ -1,24 +1,13 @@
 import Image from "next/image";
+import IpadShell from "@/components/IpadShell";
 import { ASPECT_BY_SRC, DIMS_BY_SRC } from "@/lib/screenshots";
-import type { CSSProperties } from "react";
 
 /**
  * iPad mockup — a real product screenshot dressed as a tablet.
  *
- * The device is drawn entirely from the house tokens (`--espresso` family,
- * `--on-espresso`, `--shadow-lift`), each of which is defined for both themes,
- * so the frame never branches on light/dark. The bezel highlight is an *inset*
- * ring against the device's own dark body rather than an outline against the
- * page, which is what keeps the mockup legible on a cream band, on the espresso
- * band, and on the dark theme alike.
- *
- * Geometry is expressed as `clamp(rem, %, rem)` against the component's own
- * width, so the bezel and corner radius stay proportional from a 320px phone up
- * to the desktop cap without a single breakpoint.
- *
- * RTL: nothing here is directional. The camera is centred with `justify-center`
- * inside a symmetric `inset-x-0` strip rather than a `start`/`left` offset, so
- * Arabic renders the identical device.
+ * The device chrome lives in `IpadShell`, shared with the promo clip so the two
+ * mockups cannot drift apart. This file is only concerned with getting the
+ * screenshot onto the glass at the ratio it was actually captured at.
  */
 
 export type IpadOrientation = "landscape" | "portrait";
@@ -91,97 +80,28 @@ export default function IpadFrame({
   const native = DIMS_BY_SRC[src] ?? NATIVE[orientation];
   const portrait = orientation === "portrait";
 
-  const deviceStyle = {
-    "--ipad-bezel": "clamp(0.5rem, 2.6%, 1.35rem)",
-    "--ipad-radius": "clamp(0.9rem, 4.4%, 2.1rem)",
-    padding: "var(--ipad-bezel)",
-    borderRadius: "var(--ipad-radius)",
-    // Warm anodised body: the espresso family reads as a device against both
-    // the cream page and the dark theme, where --espresso sits below --bg.
-    background:
-      "linear-gradient(157deg, var(--espresso-2) 0%, var(--espresso) 44%, var(--espresso-2) 100%)",
-    boxShadow: [
-      "var(--shadow-lift)",
-      // Machined edge highlight — measured against the body, not the page.
-      "inset 0 0 0 1px color-mix(in srgb, var(--on-espresso) 16%, transparent)",
-      "inset 0 1px 1px 0 color-mix(in srgb, var(--on-espresso) 26%, transparent)",
-      "inset 0 -1px 1px 0 rgba(0, 0, 0, 0.55)",
-    ].join(", "),
-  } as CSSProperties;
-
-  const screenStyle: CSSProperties = {
-    // Concentric with the body: the screen radius is the shell radius minus
-    // most of the bezel, floored so tiny frames keep a rounded corner.
-    borderRadius: "max(0.3rem, calc(var(--ipad-radius) - var(--ipad-bezel) * 0.8))",
-    background: "var(--espresso)",
-    boxShadow: "inset 0 0 0 1px rgba(0, 0, 0, 0.6)",
-  };
-
-  const cameraDot: CSSProperties = {
-    width: "clamp(0.2rem, 0.6%, 0.4rem)",
-    height: "clamp(0.2rem, 0.6%, 0.4rem)",
-    background:
-      "radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--on-espresso) 48%, transparent), rgba(0, 0, 0, 0.92) 76%)",
-    boxShadow: "0 0 0 1px color-mix(in srgb, var(--on-espresso) 12%, transparent)",
-  };
-
   return (
-    <div
-      className={`mx-auto w-full ${className}`.trim()}
-      style={{ maxWidth: maxWidth ?? MAX_WIDTH[orientation] }}
+    <IpadShell
+      className={className}
+      maxWidth={maxWidth ?? MAX_WIDTH[orientation]}
+      // Explicit prop wins; otherwise the manifest knows what this capture was
+      // actually shot at; 4:3 only as a last resort.
+      aspect={aspect ?? ASPECT_BY_SRC[src] ?? (portrait ? 3 / 4 : 4 / 3)}
     >
-      <div className="relative w-full" style={deviceStyle}>
-        {/* Front camera, centred in the top bezel in both writing directions. */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 flex justify-center"
-          style={{
-            top: "calc(var(--ipad-bezel) / 2)",
-            transform: "translateY(-50%)",
-          }}
-        >
-          <span className="block rounded-full" style={cameraDot} />
-        </span>
-
-        <div
-          className="relative w-full overflow-hidden"
-          style={{
-            ...screenStyle,
-            // Inline rather than a Tailwind aspect-[] class: the ratio comes
-            // from the capture at runtime, so it cannot be a static class name.
-            // Explicit prop wins; otherwise the manifest knows what this
-            // capture was actually shot at; 4:3 only as a last resort.
-            aspectRatio: String(
-              aspect ?? ASPECT_BY_SRC[src] ?? (portrait ? 3 / 4 : 4 / 3),
-            ),
-          }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            width={native.width}
-            height={native.height}
-            sizes={sizes ?? SIZES[orientation]}
-            priority={priority}
-            quality={quality}
-            /* `contain`, not `cover`. A capture whose aspect is not exactly
-               4:3 gets letterboxed against the screen fill rather than having
-               its edges sliced off — losing a sidebar or a totals column is
-               far worse on a product screenshot than a thin margin. */
-            className="h-full w-full object-contain"
-          />
-          {/* Glass sheen. Decorative only, and kept faint enough that dense UI
-              text underneath stays readable. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(154deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.03) 20%, transparent 44%)",
-            }}
-          />
-        </div>
-      </div>
-    </div>
+      <Image
+        src={src}
+        alt={alt}
+        width={native.width}
+        height={native.height}
+        sizes={sizes ?? SIZES[orientation]}
+        priority={priority}
+        quality={quality}
+        /* `contain`, not `cover`. A capture whose aspect is not exactly 4:3
+           gets letterboxed against the screen fill rather than having its
+           edges sliced off — losing a sidebar or a totals column is far worse
+           on a product screenshot than a thin margin. */
+        className="h-full w-full object-contain"
+      />
+    </IpadShell>
   );
 }
