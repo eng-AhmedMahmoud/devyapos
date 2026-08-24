@@ -39,7 +39,7 @@ export default async function Ledger() {
 
           {c.pain.items.map((item, i) => (
             <Reveal key={item.title} delay={i * 70}>
-              <article className="card-flat grid gap-5 p-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
+              <article className="card-flat ledger-row grid gap-5 p-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
                 <div className="ledger-problem flex items-start gap-4">
                   <span
                     className="icon-tile shrink-0"

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
-import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
+import { mailtoLink, telLink, whatsappLink } from "@/lib/brand";
 import { buildMetadata } from "@/lib/meta";
 import ContactForm from "@/components/ContactForm";
 import Faq from "@/components/Faq";
@@ -81,47 +81,6 @@ export default async function ContactPage({
                     </span>
                   </a>
                 ))}
-                {/* The concrete details, spelled out — a visitor should be
-                    able to read the number and the inbox without clicking. */}
-                <dl className="card-flat mt-2 flex flex-col gap-3 p-5 text-sm">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-ink-dim">{c.contact.channels.items[1].title}</dt>
-                    <dd>
-                      <a
-                        href={telLink}
-                        dir="ltr"
-                        className="font-semibold text-brand transition-colors hover:text-caramel"
-                      >
-                        {brand.phoneDisplay}
-                      </a>
-                    </dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-ink-dim">{c.contact.channels.items[2].title}</dt>
-                    <dd>
-                      <a
-                        href={mailtoLink(c.meta.contact.title)}
-                        dir="ltr"
-                        className="font-semibold text-brand transition-colors hover:text-caramel"
-                      >
-                        {brand.email}
-                      </a>
-                    </dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
-                    <dt className="text-ink-dim">{c.footer.madeBy}</dt>
-                    <dd>
-                      <a
-                        href={brand.parent.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-semibold text-brand transition-colors hover:text-caramel"
-                      >
-                        {brand.parent.name}
-                      </a>
-                    </dd>
-                  </div>
-                </dl>
               </div>
             </Reveal>
           </div>

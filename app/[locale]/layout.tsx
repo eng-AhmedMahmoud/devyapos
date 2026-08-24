@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Baloo_Bhaijaan_2, Cairo } from "next/font/google";
+import {
+  Baloo_Bhaijaan_2,
+  Cairo,
+  Fraunces,
+  Schibsted_Grotesk,
+} from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -26,6 +31,37 @@ const baloo = Baloo_Bhaijaan_2({
   display: "swap",
 });
 
+/* Latin-only pair, used on the English side of the site: Fraunces for display
+   and Schibsted Grotesk for body — the same combination as the Oz Puzzle site.
+   Cairo and Baloo are competent in Latin but they are Arabic faces first, and
+   English set in them reads a little generic; Fraunces gives the headlines an
+   actual voice.
+
+   These CANNOT replace the Arabic pair — neither family ships Arabic glyphs, so
+   applying them site-wide would silently drop every Arabic headline back to a
+   system fallback. `globals.css` swaps between the two pairs on `html[lang]`,
+   and all four variables are attached below so the swap is a variable lookup
+   rather than a conditional font load. */
+/* `preload: false` because next/font emits its preload hints per ROUTE, from
+   the font calls in the module graph — not from which className is actually
+   rendered. With it on, every Arabic page (the default locale, so most of the
+   traffic) fetched both Latin files to style nothing. Without the hint the
+   @font-face still resolves the moment English matches it; the only cost is
+   that English requests them a beat later, which `display: "swap"` covers. */
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -50,6 +86,15 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  /* Arabic pages never attach the Latin pair — there is nothing for it to set,
+     and it would be two font files fetched to style nothing. English keeps the
+     Arabic pair attached as a fallback, because English pages still carry
+     Arabic strings (the brand name, the odd product term). */
+  const fontVars =
+    locale === "ar"
+      ? `${cairo.variable} ${baloo.variable}`
+      : `${schibsted.variable} ${fraunces.variable} ${cairo.variable} ${baloo.variable}`;
+
   return (
     <html
       lang={locale}
@@ -58,7 +103,7 @@ export default async function LocaleLayout({
          this attribute at runtime. */
       data-theme="dark"
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${cairo.variable} ${baloo.variable} h-full antialiased`}
+      className={`${fontVars} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
