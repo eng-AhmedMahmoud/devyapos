@@ -5,6 +5,7 @@ import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import FeatureGrid from "@/components/FeatureGrid";
 import PageHero from "@/components/PageHero";
+import PaymentProviders from "@/components/PaymentProviders";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
 import { SHOTS } from "@/lib/screenshots";
 import Reveal from "@/components/Reveal";
@@ -101,6 +102,8 @@ export default async function FeaturesPage({
           </div>
         </Container>
       </section>
+
+      <PaymentProviders />
 
       <CtaBand />
     </>

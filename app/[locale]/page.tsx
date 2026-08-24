@@ -1,4 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
+import BrandPromise from "@/components/home/BrandPromise";
 import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import Ledger from "@/components/home/Ledger";
@@ -25,6 +26,7 @@ import CtaBand from "@/components/CtaBand";
  *   promo     — four seconds of the register actually being operated
  *   features  — what actually does it
  *   showcase  — the product itself, so the claims stop being abstract
+ *   promise   — and it gets fitted to your brand, not licensed as-is
  *   testimonials — hides itself until real quotes exist
  *   cta       — the ask
  *
@@ -46,6 +48,7 @@ export default async function HomePage({
       <Promo />
       <Features />
       <Showcase />
+      <BrandPromise />
       <Testimonials />
       <CtaBand />
     </>

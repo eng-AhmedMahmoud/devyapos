@@ -145,6 +145,22 @@ export interface SiteContent {
       branches: string;
     };
     hints: { orders: string; aov: string; commission: string; branches: string };
+    /** Tooltip copy — one per input and per result figure. */
+    tips: {
+      orders: string;
+      aov: string;
+      commission: string;
+      branches: string;
+      paid: string;
+      recovered: string;
+      cost: string;
+      net: string;
+      payback: string;
+    };
+    /** Caption under the commission presets. */
+    rateNote: string;
+    /** Restates the inputs. Interpolates {orders}. */
+    summary: string;
     results: {
       paid: string;
       recovered: string;
@@ -152,6 +168,8 @@ export interface SiteContent {
       net: string;
       payback: string;
       paybackUnit: string;
+      /** Shown instead of a day count when the recovery never covers the cost. */
+      paybackNone: string;
     };
     assumption: string;
     note: string;
@@ -255,6 +273,26 @@ export interface SiteContent {
     alt: string;
     /** Accessible name for the reduced-motion play button. */
     play: string;
+  };
+
+  /** Payment gateways, and which are integrated versus wired up on request. */
+  payments: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    liveLabel: string;
+    onRequestLabel: string;
+    /** `live: true` means shipping today; false means built during onboarding. */
+    providers: { name: string; live: boolean }[];
+    note: string;
+  };
+
+  /** The positioning line: a fitted experience, not an off-the-shelf system. */
+  promise: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    items: { title: string; body: string }[];
   };
 
   featuresPage: {

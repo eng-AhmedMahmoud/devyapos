@@ -76,7 +76,7 @@ export const en: SiteContent = {
     "Delivery zones",
     "Shifts and cash drawer",
     "Food-cost reporting",
-    "Paymob and cash",
+    "Online payments and cash",
     "Unlimited branches",
     "Arabic and English",
   ],
@@ -178,7 +178,7 @@ export const en: SiteContent = {
       {
         icon: "pay",
         title: "Payments built for Egypt",
-        body: "Paymob (Intention API + Unified Checkout) for cards, cash on pickup or delivery, and HMAC-verified webhooks.",
+        body: "Card payments through your Egyptian gateway — Paymob is live today, and Fawry, Kashier, Geidea, OPay or PayTabs get wired to your account on request. Plus cash on pickup or delivery, and HMAC-verified webhooks.",
         badge: "EGP + 14% VAT",
         hue: "blue",
       },
@@ -268,7 +268,7 @@ export const en: SiteContent = {
       {
         n: "02",
         title: "We wire branches and payments",
-        body: "Each branch with its stock, delivery zones, printer and staff. Your Paymob account gets connected and tested with a real order.",
+        body: "Each branch with its stock, delivery zones, printer and staff. Your payment gateway account gets connected and tested with a real order.",
       },
       {
         n: "03",
@@ -297,7 +297,7 @@ export const en: SiteContent = {
       { label: "Food-cost reporting", us: true, them: false },
       { label: "Delivery zones and fees", us: true, them: false },
       { label: "Multi-branch with separate stock", us: true, them: "partial" },
-      { label: "Paymob + cash on pickup", us: true, them: true },
+      { label: "Online payments + cash on pickup", us: true, them: true },
       { label: "Full bilingual RTL", us: true, them: true },
       { label: "On-premise or your-own-server hosting", us: true, them: false },
       { label: "Menu and data migration", us: "Free", them: "Paid" },
@@ -314,8 +314,8 @@ export const en: SiteContent = {
     title: "How much commission do you pay a year?",
     sub: "Move the numbers to match your restaurant, and see the difference if those orders arrived on your own site.",
     fields: {
-      orders: "Monthly orders via aggregators",
-      aov: "Average order value (EGP)",
+      orders: "Delivery orders per branch",
+      aov: "Average order value",
       commission: "Aggregator commission",
       branches: "Number of branches",
     },
@@ -325,6 +325,23 @@ export const en: SiteContent = {
       commission: "%",
       branches: "branches",
     },
+    tips: {
+      orders:
+        "Orders one branch takes through Talabat, Elmenus or Breadfast in a month — not the whole chain. A busy branch is usually somewhere between 300 and 1,200.",
+      aov: "The average bill on a delivery order, before the aggregator's cut. Take last month's delivery revenue and divide it by the number of delivery orders.",
+      commission:
+        "The cut the aggregator keeps on every order. Egyptian restaurants are typically quoted between 15% and 25%, depending on volume, area, and whether you list exclusively.",
+      branches: "Branches you would run on Sufra. Pricing is per branch, so this drives the cost side.",
+      paid: "Orders per branch x branches x average order value x commission, over twelve months.",
+      recovered:
+        "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
+      cost: "399 EGP per branch per month on the Growth plan, for twelve months.",
+      net: "Recovered commission minus what Sufra costs you. This is the number that matters.",
+      payback:
+        "How long the recovered commission takes to cover a full year of Sufra. Shorter is better.",
+    },
+    rateNote: "Typical range quoted to Egyptian restaurants.",
+    summary: "That is {orders} delivery orders a month across the whole chain.",
     results: {
       paid: "Commission you pay per year",
       recovered: "Recovered if 30% shift to your own site",
@@ -332,6 +349,7 @@ export const en: SiteContent = {
       net: "Net saving per year",
       payback: "You break even in",
       paybackUnit: "days",
+      paybackNone: "Not at these numbers",
     },
     assumption:
       "The math assumes only 30% of aggregator orders move to your direct channel — a conservative figure once loyalty and notifications are running.",
@@ -386,7 +404,7 @@ export const en: SiteContent = {
           "Full POS + shifts and drawer",
           "Live kitchen display (KDS)",
           "Zoned delivery with fees",
-          "Paymob + cash + coupons",
+          "Online payments + cash + coupons",
           "Loyalty, points and tiers",
           "Customer notifications and campaigns",
           "Sales and staff reporting",
@@ -673,6 +691,43 @@ export const en: SiteContent = {
     play: "Play the recording",
   },
 
+  payments: {
+    eyebrow: "Payments",
+    title: "Take money the way Egypt actually pays",
+    sub: "Cards, wallets, instalments and cash — through the gateway you already have a contract with, into the same reports as everything else.",
+    liveLabel: "Live today",
+    onRequestLabel: "Connected on request",
+    providers: [
+      { name: "Paymob", live: true },
+      { name: "Fawry", live: false },
+      { name: "Kashier", live: false },
+      { name: "Geidea", live: false },
+      { name: "OPay", live: false },
+      { name: "PayTabs", live: false },
+    ],
+    note: "Paymob ships integrated — Intention API, Unified Checkout and HMAC-verified webhooks. The others we connect to your own merchant account as part of onboarding, because we wrote the payment layer and can extend it. Cash on pickup and delivery is always supported and lands in the same daily report.",
+  },
+
+  promise: {
+    eyebrow: "How we work",
+    title: "We don't sell you a system. We build the experience your brand runs on.",
+    sub: "Sufra is the foundation. What your customer actually sees is yours — your name, your colours, your menu, your flow. Every deployment is fitted to the restaurant instead of the restaurant being fitted to the software.",
+    items: [
+      {
+        title: "Your brand, never ours",
+        body: "The ordering site, the receipt, the loyalty tiers and the notifications all carry your name. Our name appears nowhere your customer looks.",
+      },
+      {
+        title: "Fitted to how you already work",
+        body: "Your menu structure, your delivery zones, your shift rules, your printer layout. We shape the system around the operation you have, not a template you have to move into.",
+      },
+      {
+        title: "Missing something? We build it",
+        body: "A gateway, a report, an integration with the accounting system you already use. We are the team that wrote the code, so it gets built — not filed as a feature request behind someone else's roadmap.",
+      },
+    ],
+  },
+
   featuresPage: {
     badge: "Full capabilities",
     title: "Everything that runs your restaurant — in detail",
@@ -786,8 +841,8 @@ export const en: SiteContent = {
         items: [
           {
             icon: "pay",
-            title: "Paymob",
-            body: "Intention API and Unified Checkout, with HMAC-verified confirmation webhooks.",
+            title: "Online payments",
+            body: "Paymob is live today with Intention API, Unified Checkout and HMAC-verified webhooks. Already on Fawry, Kashier, Geidea, OPay or PayTabs? We connect yours during onboarding.",
             badge: "Cards",
             hue: "blue",
           },
