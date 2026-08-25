@@ -33,14 +33,15 @@ export const brand = {
   parent: { name: "Devya Solutions", url: "https://devya.dev" },
   /** The flagship reference deployment this whole platform was proven on. */
   flagship: { name: { ar: "بوهَب", en: "BóHub" }, url: "https://bohubegy.com" },
-  social: {
-    instagram: "https://instagram.com/",
-    linkedin: "https://linkedin.com/",
-  },
-  /** Where the CTAs point. Swap for the real dashboard once it ships. */
-  signupUrl: "/ar/contact",
-  loginUrl: "/ar/contact",
-  demoUrl: "https://bohub-c4.vercel.app",
+  /*
+   * Removed rather than left dangling: `social` held bare instagram.com /
+   * linkedin.com placeholders, `signupUrl` and `loginUrl` duplicated the
+   * /contact route the nav already links, and `demoUrl` pointed the hero's
+   * "See it running" button at a C4 architecture diagram. None of the four
+   * had a live consumer once the hero moved to the on-page #promo recording.
+   * The architecture diagram still lives at https://bohub-c4.vercel.app if it
+   * is ever wanted somewhere the label actually fits.
+   */
 } as const;
 
 /** wa.me link with a prefilled, locale-aware first message. */

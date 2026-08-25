@@ -1,7 +1,6 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand } from "@/lib/brand";
 import { Arrow, Check } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
@@ -57,12 +56,11 @@ export default async function Hero() {
                 {c.hero.ctaPrimary}
                 <Arrow width={18} height={18} className="flip-rtl" />
               </Link>
-              <a
-                href={brand.demoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-ghost"
-              >
+              {/* "See it running" scrolls to the register recording further
+                  down this page. It used to open a C4 architecture diagram in
+                  a new tab — a system design document is not the system
+                  running, and the label was promising something else. */}
+              <a href="#promo" className="btn btn-ghost">
                 {c.hero.ctaSecondary}
               </a>
             </div>

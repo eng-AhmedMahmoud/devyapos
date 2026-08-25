@@ -25,7 +25,11 @@ export default async function Promo() {
   const c = getContent(locale);
 
   return (
-    <section className="band-espresso pearl-grid-dark border-y border-espresso-line py-20 sm:py-24">
+    <section
+      /* The hero's "See it running" CTA lands here. */
+      id="promo"
+      className="band-espresso pearl-grid-dark border-y border-espresso-line py-20 sm:py-24"
+    >
       <Container>
         <Reveal>
           <div className="flex flex-col items-center gap-2 text-center">
