@@ -4,6 +4,7 @@ import { getContent } from "@/content";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import Faq from "@/components/Faq";
+import MarketAnchor from "@/components/MarketAnchor";
 import PageHero from "@/components/PageHero";
 import Pricing from "@/components/Pricing";
 
@@ -37,6 +38,8 @@ export default async function PricingPage({
       <div className="bg-bg pt-10 pb-20 sm:pb-24">
         <Pricing compact />
       </div>
+      <MarketAnchor />
+
       <Faq />
       <CtaBand />
     </>

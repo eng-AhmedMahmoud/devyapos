@@ -1,19 +1,26 @@
 /**
  * Single source of truth for the SaaS brand.
  *
- * The platform in this monorepo was built for BóHub (a real 10-branch Egyptian
- * chain). Sufra is the productised version of that platform sold to other
- * restaurants — a sister brand under Devya, so it follows the house convention
- * of `https://<brand>.dev` + `hello@<brand>.dev`.
+ * The platform in this monorepo was built for BóHub (a real 25-branch Egyptian
+ * chain). DevyaPOS is the productised version of that platform sold to other
+ * restaurants.
+ *
+ * It is named as a Devya product rather than a sister brand, so it lives on a
+ * subdomain of the studio's own `devya.dev` instead of taking a new `.dev`
+ * registration. Note the house rule: the company is Devya Solutions but the
+ * domain is devya.dev, never devya.solutions.
+ *
+ * The wordmark is Latin in both locales. Arabic copy writes "DevyaPOS" inline,
+ * which is how Latin product names are normally set in Arabic technical prose.
  *
  * Rename the product here and the whole site follows.
  */
 export const brand = {
-  name: { ar: "سُفرة", en: "Sufra" },
+  name: { ar: "DevyaPOS", en: "DevyaPOS" },
   /** Latin wordmark — used in the logo lockup in both locales. */
-  wordmark: "Sufra",
-  domain: "sufra.dev",
-  url: "https://sufra.dev",
+  wordmark: "DevyaPOS",
+  domain: "pos.devya.dev",
+  url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
   /** E.164, no plus — used to build wa.me deep links and tel: hrefs. */
   whatsapp: "201055930032",

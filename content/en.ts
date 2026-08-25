@@ -4,37 +4,37 @@ import type { SiteContent } from "./types";
 export const en: SiteContent = {
   meta: {
     home: {
-      title: "Sufra | The restaurant OS — register, kitchen, online, stock",
+      title: "DevyaPOS | The restaurant OS — register, kitchen, online, stock",
       description:
         "One system runs the whole restaurant: POS, live kitchen display, your own online ordering, loyalty, and recipe-costed inventory. Bilingual AR/EN, EGP-native, multi-branch.",
     },
     features: {
-      title: "Features | Sufra",
+      title: "Features | DevyaPOS",
       description:
-        "Everything Sufra runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
+        "Everything DevyaPOS runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
     },
     pricing: {
-      title: "Pricing | Sufra",
+      title: "Pricing | DevyaPOS",
       description:
         "A 14-day free trial, and Growth at 399 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
     about: {
-      title: "About Sufra | Why we built this",
+      title: "About DevyaPOS | Why we built this",
       description:
-        "Sufra was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
+        "DevyaPOS was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
     howItWorks: {
-      title: "How it works | Sufra",
+      title: "How it works | DevyaPOS",
       description:
         "One order, four screens: register or phone to kitchen display in under a second, stock deducting itself, and the cost report ready at close. Plus what it takes to switch.",
     },
     compare: {
-      title: "Sufra vs enterprise POS platforms | Pricing compared",
+      title: "DevyaPOS vs enterprise POS platforms | Pricing compared",
       description:
         "Enterprise restaurant platforms bill per terminal and charge again per module. See the feature-by-feature comparison, and work out what aggregator commission is costing you a year.",
     },
     contact: {
-      title: "Contact | Sufra",
+      title: "Contact | DevyaPOS",
       description:
         "Book a 15-minute demo or message us on WhatsApp. We load your menu and migrate your data for free.",
     },
@@ -86,7 +86,7 @@ export const en: SiteContent = {
     title: "The restaurant is busy — so where is the profit going?",
     sub: "This was never a menu problem. Every part of your restaurant is running on its own — and each of these has exactly one line that cancels it.",
     beforeLabel: "Today",
-    afterLabel: "With Sufra",
+    afterLabel: "With DevyaPOS",
     items: [
       {
         icon: "coins",
@@ -117,7 +117,7 @@ export const en: SiteContent = {
 
   bridge: {
     eyebrow: "The fix",
-    title: "Sufra connects the register, the kitchen, the storefront and the stockroom",
+    title: "DevyaPOS connects the register, the kitchen, the storefront and the stockroom",
     sub: "An order enters from anywhere — register, a customer's phone, or delivery — hits the kitchen screen in under a second, deducts its ingredients from that branch's stock, and lands in the cost report at close. Nobody re-types anything.",
     chips: [
       "One order",
@@ -282,8 +282,8 @@ export const en: SiteContent = {
   compare: {
     eyebrow: "Comparison",
     title: "Enterprise power, without the enterprise invoice",
-    sub: "The big platforms — Foodics and the like — do the job, then bill per terminal and charge again for each module. Sufra gives you the whole system for a flat price per branch, and the parts you need changed, we change.",
-    us: "Sufra",
+    sub: "The big platforms — Foodics and the like — do the job, then bill per terminal and charge again for each module. DevyaPOS gives you the whole system for a flat price per branch, and the parts you need changed, we change.",
+    us: "DevyaPOS",
     them: "Enterprise POS platforms",
     rows: [
       { label: "Digital QR menu", us: true, them: true },
@@ -306,7 +306,7 @@ export const en: SiteContent = {
       { label: "Billing model", us: "Flat, per branch", them: "Per terminal + modules" },
       { label: "Price per branch per month", us: "399 EGP", them: "Quote only" },
     ],
-    note: "Sufra's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
+    note: "DevyaPOS's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
   },
 
   roi: {
@@ -331,21 +331,21 @@ export const en: SiteContent = {
       aov: "The average bill on a delivery order, before the aggregator's cut. Take last month's delivery revenue and divide it by the number of delivery orders.",
       commission:
         "The cut the aggregator keeps on every order. Egyptian restaurants are typically quoted between 15% and 25%, depending on volume, area, and whether you list exclusively.",
-      branches: "Branches you would run on Sufra. Pricing is per branch, so this drives the cost side.",
+      branches: "Branches you would run on DevyaPOS. Pricing is per branch, so this drives the cost side.",
       paid: "Orders per branch x branches x average order value x commission, over twelve months.",
       recovered:
         "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
       cost: "399 EGP per branch per month on the Growth plan, for twelve months.",
-      net: "Recovered commission minus what Sufra costs you. This is the number that matters.",
+      net: "Recovered commission minus what DevyaPOS costs you. This is the number that matters.",
       payback:
-        "How long the recovered commission takes to cover a full year of Sufra. Shorter is better.",
+        "How long the recovered commission takes to cover a full year of DevyaPOS. Shorter is better.",
     },
     rateNote: "Typical range quoted to Egyptian restaurants.",
     summary: "That is {orders} delivery orders a month across the whole chain.",
     results: {
       paid: "Commission you pay per year",
       recovered: "Recovered if 30% shift to your own site",
-      cost: "Sufra cost per year",
+      cost: "DevyaPOS cost per year",
       net: "Net saving per year",
       payback: "You break even in",
       paybackUnit: "days",
@@ -359,8 +359,8 @@ export const en: SiteContent = {
 
   caseStudy: {
     eyebrow: "Our first client, still our toughest",
-    title: "Sufra isn't slideware — 25 branches run on it daily",
-    body: "BóHub was the first chain to put Sufra on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
+    title: "DevyaPOS isn't slideware — 25 branches run on it daily",
+    body: "BóHub was the first chain to put DevyaPOS on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
     stats: [
       { value: "25", label: "live branches" },
       { value: "249", label: "products" },
@@ -372,7 +372,7 @@ export const en: SiteContent = {
 
   testimonials: {
     eyebrow: "Customer stories",
-    title: "Restaurant owners on Sufra",
+    title: "Restaurant owners on DevyaPOS",
     // Intentionally empty until real, signed customer quotes exist —
     // the section hides itself while this array is empty.
     items: [],
@@ -447,6 +447,17 @@ export const en: SiteContent = {
         cta: "Book a call",
       },
     ],
+    marketAnchor: {
+      title: "What the market charges",
+      sub: "Published Egyptian pricing, as of August 2026. Compare per branch, per month.",
+      rows: [
+        { name: "Foodics — Starter", price: "1,506 EGP", note: "Billed quarterly or annually; hardware separate" },
+        { name: "Foodics — Basic", price: "2,582 EGP", note: "Loyalty and delivery integrations cost extra" },
+        { name: "Foodics — Advanced", price: "3,442 EGP", note: "Top published tier" },
+        { name: "DevyaPOS — Growth", price: "399 EGP", note: "The whole system, every module included", ours: true },
+      ],
+      note: "Competitor figures are their own published Egyptian prices at the date above and may change — check them yourself before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
+    },
     note: "Prices are in EGP per branch, excluding VAT. The trial runs 14 days with every feature and no credit card. Change or cancel any time, and export all of your data before you go.",
     founding: "Founding offer: the first 50 restaurants lock this price for the life of their subscription.",
   },
@@ -540,15 +551,15 @@ export const en: SiteContent = {
   },
 
   about: {
-    badge: "About Sufra",
+    badge: "About DevyaPOS",
     title: "Built inside a restaurant — not inside a meeting",
-    sub: "Every feature in Sufra came out of something that went wrong during a real shift, in a real branch, at peak hour.",
+    sub: "Every feature in DevyaPOS came out of something that went wrong during a real shift, in a real branch, at peak hour.",
     storyTitle: "The story",
     story: [
       "It started as one project: build a complete system for an Egyptian bubble-tea chain with ten branches. Not a QR menu, not an ordering page — the whole thing: register, kitchen display, storefront, inventory and reporting.",
       "The moment it went into the branches, the real problem became obvious. It was never any single tool. It was that the market sells restaurants pieces: a menu tool, a loyalty tool, register software, and a spreadsheet for stock. Each piece works alone and they contradict each other together.",
       "What we learned there — that money must be stored as whole piasters, that Arabic has to be a first-class language rather than a translation, that an order must reach the kitchen in under a second, and that every cup needs a known cost — became the product's principles.",
-      "Sufra is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 25 branches right now.",
+      "DevyaPOS is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 25 branches right now.",
     ],
     principlesTitle: "The principles we build on",
     principlesSub: "Engineering decisions made once that protect you every day.",
@@ -608,7 +619,7 @@ export const en: SiteContent = {
       {
         n: "03",
         title: "Turned into a product",
-        body: "The same system was decoupled from one brand and became a platform any restaurant can run the same day — Sufra.",
+        body: "The same system was decoupled from one brand and became a platform any restaurant can run the same day — DevyaPOS.",
       },
     ],
     plansTitle: "The plans, briefly",
@@ -616,7 +627,7 @@ export const en: SiteContent = {
       "Growth for a working restaurant, Scale for when margin becomes the game, Enterprise for chains — all of them starting with a 14-day trial.",
     builtByTitle: "Who builds it",
     builtByBody:
-      "Sufra is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
+      "DevyaPOS is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
     builtByCta: "devya.dev",
     ctaTitle: "Want to see it on your own menu?",
     ctaBody:
@@ -664,13 +675,13 @@ export const en: SiteContent = {
         },
       ],
     },
-    waTemplate: "Hi Sufra! I'd like to know more about the system for my restaurant.",
+    waTemplate: "Hi DevyaPOS! I'd like to know more about the system for my restaurant.",
   },
 
   gallery: {
     eyebrow: "The real thing",
     title: "Screens from a live deployment",
-    sub: "Not renders. These are captures from the BóHub chain running Sufra across 25 branches.",
+    sub: "Not renders. These are captures from the BóHub chain running DevyaPOS across 25 branches.",
     items: [
       { alt: "Taking an order on the register", caption: "The register: a live ticket, sizes and totals as you tap" },
       { alt: "The kitchen display screen", caption: "Kitchen display: every ticket, with a delay counter running" },
@@ -711,7 +722,7 @@ export const en: SiteContent = {
   promise: {
     eyebrow: "How we work",
     title: "We don't sell you a system. We build the experience your brand runs on.",
-    sub: "Sufra is the foundation. What your customer actually sees is yours — your name, your colours, your menu, your flow. Every deployment is fitted to the restaurant instead of the restaurant being fitted to the software.",
+    sub: "DevyaPOS is the foundation. What your customer actually sees is yours — your name, your colours, your menu, your flow. Every deployment is fitted to the restaurant instead of the restaurant being fitted to the software.",
     items: [
       {
         title: "Your brand, never ours",

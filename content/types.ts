@@ -194,6 +194,17 @@ export interface SiteContent {
     per: string;
     perBranch: string;
     plans: Plan[];
+    /**
+     * Published competitor pricing, so "affordable" is a number a visitor can
+     * check rather than a claim. Dated and hedged in `note` on purpose — these
+     * are someone else's prices and they move.
+     */
+    marketAnchor: {
+      title: string;
+      sub: string;
+      rows: { name: string; price: string; note: string; ours?: boolean }[];
+      note: string;
+    };
     note: string;
     founding: string;
     compareLink: string;

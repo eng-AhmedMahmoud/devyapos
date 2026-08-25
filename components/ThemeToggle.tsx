@@ -3,7 +3,10 @@
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
-export const THEME_KEY = "sufra-theme";
+/* Renamed with the product. A visitor who had stored a preference under
+   the old key falls back to the dark default once, then re-stores under this
+   one — acceptable because dark is the default the site now ships. */
+export const THEME_KEY = "devyapos-theme";
 
 /**
  * Inlined in <head> so the stored theme is applied before first paint.

@@ -4,7 +4,7 @@ import { Container } from "@/components/Section";
 import Reveal from "@/components/Reveal";
 
 /**
- * The payment gateways a restaurant can run through Sufra.
+ * The payment gateways a restaurant can run through DevyaPOS.
  *
  * Two statuses, kept visually distinct on purpose. Paymob is integrated and
  * shipping; the rest are gateways we wire to your account during onboarding.
