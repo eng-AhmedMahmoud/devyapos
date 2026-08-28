@@ -26,14 +26,10 @@
 export const PRODUCT_MEDIA_AVAILABLE = true;
 
 /**
- * The register recording, tracked separately from the stills.
- *
- * The screenshots have been re-captured from the demo tenant, but the clip has
- * not been re-recorded yet — and the old one is gone, so leaving the Promo
- * section on would render a broken <video>. Record a replacement from the demo
- * tenant, restore public/video/, then flip this.
+ * The register recording, tracked separately from the stills so either can
+ * ship without the other. Both are now captured from the demo tenant.
  */
-export const PROMO_CLIP_AVAILABLE = false;
+export const PROMO_CLIP_AVAILABLE = true;
 
 export interface Shot {
   src: string;
