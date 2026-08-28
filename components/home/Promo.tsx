@@ -4,7 +4,7 @@ import { Container } from "@/components/Section";
 import IpadVideo from "@/components/IpadVideo";
 import Reveal from "@/components/Reveal";
 import ScrollLift from "@/components/ScrollLift";
-import { PRODUCT_MEDIA_AVAILABLE, PROMO_CLIP } from "@/lib/screenshots";
+import { PROMO_CLIP, PROMO_CLIP_AVAILABLE } from "@/lib/screenshots";
 
 /**
  * The four-second register recording, on one deliberately oversized tablet.
@@ -21,9 +21,9 @@ import { PRODUCT_MEDIA_AVAILABLE, PROMO_CLIP } from "@/lib/screenshots";
  * have that problem, and the extra width is what buys the attention.
  */
 export default async function Promo() {
-  // Register recording withdrawn pending neutral demo captures — see
-  // PRODUCT_MEDIA_AVAILABLE in lib/screenshots.ts.
-  if (!PRODUCT_MEDIA_AVAILABLE) return null;
+  // The stills are back from the demo tenant but the clip is not
+  // re-recorded yet — see PROMO_CLIP_AVAILABLE in lib/screenshots.ts.
+  if (!PROMO_CLIP_AVAILABLE) return null;
 
   const locale = await getLocale();
   const c = getContent(locale);

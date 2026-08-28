@@ -1,34 +1,39 @@
 /**
  * Product screenshots, with the aspect each was actually captured at.
  *
- * A browser window does not hand back a tidy 4:3, and the captures here range
- * from a 16:9-ish 1480x811 to a portrait 1032x1376. An earlier pass forced them
- * all to 4:3 with `sips -c`, which CROPS AND PADS rather than scales — it
- * sliced the sidebar off the admin console and added black bars top and bottom.
+ * A browser window does not hand back a tidy ratio, so images ship at their
+ * native aspect and the device frame adopts it. Every consumer reads the ratio
+ * from here rather than hardcoding one — an earlier pass forced everything to
+ * 4:3, which cropped the sidebar off the admin console.
  *
- * So the images are shipped at their native aspect and the device frame adopts
- * it. Every consumer reads the ratio from here rather than hardcoding one, so
- * adding a capture at a new size cannot silently reintroduce the cropping.
- *
- * The `-v2` suffix is deliberate. A previous deploy shipped different bytes at
- * the same paths, and Next serves optimised images from an immutable-cached
- * URL keyed on the source path — a returning visitor would keep the old,
- * cropped copy indefinitely. Renaming the file is the only reliable bust.
+ * The `-demo` suffix is doing real work. Next serves optimised images from an
+ * immutable-cached URL keyed on the source path, so shipping different bytes at
+ * an old path leaves returning visitors on the previous image forever. These
+ * paths differ from the withdrawn client captures, which busts that cache.
  */
 /**
  * Whether product media may be shown at all.
  *
- * Set to false on 2026-08-28: every screenshot and the register recording were
- * captured from the BóHub deployment and carry that client's logo, name and
- * menu. The client asked that their brand not appear in our marketing, so the
- * media was withdrawn the same day and the files removed from the repo.
+ * Turned back on 2026-08-29. The original captures came from a client
+ * deployment and carried that client's logo, name and menu; they were
+ * withdrawn at the client's request and are gone from the repo.
  *
- * Replacements are being captured from a neutral demo tenant that runs the
- * same build. When those land, restore the files under public/screenshots and
- * public/video, flip this to true, and the gated sections come back unchanged
- * — Showcase, Promo and the /features gallery all read this flag.
+ * Everything here is now captured from the neutral DevyaPOS Demo tenant,
+ * which runs this same build against fictional data. That is the standing
+ * rule: marketing media comes from the demo tenant, never from a client's
+ * deployment. See docs/guides/white-label.md in the platform monorepo.
  */
-export const PRODUCT_MEDIA_AVAILABLE = false;
+export const PRODUCT_MEDIA_AVAILABLE = true;
+
+/**
+ * The register recording, tracked separately from the stills.
+ *
+ * The screenshots have been re-captured from the demo tenant, but the clip has
+ * not been re-recorded yet — and the old one is gone, so leaving the Promo
+ * section on would render a broken <video>. Record a replacement from the demo
+ * tenant, restore public/video/, then flip this.
+ */
+export const PROMO_CLIP_AVAILABLE = false;
 
 export interface Shot {
   src: string;
@@ -43,29 +48,30 @@ export interface Shot {
   orientation?: "landscape" | "portrait";
 }
 
-const WIDE = { width: 1480, height: 811 };   // current capture viewport
-const FOUR3 = { width: 1376, height: 1032 }; // the older set
+const WIDE = { width: 1450, height: 840 };  // demo-tenant capture viewport
+const POS = { width: 1481, height: 812 };   // the register was captured wider
 const wide = WIDE.width / WIDE.height;
-const four3 = FOUR3.width / FOUR3.height;
+const pos = POS.width / POS.height;
 
 export const SHOTS = {
-  posOrder: { src: "/screenshots/pos-order-v2.webp", ...WIDE, aspect: wide },
-  posItem: { src: "/screenshots/pos-item.webp", ...FOUR3, aspect: four3 },
-  posPayment: { src: "/screenshots/pos-payment.webp", ...FOUR3, aspect: four3 },
-  posReceipt: { src: "/screenshots/pos-receipt-print.webp", ...FOUR3, aspect: four3 },
-  kds: { src: "/screenshots/pos-kds-v2.webp", ...WIDE, aspect: wide },
-  shopMenu: { src: "/screenshots/shop-menu-v2.webp", ...WIDE, aspect: wide },
-  adminDashboard: { src: "/screenshots/admin-dashboard-v2.webp", ...WIDE, aspect: wide },
-  adminReports: { src: "/screenshots/admin-reports-v2.webp", ...WIDE, aspect: wide },
-  adminMenu: { src: "/screenshots/admin-menu-v2.webp", ...WIDE, aspect: wide },
-  adminInventory: { src: "/screenshots/admin-inventory-v2.webp", ...WIDE, aspect: wide },
-  adminPermissions: { src: "/screenshots/admin-permissions.webp", ...FOUR3, aspect: four3 },
-  shellSettings: {
-    src: "/screenshots/shell-settings.webp",
-    width: 1032,
-    height: 1376,
-    aspect: 1032 / 1376,
-    orientation: "portrait",
+  posOrder: { src: "/screenshots/pos-order-demo.webp", ...POS, aspect: pos },
+  kds: { src: "/screenshots/pos-kds-demo.webp", ...WIDE, aspect: wide },
+  shopMenu: { src: "/screenshots/shop-menu-demo.webp", ...WIDE, aspect: wide },
+  adminDashboard: {
+    src: "/screenshots/admin-dashboard-demo.webp",
+    ...WIDE,
+    aspect: wide,
+  },
+  adminReports: {
+    src: "/screenshots/admin-reports-demo.webp",
+    ...WIDE,
+    aspect: wide,
+  },
+  adminMenu: { src: "/screenshots/admin-menu-demo.webp", ...WIDE, aspect: wide },
+  adminInventory: {
+    src: "/screenshots/admin-inventory-demo.webp",
+    ...WIDE,
+    aspect: wide,
   },
 } as const satisfies Record<string, Shot>;
 
