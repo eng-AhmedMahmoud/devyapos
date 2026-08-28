@@ -7,7 +7,7 @@ import FeatureGrid from "@/components/FeatureGrid";
 import PageHero from "@/components/PageHero";
 import PaymentProviders from "@/components/PaymentProviders";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
-import { SHOTS } from "@/lib/screenshots";
+import { PRODUCT_MEDIA_AVAILABLE, SHOTS } from "@/lib/screenshots";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
 
@@ -76,6 +76,9 @@ export default async function FeaturesPage({
       {/* Captures of the live deployment. The FAQ used to sit here too, but it
           also ran on /pricing — objections belong next to the price, and two
           copies of the same answers only split the search signal. */}
+      {/* Gallery hidden while product media is withdrawn — see
+          PRODUCT_MEDIA_AVAILABLE in lib/screenshots.ts. */}
+      {PRODUCT_MEDIA_AVAILABLE && (
       <section className="bg-bg py-16 sm:py-20">
         <Container>
           <Reveal>
@@ -102,6 +105,7 @@ export default async function FeaturesPage({
           </div>
         </Container>
       </section>
+      )}
 
       <PaymentProviders />
 

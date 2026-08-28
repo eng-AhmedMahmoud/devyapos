@@ -49,17 +49,6 @@ export default async function AboutPage({
                   <p className="leading-loose text-pretty text-ink-2">{p}</p>
                 </Reveal>
               ))}
-              <Reveal delay={240}>
-                <a
-                  href={brand.flagship.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-brand transition-colors hover:text-caramel"
-                >
-                  {brand.flagship.name[locale === "ar" ? "ar" : "en"]}
-                  <Arrow width={16} height={16} className="flip-rtl" />
-                </a>
-              </Reveal>
             </div>
           </div>
         </Container>

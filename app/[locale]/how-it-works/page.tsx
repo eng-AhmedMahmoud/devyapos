@@ -7,6 +7,7 @@ import PageHero from "@/components/PageHero";
 import Flow from "@/components/home/Flow";
 import Steps from "@/components/home/Steps";
 import Tour from "@/components/home/Tour";
+import { PRODUCT_MEDIA_AVAILABLE } from "@/lib/screenshots";
 
 export async function generateMetadata({
   params,
@@ -42,7 +43,9 @@ export default async function HowItWorksPage({
         sub={c.bridge.sub}
       />
       <Flow />
-      <Tour />
+      {/* Tour renders captures from a live client deployment — hidden while
+          product media is withdrawn (see lib/screenshots.ts). */}
+      {PRODUCT_MEDIA_AVAILABLE && <Tour />}
       <Steps />
       <CtaBand />
     </>

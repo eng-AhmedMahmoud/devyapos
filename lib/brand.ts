@@ -1,8 +1,8 @@
 /**
  * Single source of truth for the SaaS brand.
  *
- * The platform in this monorepo was built for BóHub (a real 25-branch Egyptian
- * chain). DevyaPOS is the productised version of that platform sold to other
+ * The platform in this monorepo was built for a real 25-branch Egyptian
+ * chain. DevyaPOS is the productised version of that platform sold to other
  * restaurants.
  *
  * It is named as a Devya product rather than a sister brand, so it lives on a
@@ -31,8 +31,13 @@ export const brand = {
    * — the company is Devya Solutions, but the domain is NOT devya.solutions.
    */
   parent: { name: "Devya Solutions", url: "https://devya.dev" },
-  /** The flagship reference deployment this whole platform was proven on. */
-  flagship: { name: { ar: "بوهَب", en: "BóHub" }, url: "https://bohubegy.com" },
+  /*
+   * `flagship` (a named, linked reference deployment) was removed on
+   * 2026-08-28 at that client's request: they do not want their brand used in
+   * our marketing. Reference deployments are described anonymously in the copy
+   * instead ("a 25-branch Egyptian chain"). Do not reintroduce a client name
+   * here without written permission from that client.
+   */
   /*
    * Removed rather than left dangling: `social` held bare instagram.com /
    * linkedin.com placeholders, `signupUrl` and `loginUrl` duplicated the

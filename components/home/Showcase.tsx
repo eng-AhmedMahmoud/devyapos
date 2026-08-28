@@ -3,7 +3,7 @@ import { getContent } from "@/content";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
 import { Container } from "@/components/Section";
 import Reveal from "@/components/Reveal";
-import { SHOTS } from "@/lib/screenshots";
+import { PRODUCT_MEDIA_AVAILABLE, SHOTS } from "@/lib/screenshots";
 
 /**
  * Product screenshots on the home page.
@@ -31,6 +31,10 @@ const ORDER = [
 ];
 
 export default async function Showcase() {
+  // Product media withdrawn pending neutral demo captures — see
+  // PRODUCT_MEDIA_AVAILABLE in lib/screenshots.ts.
+  if (!PRODUCT_MEDIA_AVAILABLE) return null;
+
   const locale = await getLocale();
   const c = getContent(locale);
 

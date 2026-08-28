@@ -360,7 +360,7 @@ export const en: SiteContent = {
   caseStudy: {
     eyebrow: "Our first client, still our toughest",
     title: "DevyaPOS isn't slideware — 25 branches run on it daily",
-    body: "BóHub was the first chain to put DevyaPOS on its tills, and it still shapes the roadmap. A real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
+    body: "The first chain to put DevyaPOS on its tills still shapes the roadmap: a real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
     stats: [
       { value: "25", label: "live branches" },
       { value: "249", label: "products" },
@@ -681,7 +681,7 @@ export const en: SiteContent = {
   gallery: {
     eyebrow: "The real thing",
     title: "Screens from a live deployment",
-    sub: "Not renders. These are captures from the BóHub chain running DevyaPOS across 25 branches.",
+    sub: "Not renders. These are captures of the system actually running.",
     items: [
       { alt: "Taking an order on the register", caption: "The register: a live ticket, sizes and totals as you tap" },
       { alt: "The kitchen display screen", caption: "Kitchen display: every ticket, with a delay counter running" },

@@ -15,6 +15,21 @@
  * URL keyed on the source path — a returning visitor would keep the old,
  * cropped copy indefinitely. Renaming the file is the only reliable bust.
  */
+/**
+ * Whether product media may be shown at all.
+ *
+ * Set to false on 2026-08-28: every screenshot and the register recording were
+ * captured from the BóHub deployment and carry that client's logo, name and
+ * menu. The client asked that their brand not appear in our marketing, so the
+ * media was withdrawn the same day and the files removed from the repo.
+ *
+ * Replacements are being captured from a neutral demo tenant that runs the
+ * same build. When those land, restore the files under public/screenshots and
+ * public/video, flip this to true, and the gated sections come back unchanged
+ * — Showcase, Promo and the /features gallery all read this flag.
+ */
+export const PRODUCT_MEDIA_AVAILABLE = false;
+
 export interface Shot {
   src: string;
   /** Real pixel size of the file. next/image needs the TRUE dimensions:
