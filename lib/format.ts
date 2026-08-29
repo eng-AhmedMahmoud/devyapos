@@ -1,7 +1,7 @@
 /**
  * Locale-aware number formatting.
  *
- * `ar-EG` renders Arabic-Indic digits (٣٩٩), which is what the market reads and
+ * `ar-EG` renders Arabic-Indic digits (١٩٩), which is what the market reads and
  * what the incumbent's pricing card shows. Everything here is deterministic for
  * a given locale so server and client render identically.
  */

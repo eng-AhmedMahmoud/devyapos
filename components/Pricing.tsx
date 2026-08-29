@@ -15,10 +15,12 @@ const YEARLY_RATE = 0.7;
 /**
  * Pricing.
  *
- * Four tiers: a permanently free entry point removes the first objection
- * outright, and the paid ladder makes the middle tier the obvious pick rather
- * than the only one. The per-branch unit matches how this market already
- * reasons about cost.
+ * Three tiers. Two priced, one quoted: the ladder makes the middle tier the
+ * obvious pick rather than the only one, and the per-branch unit matches how
+ * this market already reasons about cost.
+ *
+ * (An earlier draft had a permanently free fourth tier. It was dropped; this
+ * comment claimed four for a while after the data said three.)
  */
 export default function Pricing({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();

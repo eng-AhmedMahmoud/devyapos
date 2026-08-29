@@ -187,10 +187,10 @@ content, `src`/`poster` from `PROMO_CLIP` in `lib/screenshots.ts`).
 
 Some concrete figures baked into the Arabic tree (`content/ar.ts`), to
 illustrate the level of specificity: hero stats "25 branches, 679
-items/sizes, <1s POS→kitchen"; pricing plans Growth (399 EGP/branch/mo,
-featured), Scale (899 EGP/branch/mo), Enterprise (custom); market-anchor
+items/sizes, <1s POS→kitchen"; pricing plans Growth (199 EGP/branch/mo,
+featured), Scale (499 EGP/branch/mo), Enterprise (custom); market-anchor
 rows dated "as of August 2026" citing Foodics Starter/Basic/Advanced
-(1,506 / 2,582 / 3,442 EGP) against DevyaPOS Growth (399 EGP); payments
+(1,506 / 2,582 / 3,442 EGP) against DevyaPOS Growth (199 EGP); payments
 providers `[Paymob(live), Fawry, Kashier, Geidea, OPay, PayTabs]` with only
 Paymob marked `live: true`. `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty

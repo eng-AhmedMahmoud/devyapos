@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 /**
  * What the rest of the Egyptian market charges, next to what we charge.
  *
- * "Affordable" is a claim; 399 against a published 1,506 is a number the
+ * "Affordable" is a claim; 199 against a published 1,506 is a number the
  * visitor can go and check. The comparison is per branch per month, because
  * that is the only unit where the two are actually comparable — the enterprise
  * tiers also bill per terminal and sell loyalty and delivery as add-ons, which

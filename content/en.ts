@@ -16,7 +16,7 @@ export const en: SiteContent = {
     pricing: {
       title: "Pricing | DevyaPOS",
       description:
-        "A 14-day free trial, and Growth at 399 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
+        "A 14-day free trial, and Growth at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
     about: {
       title: "About DevyaPOS | Why we built this",
@@ -304,7 +304,7 @@ export const en: SiteContent = {
       { label: "Custom features built for your chain", us: true, them: false },
       { label: "Workflow changed to match how you work", us: true, them: false },
       { label: "Billing model", us: "Flat, per branch", them: "Per terminal + modules" },
-      { label: "Price per branch per month", us: "399 EGP", them: "Quote only" },
+      { label: "Price per branch per month", us: "199 EGP", them: "Quote only" },
     ],
     note: "DevyaPOS's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
   },
@@ -335,7 +335,7 @@ export const en: SiteContent = {
       paid: "Orders per branch x branches x average order value x commission, over twelve months.",
       recovered:
         "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
-      cost: "399 EGP per branch per month on the Growth plan, for twelve months.",
+      cost: "199 EGP per branch per month on the Growth plan, for twelve months.",
       net: "Recovered commission minus what DevyaPOS costs you. This is the number that matters.",
       payback:
         "How long the recovered commission takes to cover a full year of DevyaPOS. Shorter is better.",
@@ -394,7 +394,7 @@ export const en: SiteContent = {
         id: "growth",
         name: "Growth",
         tagline: "The whole restaurant runs from here",
-        price: 399,
+        price: 199,
         badge: "Most chosen",
         featured: true,
         features: [
@@ -417,7 +417,7 @@ export const en: SiteContent = {
         id: "scale",
         name: "Scale",
         tagline: "When margin becomes the game",
-        price: 899,
+        price: 499,
         features: [
           "Everything in Growth",
           "Recipe-costed inventory",
@@ -454,7 +454,7 @@ export const en: SiteContent = {
         { name: "Foodics — Starter", price: "1,506 EGP", note: "Billed quarterly or annually; hardware separate" },
         { name: "Foodics — Basic", price: "2,582 EGP", note: "Loyalty and delivery integrations cost extra" },
         { name: "Foodics — Advanced", price: "3,442 EGP", note: "Top published tier" },
-        { name: "DevyaPOS — Growth", price: "399 EGP", note: "The whole system, every module included", ours: true },
+        { name: "DevyaPOS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
       ],
       note: "Competitor figures are their own published Egyptian prices at the date above and may change — check them yourself before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
     },
