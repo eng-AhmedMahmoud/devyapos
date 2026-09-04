@@ -8,10 +8,15 @@ import {
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { routing } from "@/i18n/routing";
+import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
+import Attribution from "@/components/Attribution";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import JsonLd from "@/components/JsonLd";
 import { themeBootScript } from "@/components/ThemeToggle";
 import "../globals.css";
 
@@ -111,11 +116,22 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body className="flex min-h-full flex-col">
+        {/* Site-wide structured data: who sells this and what it costs. The
+            per-page nodes (BreadcrumbList, FAQPage) are built by
+            `pageJsonLd(locale, path)` and mounted by the pages themselves —
+            a layout cannot know which route it is wrapping. */}
+        <JsonLd data={siteJsonLd(locale)} />
         <NextIntlClientProvider>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
         </NextIntlClientProvider>
+        {/* Records the campaign the visit started on, before the visitor
+            navigates away from the tagged landing page. */}
+        <Attribution />
+        {/* Both ship nothing in dev and only report from the deployed site. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

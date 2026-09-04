@@ -5,6 +5,7 @@ import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
 import { Arrow, Whatsapp } from "./icons";
 import Reveal from "./Reveal";
 import { Container } from "./Section";
+import WhatsappLink from "./WhatsappLink";
 
 /**
  * Closing CTA — an espresso card floated on the page rather than a full-bleed
@@ -61,15 +62,14 @@ export default async function CtaBand() {
                   {c.cta.primary}
                   <Arrow width={18} height={18} className="flip-rtl" />
                 </Link>
-                <a
+                <WhatsappLink
                   href={whatsappLink(c.contact.waTemplate)}
-                  target="_blank"
-                  rel="noreferrer"
+                  place="cta_band"
                   className="btn btn-outline-espresso"
                 >
                   <Whatsapp width={18} height={18} />
                   {c.cta.secondary}
-                </a>
+                </WhatsappLink>
               </div>
             </div>
           </div>

@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { mailtoLink, telLink, whatsappLink } from "@/lib/brand";
+import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import ContactForm from "@/components/ContactForm";
 import Faq from "@/components/Faq";
 import { Icon } from "@/components/icons";
+import JsonLd from "@/components/JsonLd";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
+import WhatsappLink from "@/components/WhatsappLink";
 
 export async function generateMetadata({
   params,
@@ -30,15 +33,18 @@ export default async function ContactPage({
 
   // Each channel card links where its title implies: WhatsApp, phone, mail,
   // and the demo (booked over WhatsApp like everything else in this market).
-  const hrefs = [
-    whatsappLink(c.contact.waTemplate),
-    telLink,
-    mailtoLink(c.meta.contact.title),
-    whatsappLink(c.contact.waTemplate),
+  // The two WhatsApp cards are tracked apart — "message us" and "book a demo"
+  // are different intents even though they open the same thread.
+  const channels: { href: string; place?: string }[] = [
+    { href: whatsappLink(c.contact.waTemplate), place: "contact_channel" },
+    { href: telLink },
+    { href: mailtoLink(c.meta.contact.title) },
+    { href: whatsappLink(c.contact.waTemplate), place: "contact_channel_demo" },
   ];
 
   return (
     <>
+      <JsonLd data={pageJsonLd(locale, "/contact")} />
       <PageHero
         badge={c.contact.badge}
         title={c.contact.title}
@@ -57,30 +63,43 @@ export default async function ContactPage({
                 <h2 className="font-display text-lg text-ink">
                   {c.contact.channels.title}
                 </h2>
-                {c.contact.channels.items.map((item, i) => (
-                  <a
-                    key={item.title}
-                    href={hrefs[i]}
-                    target={hrefs[i].startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    className="card lift flex items-start gap-4 p-5"
-                  >
-                    <span
-                      className="icon-tile shrink-0"
-                      style={{ ["--tile" as string]: "var(--brand)" }}
+                {c.contact.channels.items.map((item, i) => {
+                  const channel = channels[i];
+                  const body = (
+                    <>
+                      <span
+                        className="icon-tile shrink-0"
+                        style={{ ["--tile" as string]: "var(--brand)" }}
+                      >
+                        <Icon name={item.icon} />
+                      </span>
+                      <span>
+                        <span className="block font-semibold text-ink">
+                          {item.title}
+                        </span>
+                        <span className="mt-1 block text-sm text-ink-dim">
+                          {item.body}
+                        </span>
+                      </span>
+                    </>
+                  );
+                  const className = "card lift flex items-start gap-4 p-5";
+
+                  return channel.place ? (
+                    <WhatsappLink
+                      key={item.title}
+                      href={channel.href}
+                      place={channel.place}
+                      className={className}
                     >
-                      <Icon name={item.icon} />
-                    </span>
-                    <span>
-                      <span className="block font-semibold text-ink">
-                        {item.title}
-                      </span>
-                      <span className="mt-1 block text-sm text-ink-dim">
-                        {item.body}
-                      </span>
-                    </span>
-                  </a>
-                ))}
+                      {body}
+                    </WhatsappLink>
+                  ) : (
+                    <a key={item.title} href={channel.href} className={className}>
+                      {body}
+                    </a>
+                  );
+                })}
               </div>
             </Reveal>
           </div>

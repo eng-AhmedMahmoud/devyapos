@@ -1,28 +1,22 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
-import { brand } from "@/lib/brand";
+import { alternateLanguages, localeHref, routes } from "@/lib/meta";
 
-const paths = [
-  "",
-  "/features",
-  "/how-it-works",
-  "/compare",
-  "/pricing",
-  "/about",
-  "/contact",
-];
-
+/**
+ * Every route, in every locale, with `xhtml:link` hreflang alternates.
+ *
+ * The path list used to live here as a hand-maintained array, which made every
+ * new page two edits — and the forgotten second edit is silent. `routes` in
+ * `lib/meta.ts` is now the single manifest; adding a page there adds it here.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   return routing.locales.flatMap((locale) =>
-    paths.map((path) => ({
-      url: `${brand.url}/${locale}${path}`,
-      changeFrequency: "weekly" as const,
-      priority: path === "" ? 1 : 0.7,
-      alternates: {
-        languages: Object.fromEntries(
-          routing.locales.map((l) => [l, `${brand.url}/${l}${path}`]),
-        ),
-      },
+    routes.map((route) => ({
+      url: localeHref(locale, route.path),
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+      // Includes x-default, pointing at the Arabic page — see lib/meta.ts.
+      alternates: { languages: alternateLanguages(route.path) },
     })),
   );
 }

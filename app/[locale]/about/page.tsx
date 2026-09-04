@@ -3,9 +3,11 @@ import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { brand, mailtoLink, telLink } from "@/lib/brand";
+import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import { Arrow, Icon } from "@/components/icons";
+import JsonLd from "@/components/JsonLd";
 import PageHero from "@/components/PageHero";
 import Pricing from "@/components/Pricing";
 import Reveal from "@/components/Reveal";
@@ -32,6 +34,7 @@ export default async function AboutPage({
 
   return (
     <>
+      <JsonLd data={pageJsonLd(locale, "/about")} />
       <PageHero badge={a.badge} title={a.title} sub={a.sub} />
 
       {/* Story — long-form prose, single column, deliberately unadorned. */}

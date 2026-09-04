@@ -57,7 +57,18 @@ export default async function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-espresso-line pt-6 text-xs text-on-espresso-dim sm:flex-row sm:items-center sm:justify-between">
+        {/*
+          Who operates the product, in one sentence, on every page in both
+          locales. `trustLine.withCr` says the same thing with a commercial
+          registration number, but it still carries the literal `{cr}`
+          placeholder — shipping that token is worse than shipping no number,
+          so `short` is what renders until a real CR replaces it.
+        */}
+        <p className="mt-12 max-w-3xl border-t border-espresso-line pt-6 text-xs leading-relaxed text-on-espresso-dim">
+          {c.trustLine.short}
+        </p>
+
+        <div className="mt-6 flex flex-col gap-3 text-xs text-on-espresso-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {brand.wordmark}. {c.footer.legal}
           </p>

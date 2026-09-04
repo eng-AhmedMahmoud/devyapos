@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
+import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
+import JsonLd from "@/components/JsonLd";
 import Compare from "@/components/home/Compare";
 import RoiCalculator from "@/components/home/RoiCalculator";
 
@@ -37,6 +39,7 @@ export default async function ComparePage({
 
   return (
     <>
+      <JsonLd data={pageJsonLd(locale, "/compare")} />
       <Compare />
       <RoiCalculator />
       <CtaBand />

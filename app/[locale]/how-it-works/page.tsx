@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
+import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
+import JsonLd from "@/components/JsonLd";
 import PageHero from "@/components/PageHero";
 import Flow from "@/components/home/Flow";
 import Steps from "@/components/home/Steps";
@@ -37,6 +39,7 @@ export default async function HowItWorksPage({
 
   return (
     <>
+      <JsonLd data={pageJsonLd(locale, "/how-it-works")} />
       <PageHero
         badge={c.bridge.eyebrow}
         title={c.bridge.title}

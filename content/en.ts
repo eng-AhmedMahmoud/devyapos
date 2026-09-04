@@ -38,6 +38,36 @@ export const en: SiteContent = {
       description:
         "Book a 15-minute demo or message us on WhatsApp. We load your menu and migrate your data for free.",
     },
+    etaInvoicing: {
+      title: "Egyptian VAT and ETA e-invoicing | DevyaPOS",
+      description:
+        "Where DevyaPOS stands on Egyptian tax, in plain words: 14% VAT computed on every line, exportable sales records — and no ETA submission yet.",
+    },
+    foodicsAlternative: {
+      title: "Foodics alternative in Egypt | DevyaPOS",
+      description:
+        "The published Egyptian entry bundle is 2,848.95 EGP per branch per month. DevyaPOS Growth is 199 EGP with every module included. Compared honestly.",
+    },
+    hardware: {
+      title: "POS hardware | Run DevyaPOS on what you own",
+      description:
+        "No terminal to buy. DevyaPOS runs in a browser on any tablet, laptop or touchscreen and prints to any ESC/POS thermal printer. What a branch really needs.",
+    },
+    terms: {
+      title: "Terms of service | DevyaPOS",
+      description:
+        "The terms behind a DevyaPOS subscription: the 14-day trial, billing per branch in EGP, support, cancellation, and who owns your data. Updated September 2026.",
+    },
+    privacy: {
+      title: "Privacy policy | DevyaPOS",
+      description:
+        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, Vercel hosting, and no cookies of our own.",
+    },
+    refund: {
+      title: "Refund and cancellation | DevyaPOS",
+      description:
+        "14 days free with no card, monthly or yearly billing, cancel any time, and a full export of your data on the way out. The policy in plain words.",
+    },
   },
 
   nav: {
@@ -47,6 +77,11 @@ export const en: SiteContent = {
       { label: "Compare", href: "/compare" },
       { label: "Pricing", href: "/pricing" },
       { label: "About", href: "/about" },
+    ],
+    extra: [
+      { label: "Foodics alternative", href: "/foodics-alternative" },
+      { label: "Hardware", href: "/hardware" },
+      { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
     ],
     login: "Log in",
     cta: "Try it free",
@@ -361,12 +396,32 @@ export const en: SiteContent = {
     eyebrow: "Our first client, still our toughest",
     title: "DevyaPOS isn't slideware — 25 branches run on it daily",
     body: "The first chain to put DevyaPOS on its tills still shapes the roadmap: a real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
+    statsTitle: "The deployment, in numbers",
     stats: [
       { value: "25", label: "live branches" },
       { value: "249", label: "products" },
       { value: "430", label: "size variants" },
       { value: "29", label: "menu categories" },
     ],
+    facts: [
+      {
+        title: "It was never a pilot",
+        body: "The system went into working branches with paying customers in front of them. No sandbox phase, no parallel run — the old way stopped and this started.",
+      },
+      {
+        title: "The menu is the hard part",
+        body: "249 products across 29 categories, 430 costed size variants, and add-ons that change the price and the recipe at once. Loading that properly is what makes the first shift boring, which is the whole goal.",
+      },
+      {
+        title: "It gets fixed the same shift",
+        body: "25 branches call when something is wrong, and they call during service. Most of what is in DevyaPOS today exists because a shift needed it before the next rush.",
+      },
+      {
+        title: "The same code runs your restaurant",
+        body: "There is no enterprise edition held back for bigger accounts. What runs those branches is what you get on the trial.",
+      },
+    ],
+    anonymity: "The chain is not named here. They asked us to keep their brand out of our marketing and we agreed, so the numbers are theirs and the logo stays off this page.",
     link: "See the system architecture",
   },
 
@@ -389,6 +444,68 @@ export const en: SiteContent = {
     per: "/mo",
     perBranch: "per branch",
     compareLink: "See the full comparison",
+    segments: {
+      eyebrow: "Start here",
+      title: "What kind of restaurant are you?",
+      sub: "The price is the same whichever one you pick. What changes is the part of the system you will live in.",
+      note: "One platform, one price per branch. These are listed separately because a cloud kitchen and a dining room are shopping for different things, not because they are billed differently.",
+      items: [
+        {
+          id: "qsr",
+          label: "QSR and cafés",
+          headline: "Speed at the till, and a delivery channel that is not costing you a quarter of the bill.",
+          body: "Counter service is decided by how fast the cashier moves and how much of your delivery volume you keep. The register is built for two-tap ordering, and the same order comes through your own site at zero commission.",
+          points: [
+            "Sizes and add-ons in two taps",
+            "Kitchen display instead of paper tickets",
+            "Your own ordering site, zero commission",
+            "Loyalty that brings the morning regular back",
+          ],
+        },
+        {
+          id: "cloud",
+          label: "Cloud kitchens",
+          headline: "One kitchen, several brands, and a cost per dish you can actually see.",
+          body: "With no dining room, the business is the order flow and the food cost. Orders from every channel land on one kitchen screen, and every recipe carries its own costed ingredients.",
+          points: [
+            "Every channel on one kitchen screen",
+            "Recipe-costed inventory per dish",
+            "Delivery zones and fees you set yourself",
+            "Food-cost reporting per brand and per branch",
+          ],
+        },
+        {
+          id: "dinein",
+          label: "Dine-in restaurants",
+          headline: "Shifts, drawer counts, and a kitchen that hears the order as it is taken.",
+          body: "A dining room is a staffing and timing problem before it is a software problem. Shifts open and close against a counted drawer, and tickets reach the kitchen in under a second with a delay counter running.",
+          points: [
+            "Shifts and drawer variance by staff member",
+            "Live kitchen display with per-ticket timing",
+            "Bilingual thermal receipts",
+            "Role-scoped permissions for every position",
+          ],
+        },
+        {
+          id: "chain",
+          label: "Multi-branch chains",
+          headline: "Every branch on its own stock and its own numbers, with one console above all of them.",
+          body: "Past the second branch the question stops being the till and becomes comparison. Each branch keeps its own stock, zones and order numbering, and you see all of them side by side.",
+          points: [
+            "Independent stock and delivery zones per branch",
+            "Staff scoped to their own branch",
+            "One console across every branch",
+            "Flat price per branch, no per-terminal fee",
+          ],
+        },
+      ],
+    },
+    annual: {
+      label: "Billed once a year",
+      total: "{total} EGP per branch for twelve months",
+      saving: "You keep {saved} EGP per branch a year against paying monthly.",
+      note: "The yearly price is the monthly price less 30%, charged once for twelve months. Cancel and you keep access until the year you paid for ends, with a full export of your data before you go.",
+    },
     plans: [
       {
         id: "growth",
@@ -449,11 +566,10 @@ export const en: SiteContent = {
     ],
     marketAnchor: {
       title: "What the market charges",
-      sub: "Published Egyptian pricing, as of August 2026. Compare per branch, per month.",
+      sub: "Published Egyptian pricing, retrieved 4 September 2026. Compare per branch, per month.",
       rows: [
-        { name: "Foodics — Starter", price: "1,506 EGP", note: "Billed quarterly or annually; hardware separate" },
-        { name: "Foodics — Basic", price: "2,582 EGP", note: "Loyalty and delivery integrations cost extra" },
-        { name: "Foodics — Advanced", price: "3,442 EGP", note: "Top published tier" },
+        { name: "Foodics — Basic Bundle", price: "2,848.95 EGP", note: "Billed annually (3,019.89 quarterly). Loyalty, API, delivery aggregators and BI all cost extra" },
+        { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top published Egyptian tier" },
         { name: "DevyaPOS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
       ],
       note: "Competitor figures are their own published Egyptian prices at the date above and may change — check them yourself before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
@@ -525,8 +641,16 @@ export const en: SiteContent = {
         links: [
           { label: "Features", href: "/features" },
           { label: "Pricing", href: "/pricing" },
+          { label: "Hardware", href: "/hardware" },
           { label: "How it works", href: "/#how" },
-          { label: "Comparison", href: "/#compare" },
+        ],
+      },
+      {
+        title: "Compare",
+        links: [
+          { label: "Foodics alternative", href: "/foodics-alternative" },
+          { label: "Enterprise POS platforms", href: "/compare" },
+          { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
           { label: "Commission calculator", href: "/#roi" },
         ],
       },
@@ -535,11 +659,6 @@ export const en: SiteContent = {
         links: [
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
-        ],
-      },
-      {
-        title: "Legal",
-        links: [
           { label: "Terms of service", href: "/contact" },
           { label: "Privacy policy", href: "/contact" },
           { label: "Refund policy", href: "/contact" },
@@ -644,11 +763,29 @@ export const en: SiteContent = {
       branches: "Number of branches",
       phone: "Mobile number",
       message: "Anything we should know",
+      submitLead: "Send my details",
       submit: "Send on WhatsApp",
       submitEmail: "Send by email",
-      hint: "The form opens WhatsApp or your email client with these details — nothing is stored on this site.",
+      hint: "Your details come straight to the DevyaPOS team so we can call you back — or send them on WhatsApp instead, if that suits you better.",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
+      status: {
+        sending: "Sending…",
+        successTitle: "We've got your details",
+        successBody: "We'll reach out on the number you gave us, the same business day.",
+        errorTitle: "Couldn't send that",
+        errorBody: "Something went wrong at our end. Try again, or send it on WhatsApp instead.",
+        errorSummary: "Please check the following fields:",
+        rateLimited: "That's a few attempts in a row. Give it a minute and try again.",
+        optional: "optional",
+      },
+      errors: {
+        required: "This field is required",
+        too_short: "That looks a little short",
+        too_long: "That's longer than we can accept",
+        invalid_phone: "Enter a valid Egyptian mobile, e.g. 01055930032",
+        invalid_branches: "Enter a whole number of branches (1 or more)",
+      },
     },
     channels: {
       title: "Other channels",
@@ -881,5 +1018,633 @@ export const en: SiteContent = {
         ],
       },
     ],
+  },
+
+  trustLine: {
+    short: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it.",
+    withCr: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
+  },
+
+  etaInvoicing: {
+    badge: "VAT and e-invoicing in Egypt",
+    title: "Where DevyaPOS stands on Egyptian tax",
+    sub: "Most systems sold to Egyptian restaurants say nothing at all about this. Here is what the law asks of you, what this system does for you today, and what it does not do yet.",
+    standfirst:
+      "DevyaPOS is not an Egyptian Tax Authority e-invoicing integration. It computes and shows 14% VAT, holds your tax registration number, and exports the sales records your accountant works from. It does not submit anything to the ETA on your behalf. If a vendor tells you their point of sale makes you compliant, ask them to show you a submitted document with an ETA reference on it, in a live account.",
+    updated: "Reviewed 4 September 2026. Tax rules move; this page moves with them.",
+    required: {
+      title: "What a VAT-registered restaurant in Egypt is actually asked to do",
+      sub: "The short version, in the order owners ask us about it. This is not legal advice — the Egyptian Tax Authority's own guidance and your accountant are the authority.",
+      items: [
+        {
+          title: "Register for VAT once you cross the threshold",
+          body: "Registration follows the turnover threshold set in the VAT law. Check the current figure with the ETA or your accountant. Once you are registered you hold a tax registration number and you are inside the system, whether or not your till knows it.",
+        },
+        {
+          title: "Charge the right rate, and keep it visible",
+          body: "The standard rate is 14%. The figure you file has to be supported by what you actually charged, line by line, not reconstructed from a total at the end of the month.",
+        },
+        {
+          title: "File returns on the authority's schedule",
+          body: "Returns are filed periodically through the ETA, out of your own sales records. No point-of-sale system files them for you by simply existing.",
+        },
+        {
+          title: "Keep records that survive a question",
+          body: "Sales per branch, per day, with tax separated out, retrievable months later — not sitting in a cash drawer or in a spreadsheet somebody overwrote.",
+        },
+        {
+          title: "Know which electronic system applies to you",
+          body: "The ETA runs an e-invoice system for business-to-business documents and an e-receipt system for business-to-consumer sales, phased in by taxpayer group. Whether your restaurant is already inside a mandated group is a question for the ETA or your accountant, and the answer changes over time.",
+        },
+      ],
+      note: "We build software, not tax positions. Every line above is a question worth asking, not a substitute for asking it.",
+    },
+    does: {
+      title: "What DevyaPOS does for you today",
+      sub: "All of it ships now, on every plan, and you can watch it working during the trial on your own menu.",
+      items: [
+        {
+          title: "14% VAT computed on every line",
+          body: "Tax is calculated per line item as the order is built, not estimated at the end, and it appears on the receipt the customer takes away.",
+        },
+        {
+          title: "Your tax registration number is held on the business record",
+          body: "Stored once against the business, so it lives in the system rather than on a sticker behind the till.",
+        },
+        {
+          title: "Amounts stored as whole piasters",
+          body: "No floating-point drift. The total on the receipt is the total in the report, to the piaster, months later.",
+        },
+        {
+          title: "Sales records you can export",
+          body: "By branch, by day, by payment method, with tax separated — the raw material an accountant needs to prepare a return.",
+        },
+        {
+          title: "One set of numbers for the whole chain",
+          body: "Two branches or twenty-five, the sales behind a filing come out of one database instead of being stitched together by hand at month end.",
+        },
+      ],
+    },
+    doesNot: {
+      title: "What DevyaPOS does not do yet",
+      sub: "Written here so you read it now rather than discover it after signing.",
+      items: [
+        {
+          title: "No submission to the ETA",
+          body: "DevyaPOS does not send invoices or receipts to the Egyptian Tax Authority's systems. Nothing is transmitted on your behalf, to anyone.",
+        },
+        {
+          title: "No signed electronic documents",
+          body: "There is no e-signature, no e-seal, and no ETA-format document produced. A DevyaPOS receipt is a receipt, not a registered electronic tax document.",
+        },
+        {
+          title: "No ETA reference on the receipt",
+          body: "You will not find a submission identifier or status on the printout, because there is no submission behind it.",
+        },
+        {
+          title: "No accreditation",
+          body: "DevyaPOS holds no certification, accreditation or approval from the Egyptian Tax Authority, and this site claims none anywhere.",
+        },
+      ],
+      note: "None of that is priced into what you pay. You are not being billed for a compliance module that does not exist.",
+    },
+    meaning: {
+      title: "What that means if you are choosing a system now",
+      body: "The honest answer turns on one thing: whether your restaurant is already required to submit electronically.",
+      points: [
+        "If you are not yet in a mandated group, DevyaPOS covers the daily part — correct VAT on every line, clean records per branch, and an export your accountant can work from.",
+        "If you are already required to submit e-receipts or e-invoices, you need a route that submits. Run one alongside DevyaPOS, or wait for us. Do not buy this expecting it to close that gap today.",
+        "Ask every vendor you are talking to the same question in writing: does your system submit to the ETA, under whose accreditation, and can you show it happening in a live account? A logo on a slide is not an answer.",
+        "When submission ships here, this page changes the same day, with the date on it. That is the only promise on this page.",
+      ],
+    },
+    faq: {
+      title: "The awkward questions, answered",
+      items: [
+        {
+          q: "Is DevyaPOS compliant with Egyptian e-invoicing?",
+          a: "No, and we will not say otherwise. DevyaPOS computes and shows VAT and keeps your sales records. It does not submit documents to the Egyptian Tax Authority, and it holds no accreditation from them.",
+        },
+        {
+          q: "Does it calculate VAT correctly?",
+          a: "Yes. 14% is computed per line item as the order is built, and shown on the receipt and in reports. Amounts are stored as whole piasters, so the receipt and the report never disagree.",
+        },
+        {
+          q: "Can I file my VAT return from DevyaPOS?",
+          a: "You can export the sales records a return is built from — by branch, by day, with tax separated. The filing itself happens through the Egyptian Tax Authority, by you or your accountant.",
+        },
+        {
+          q: "My accountant says I have to submit e-receipts. What now?",
+          a: "Then you need a submission route DevyaPOS does not provide today. Tell us during the trial and we will say plainly whether the rest of the system is still worth your time — sometimes it is, sometimes it is not.",
+        },
+        {
+          q: "Is ETA submission on the roadmap?",
+          a: "It is on the list. We are not putting a date on it on a marketing page, because a date here is not something you could hold us to. If it decides your purchase, ask us directly and we will tell you where it actually stands.",
+        },
+        {
+          q: "Do you store my tax registration number?",
+          a: "Yes, on your business record, so it is in the system rather than on a note behind the till. It is your data — export it or have it deleted whenever you want.",
+        },
+      ],
+    },
+    cta: {
+      title: "Ask us the awkward question first",
+      body: "Fifteen minutes, your menu, and your accountant's requirements on the table. If DevyaPOS is the wrong fit for where your restaurant stands, we would rather say so now than after you have paid.",
+      primary: "Book a 15-min demo",
+      secondary: "Message us on WhatsApp",
+    },
+  },
+
+  foodicsAlternative: {
+    badge: "DevyaPOS vs Foodics",
+    title: "Looking for a Foodics alternative in Egypt?",
+    sub: "Foodics is a serious product. It is also priced for a different restaurant than the one this page is written for. Here is the comparison with the numbers left in.",
+    disclaimer:
+      "Foodics is a trademark of its owner and has no affiliation with DevyaPOS. Every figure below comes from Foodics' own published Egyptian pricing, retrieved September 2026. Their prices are theirs to change — check foodics.com yourself before you decide anything.",
+    positioning: {
+      title: "The honest version",
+      body: "Foodics is a regional platform with its own hardware, its own payment rail and a marketplace of add-ons behind it. DevyaPOS is one system, built in Egypt for Egyptian restaurants, at a flat price per branch with every module already inside it. Neither sentence is an insult to the other product. They are two different bets, and which one is right depends on the size of your operation and how much of your budget you want going to software.",
+      points: [
+        "Same job: take the order, feed the kitchen, sell online, count the stock.",
+        "Different billing: bundles per branch with paid add-ons, against one flat per-branch price.",
+        "Different depth: regional scale and hardware, against a team that will change the software for you.",
+      ],
+    },
+    facts: {
+      title: "What Foodics publishes for Egypt",
+      sub: "Per branch, per month. Retrieved September 2026.",
+      rows: [
+        {
+          label: "Entry bundle, Egypt",
+          value: "2,848.95 EGP",
+          note: "Per branch per month billed annually, or 3,019.89 EGP billed quarterly. Egypt is not offered a Starter tier at all.",
+        },
+        {
+          label: "Advanced bundle, Egypt",
+          value: "3,733.67 EGP",
+          note: "Per branch per month billed annually. The top published Egyptian bundle.",
+        },
+        {
+          label: "Pay, Pay at Table, Kitchen Display, Customer Display, Foodics One",
+          value: "In no Egyptian tier",
+          note: "These appear on other markets' pages. None of them is listed in an Egyptian bundle.",
+        },
+        {
+          label: "Loyalty, API access, delivery-aggregator integrations, BI",
+          value: "Paid add-ons",
+          note: "On the Egyptian Basic bundle each of these is charged on top of the bundle price.",
+        },
+        {
+          label: "DevyaPOS — Growth",
+          value: "199 EGP",
+          note: "Per branch per month. Register, kitchen display, ordering site, loyalty and reporting included, with no per-terminal fee.",
+          ours: true,
+        },
+      ],
+      source: "Foodics figures are their own published Egyptian pricing, retrieved September 2026, and may have changed since. DevyaPOS figures are our own published prices.",
+    },
+    pickThem: {
+      title: "Pick Foodics if this is you",
+      sub: "Written straight. There are restaurants we are not the right answer for, and you should know which ones before you talk to us.",
+      items: [
+        {
+          title: "You want hardware and software from one supplier",
+          body: "Foodics sells terminals, printers and drawers as part of the deal. One invoice, one warranty, one number to call for the metal as well as the software is a real advantage, and we do not offer it.",
+        },
+        {
+          title: "You want payments from the same vendor",
+          body: "Foodics Pay puts the card rail inside the platform in the markets where it is offered. We integrate with your own Egyptian gateway instead — better if you already hold a merchant account, worse if you wanted it all on one contract.",
+        },
+        {
+          title: "You depend on a large add-on marketplace",
+          body: "Foodics lists a marketplace of more than a hundred apps. If your operation already runs on a specific accounting, delivery or workforce tool with a listing there, an existing connector beats our promise to build one.",
+        },
+        {
+          title: "You are expanding across the Gulf",
+          body: "Foodics operates across the region with local entities and local compliance work behind it. If your next five branches are in Riyadh or Dubai rather than Alexandria, that coverage is worth paying for.",
+        },
+        {
+          title: "Procurement requires a vendor of a certain size",
+          body: "Some franchise agreements and some landlords do. That is a legitimate constraint, and we would rather hear it in the first call than at signing.",
+        },
+      ],
+    },
+    pickUs: {
+      title: "Pick DevyaPOS if this is you",
+      sub: "The cases where the flat per-branch price and an in-house team are the whole argument.",
+      items: [
+        {
+          title: "Software cost has to make sense at your volume",
+          body: "At the published Egyptian entry bundle, one branch costs more per month than fourteen branches on Growth. For an independent café or a small chain, that difference is a salary.",
+        },
+        {
+          title: "You want the whole system, not a bundle plus add-ons",
+          body: "Loyalty, API access, delivery integrations and reporting are inside the price here. Nothing you need on day thirty gets quoted to you on day thirty.",
+        },
+        {
+          title: "You want the kitchen display included",
+          body: "A live kitchen display is part of Growth. It is not listed in any published Egyptian tier on the other side.",
+        },
+        {
+          title: "You already own the hardware",
+          body: "DevyaPOS runs in a browser on the tablet, laptop or touchscreen you have, with any ESC/POS thermal printer. Nothing to buy on the way in and nothing to return on the way out.",
+        },
+        {
+          title: "You need the software changed to fit your operation",
+          body: "We wrote the code and we are the ones who support it. A report, a gateway, a workflow that matches how your branches actually run — that gets built, not filed behind someone else's roadmap.",
+        },
+        {
+          title: "You are Egyptian-first",
+          body: "Prices in EGP, 14% VAT, Arabic as a first-class language down to the thermal receipt, and delivery zones and payment habits that match this market rather than a regional average.",
+        },
+      ],
+    },
+    cta: {
+      title: "Get a straight comparison on your own numbers",
+      body: "Send us your branch count and what you are quoted today. We will tell you what DevyaPOS costs, what it does not do, and whether switching is worth the disruption at your size.",
+      primary: "Book a 15-min demo",
+      secondary: "Message us on WhatsApp",
+      note: "14-day free trial, no credit card, and we load your menu before you decide.",
+    },
+  },
+
+  hardware: {
+    badge: "Hardware",
+    title: "Buy nothing. Run it on what you already own.",
+    sub: "DevyaPOS runs in a browser. Any tablet, laptop or touchscreen big enough to tap is a register, and any ESC/POS thermal printer prints the receipt.",
+    stance: {
+      title: "Bring your own is the position, not the excuse",
+      body: "Most point-of-sale vendors sell you a terminal, because the terminal is where the margin is — and once it is bolted to your counter, leaving costs you the hardware as well as the subscription. We took the other road deliberately. The system is a web app: it opens in a browser, on your device, and if you ever walk away, you keep the device.",
+      points: [
+        "No proprietary terminal to buy, lease or hand back.",
+        "No device fee, no per-terminal licence, no activation charge.",
+        "A second register at a branch is a second device with the browser open.",
+        "A cracked screen on a Friday night is a trip to any shop that sells tablets, not a support ticket and a courier.",
+      ],
+    },
+    works: {
+      title: "What it works with",
+      sub: "If it has a current browser and a network, it runs the register.",
+      items: [
+        {
+          icon: "register",
+          title: "Any tablet or touchscreen",
+          body: "Android or iPad from around ten inches up, or the all-in-one touchscreen already on your counter. Chrome, Edge, Safari or Firefox, kept up to date.",
+        },
+        {
+          icon: "printer",
+          title: "Any ESC/POS thermal printer",
+          body: "80mm or 58mm, network or USB, from any brand that speaks ESC/POS — which is most of them. Arabic and English print on the same roll.",
+        },
+        {
+          icon: "kds",
+          title: "Any screen in the kitchen",
+          body: "The kitchen display is a web page. A cheap tablet on a stand, a retired laptop, or a TV with a stick behind it all do the job.",
+        },
+        {
+          icon: "cart",
+          title: "The customer's own phone",
+          body: "The ordering site needs nothing installed, and no hardware beyond a printed QR sticker on the table.",
+        },
+        {
+          icon: "coins",
+          title: "The cash drawer you have",
+          body: "Drawers that open from the printer's kick-out port carry on working exactly as they do now.",
+        },
+        {
+          icon: "branches",
+          title: "The network you have",
+          body: "Screens talk over the branch network. Nothing here needs a dedicated line, a special router or a server in the back room.",
+        },
+      ],
+    },
+    need: {
+      title: "What a branch actually needs to open",
+      sub: "The realistic minimum for one branch on day one.",
+      items: [
+        {
+          title: "One screen at the till",
+          body: "A tablet or touchscreen for the cashier. This is the only device genuinely required to take an order.",
+        },
+        {
+          title: "One thermal printer",
+          body: "For the customer receipt, and a second copy for the kitchen if they still want paper. A branch with a kitchen screen usually needs one printer, not two.",
+        },
+        {
+          title: "One screen in the kitchen",
+          body: "Optional on day one, and the change most owners notice fastest. Any spare tablet will do until you buy something sturdier.",
+        },
+        {
+          title: "Internet at the branch",
+          body: "A normal business line. Screens update over the branch network, and your ordering site needs the branch reachable.",
+        },
+        {
+          title: "Nothing else",
+          body: "No back-office server, no dongle, no licence key, and no card reader unless you want to take cards in person through your own gateway's terminal.",
+        },
+      ],
+    },
+    buying: {
+      title: "If you are buying fresh",
+      sub: "Generic guidance only — no brands, no models, no prices.",
+      items: [
+        {
+          title: "Screen: ten inches or more",
+          body: "Below ten inches the menu grid gets cramped and cashiers start mis-tapping in a rush. Fifteen inches is comfortable on a busy till.",
+        },
+        {
+          title: "Printer: 80mm thermal, ESC/POS, with a network port",
+          body: "80mm fits an Arabic receipt without wrapping badly. A network port means the printer is not tied to one device, so any screen at the branch can print to it.",
+        },
+        {
+          title: "Network: the printer on a cable, the screens on wireless",
+          body: "Tablets are fine on wireless. A printer that drops off the network mid-service is the failure everybody remembers, so give it a cable if the counter allows one.",
+        },
+        {
+          title: "Power: one battery backup for the router and the printer",
+          body: "Cheap, and it turns a short cut into a pause rather than a stopped service.",
+        },
+        {
+          title: "Buy one, work a shift on it, then buy the rest",
+          body: "Run a real rush on a single setup before ordering for every branch. Whatever is wrong with a device shows up in the first hour of service, never in a specification sheet.",
+        },
+      ],
+      note: "We do not sell hardware, resell it, or take a commission from anyone who does. Ask us what to look for and you get an opinion with nothing behind it.",
+    },
+    faq: {
+      title: "Hardware questions",
+      items: [
+        {
+          q: "Do I have to buy anything to start the trial?",
+          a: "No. Open the browser on any device you already own — a laptop is enough to see the whole system running on your own menu.",
+        },
+        {
+          q: "What if my printer is old?",
+          a: "If it speaks ESC/POS it almost certainly works. Send us the model during onboarding and we will tell you before you spend anything.",
+        },
+        {
+          q: "Does it work when the internet drops?",
+          a: "Screens run on the branch network with live updates between them. For branches with unreliable internet, the Scale and Enterprise plans can host the system inside the restaurant or on your own server.",
+        },
+        {
+          q: "Can I use the touchscreen from my old POS?",
+          a: "Usually. If it runs a current browser it runs DevyaPOS. Old Windows tills locked to an ancient browser are the one case worth testing first, and we will test it with you before you commit.",
+        },
+        {
+          q: "What happens to my hardware if I leave?",
+          a: "You keep it. It was yours. Export your data and the devices carry on doing whatever else you want with them.",
+        },
+      ],
+    },
+    cta: {
+      title: "Not sure what you have is enough?",
+      body: "Send us a photo of your counter. We will tell you what works as it is, what needs replacing, and what you can safely ignore.",
+      primary: "Message us on WhatsApp",
+      secondary: "Book a 15-min demo",
+    },
+  },
+
+  legal: {
+    terms: {
+      title: "Terms of service",
+      sub: "The agreement behind a DevyaPOS subscription, in the plainest language we can write it in.",
+      updated: "Last updated 4 September 2026",
+      sections: [
+        {
+          title: "1. Who you are contracting with",
+          body: [
+            "DevyaPOS is a product operated by Devya Solutions (\"we\", \"us\"), the studio that built the platform and maintains it.",
+            "These terms cover your use of the DevyaPOS platform and of this website. Using either means you accept them. If you are agreeing on behalf of a company, you are confirming that you are allowed to.",
+          ],
+        },
+        {
+          title: "2. The free trial",
+          body: [
+            "Every account starts with a 14-day free trial carrying the features of the Growth plan. No card is required to start it, and nothing is charged automatically when it ends.",
+            "We load your menu before the trial starts so you are testing on your own data. If you decide not to subscribe, the account stops at the end of the trial. Your data stays available for export for thirty days after that, and is then deleted.",
+          ],
+        },
+        {
+          title: "3. Subscription and billing",
+          body: [
+            "Subscriptions are priced per branch per month in Egyptian pounds, on the plan you choose, and are billed either monthly or once a year in advance. Published prices exclude VAT, which is added where it applies.",
+            "Yearly billing is charged once for twelve months at the discounted rate shown on the pricing page.",
+            "We may change published prices. An existing subscriber's price does not change during a period already paid for, and we will give at least thirty days' notice before a change takes effect at the next renewal. Restaurants on the founding offer keep the price they signed at for as long as their subscription runs without a break.",
+          ],
+        },
+        {
+          title: "4. What we provide",
+          body: [
+            "Access to the platform on your plan, the onboarding described on this site (menu loading, branch and payment-gateway setup, data migration from your previous system), support on business days through WhatsApp or email, and platform updates as they ship, at no extra charge.",
+            "New features are released to plans as described on the pricing page at the time. We do not remove a capability you are paying for without notice.",
+          ],
+        },
+        {
+          title: "5. What we do not promise",
+          body: [
+            "We do not offer a contractual uptime guarantee except on Enterprise, where it is written into the agreement. We aim for continuous availability and we will tell you honestly when we fall short.",
+            "Your internet connection, your branch network, your devices, your payment gateway and the delivery platforms you use are outside our control, and interruptions caused by them are not our responsibility.",
+            "Figures on this site — including the commission calculator — are estimates for guidance. They are not a forecast of your results and nothing here is a promise of revenue or savings.",
+          ],
+        },
+        {
+          title: "6. Your responsibilities",
+          body: [
+            "Give us accurate business details, keep staff credentials under control, and tell us promptly if you think an account has been misused.",
+            "Your menu, prices, images and customer communications are yours; you confirm you have the right to use them. Your tax, licensing and employment obligations stay yours — a point-of-sale system does not discharge any of them. See the VAT and e-invoicing page for exactly where the software stops.",
+            "Do not use the platform for anything unlawful, and do not attempt to break, overload or reverse-engineer it.",
+          ],
+        },
+        {
+          title: "7. Your data",
+          body: [
+            "Your menu, orders, customers and reports belong to you. We process them to run the service for you, and for nothing else.",
+            "You can export all of it at any time, at no charge, including after you cancel. We do not sell your data, and we do not market to your customers.",
+            "We keep the security measures a system like this needs, and we will tell you without delay if we ever believe your data has been exposed.",
+          ],
+        },
+        {
+          title: "8. Payments and third parties",
+          body: [
+            "Card payments taken through the platform run on your own contract with your payment gateway. That relationship, its fees and its settlement terms are between you and the provider.",
+            "We do not hold card numbers. Payment details go to the gateway, not to us.",
+          ],
+        },
+        {
+          title: "9. Ending the subscription",
+          body: [
+            "You can cancel at any time. Cancellation takes effect at the end of the period you have already paid for, and you keep access until then. The refund and cancellation policy sets out what is refundable.",
+            "We may suspend or end an account for non-payment, or for unlawful use, after telling you and giving you a reasonable chance to put it right — except where the use is serious enough that waiting would cause harm.",
+            "Whatever the reason for ending, you get your data export.",
+          ],
+        },
+        {
+          title: "10. Liability",
+          body: [
+            "Nothing here limits liability that cannot be limited by Egyptian law.",
+            "Beyond that, our total liability in connection with the service is limited to the subscription fees you paid us in the twelve months before the claim, and we are not liable for indirect or consequential loss such as lost profit or lost business.",
+          ],
+        },
+        {
+          title: "11. Changes to these terms",
+          body: [
+            "We may update these terms. The current version always sits on this page with its date at the top.",
+            "For a material change we will tell subscribers before it takes effect, and you can cancel if you do not accept it.",
+          ],
+        },
+        {
+          title: "12. Governing law",
+          body: [
+            "These terms are governed by the laws of the Arab Republic of Egypt, and the courts of Cairo have jurisdiction over any dispute arising from them.",
+          ],
+        },
+      ],
+      contact: "Anything here you want explained before you sign? Ask us on the contact page and you will get an answer from a person, not a form letter.",
+    },
+    privacy: {
+      title: "Privacy policy",
+      sub: "What this website collects, which is very little, and what happens to it.",
+      updated: "Last updated 4 September 2026",
+      sections: [
+        {
+          title: "The short version",
+          body: [
+            "This website has no accounts, no login and no profile of you. One thing on it sends us anything at all: the contact form. Everything below is the detail of what that form carries and where it goes.",
+          ],
+        },
+        {
+          title: "What the contact form collects",
+          body: [
+            "The form asks for your name, your restaurant's name, your mobile number, how many branches you run, and anything you type into the message box. The first three are required; the rest is optional.",
+            "When you press send, those details are posted to this site and passed on to the DevyaPOS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
+            "Your IP address is used for a moment to stop the form being hammered by a script. It is not stored with your enquiry.",
+            "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, the details go to us through WhatsApp or through your own email client, and no submission is recorded on this site.",
+          ],
+        },
+        {
+          title: "What we do with it",
+          body: [
+            "We use your details to reply to you, to prepare a demo, and to load your menu if you ask for that. We use the campaign details to know which page or advert brought you, which is how we decide what to write next. Nothing else.",
+            "We do not sell any of it, we do not pass it to anyone else, and we do not add you to a mailing list you did not ask for. Ask us to delete your details and we delete them.",
+          ],
+        },
+        {
+          title: "Hosting",
+          body: [
+            "This site is hosted on Vercel. Like any web host, Vercel processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. Vercel acts as our hosting provider under their own terms.",
+          ],
+        },
+        {
+          title: "Analytics",
+          body: [
+            "We measure traffic with Vercel's own analytics: how many people reached a page, and roughly where from. It counts visits in aggregate. It does not build a profile of you, and it does not follow you to other websites.",
+            "We also count a handful of actions — the contact form being seen, a submission going through, a WhatsApp button being pressed — so we know which pages actually work. Names, phone numbers and message text never go into analytics.",
+          ],
+        },
+        {
+          title: "Cookies and browser storage",
+          body: [
+            "This site sets no cookies of its own — no advertising cookies, no tracking pixels, no third-party trackers.",
+            "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
+            "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie, and it does not follow you to other websites.",
+            "Vercel may set technical cookies where they are needed to serve or protect the site.",
+          ],
+        },
+        {
+          title: "The product is a separate matter",
+          body: [
+            "This policy covers the marketing website. If you become a customer, the data your restaurant puts into the DevyaPOS platform — your menu, your orders, your own customers — is covered by your subscription agreement. It stays yours, we process it only to run the service for you, and you can export or delete it whenever you want.",
+          ],
+        },
+        {
+          title: "Children",
+          body: [
+            "This site sells a business system. It is not directed at children and we do not knowingly collect anything from them.",
+          ],
+        },
+        {
+          title: "Your rights",
+          body: [
+            "Ask us what we hold about you, ask us to correct it, or ask us to delete it. Write to us through the contact page and we will deal with it — normally the same business day, and in any case without unreasonable delay.",
+          ],
+        },
+        {
+          title: "Changes to this policy",
+          body: [
+            "If this changes, the new version sits here with a new date at the top. There is no archive of old versions; the date tells you when the current text was written.",
+          ],
+        },
+      ],
+      contact: "Questions about any of this go to the contact page, and a person answers them.",
+    },
+    refund: {
+      title: "Refund and cancellation policy",
+      sub: "The 14-day trial is meant to make this page almost unnecessary. Here it is anyway.",
+      updated: "Last updated 4 September 2026",
+      sections: [
+        {
+          title: "The offer, restated",
+          body: [
+            "Fourteen days free with every Growth feature and no credit card. Billing monthly or once a year after that, per branch, in Egyptian pounds. Cancel any time, and take a full export of your data with you.",
+          ],
+        },
+        {
+          title: "The trial is the real refund policy",
+          body: [
+            "Fourteen days on your own menu, with your own staff, in your own branch, is the point at which to decide. We load the menu before the trial starts so you are testing the real thing rather than a demo.",
+            "We would far rather you walked away during the trial than paid for a month you did not want.",
+          ],
+        },
+        {
+          title: "Monthly subscriptions",
+          body: [
+            "Cancel at any time. Cancellation takes effect at the end of the month you have already paid for, and you keep full access until then.",
+            "We do not pro-rate a part-used month.",
+          ],
+        },
+        {
+          title: "Yearly subscriptions",
+          body: [
+            "Cancel within fourteen days of the first annual payment and we refund it in full.",
+            "After those fourteen days, cancelling stops the renewal and the year you have paid for runs to its end with full access.",
+          ],
+        },
+        {
+          title: "What is not refundable",
+          body: [
+            "Work already delivered at your request — custom development, migration beyond the standard menu load, on-site training — is not refundable once it has been done. We always agree the cost with you in writing before starting any of it.",
+            "Fees charged by your payment gateway on transactions you took are theirs, not ours, and we cannot refund them.",
+          ],
+        },
+        {
+          title: "If the fault is ours",
+          body: [
+            "If the platform is unusable for a meaningful stretch of time because of something we did, tell us. We will credit the time or refund it.",
+            "We would rather settle that quickly than argue about it.",
+          ],
+        },
+        {
+          title: "Getting your data out",
+          body: [
+            "Export your customers, orders and menu at any time, at no charge, before or after you cancel.",
+            "If you are moving to another system, or to your own server, we will help with the export rather than make it difficult. Holding data hostage is not a retention strategy we are interested in.",
+          ],
+        },
+        {
+          title: "How to cancel",
+          body: [
+            "Message us on WhatsApp or email us from the account owner's address and say you want to cancel. We confirm it in writing, with the date access ends and the export ready.",
+            "There is no retention script and nobody will keep you on the phone.",
+          ],
+        },
+        {
+          title: "How refunds are paid",
+          body: [
+            "Refunds go back to the method you paid with, within fourteen business days of us agreeing to one. How long your bank then takes is outside our control.",
+          ],
+        },
+      ],
+      contact: "If something about your billing does not look right, tell us on the contact page before it becomes a dispute. We would rather fix it.",
+    },
   },
 };

@@ -1,6 +1,6 @@
-# Settings only — this is a single-package repo. pnpm v10 reads overrides and
-# build allowances from here rather than package.json. The overrides carry the
-# audit fixes the bohub-pos workspace had for next@16's pinned postcss/sharp
+# Settings only — this is a single-package repo. pnpm reads overrides and build
+# allowances from here rather than package.json. The overrides carry the audit
+# fixes the bohub-pos workspace had for next@16's pinned postcss/sharp
 # (GHSA-6g55-p6wh-862q, GHSA-r28c-9q8g-f849, sharp <0.35.0); drop them once
 # next bumps its own pins.
 overrides:
@@ -10,7 +10,13 @@ onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - sharp
   - unrs-resolver
+# pnpm v11 refuses to run ANY script until every dependency that has a build
+# script is explicitly allowed or denied here. These three values used to be the
+# literal placeholder string "set this to true or false", which made every
+# `pnpm run <script>` — lint, build, CI — fail with ERR_PNPM_IGNORED_BUILDS
+# before the script even started. unrs-resolver needs its native binding built;
+# the other two ship prebuilt binaries and do not.
 allowBuilds:
-  '@parcel/watcher': set this to true or false
-  '@swc/core': set this to true or false
-  unrs-resolver: set this to true or false
+  '@parcel/watcher': false
+  '@swc/core': false
+  unrs-resolver: true

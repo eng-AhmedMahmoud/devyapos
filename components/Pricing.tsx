@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
+import { track } from "@/lib/analytics";
 import { formatEgp } from "@/lib/format";
 import { Check } from "./icons";
 import Reveal from "./Reveal";
@@ -11,6 +12,7 @@ import { Container, SectionHead } from "./Section";
 
 /** Yearly billing discount applied to the monthly per-branch price. */
 const YEARLY_RATE = 0.7;
+const MONTHS = 12;
 
 /**
  * Pricing.
@@ -21,11 +23,22 @@ const YEARLY_RATE = 0.7;
  *
  * (An earlier draft had a permanently free fourth tier. It was dropped; this
  * comment claimed four for a while after the data said three.)
+ *
+ * The yearly toggle used to show a discounted *monthly* figure and stop there,
+ * which left the visitor to work out what actually gets charged. Every priced
+ * card now states the twelve-month total and the saving underneath it —
+ * ambiguity about the number on the invoice is the cheapest trust to lose.
  */
 export default function Pricing({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
   const c = getContent(locale);
   const [yearly, setYearly] = useState(false);
+
+  /** `{total}`/`{saved}` are the only tokens in `pricing.annual`. */
+  const fill = (template: string, values: Record<string, string>) =>
+    template.replace(/\{(total|saved)\}/g, (match, key: string) =>
+      key in values ? values[key] : match,
+    );
 
   return (
     <section id="pricing" className={compact ? "py-2" : "bg-bg py-20 sm:py-24"}>
@@ -81,6 +94,16 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                   ? Math.round(plan.price * YEARLY_RATE)
                   : plan.price;
 
+            // What the card is actually asking for, and what the monthly plan
+            // would have cost over the same twelve months. Derived from the
+            // rounded monthly figure the card prints, so the three numbers
+            // reconcile exactly rather than to within a pound.
+            const annualTotal = monthly === null ? null : monthly * MONTHS;
+            const annualSaved =
+              plan.price === null || annualTotal === null
+                ? null
+                : plan.price * MONTHS - annualTotal;
+
             return (
               <Reveal as="li" key={plan.id} delay={(i % 4) * 60}>
                 <article
@@ -126,6 +149,27 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                     {c.pricing.perBranch}
                   </p>
 
+                  {/* The amount that leaves the bank account. Only on the
+                      yearly toggle, and only where there is a price to
+                      multiply — Enterprise is quoted, not billed. */}
+                  {yearly && annualTotal !== null && annualSaved !== null ? (
+                    <div className="mt-4 rounded-xl border border-line bg-surface-2 px-3.5 py-3">
+                      <p className="text-xs font-bold text-ink-2">
+                        {c.pricing.annual.label}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-ink-2">
+                        {fill(c.pricing.annual.total, {
+                          total: formatEgp(locale, annualTotal),
+                        })}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-mint">
+                        {fill(c.pricing.annual.saving, {
+                          saved: formatEgp(locale, annualSaved),
+                        })}
+                      </p>
+                    </div>
+                  ) : null}
+
                   <ul className="mt-6 flex flex-1 flex-col gap-2.5 border-t border-line pt-5">
                     {plan.features.map((f) => (
                       <li key={f} className="flex items-start gap-2.5">
@@ -141,6 +185,18 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
 
                   <Link
                     href="/contact"
+                    onClick={() =>
+                      // `plan` is the stable id, not the label: the Arabic
+                      // card says "النمو" and the English one "Growth", and
+                      // one funnel split in two by locale answers nothing.
+                      // The rendered name rides along for readability.
+                      track("pricing_cta_click", {
+                        locale,
+                        plan: plan.id,
+                        planName: plan.name,
+                        billing: yearly ? "yearly" : "monthly",
+                      })
+                    }
                     className={`btn mt-7 w-full ${
                       plan.featured ? "btn-primary" : "btn-ghost"
                     }`}
@@ -159,6 +215,11 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
               <span className="pearl" aria-hidden="true" />
               {c.pricing.founding}
             </p>
+            {yearly ? (
+              <p className="max-w-2xl text-xs leading-relaxed text-ink-dim">
+                {c.pricing.annual.note}
+              </p>
+            ) : null}
             <p className="max-w-2xl text-xs leading-relaxed text-ink-dim">
               {c.pricing.note}
             </p>

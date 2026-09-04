@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
+import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
 import FeatureGrid from "@/components/FeatureGrid";
+import JsonLd from "@/components/JsonLd";
 import PageHero from "@/components/PageHero";
 import PaymentProviders from "@/components/PaymentProviders";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
@@ -42,6 +44,7 @@ export default async function FeaturesPage({
 
   return (
     <>
+      <JsonLd data={pageJsonLd(locale, "/features")} />
       <PageHero
         badge={c.featuresPage.badge}
         title={c.featuresPage.title}
