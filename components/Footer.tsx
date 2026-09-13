@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { brand, mailtoLink, telLink } from "@/lib/brand";
+import CookieSettingsLink from "./CookieSettingsLink";
 import Logo from "./Logo";
 
 export default async function Footer() {
@@ -72,6 +73,12 @@ export default async function Footer() {
           <p>
             © {year} {brand.wordmark}. {c.footer.legal}
           </p>
+          {/* Reopens the cookie preferences panel — the standing route to
+              change or withdraw a prior consent choice, on every page. */}
+          <CookieSettingsLink
+            label={c.consent.settingsLabel}
+            className="w-fit text-on-espresso-dim underline underline-offset-2 transition-colors hover:text-gold"
+          />
           <p>
             {c.footer.madeBy}{" "}
             <a

@@ -131,13 +131,42 @@ export interface PricingSegment {
   points: string[];
 }
 
+/** One row of the cookie / storage inventory table on the cookie policy. */
+export interface CookieRow {
+  name: string;
+  purpose: string;
+  duration: string;
+  category: string;
+}
+
+/** The cookie / storage inventory, rendered as a table on the cookie policy. */
+export interface CookieTable {
+  title: string;
+  /** Column headers, in render order. */
+  columns: {
+    name: string;
+    purpose: string;
+    duration: string;
+    category: string;
+  };
+  rows: CookieRow[];
+}
+
 /** A standalone legal page. `updated` is rendered, not a comment. */
 export interface LegalDoc {
   title: string;
   sub: string;
   /** Visible "last updated" line. Change the date whenever the text changes. */
   updated: string;
+  /**
+   * Optional prominent notice rendered above the body — used to carry the
+   * "template / draft, review with legal counsel" banner on the privacy and
+   * cookie policies so it is impossible to miss.
+   */
+  disclaimer?: string;
   sections: Prose[];
+  /** Optional cookie inventory, rendered as a table after the sections. */
+  cookieTable?: CookieTable;
   /** Closing line pointing the reader at the contact route. */
   contact: string;
 }
@@ -387,6 +416,21 @@ export interface SiteContent {
         invalid_phone: string;
         invalid_branches: string;
       };
+      /**
+       * Data-processing notice shown above the consent box: what is done with
+       * the details and who receives them. The GDPR "transparency at the point
+       * of collection" line for the lead form.
+       */
+      processingNotice: string;
+      /** Explicit, unticked-by-default consent for sending the lead to us. */
+      consent: {
+        /** Label text before the linked privacy-policy phrase. */
+        label: string;
+        /** The linked phrase itself (points at /privacy). */
+        linkText: string;
+        /** Shown when the box is unticked on submit. */
+        required: string;
+      };
     };
     channels: { title: string; items: Card[] };
     waTemplate: string;
@@ -520,14 +564,51 @@ export interface SiteContent {
   };
 
   /**
-   * `/terms`, `/privacy`, `/refund` — the three routes the footer used to
-   * point at `/contact`. Plain-language drafts pending the owner's legal
-   * review; each carries its own visible `updated` line.
+   * `/terms`, `/privacy`, `/refund`, `/cookies` — the legal routes. Plain-
+   * language drafts pending the owner's legal review; each carries its own
+   * visible `updated` line, and privacy + cookies carry a `disclaimer` banner.
    */
   legal: {
     terms: LegalDoc;
     privacy: LegalDoc;
     refund: LegalDoc;
+    cookies: LegalDoc;
+  };
+
+  /**
+   * Cookie / tracking consent UI. Categories mirror `lib/consent.ts`: strictly-
+   * necessary is always on, analytics and marketing are opt-in. The default is
+   * privacy-preserving, so "reject all" is as prominent as "accept all".
+   */
+  consent: {
+    /** The first-visit banner. */
+    banner: {
+      title: string;
+      body: string;
+      /** Inline link labels appended after `body`. */
+      privacyLink: string;
+      cookiesLink: string;
+      acceptAll: string;
+      rejectAll: string;
+      customize: string;
+    };
+    /** The per-category preferences panel. */
+    panel: {
+      title: string;
+      intro: string;
+      save: string;
+      acceptAll: string;
+      rejectAll: string;
+      /** Status pill on the always-on strictly-necessary row. */
+      on: string;
+      categories: {
+        necessary: { title: string; body: string };
+        analytics: { title: string; body: string };
+        marketing: { title: string; body: string };
+      };
+    };
+    /** Footer control that reopens the panel. */
+    settingsLabel: string;
   };
 }
 

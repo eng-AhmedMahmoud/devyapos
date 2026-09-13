@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { getContent } from "@/content";
+import { Link } from "@/i18n/navigation";
 import { captureFirstTouch, readAttribution, track } from "@/lib/analytics";
 import { brand, whatsappLink } from "@/lib/brand";
 import {
@@ -64,6 +65,14 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<LeadErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [formError, setFormError] = useState<string | null>(null);
+  /**
+   * Explicit consent for the lead submit. Unticked by default, and required
+   * before the details are POSTed to us — GDPR consent at the point of
+   * collection. The WhatsApp and email routes are the visitor sending the data
+   * themselves through their own app, so they are not gated on this box.
+   */
+  const [consented, setConsented] = useState(false);
+  const [consentError, setConsentError] = useState(false);
   /** Honeypot. Never shown, never filled by a person. */
   const [company, setCompany] = useState("");
 
@@ -117,10 +126,15 @@ export default function ContactForm() {
 
     setFormError(null);
     const check = validateLead({ ...values, locale });
-    if (!check.ok) {
-      setErrors(check.errors);
+    const missingConsent = !consented;
+    if (!check.ok || missingConsent) {
+      setErrors(check.ok ? {} : check.errors);
+      setConsentError(missingConsent);
       setStatus("error");
-      track("lead_form_error", { locale, reason: "client_validation" });
+      track("lead_form_error", {
+        locale,
+        reason: !check.ok ? "client_validation" : "no_consent",
+      });
       // Move focus to the summary so a screen reader lands on the problem list
       // instead of announcing nothing and leaving the user on the button.
       requestAnimationFrame(() => summaryRef.current?.focus());
@@ -128,6 +142,7 @@ export default function ContactForm() {
     }
 
     setErrors({});
+    setConsentError(false);
     setStatus("submitting");
     track("lead_form_submit", { locale, branches: check.lead.branches ?? 0 });
 
@@ -151,6 +166,7 @@ export default function ContactForm() {
       if (res.ok && data.ok) {
         setStatus("success");
         setValues(EMPTY);
+        setConsented(false);
         track("lead_form_success", {
           locale,
           source: readAttribution()?.source ?? "direct",
@@ -235,18 +251,18 @@ export default function ContactForm() {
         role="alert"
         aria-live="assertive"
         className={
-          listed.length > 0 || formError
+          listed.length > 0 || formError || consentError
             ? "rounded-xl border border-danger/40 bg-danger/8 p-4 outline-none"
             : "sr-only"
         }
       >
-        {listed.length > 0 || formError ? (
+        {listed.length > 0 || formError || consentError ? (
           <>
             <p className="text-sm font-bold text-danger">{t.errorTitle}</p>
             {formError ? (
               <p className="mt-1 text-sm text-ink-2">{formError}</p>
             ) : null}
-            {listed.length > 0 ? (
+            {listed.length > 0 || consentError ? (
               <>
                 <p className="mt-1 text-sm text-ink-2">{t.errorSummary}</p>
                 <ul className="mt-2 flex flex-col gap-1">
@@ -259,6 +275,16 @@ export default function ContactForm() {
                       {fieldError[errors[key] as LeadErrorCode]}
                     </li>
                   ))}
+                  {consentError ? (
+                    <li className="text-sm text-ink-2">
+                      <a
+                        href={`#${fieldId("consent")}`}
+                        className="underline underline-offset-2"
+                      >
+                        {f.consent.required}
+                      </a>
+                    </li>
+                  ) : null}
                 </ul>
               </>
             ) : null}
@@ -368,6 +394,48 @@ export default function ContactForm() {
           value={company}
           onChange={(e) => setCompany(e.target.value)}
         />
+      </div>
+
+      {/*
+        Data-processing notice + explicit, unticked-by-default consent. The
+        primary "send my details" button will not POST until the box is ticked;
+        WhatsApp and email are unaffected, because there the visitor is sending
+        the data through their own app rather than to a record we store.
+      */}
+      <div className="flex flex-col gap-2.5 rounded-xl border border-line bg-surface-2 p-4">
+        <p className="text-xs leading-relaxed text-ink-dim">
+          {f.processingNotice}
+        </p>
+        <label className="flex items-start gap-2.5" htmlFor={fieldId("consent")}>
+          <input
+            id={fieldId("consent")}
+            type="checkbox"
+            checked={consented}
+            onChange={(e) => {
+              setConsented(e.target.checked);
+              if (e.target.checked) setConsentError(false);
+            }}
+            disabled={submitting}
+            aria-invalid={consentError ? true : undefined}
+            aria-describedby={consentError ? errorId("consent") : undefined}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
+          />
+          <span className="text-xs leading-relaxed text-ink-2">
+            {f.consent.label}{" "}
+            <Link
+              href="/privacy"
+              className="underline underline-offset-2 hover:text-caramel"
+            >
+              {f.consent.linkText}
+            </Link>
+            .
+          </span>
+        </label>
+        {consentError ? (
+          <span id={errorId("consent")} className="text-xs text-danger">
+            {f.consent.required}
+          </span>
+        ) : null}
       </div>
 
       <div className="mt-1 flex flex-col gap-3 sm:flex-row">

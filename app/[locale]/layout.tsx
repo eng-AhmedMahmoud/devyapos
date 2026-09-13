@@ -8,12 +8,12 @@ import {
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { routing } from "@/i18n/routing";
 import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import Attribution from "@/components/Attribution";
+import ConsentedAnalytics from "@/components/ConsentedAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -125,13 +125,16 @@ export default async function LocaleLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          {/* Consent gate. Renders the first-visit banner and the preferences
+              panel; needs the intl context for its bilingual copy. */}
+          <CookieConsent />
         </NextIntlClientProvider>
-        {/* Records the campaign the visit started on, before the visitor
-            navigates away from the tagged landing page. */}
+        {/* Records the campaign the visit started on — but only once the
+            visitor has opted into the marketing category (see lib/analytics). */}
         <Attribution />
-        {/* Both ship nothing in dev and only report from the deployed site. */}
-        <Analytics />
-        <SpeedInsights />
+        {/* Vercel Analytics + Speed Insights, mounted only after analytics
+            consent. Nothing loads or reports before the visitor opts in. */}
+        <ConsentedAnalytics />
       </body>
     </html>
   );
