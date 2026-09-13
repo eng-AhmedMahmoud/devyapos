@@ -61,12 +61,17 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy | DevyaPOS",
       description:
-        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, Vercel hosting, and no cookies of our own.",
+        "What this site collects and why: the contact form, hosting, and analytics you have to opt into. Your rights under the GDPR, and how to exercise them. A draft pending legal review.",
     },
     refund: {
       title: "Refund and cancellation | DevyaPOS",
       description:
         "14 days free with no card, monthly or yearly billing, cancel any time, and a full export of your data on the way out. The policy in plain words.",
+    },
+    cookies: {
+      title: "Cookie policy | DevyaPOS",
+      description:
+        "Every cookie and browser store this site uses, why, and for how long — with analytics and marketing off until you opt in. How to change your choice. A draft pending legal review.",
     },
   },
 
@@ -659,9 +664,10 @@ export const en: SiteContent = {
         links: [
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
-          { label: "Terms of service", href: "/contact" },
-          { label: "Privacy policy", href: "/contact" },
-          { label: "Refund policy", href: "/contact" },
+          { label: "Terms of service", href: "/terms" },
+          { label: "Privacy policy", href: "/privacy" },
+          { label: "Cookie policy", href: "/cookies" },
+          { label: "Refund policy", href: "/refund" },
         ],
       },
     ],
@@ -785,6 +791,14 @@ export const en: SiteContent = {
         too_long: "That's longer than we can accept",
         invalid_phone: "Enter a valid Egyptian mobile, e.g. 01055930032",
         invalid_branches: "Enter a whole number of branches (1 or more)",
+      },
+      processingNotice:
+        "When you press send, these details go to Devya Solutions (the DevyaPOS team) so we can reply to your enquiry — nobody else. We keep them only as long as needed to follow up, and you can ask us to delete them any time.",
+      consent: {
+        label:
+          "I agree that DevyaPOS may use the details I've entered to contact me about my enquiry, as set out in the",
+        linkText: "privacy policy",
+        required: "Please tick the box to agree before sending your details.",
       },
     },
     channels: {
@@ -1023,6 +1037,41 @@ export const en: SiteContent = {
   trustLine: {
     short: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it.",
     withCr: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
+  },
+
+  consent: {
+    banner: {
+      title: "Your privacy, your choice",
+      body: "We use cookies and similar storage. Strictly-necessary ones keep the site working; analytics and marketing stay off until you turn them on. Choose what you're happy with — you can change it any time.",
+      privacyLink: "Privacy policy",
+      cookiesLink: "Cookie policy",
+      acceptAll: "Accept all",
+      rejectAll: "Reject all",
+      customize: "Customize",
+    },
+    panel: {
+      title: "Cookie preferences",
+      intro: "Turn each category on or off, then save. Strictly-necessary storage is always on because the site can't work without it.",
+      save: "Save my choices",
+      acceptAll: "Accept all",
+      rejectAll: "Reject all",
+      on: "Always on",
+      categories: {
+        necessary: {
+          title: "Strictly necessary",
+          body: "Remembers your language and light/dark choice and keeps the site secure. No tracking, and nothing that leaves your device on its own.",
+        },
+        analytics: {
+          title: "Analytics",
+          body: "Vercel Web Analytics and Speed Insights — aggregate page counts and load times, so we can see which pages work. No profile of you, and no tracking across other sites.",
+        },
+        marketing: {
+          title: "Marketing",
+          body: "Remembers which campaign link brought you (for one visit) so a lead you send us can be credited to it. Nothing is loaded and nothing is stored until you allow this.",
+        },
+      },
+    },
+    settingsLabel: "Cookie settings",
   },
 
   etaInvoicing: {
@@ -1503,57 +1552,84 @@ export const en: SiteContent = {
     },
     privacy: {
       title: "Privacy policy",
-      sub: "What this website collects, which is very little, and what happens to it.",
+      sub: "What this website collects, why, who it goes to, and the rights you have over it.",
       updated: "Last updated 4 September 2026",
+      disclaimer:
+        "TEMPLATE / DRAFT — not legal advice. This policy is a starting template prepared for review with qualified legal counsel before it is relied upon. It has not been reviewed by a lawyer, and nothing here should be taken as a definitive statement that this site complies with the GDPR or any other law. Replace the bracketed items and confirm the detail with your advisers before publishing.",
       sections: [
         {
           title: "The short version",
           body: [
-            "This website has no accounts, no login and no profile of you. One thing on it sends us anything at all: the contact form. Everything below is the detail of what that form carries and where it goes.",
+            "This website has no accounts, no login and no profile of you. One thing on it sends us anything at all: the contact form. Analytics and campaign tracking stay switched off until you opt in through the cookie banner. Everything below is the detail.",
           ],
         },
         {
-          title: "What the contact form collects",
+          title: "Who is responsible for your data (the controller)",
           body: [
-            "The form asks for your name, your restaurant's name, your mobile number, how many branches you run, and anything you type into the message box. The first three are required; the rest is optional.",
-            "When you press send, those details are posted to this site and passed on to the DevyaPOS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
-            "Your IP address is used for a moment to stop the form being hammered by a script. It is not stored with your enquiry.",
-            "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, the details go to us through WhatsApp or through your own email client, and no submission is recorded on this site.",
+            "The controller of the personal data collected through this website is Devya Solutions, the Egyptian software studio that operates DevyaPOS (\"we\", \"us\").",
+            "You can reach us about anything in this policy, including any of the rights below, by email at devya.solutions@gmail.com or through the contact page on this site.",
+            "[Add the registered legal name, business address and, where one is appointed, the details of a data protection officer or an EU/UK representative under Article 27 GDPR. These are placeholders pending legal review.]",
           ],
         },
         {
-          title: "What we do with it",
+          title: "What we collect, and why",
           body: [
-            "We use your details to reply to you, to prepare a demo, and to load your menu if you ask for that. We use the campaign details to know which page or advert brought you, which is how we decide what to write next. Nothing else.",
-            "We do not sell any of it, we do not pass it to anyone else, and we do not add you to a mailing list you did not ask for. Ask us to delete your details and we delete them.",
+            "Contact-form details you give us: your name, your restaurant's name and your mobile number (required), and the number of branches and a free-text message (optional). We collect these to answer your enquiry, prepare a demo and load your menu if you ask.",
+            "How you reached us: if you have allowed the marketing category, the campaign link (UTM tags), the referring website and the page you landed on travel with the form so we can tell which page or advert brought you. Without that consent this is not collected.",
+            "Technical data every website receives: your IP address, browser and device type, the page requested and the time. Your IP address is used momentarily to rate-limit the form against automated abuse and is not stored with your enquiry.",
+            "Usage measurement: if you have allowed the analytics category, aggregate page counts, load times and a few interaction events (the form being seen, a submission going through, a WhatsApp button being pressed). Names, phone numbers and message text never go into analytics.",
+            "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, your details reach us through WhatsApp or your own email client, and no submission is recorded on this website.",
           ],
         },
         {
-          title: "Hosting",
+          title: "Our legal basis for using it",
           body: [
-            "This site is hosted on Vercel. Like any web host, Vercel processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. Vercel acts as our hosting provider under their own terms.",
+            "Contact-form details: we rely on your consent (you choose to send the form) and on our legitimate interest in responding to a business enquiry and taking steps toward a possible contract. GDPR Article 6(1)(a), (b) and (f).",
+            "Analytics and campaign attribution: your consent, given through the cookie banner, and only from the moment you give it. GDPR Article 6(1)(a). You can withdraw it at any time, and doing so is as easy as giving it.",
+            "Security and abuse-prevention (including the momentary use of your IP address): our legitimate interest in keeping the site available and safe. GDPR Article 6(1)(f).",
           ],
         },
         {
-          title: "Analytics",
+          title: "Who we share it with",
           body: [
-            "We measure traffic with Vercel's own analytics: how many people reached a page, and roughly where from. It counts visits in aggregate. It does not build a profile of you, and it does not follow you to other websites.",
-            "We also count a handful of actions — the contact form being seen, a submission going through, a WhatsApp button being pressed — so we know which pages actually work. Names, phone numbers and message text never go into analytics.",
+            "We do not sell your data, we do not add you to a mailing list you did not ask for, and we share it only with the service providers that help us run the site, each acting as our processor under its own terms:",
+            "Vercel Inc. — hosting, and (only with your analytics consent) Vercel Web Analytics and Speed Insights. Vercel processes the technical data a request carries in order to serve and protect the site.",
+            "Beyond those processors, your enquiry is seen only by the Devya Solutions team who follow it up. If a request from a court or regulator legally compels disclosure, we comply with the minimum the law requires.",
+          ],
+        },
+        {
+          title: "Where your data is processed (international transfers)",
+          body: [
+            "We are based in Egypt, and our hosting provider operates globally, so your data may be processed on servers outside your own country — including outside the European Economic Area.",
+            "Where a transfer of EEA or UK personal data takes place, it is intended to be covered by an appropriate safeguard such as the European Commission's Standard Contractual Clauses. [Confirm the transfer mechanism and the processing locations with your advisers.]",
+          ],
+        },
+        {
+          title: "How long we keep it",
+          body: [
+            "Contact-form enquiries: kept for as long as we are in contact about them and for a reasonable period afterwards so we can pick the conversation back up, then deleted. [Set a specific retention period with your advisers.]",
+            "Analytics: held in aggregate by our analytics provider and not tied to an identifiable person.",
+            "You can ask us to delete your enquiry sooner, and we will unless we are required to keep it.",
+          ],
+        },
+        {
+          title: "Your rights",
+          body: [
+            "Where the GDPR applies, you have the right to: access the personal data we hold about you; have it corrected (rectification); have it deleted (erasure); restrict how we use it; object to processing based on our legitimate interests; receive the data you gave us in a portable form; and withdraw any consent you have given, at any time, without affecting what we did before you withdrew it.",
+            "You can exercise any of these by emailing devya.solutions@gmail.com or using the contact page. We will respond without undue delay and within one month, and we will not charge you for a reasonable request.",
+            "You also have the right to complain to a data protection supervisory authority — in the EEA, the authority in your country of residence or work. [If you serve EU/UK users, name the lead authority and provide its contact details after legal review.]",
           ],
         },
         {
           title: "Cookies and browser storage",
           body: [
-            "This site sets no cookies of its own — no advertising cookies, no tracking pixels, no third-party trackers.",
-            "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
-            "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie, and it does not follow you to other websites.",
-            "Vercel may set technical cookies where they are needed to serve or protect the site.",
+            "Non-essential cookies and tracking do not run until you opt in through the banner, and you can change or withdraw your choice any time from \"Cookie settings\" in the footer. The full inventory — what each item is, why it exists and how long it lasts — is on the cookie policy.",
           ],
         },
         {
           title: "The product is a separate matter",
           body: [
-            "This policy covers the marketing website. If you become a customer, the data your restaurant puts into the DevyaPOS platform — your menu, your orders, your own customers — is covered by your subscription agreement. It stays yours, we process it only to run the service for you, and you can export or delete it whenever you want.",
+            "This policy covers the marketing website. If you become a customer, the data your restaurant puts into the DevyaPOS platform — your menu, your orders, your own customers — is covered by your subscription agreement, under which we act as your processor. It stays yours, we process it only to run the service for you, and you can export or delete it whenever you want.",
           ],
         },
         {
@@ -1563,19 +1639,13 @@ export const en: SiteContent = {
           ],
         },
         {
-          title: "Your rights",
-          body: [
-            "Ask us what we hold about you, ask us to correct it, or ask us to delete it. Write to us through the contact page and we will deal with it — normally the same business day, and in any case without unreasonable delay.",
-          ],
-        },
-        {
           title: "Changes to this policy",
           body: [
             "If this changes, the new version sits here with a new date at the top. There is no archive of old versions; the date tells you when the current text was written.",
           ],
         },
       ],
-      contact: "Questions about any of this go to the contact page, and a person answers them.",
+      contact: "Questions about any of this, or a request to exercise one of your rights, go to the contact page, and a person answers them.",
     },
     refund: {
       title: "Refund and cancellation policy",
@@ -1645,6 +1715,96 @@ export const en: SiteContent = {
         },
       ],
       contact: "If something about your billing does not look right, tell us on the contact page before it becomes a dispute. We would rather fix it.",
+    },
+    cookies: {
+      title: "Cookie policy",
+      sub: "Every cookie and browser store this site uses, why it exists, and how long it lasts.",
+      updated: "Last updated 4 September 2026",
+      disclaimer:
+        "TEMPLATE / DRAFT — not legal advice. This policy is a starting template prepared for review with qualified legal counsel before it is relied upon. It has not been reviewed by a lawyer, and nothing here should be taken as a definitive statement that this site complies with the GDPR, the ePrivacy rules or any other law. Confirm the inventory below matches what actually loads before publishing.",
+      sections: [
+        {
+          title: "What this covers",
+          body: [
+            "\"Cookies\" here is shorthand for cookies and the similar browser storage this site uses (local storage and session storage). This page lists each one, what it does, how long it lasts, and which category it belongs to.",
+            "The default is privacy-preserving: nothing in the analytics or marketing categories loads or is stored until you opt in through the banner. \"Reject all\" is the same as doing nothing.",
+          ],
+        },
+        {
+          title: "The categories",
+          body: [
+            "Strictly necessary — always on, because the site cannot work without them. They remember your language and theme, keep the site secure, and store the cookie choice you make here. They set no third-party tracker and are not used to profile you.",
+            "Analytics (opt-in) — Vercel Web Analytics and Speed Insights, which count visits and page load times in aggregate so we can see which pages work. They run only after you allow this category.",
+            "Marketing (opt-in) — remembers which campaign link brought you, for the length of one visit, so a lead you choose to send us can be credited to it. It runs only after you allow this category and follows you to no other website.",
+          ],
+        },
+        {
+          title: "The inventory",
+          body: [
+            "The items below are what this site sets. Analytics and marketing entries are written only after you opt in.",
+          ],
+        },
+        {
+          title: "Third-party cookies",
+          body: [
+            "Our analytics runs on Vercel, our hosting provider, and Vercel may set technical cookies where they are needed to serve or protect the site. We set no advertising cookies and embed no third-party trackers, pixels or social widgets on this site.",
+          ],
+        },
+        {
+          title: "Changing your choice",
+          body: [
+            "Open \"Cookie settings\" in the footer at any time to turn categories on or off, or to withdraw a choice you made before — it is as easy as giving it. You can also clear cookies and site storage from your browser settings, though clearing the strictly-necessary items will simply make the banner ask you again and reset your theme.",
+          ],
+        },
+        {
+          title: "Changes to this policy",
+          body: [
+            "If the cookies we use change, this page and the table change with it, and the date at the top moves. The date tells you when the current text was written.",
+          ],
+        },
+      ],
+      cookieTable: {
+        title: "Cookies and browser storage in use",
+        columns: {
+          name: "Name",
+          purpose: "Purpose",
+          duration: "Duration",
+          category: "Category",
+        },
+        rows: [
+          {
+            name: "devyapos-theme",
+            purpose: "Remembers your light / dark theme choice.",
+            duration: "Persistent (local storage — until you clear it)",
+            category: "Strictly necessary",
+          },
+          {
+            name: "devyapos.consent.v1",
+            purpose: "Stores the cookie choices you make here, so we don't ask again.",
+            duration: "Persistent (local storage — until you clear it)",
+            category: "Strictly necessary",
+          },
+          {
+            name: "Vercel platform",
+            purpose: "Technical cookies your host may set to route requests and protect the site from abuse.",
+            duration: "Session / short-lived",
+            category: "Strictly necessary",
+          },
+          {
+            name: "Vercel Web Analytics & Speed Insights",
+            purpose: "Aggregate page counts, interaction events and load times. No profile, no cross-site tracking.",
+            duration: "No cookie; no persistent identifier stored on your device",
+            category: "Analytics (opt-in)",
+          },
+          {
+            name: "devyapos.attribution.v1",
+            purpose: "Remembers which campaign link brought you, to attach to a lead you choose to send.",
+            duration: "Session (local to the tab — cleared when you close it)",
+            category: "Marketing (opt-in)",
+          },
+        ],
+      },
+      contact: "Questions about cookies, or a request to change what we store, go to the contact page, and a person answers them.",
     },
   },
 };

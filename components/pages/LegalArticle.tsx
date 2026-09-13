@@ -35,6 +35,25 @@ export default async function LegalArticle({ doc }: { doc: LegalDoc }) {
       <section className="bg-bg py-16 sm:py-20">
         <Container>
           <article className="flex max-w-3xl flex-col gap-11">
+            {/* Prominent template/draft notice — impossible to miss on the two
+                policies that carry one, so the text is never mistaken for
+                reviewed, relied-upon legal terms. */}
+            {doc.disclaimer ? (
+              <Reveal>
+                <aside
+                  role="note"
+                  className="rounded-2xl border-2 border-caramel/50 bg-caramel/10 p-5 sm:p-6"
+                >
+                  <p className="text-xs font-bold uppercase tracking-wide text-caramel">
+                    ⚠︎
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-pretty text-ink-2">
+                    {doc.disclaimer}
+                  </p>
+                </aside>
+              </Reveal>
+            ) : null}
+
             {doc.sections.map((section, i) => (
               <Reveal key={section.title} delay={Math.min(i, 3) * 40}>
                 <section>
@@ -54,6 +73,53 @@ export default async function LegalArticle({ doc }: { doc: LegalDoc }) {
                 </section>
               </Reveal>
             ))}
+
+            {/* Cookie inventory. Scrolls inside its own container on narrow
+                screens so the article never scrolls sideways. */}
+            {doc.cookieTable ? (
+              <Reveal>
+                <section>
+                  <h2 className="font-display text-xl text-balance text-ink sm:text-2xl">
+                    {doc.cookieTable.title}
+                  </h2>
+                  <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
+                    <table className="w-full min-w-[38rem] border-collapse text-start text-sm">
+                      <thead>
+                        <tr className="bg-surface-2 text-ink">
+                          <th className="p-3 text-start font-bold">
+                            {doc.cookieTable.columns.name}
+                          </th>
+                          <th className="p-3 text-start font-bold">
+                            {doc.cookieTable.columns.purpose}
+                          </th>
+                          <th className="p-3 text-start font-bold">
+                            {doc.cookieTable.columns.duration}
+                          </th>
+                          <th className="p-3 text-start font-bold">
+                            {doc.cookieTable.columns.category}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {doc.cookieTable.rows.map((row) => (
+                          <tr
+                            key={row.name}
+                            className="border-t border-line align-top text-ink-2"
+                          >
+                            <td className="p-3 font-medium text-ink" dir="ltr">
+                              {row.name}
+                            </td>
+                            <td className="p-3 leading-relaxed">{row.purpose}</td>
+                            <td className="p-3 leading-relaxed">{row.duration}</td>
+                            <td className="p-3 leading-relaxed">{row.category}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              </Reveal>
+            ) : null}
 
             <Reveal>
               <div className="card flex flex-col items-start gap-4 p-7">

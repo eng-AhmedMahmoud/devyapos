@@ -10,11 +10,13 @@
  *   2. It is a no-op outside production, so local work does not pollute the
  *      dashboard with test leads.
  *
- * `<Analytics />` and `<SpeedInsights />` are mounted in the root layout; this
- * module only emits custom events on top of the automatic page views.
+ * `<Analytics />` and `<SpeedInsights />` are mounted in the root layout behind
+ * a consent gate (`ConsentedAnalytics`); this module only emits custom events
+ * on top of the automatic page views, and only once analytics is consented.
  */
 
 import { track as vercelTrack } from "@vercel/analytics";
+import { readConsent } from "./consent";
 import { UTM_KEYS, coarseTimestamp, type LeadAttribution } from "./leads";
 
 /**
@@ -52,6 +54,10 @@ export function track(
 ): void {
   if (typeof window === "undefined") return;
 
+  // Analytics is opt-in. Without consent this is a no-op — no event is sent and
+  // the Vercel script is not even mounted (see ConsentedAnalytics).
+  if (!readConsent().analytics) return;
+
   if (process.env.NODE_ENV !== "production") {
     // Visible while developing, invisible to the dashboard.
     console.debug("[analytics]", event, props ?? {});
@@ -68,9 +74,10 @@ export function track(
 /**
  * sessionStorage key for the first-touch attribution record.
  *
- * Session-scoped, not a cookie: it dies with the tab, is never sent
- * automatically, and needs no consent banner. Versioned so a shape change does
- * not have to read old records.
+ * Session-scoped, not a cookie: it dies with the tab and is never sent
+ * automatically. Even so it is a marketing/tracking store, so it is only
+ * written once the visitor opts into the marketing category (see
+ * `captureFirstTouch`). Versioned so a shape change does not read old records.
  */
 const ATTRIBUTION_KEY = "devyapos.attribution.v1";
 
@@ -98,6 +105,10 @@ function readStore(): LeadAttribution | null {
  */
 export function captureFirstTouch(): LeadAttribution | null {
   if (typeof window === "undefined") return null;
+
+  // Marketing is opt-in: nothing is written until the visitor allows it. A
+  // record captured under an earlier consent is still honoured on read.
+  if (!readConsent().marketing) return readStore();
 
   const existing = readStore();
   if (existing) return existing;
