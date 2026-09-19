@@ -119,8 +119,11 @@ export interface Fact {
 }
 
 /**
- * A buyer segment on the pricing page. The price is identical for every
- * segment — only the framing changes, so there is no `price` here on purpose.
+ * A buyer segment on the pricing page.
+ *
+ * Packages follow the service model, so a segment now names the one that fits
+ * it. `plan` is a rendered string, not a number: Group is quoted per deal and
+ * a numeric field would tempt someone into inventing a figure for it.
  */
 export interface PricingSegment {
   id: string;
@@ -129,6 +132,8 @@ export interface PricingSegment {
   headline: string;
   body: string;
   points: string[];
+  /** The package this segment buys, priced as the pricing cards price it. */
+  plan: string;
 }
 
 /** One row of the cookie / storage inventory table on the cookie policy. */

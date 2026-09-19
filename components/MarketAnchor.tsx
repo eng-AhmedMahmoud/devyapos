@@ -6,11 +6,13 @@ import Reveal from "@/components/Reveal";
 /**
  * What the rest of the Egyptian market charges, next to what we charge.
  *
- * "Affordable" is a claim; 199 against a published 1,506 is a number the
- * visitor can go and check. The comparison is per branch per month, because
- * that is the only unit where the two are actually comparable — the enterprise
- * tiers also bill per terminal and sell loyalty and delivery as add-ons, which
- * the row notes say rather than quietly ignoring.
+ * "Affordable" is a claim; 199 against a published 2,848.95 is a number the
+ * visitor can go and check. Both of our published packages are listed, because
+ * a single row would leave a dining-room buyer to discover the 499 later. The
+ * comparison is per branch per month, because that is the only unit where the
+ * two sides are actually comparable — the enterprise tiers also bill per
+ * terminal and sell loyalty and delivery as add-ons, which the row notes say
+ * rather than quietly ignoring.
  *
  * Competitor figures are their own published Egyptian prices, dated in the copy
  * and hedged in the footnote. Someone else's price list is not ours to promise;

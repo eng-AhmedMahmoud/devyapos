@@ -15,10 +15,11 @@ import { Container, SectionHead } from "./Section";
  * let the visitor self-select before a number appears, so the number lands on a
  * reader who has already decided which half of the product they care about.
  *
- * The price is identical in every tab — there is deliberately no `price` on
- * `PricingSegment`. A tabbed pricing page normally implies tiered billing, so
- * `segments.note` says out loud that it does not, and it renders on every tab
- * rather than only the first.
+ * Each tab now names the package that fits it. It used to say the opposite —
+ * one price, four framings — which was true while the ladder was Growth /
+ * Scale / Enterprise and stopped being true when the product was re-segmented
+ * by service model. `segment.plan` is a rendered string rather than a number
+ * because Group has no number, and inventing one would be the whole bug.
  *
  * Kept out of `Pricing` because `Pricing` is also embedded on /about, where a
  * reader who has just finished the company story does not need to re-qualify
@@ -81,6 +82,10 @@ export default function PricingSegments() {
               <p className="mt-3 leading-relaxed text-pretty text-ink-dim">
                 {active.body}
               </p>
+              <p className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-sm font-bold text-brand">
+                <span className="pearl" aria-hidden="true" />
+                {active.plan}
+              </p>
             </div>
             <ul className="flex flex-col gap-2.5 border-t border-line pt-5 lg:border-t-0 lg:border-s lg:pt-0 lg:ps-7">
               {active.points.map((point) => (
@@ -97,8 +102,8 @@ export default function PricingSegments() {
           </div>
         </Reveal>
 
-        {/* One price, four framings — stated wherever the tabs are, because a
-            tab strip above a price grid otherwise reads as four price lists. */}
+        {/* Why the counter package is smaller than the dining-room one, said
+            where the tabs are rather than left for the reader to infer. */}
         <Reveal delay={160}>
           <p className="mt-5 max-w-3xl text-xs leading-relaxed text-ink-dim">
             {s.note}

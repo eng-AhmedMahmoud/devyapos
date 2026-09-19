@@ -73,7 +73,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
 /**
  * The product itself, priced from the real plans.
  *
- * `AggregateOffer` spans the three published plans; Enterprise carries no
+ * `AggregateOffer` spans the three published packages; Group carries no
  * `price` because it is quoted, so it contributes to `offerCount` but not to
  * the low/high band.
  */

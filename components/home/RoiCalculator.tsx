@@ -10,7 +10,9 @@ import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 import { formatEgp, formatNumber } from "@/lib/format";
 
-/** Growth plan, EGP per branch per month — the figure the payback is costed at. */
+/** Counter package, EGP per branch per month — the cheapest published price,
+ * and the figure the payback is costed at. A dining room pays 499; the tooltip
+ * on the cost row says so rather than letting the calculator flatter itself. */
 const PLAN_PRICE = 199;
 /** Deliberately conservative share of aggregator orders assumed to move over. */
 const SHIFT_RATE = 0.3;

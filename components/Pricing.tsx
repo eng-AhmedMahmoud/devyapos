@@ -17,9 +17,10 @@ const MONTHS = 12;
 /**
  * Pricing.
  *
- * Three tiers. Two priced, one quoted: the ladder makes the middle tier the
- * obvious pick rather than the only one, and the per-branch unit matches how
- * this market already reasons about cost.
+ * Three packages. Two priced, one quoted — and they are a service model, not a
+ * size ladder: Counter runs a counter, Dining room adds the room, Group adds
+ * the back office. The per-branch unit matches how this market already reasons
+ * about cost.
  *
  * (An earlier draft had a permanently free fourth tier. It was dropped; this
  * comment claimed four for a while after the data said three.)
@@ -151,7 +152,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
 
                   {/* The amount that leaves the bank account. Only on the
                       yearly toggle, and only where there is a price to
-                      multiply — Enterprise is quoted, not billed. */}
+                      multiply — Group is quoted, not billed. */}
                   {yearly && annualTotal !== null && annualSaved !== null ? (
                     <div className="mt-4 rounded-xl border border-line bg-surface-2 px-3.5 py-3">
                       <p className="text-xs font-bold text-ink-2">
@@ -187,7 +188,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                     href="/contact"
                     onClick={() =>
                       // `plan` is the stable id, not the label: the Arabic
-                      // card says "النمو" and the English one "Growth", and
+                      // card says "الكاونتر" and the English one "Counter", and
                       // one funnel split in two by locale answers nothing.
                       // The rendered name rides along for readability.
                       track("pricing_cta_click", {
