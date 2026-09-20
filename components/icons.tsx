@@ -209,7 +209,32 @@ const Whatsapp = (p: IconProps) => (
   </svg>
 );
 
+/*
+ * The two social glyphs. Drawn in the same 24px stroke language as the rest of
+ * the set rather than pasted from a brand kit: Meta's own marks are trademarks
+ * with their own usage rules, and a stroke outline that matches the footer is
+ * both safer and visually consistent with everything around it.
+ */
+const Instagram = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+  </Base>
+);
+
+const Facebook = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M14.5 8.5h2.2M14.5 8.5V7.2a2 2 0 0 1 2-2h1.2" />
+    <path d="M14.5 8.5v10.9" />
+    <path d="M11 12.4h5.6" />
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+  </Base>
+);
+
 export const icons = {
+  instagram: Instagram,
+  facebook: Facebook,
   register: Register,
   kds: Kds,
   cart: Cart,

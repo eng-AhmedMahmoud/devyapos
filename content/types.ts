@@ -322,6 +322,8 @@ export interface SiteContent {
     cols: { title: string; links: { label: string; href: string }[] }[];
     legal: string;
     madeBy: string;
+    /** Group label for the social icon row — read by screen readers only. */
+    social: string;
   };
   about: {
     badge: string;
@@ -365,6 +367,14 @@ export interface SiteContent {
        * submission that is received and stored — never "nothing is stored".
        */
       hint: string;
+      /**
+       * The collection notice, shown at the point the details are typed rather
+       * than only in the policy — a form that takes a name and a mobile number
+       * has to say what happens to them where the person can see it.
+       */
+      privacy: string;
+      /** Link text to the full policy, rendered inline after `privacy`. */
+      privacyLink: string;
       messagePlaceholder: string;
       /** Submission lifecycle. */
       status: {

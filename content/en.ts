@@ -660,13 +660,20 @@ export const en: SiteContent = {
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
           { label: "Terms of service", href: "/contact" },
-          { label: "Privacy policy", href: "/contact" },
+          /* The privacy policy is the one legal page that must be reachable
+             rather than routed to /contact: it is a notice describing what the
+             site actually does with what you send it, and a site that collects
+             a name and a phone number owes the reader that link. Terms and
+             refund stay pointed at /contact until they have had a legal read,
+             because those two are contractual rather than informational. */
+          { label: "Privacy policy", href: "/privacy" },
           { label: "Refund policy", href: "/contact" },
         ],
       },
     ],
     legal: "All rights reserved.",
     madeBy: "A product by",
+    social: "DevyaPOS on social media",
   },
 
   about: {
@@ -767,6 +774,9 @@ export const en: SiteContent = {
       submit: "Send on WhatsApp",
       submitEmail: "Send by email",
       hint: "Your details come straight to the DevyaPOS team so we can call you back — or send them on WhatsApp instead, if that suits you better.",
+      privacy:
+        "We use what you send here to answer you about DevyaPOS and nothing else. We don't sell it, share it with advertisers, or add you to a marketing list. Ask us to delete it any time.",
+      privacyLink: "Read the privacy policy",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
       status: {
@@ -1513,6 +1523,13 @@ export const en: SiteContent = {
           ],
         },
         {
+          title: "Who is responsible for this",
+          body: [
+            "DevyaPOS is operated by Devya Solutions, in Cairo, Egypt. We decide what this website collects and what happens to it, which makes us the controller of it.",
+            "For anything in this policy — a question, a correction, or a request to delete what we hold — write to devya.solutions@gmail.com or message +20 104 185 8781. A person reads both.",
+          ],
+        },
+        {
           title: "What the contact form collects",
           body: [
             "The form asks for your name, your restaurant's name, your mobile number, how many branches you run, and anything you type into the message box. The first three are required; the rest is optional.",
@@ -1529,9 +1546,25 @@ export const en: SiteContent = {
           ],
         },
         {
-          title: "Hosting",
+          title: "Why we are allowed to hold it",
+          body: [
+            "You sent us an enquiry and asked to be contacted about a product. Answering that is the reason we hold your details, and it is the only reason — in the language of data protection law, the steps taken at your request before a contract, and our legitimate interest in running a business that replies to the people who write to it.",
+            "We do not rely on consent for this, because consent you cannot meaningfully refuse is not consent. Nothing here is used for advertising, profiling or automated decisions.",
+          ],
+        },
+        {
+          title: "How long we keep it",
+          body: [
+            "An enquiry that goes nowhere is deleted within twelve months. If you become a customer, your contact details move into your account and are kept for as long as that account exists, and afterwards only for as long as Egyptian tax and company law requires us to keep business records.",
+            "Campaign and page data is aggregated well before that and stops being about you at all.",
+            "You do not have to wait for any of these periods. Ask, and it goes sooner.",
+          ],
+        },
+        {
+          title: "Hosting, and where your details are",
           body: [
             "This site is hosted on Vercel. Like any web host, Vercel processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. Vercel acts as our hosting provider under their own terms.",
+            "That means your details are processed on servers outside Egypt, and may be handled in the United States and the European Union. We use Vercel's standard data processing terms for that transfer. If you would rather not send anything through this site at all, the WhatsApp and email routes on the contact page reach us directly.",
           ],
         },
         {
@@ -1565,7 +1598,9 @@ export const en: SiteContent = {
         {
           title: "Your rights",
           body: [
-            "Ask us what we hold about you, ask us to correct it, or ask us to delete it. Write to us through the contact page and we will deal with it — normally the same business day, and in any case without unreasonable delay.",
+            "Ask us what we hold about you and we will tell you, and send you a copy. Ask us to correct it, or to delete it, and we will. Ask us to stop using it, or to hand it to you in a portable form so you can take it elsewhere, and we will do that too. Where we rely on our legitimate interest, you can object — and for a sales enquiry that objection wins, because there is nothing we need it for once you have said stop.",
+            "Write to devya.solutions@gmail.com or to the contact page. Normally the same business day, and in any case within a month. We do not charge for this and we will not ask you why.",
+            "If you live in the European Union or the United Kingdom, you also have the right to complain to your national data protection authority. In Egypt, the Personal Data Protection Centre performs the same role. We would rather you came to us first, but the right is yours either way.",
           ],
         },
         {
