@@ -1,5 +1,5 @@
 import { getContent, type SiteContent } from "@/content";
-import { brand } from "./brand";
+import { brand, socialLinks } from "./brand";
 import { localeHref, routes } from "./meta";
 
 /**
@@ -9,8 +9,10 @@ import { localeHref, routes } from "./meta";
  * an FAQ answer or a plan price can then never drift from the visible copy,
  * which is the failure mode Google penalises hardest (markup that does not
  * match the page). Nothing is invented — there is no `aggregateRating`
- * because there are no reviews, and no `sameAs` because the brand has no
- * verified social profiles (see the note in `lib/brand.ts`).
+ * because there are no reviews. `sameAs` now carries the two live social
+ * profiles from `lib/brand.ts`; it stayed empty while those were placeholders,
+ * because pointing `sameAs` at a profile that is not the brand's is worse than
+ * omitting the property.
  */
 export interface JsonLdNode {
   "@type": string;
@@ -49,6 +51,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
     description: c.meta.home.description,
     email: brand.email,
     telephone: tel,
+    sameAs: socialLinks.map((s) => s.href),
     areaServed: { "@type": "Country", name: "EG" },
     parentOrganization: {
       "@type": "Organization",

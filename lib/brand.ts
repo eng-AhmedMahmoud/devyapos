@@ -39,15 +39,34 @@ export const brand = {
    * here without written permission from that client.
    */
   /*
-   * Removed rather than left dangling: `social` held bare instagram.com /
-   * linkedin.com placeholders, `signupUrl` and `loginUrl` duplicated the
-   * /contact route the nav already links, and `demoUrl` pointed the hero's
-   * "See it running" button at a C4 architecture diagram. None of the four
-   * had a live consumer once the hero moved to the on-page #promo recording.
+   * Live profiles, restored 20 September 2026. The earlier `social` key was
+   * deleted because it held bare instagram.com / linkedin.com placeholders —
+   * these are the real accounts, both posting, and both are what feeds
+   * `sameAs` in the Organization markup. A profile that stops being
+   * maintained should come out of here rather than rot in the footer.
+   *
+   * The Facebook Page has no vanity username yet (Meta gates it on Page
+   * maturity), so the numeric profile URL is the canonical one until it does.
+   */
+  social: {
+    facebook: "https://www.facebook.com/profile.php?id=61594479633675",
+    instagram: "https://www.instagram.com/devyapos/",
+  },
+  /*
+   * Removed rather than left dangling: `signupUrl` and `loginUrl` duplicated
+   * the /contact route the nav already links, and `demoUrl` pointed the
+   * hero's "See it running" button at a C4 architecture diagram. Neither had
+   * a live consumer once the hero moved to the on-page #promo recording.
    * The architecture diagram still lives at https://bohub-c4.vercel.app if it
    * is ever wanted somewhere the label actually fits.
    */
 } as const;
+
+/** The social profiles as a flat list, in the order the footer renders them. */
+export const socialLinks = [
+  { key: "instagram", href: brand.social.instagram, label: "Instagram" },
+  { key: "facebook", href: brand.social.facebook, label: "Facebook" },
+] as const;
 
 /** wa.me link with a prefilled, locale-aware first message. */
 export function whatsappLink(message: string) {

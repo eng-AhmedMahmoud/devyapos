@@ -1,7 +1,8 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand, mailtoLink, telLink } from "@/lib/brand";
+import { brand, mailtoLink, socialLinks, telLink } from "@/lib/brand";
+import { Icon } from "./icons";
 import Logo from "./Logo";
 
 export default async function Footer() {
@@ -36,6 +37,26 @@ export default async function Footer() {
                 {brand.email}
               </a>
             </div>
+
+            {/* `dir="ltr"` for the same reason as the contact block above: the
+                icons are a fixed left-to-right row, and letting the Arabic
+                column reverse them puts Facebook where Instagram was on /en. */}
+            <ul aria-label={c.footer.social} dir="ltr" className="flex gap-2.5">
+              {socialLinks.map((s) => (
+                <li key={s.key}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="me noreferrer"
+                    aria-label={s.label}
+                    title={s.label}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-espresso-line text-on-espresso-dim transition-colors hover:border-gold hover:text-gold"
+                  >
+                    <Icon name={s.key} />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {c.footer.cols.map((col) => (

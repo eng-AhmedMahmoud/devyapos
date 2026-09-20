@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { getContent } from "@/content";
+import { Link } from "@/i18n/navigation";
 import { captureFirstTouch, readAttribution, track } from "@/lib/analytics";
 import { brand, whatsappLink } from "@/lib/brand";
 import {
@@ -397,6 +398,21 @@ export default function ContactForm() {
         >
           {f.submitEmail}
         </button>
+      </p>
+
+      {/* The collection notice. It sits under the buttons rather than behind a
+          checkbox on purpose: this form exists to answer a sales enquiry, so
+          the lawful basis is the enquiry itself — a tick-box would imply the
+          details get used for something else if you tick it, which they do
+          not. The link is what makes the full policy one click away. */}
+      <p className="text-xs leading-relaxed text-ink-dim">
+        {f.privacy}{" "}
+        <Link
+          href="/privacy"
+          className="underline underline-offset-2 hover:text-caramel"
+        >
+          {f.privacyLink}
+        </Link>
       </p>
     </form>
   );
