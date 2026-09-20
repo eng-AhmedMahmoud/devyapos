@@ -23,9 +23,9 @@ export const brand = {
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
   /** E.164, no plus — used to build wa.me deep links and tel: hrefs. */
-  whatsapp: "201055930032",
+  whatsapp: "201041858781",
   /** Same number, grouped for display. */
-  phoneDisplay: "+20 105 593 0032",
+  phoneDisplay: "+20 104 185 8781",
   /**
    * The studio that built and runs the platform. The public URL is devya.dev
    * — the company is Devya Solutions, but the domain is NOT devya.solutions.

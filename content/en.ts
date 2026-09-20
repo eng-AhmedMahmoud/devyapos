@@ -783,7 +783,7 @@ export const en: SiteContent = {
         required: "This field is required",
         too_short: "That looks a little short",
         too_long: "That's longer than we can accept",
-        invalid_phone: "Enter a valid Egyptian mobile, e.g. 01055930032",
+        invalid_phone: "Enter a valid Egyptian mobile, e.g. 01312345678",
         invalid_branches: "Enter a whole number of branches (1 or more)",
       },
     },
