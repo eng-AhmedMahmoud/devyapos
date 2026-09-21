@@ -83,7 +83,6 @@ export const en: SiteContent = {
       { label: "Hardware", href: "/hardware" },
       { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
     ],
-    login: "Log in",
     cta: "Try it free",
   },
 
@@ -634,7 +633,7 @@ export const en: SiteContent = {
 
   consent: {
     title: "We value your privacy",
-    body: "We'd like to measure which pages actually help, using Vercel's privacy-friendly analytics. Nothing non-essential runs until you accept, and refusing costs you nothing on this site.",
+    body: "This site runs no advertising trackers and no third-party analytics. We'd only like to remember which campaign link brought you, so it travels with the contact form if you send one. It stays in your browser until you close the tab. Nothing non-essential is stored until you accept, and refusing costs you nothing here.",
     policyLink: "Read the privacy policy",
     accept: "Accept",
     reject: "Reject",
@@ -1583,9 +1582,9 @@ export const en: SiteContent = {
         {
           title: "Analytics",
           body: [
-            "None of this runs until you accept it. The banner you saw on arrival is not decoration: refuse it, or simply ignore it, and the analytics scripts are never loaded onto the page at all — not loaded and silenced, not loaded. You can change your mind either way by clearing this site's data in your browser.",
-            "If you do accept: we measure traffic with Vercel's own analytics — how many people reached a page, and roughly where from. It counts visits in aggregate. It does not build a profile of you, and it does not follow you to other websites.",
-            "We also count a handful of actions — the contact form being seen, a submission going through, a WhatsApp button being pressed — so we know which pages actually work. Names, phone numbers and message text never go into analytics.",
+            "There are none. This site runs no analytics product, from us or from anyone else — no advertising trackers, no third-party measurement scripts, nothing loaded to count you. We removed the last of it in September 2026.",
+            "That is a real cost to us rather than a boast: we genuinely do not know how many people read this page. We decided we would rather not know than load a script onto your browser to find out.",
+            "The one thing the consent banner asks about is the campaign link that brought you, described under cookies and browser storage below. Refuse it, or simply ignore the banner, and nothing at all is recorded.",
           ],
         },
         {

@@ -1,25 +1,28 @@
 /**
- * Analytics, kept to the smallest surface that answers "did this page sell
- * anything".
+ * Analytics, and first-touch UTM capture.
  *
- * A thin typed wrapper over Vercel Web Analytics' `track`, plus first-touch
- * UTM capture. Two rules the rest of the site can rely on:
+ * THERE IS NO ANALYTICS PROVIDER CONNECTED. Vercel Web Analytics and Speed
+ * Insights were removed on 21 September 2026 at the owner's instruction — no
+ * third-party measurement script is loaded on this site, by consent or
+ * otherwise. `track()` below is deliberately kept as a no-op rather than
+ * deleted along with its twenty-odd call sites: the call sites mark the
+ * moments worth measuring, and re-deriving them later is harder than leaving
+ * them in place. If a provider is ever wired up, `track()` is the only
+ * function that changes.
  *
- *   1. `track()` is safe to call anywhere — during SSR it returns immediately,
- *      and a failure inside the analytics script never propagates to the page.
- *   2. It is a no-op outside production, so local work does not pollute the
- *      dashboard with test leads.
- *
- * `<Analytics />` and `<SpeedInsights />` are mounted in the root layout; this
- * module only emits custom events on top of the automatic page views.
+ * What still runs: `captureFirstTouch`, which records the campaign that
+ * brought a visitor so it can travel with a lead they choose to send. That is
+ * storage on the visitor's own device and nothing else — it is never sent
+ * anywhere until they press send on the contact form — and it is gated behind
+ * consent all the same (`components/Attribution.tsx`).
  */
 
-import { track as vercelTrack } from "@vercel/analytics";
 import { UTM_KEYS, coarseTimestamp, type LeadAttribution } from "./leads";
 
 /**
- * The event vocabulary. A closed union rather than free strings: Vercel groups
- * by exact name, so one typo silently becomes a second, half-populated funnel.
+ * The event vocabulary, retained for the call sites described above. A closed
+ * union rather than free strings, so a future provider inherits a clean set of
+ * names instead of whatever each component happened to type.
  */
 export type AnalyticsEvent =
   /** The lead form entered the viewport / mounted on /contact. */
@@ -40,11 +43,17 @@ export type AnalyticsEvent =
 type PropValue = string | number | boolean | null | undefined;
 
 /**
- * Emit a custom event.
+ * Emit a custom event — currently to nowhere.
  *
- * Props are flattened scalars — Vercel rejects nested objects, and a lead form
- * has nothing worth nesting. Never pass anything that identifies a person:
- * names, phone numbers and free-text messages stay out of analytics.
+ * No provider is connected, so this sends nothing in production and only logs
+ * while developing. It is not a stub waiting to be filled in by accident: if
+ * you wire a provider here, the consent gate has to move with it, because the
+ * banner promises that nothing non-essential runs before the visitor accepts,
+ * and a `track()` that phones home from a component would walk straight past
+ * `components/Attribution.tsx` where the gate currently lives.
+ *
+ * Props are flattened scalars. Never pass anything that identifies a person:
+ * names, phone numbers and free-text messages stay out of events.
  */
 export function track(
   event: AnalyticsEvent,
@@ -53,15 +62,7 @@ export function track(
   if (typeof window === "undefined") return;
 
   if (process.env.NODE_ENV !== "production") {
-    // Visible while developing, invisible to the dashboard.
-    console.debug("[analytics]", event, props ?? {});
-    return;
-  }
-
-  try {
-    vercelTrack(event, props ?? {});
-  } catch {
-    // Analytics is never allowed to break a form submission.
+    console.debug("[analytics:no-op]", event, props ?? {});
   }
 }
 

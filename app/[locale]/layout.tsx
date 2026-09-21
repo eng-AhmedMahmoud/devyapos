@@ -12,7 +12,6 @@ import { routing } from "@/i18n/routing";
 import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import Attribution from "@/components/Attribution";
-import ConsentedAnalytics from "@/components/ConsentedAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -131,11 +130,13 @@ export default async function LocaleLayout({
         </NextIntlClientProvider>
         {/* Records the campaign the visit started on, before the visitor
             navigates away from the tagged landing page — but only once consent
-            is granted. */}
+            is granted, and it clears itself if consent is withdrawn.
+
+            Nothing else measures anything here. Vercel Web Analytics and Speed
+            Insights were removed on 21 September 2026: no third-party script is
+            loaded on this site at all, which is why the consent banner now has
+            only this one thing left to gate. */}
         <Attribution />
-        {/* Vercel's analytics and speed insights, mounted only after consent.
-            Both ship nothing in dev and only report from the deployed site. */}
-        <ConsentedAnalytics />
       </body>
     </html>
   );

@@ -152,7 +152,6 @@ export interface SiteContent {
      * stays at five items.
      */
     extra: NavLink[];
-    login: string;
     cta: string;
   };
   hero: {

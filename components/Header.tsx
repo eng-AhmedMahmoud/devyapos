@@ -75,12 +75,12 @@ export default function Header() {
             >
               {t("switchLanguage")}
             </Link>
-            <Link
-              href="/contact"
-              className="hidden text-sm font-semibold text-ink-2 transition-colors hover:text-brand lg:inline-flex"
-            >
-              {c.nav.login}
-            </Link>
+            {/* "Log in" used to sit here pointing at /contact — a link that
+                names a thing the site does not have, and hands you a contact
+                form when you click it. There is no customer login on this
+                domain; the product signs in elsewhere. Removed rather than
+                relabelled, because the CTA beside it already covers the only
+                action a visitor can actually take. */}
             <Link href="/contact" className="btn btn-primary !px-4 !py-2.5 text-sm">
               {c.nav.cta}
               <Arrow width={16} height={16} className="flip-rtl" />
