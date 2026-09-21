@@ -14,12 +14,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    ...(await buildMetadata(locale, "privacy", PATH)),
-    /* Unreviewed draft: reachable, but must not be indexed or presented as
-       published terms until it has had a legal review. */
-    robots: { index: false, follow: false },
-  };
+  /* Indexed, unlike /terms and /refund. Those two are contractual and keep the
+     noindex until a lawyer has read them; a privacy policy is a description of
+     what the site already does, and hiding one reads as evasion rather than
+     caution. Search engines and AI assistants both treat a reachable policy as
+     a trust signal, which is the opposite of what noindex was achieving. */
+  return buildMetadata(locale, "privacy", PATH);
 }
 
 /** Privacy policy. Prose only — see `components/pages/LegalArticle`. */

@@ -38,10 +38,14 @@ export default async function Footer() {
               </a>
             </div>
 
-            {/* `dir="ltr"` for the same reason as the contact block above: the
-                icons are a fixed left-to-right row, and letting the Arabic
-                column reverse them puts Facebook where Instagram was on /en. */}
-            <ul aria-label={c.footer.social} dir="ltr" className="flex gap-2.5">
+            {/* No `dir` override here, unlike the phone and email above. Those
+                two carry Latin digits and an address that RTL would reorder, so
+                they need pinning; a row of icons has nothing to reorder. Forcing
+                `ltr` only made the row start from the left edge of a column that
+                is right-aligned in Arabic, leaving the icons adrift under a
+                flush-right email. Letting them inherit direction puts them
+                directly under it in both locales. */}
+            <ul aria-label={c.footer.social} className="mt-1 flex gap-3">
               {socialLinks.map((s) => (
                 <li key={s.key}>
                   <a
@@ -50,9 +54,9 @@ export default async function Footer() {
                     rel="me noreferrer"
                     aria-label={s.label}
                     title={s.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-espresso-line text-on-espresso-dim transition-colors hover:border-gold hover:text-gold"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-espresso-line text-on-espresso-dim transition-colors hover:border-gold hover:text-gold"
                   >
-                    <Icon name={s.key} />
+                    <Icon name={s.key} width={20} height={20} />
                   </a>
                 </li>
               ))}

@@ -632,6 +632,14 @@ export const en: SiteContent = {
     cta: "Back to home",
   },
 
+  consent: {
+    title: "We value your privacy",
+    body: "We'd like to measure which pages actually help, using Vercel's privacy-friendly analytics. Nothing non-essential runs until you accept, and refusing costs you nothing on this site.",
+    policyLink: "Read the privacy policy",
+    accept: "Accept",
+    reject: "Reject",
+  },
+
   footer: {
     blurb:
       "The restaurant OS — register, kitchen, online ordering, loyalty and inventory on one platform, in Arabic and in EGP.",
@@ -659,15 +667,20 @@ export const en: SiteContent = {
         links: [
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
-          { label: "Terms of service", href: "/contact" },
-          /* The privacy policy is the one legal page that must be reachable
-             rather than routed to /contact: it is a notice describing what the
-             site actually does with what you send it, and a site that collects
-             a name and a phone number owes the reader that link. Terms and
-             refund stay pointed at /contact until they have had a legal read,
-             because those two are contractual rather than informational. */
+          /* Terms of service is deliberately absent rather than pointed at
+             /contact. It is the one page with liability caps, IP assignment
+             and a jurisdiction clause, it still carries the unreviewed-draft
+             gate, and a link labelled "Terms of service" that lands on a
+             contact form is a broken promise to everyone who clicks it. It
+             comes back the day a lawyer has read it.
+
+             Privacy and refund are both live: the first is a notice about what
+             we already do, and the second only restates the trial and
+             cancellation terms the marketing pages already promise out loud —
+             a page that matches those claims lowers the risk rather than
+             raising it. */
           { label: "Privacy policy", href: "/privacy" },
-          { label: "Refund policy", href: "/contact" },
+          { label: "Refund policy", href: "/refund" },
         ],
       },
     ],
@@ -1570,7 +1583,8 @@ export const en: SiteContent = {
         {
           title: "Analytics",
           body: [
-            "We measure traffic with Vercel's own analytics: how many people reached a page, and roughly where from. It counts visits in aggregate. It does not build a profile of you, and it does not follow you to other websites.",
+            "None of this runs until you accept it. The banner you saw on arrival is not decoration: refuse it, or simply ignore it, and the analytics scripts are never loaded onto the page at all — not loaded and silenced, not loaded. You can change your mind either way by clearing this site's data in your browser.",
+            "If you do accept: we measure traffic with Vercel's own analytics — how many people reached a page, and roughly where from. It counts visits in aggregate. It does not build a profile of you, and it does not follow you to other websites.",
             "We also count a handful of actions — the contact form being seen, a submission going through, a WhatsApp button being pressed — so we know which pages actually work. Names, phone numbers and message text never go into analytics.",
           ],
         },
@@ -1579,7 +1593,8 @@ export const en: SiteContent = {
           body: [
             "This site sets no cookies of its own — no advertising cookies, no tracking pixels, no third-party trackers.",
             "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
-            "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie, and it does not follow you to other websites.",
+            "Your light or dark theme choice, and your answer to the consent banner, are the two things kept without asking. Both are a direct response to something you did, both stay on your device, and neither is sent to us.",
+            "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie and it does not follow you to other websites — and like the analytics, it is not recorded at all unless you accepted.",
             "Vercel may set technical cookies where they are needed to serve or protect the site.",
           ],
         },

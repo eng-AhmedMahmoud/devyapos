@@ -317,6 +317,18 @@ export interface SiteContent {
     trust: string;
   };
   notFound: { title: string; body: string; cta: string };
+  /**
+   * The consent banner. `body` must stay true to what `lib/consent.ts`
+   * actually gates — if something new starts loading before the click, this
+   * copy is the thing that becomes a lie.
+   */
+  consent: {
+    title: string;
+    body: string;
+    policyLink: string;
+    accept: string;
+    reject: string;
+  };
   footer: {
     blurb: string;
     cols: { title: string; links: { label: string; href: string }[] }[];

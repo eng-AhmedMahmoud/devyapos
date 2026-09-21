@@ -136,3 +136,21 @@ export function readAttribution(): LeadAttribution | null {
   if (typeof window === "undefined") return null;
   return readStore();
 }
+
+/**
+ * Drop the stored record.
+ *
+ * Called when consent is refused or withdrawn. Withdrawing has to remove what
+ * was written while it was granted, not merely stop writing more — otherwise
+ * someone who accepts, changes their mind, and then sends the contact form
+ * still has the campaign that found them travelling with it, which is exactly
+ * the thing they just refused.
+ */
+export function clearAttribution(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(ATTRIBUTION_KEY);
+  } catch {
+    // Nothing to clear if storage was never available.
+  }
+}

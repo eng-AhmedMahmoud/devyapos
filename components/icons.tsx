@@ -223,12 +223,17 @@ const Instagram = (p: IconProps) => (
   </Base>
 );
 
+/*
+ * The f is built around x=12.6 rather than the box centre: an "f" is visually
+ * right-heavy (the hook leans right off the stem), so a stem on the true
+ * centre line makes the glyph look pushed left inside its rounded square.
+ * The earlier version anchored the stem at 14.5 and the whole letter drifted.
+ */
 const Facebook = (p: IconProps) => (
   <Base {...p}>
-    <path d="M14.5 8.5h2.2M14.5 8.5V7.2a2 2 0 0 1 2-2h1.2" />
-    <path d="M14.5 8.5v10.9" />
-    <path d="M11 12.4h5.6" />
     <rect x="3" y="3" width="18" height="18" rx="5" />
+    <path d="M14.9 7.6h-1.1a2 2 0 0 0-2 2V21" />
+    <path d="M9.9 12.6h4.6" />
   </Base>
 );
 
