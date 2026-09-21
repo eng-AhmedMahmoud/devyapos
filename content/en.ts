@@ -633,7 +633,7 @@ export const en: SiteContent = {
 
   consent: {
     title: "We value your privacy",
-    body: "This site runs no advertising trackers and no third-party analytics. We'd only like to remember which campaign link brought you, so it travels with the contact form if you send one. It stays in your browser until you close the tab. Nothing non-essential is stored until you accept, and refusing costs you nothing here.",
+    body: "No trackers, no third-party analytics. We'd only like to remember which link brought you — it stays in your browser until you close the tab, and nothing is stored unless you accept.",
     policyLink: "Read the privacy policy",
     accept: "Accept",
     reject: "Reject",
