@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
@@ -27,7 +29,6 @@ const C = {
   gold: "#dda45c",
   caramel: "#dd8a4c",
   brand: "#c9605f",
-  pearlLo: "#4a311f",
 };
 
 /**
@@ -39,6 +40,22 @@ const TTF_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)";
 
 /** Both locales build in the same process; fetch each face once. */
 const faces = new Map<string, Promise<ArrayBuffer>>();
+
+/**
+ * The brand mark, inlined as a data URI.
+ *
+ * Satori can draw an `<svg>` tree, but not `fill-rule: evenodd` — and the cup
+ * is an outline only because its inner loops are holes, so the vector arrives
+ * as a solid blob. The baked PNG is the same artwork the favicon and the iOS
+ * icon come from, read off disk rather than fetched: this route renders at
+ * build time, when nothing is serving `public/` yet.
+ */
+let markUri: Promise<string> | undefined;
+function brandMark() {
+  markUri ??= readFile(join(process.cwd(), "public/brand/devyapos-icon-192.png"))
+    .then((b) => `data:image/png;base64,${b.toString("base64")}`);
+  return markUri;
+}
 
 function googleFont(family: string, weight: number) {
   const key = `${family}:${weight}`;
@@ -174,6 +191,8 @@ export default async function Image({
   const row = isAr ? "row-reverse" : "row";
   const end = isAr ? "flex-end" : "flex-start";
 
+  const mark = await brandMark();
+
   let fonts;
   try {
     fonts = await loadFonts(isAr ? "ar" : "en");
@@ -235,16 +254,9 @@ export default async function Image({
               gap: 14,
             }}
           >
-            {/* The boba pearl from the brand's section headers. */}
-            <div
-              style={{
-                display: "flex",
-                width: 34,
-                height: 34,
-                borderRadius: 34,
-                backgroundImage: `linear-gradient(140deg, ${C.gold}, ${C.pearlLo})`,
-              }}
-            />
+            {/* The same mark the tab and the home screen carry. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={mark} alt="" width={40} height={40} />
             <div style={{ display: "flex", fontSize: 30, fontWeight: 700 }}>
               {brand.wordmark}
             </div>
