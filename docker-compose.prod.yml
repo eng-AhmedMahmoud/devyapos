@@ -1,0 +1,18 @@
+services:
+  devyapos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devya-devyapos:latest
+    container_name: devya-devyapos
+    restart: unless-stopped
+    ports:
+      # Loopback-only — nginx reverse-proxies to localhost:3009. Without the
+      # 127.0.0.1 prefix Docker publishes on 0.0.0.0, which ufw does not filter.
+      - "127.0.0.1:3009:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
