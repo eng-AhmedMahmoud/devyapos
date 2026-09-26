@@ -11,7 +11,7 @@ export default async function Features() {
   const c = getContent(locale);
 
   return (
-    <section id="features" className="bg-bg py-20 sm:py-24">
+    <section id="features" className="band-cream py-20 sm:py-24">
       <Container>
         {/* Head and CTA share a row, so the section opens on a line rather than
             a centred stack — the rhythm the rest of the page keeps. */}
