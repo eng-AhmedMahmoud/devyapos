@@ -35,6 +35,8 @@ export const routes: readonly SiteRoute[] = [
   { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly" },
   { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly" },
   { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly" },
+  /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
+  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly" },
   /* Legal (/terms, /privacy, /refund) is deliberately absent. The pages are
      built and reachable, but they are unreviewed drafts that commit the company
      to refund windows, retention periods and a liability cap, so they are kept

@@ -38,7 +38,15 @@ export type AnalyticsEvent =
   /** The mailto fallback. */
   | "email_click"
   /** A pricing-plan CTA. */
-  | "pricing_cta_click";
+  | "pricing_cta_click"
+  /** The accounting trial form mounted on /accounting-trial. */
+  | "trial_form_view"
+  /** Trial submit pressed and client validation passed. */
+  | "trial_form_submit"
+  /** The control plane handed out a stack. */
+  | "trial_claimed"
+  /** Anything else the claim route answered (pool empty, invalid, …). */
+  | "trial_form_error";
 
 type PropValue = string | number | boolean | null | undefined;
 
