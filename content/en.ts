@@ -66,7 +66,7 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy | DevyaPOS",
       description:
-        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, Vercel hosting, and no cookies of our own.",
+        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, a server we run ourselves, and no cookies of our own.",
     },
     refund: {
       title: "Refund and cancellation | DevyaPOS",
@@ -1797,8 +1797,8 @@ export const en: SiteContent = {
         {
           title: "Hosting, and where your details are",
           body: [
-            "This site is hosted on Vercel. Like any web host, Vercel processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. Vercel acts as our hosting provider under their own terms.",
-            "That means your details are processed on servers outside Egypt, and may be handled in the United States and the European Union. We use Vercel's standard data processing terms for that transfer. If you would rather not send anything through this site at all, the WhatsApp and email routes on the contact page reach us directly.",
+            "This site runs on a server Devya operates itself — a virtual private server we rent from a hosting company. Like any web server, it processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. The hosting company provides the machine and its network connection; the site and everything sent through it are run by us.",
+            "That server is outside Egypt, so your details are processed outside Egypt. If you would rather not send anything through this site at all, the WhatsApp and email routes on the contact page reach us directly.",
           ],
         },
         {
@@ -1816,7 +1816,6 @@ export const en: SiteContent = {
             "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
             "Your light or dark theme choice, and your answer to the consent banner, are the two things kept without asking. Both are a direct response to something you did, both stay on your device, and neither is sent to us.",
             "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie and it does not follow you to other websites — and like the analytics, it is not recorded at all unless you accepted.",
-            "Vercel may set technical cookies where they are needed to serve or protect the site.",
           ],
         },
         {
