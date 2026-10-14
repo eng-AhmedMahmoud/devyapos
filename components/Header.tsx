@@ -48,7 +48,12 @@ export default function Header() {
   return (
     <>
       <header className="site-header" data-scrolled={scrolled}>
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:h-[4.5rem] sm:px-8">
+        {/* A phone's bar is the logo, the CTA and the menu button. The theme
+            toggle joins the language switch in the drawer below sm, and below
+            340px the CTA goes too (the drawer and every hero carry it): at
+            320px the full bar ran 27–34px past the screen. The 20px gutter
+            stays, so the logo lines up with the page under it. */}
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-5 sm:h-[4.5rem] sm:gap-4 sm:px-8">
           <Link href="/" aria-label={t("home")} className="shrink-0">
             <Logo />
           </Link>
@@ -67,7 +72,9 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <ThemeToggle />
+            <span className="hidden sm:inline-flex">
+              <ThemeToggle />
+            </span>
             <Link
               href={pathname}
               locale={other}
@@ -81,10 +88,17 @@ export default function Header() {
                 domain; the product signs in elsewhere. Removed rather than
                 relabelled, because the CTA beside it already covers the only
                 action a visitor can actually take. */}
-            <Link href="/contact" className="btn btn-primary !px-4 !py-2.5 text-sm">
-              {c.nav.cta}
-              <Arrow width={16} height={16} className="flip-rtl" />
-            </Link>
+            {/* Wrapped, because .btn is unlayered CSS and beats a utility's
+                display; the padding overrides need their ! for the same reason. */}
+            <span className="max-[339px]:hidden">
+              <Link
+                href="/contact"
+                className="btn btn-primary !px-3 !py-2.5 text-sm max-sm:whitespace-nowrap sm:!px-4"
+              >
+                {c.nav.cta}
+                <Arrow width={16} height={16} className="flip-rtl hidden sm:block" />
+              </Link>
+            </span>
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -107,8 +121,11 @@ export default function Header() {
         className={`nav-drawer bg-surface shadow-2xl md:hidden ${open ? "is-open" : ""}`}
         aria-hidden={!open}
       >
-        <div className="flex h-16 items-center justify-between border-b border-line px-5">
+        <div className="flex h-16 items-center justify-between gap-2 border-b border-line px-5">
           <Logo />
+          <span className="ms-auto">
+            <ThemeToggle />
+          </span>
           <button
             type="button"
             onClick={() => setOpen(false)}

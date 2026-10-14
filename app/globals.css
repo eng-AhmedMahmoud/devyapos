@@ -425,6 +425,23 @@ html[lang="en"] .font-display {
   background: color-mix(in srgb, var(--tile, var(--brand)) 14%, transparent);
 }
 
+/* A value somebody copies — a link or a setup token on the trial page. Its own
+   isolated LTR run (so Arabic around it cannot reorder it), selected whole on
+   one click, wrapped anywhere rather than overflowing a 320px screen, and with
+   nothing that changes the characters a copy takes: no spacing, no ligatures,
+   no case transform. */
+.copy-value {
+  direction: ltr;
+  unicode-bidi: isolate;
+  user-select: all;
+  -webkit-user-select: all;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-ligatures: none;
+}
+
 /* ----------------------------------------------------------------- buttons */
 
 .btn {

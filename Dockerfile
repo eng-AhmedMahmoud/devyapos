@@ -1,7 +1,7 @@
 # Production image for the DevyaPOS marketing site (pos.devya.dev), run on
 # the Devya VPS behind nginx. Moved off Vercel 2026-09-25. Near-static; the
-# one server hop is the lead form (app/api/lead). It reads no env today —
-# Vercel had none set — so the image carries none.
+# one server hop is the lead form (app/api/lead). The one value it carries is
+# the accounting trial's claim URL, baked at build (see the builder stage).
 FROM node:24-alpine AS deps
 WORKDIR /app
 # pnpm, as the lockfile says; pinned major so a corepack default bump cannot
@@ -15,6 +15,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# The accounting trial's claim route — a NEXT_PUBLIC_ value, so it must exist
+# when `next build` runs (docker-compose.prod.yml passes it). Empty builds a
+# page that offers WhatsApp instead of posting anywhere.
+ARG NEXT_PUBLIC_TRIAL_CLAIM_URL=
+ENV NEXT_PUBLIC_TRIAL_CLAIM_URL=$NEXT_PUBLIC_TRIAL_CLAIM_URL
 RUN npx next build
 
 FROM node:24-alpine AS runner

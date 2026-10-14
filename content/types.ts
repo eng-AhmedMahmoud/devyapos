@@ -131,6 +131,33 @@ export interface PricingSegment {
   points: string[];
 }
 
+/** The two countries accounting is sold in — the trial form's choice too. */
+export interface PerCountry<T> {
+  EG: T;
+  SA: T;
+}
+
+/**
+ * One accounting plan on /accounting-trial. Every plan has every feature; the
+ * plans differ only by size, so a plan is a price and its limits, not a
+ * feature list. Prices exclude VAT and are per company per month, billed
+ * monthly; yearly is ten months (`docs/decisions/2026-10-13-accounting-pricing.md`
+ * in bohub-pos is where these numbers are decided).
+ */
+export interface AccountingPlan {
+  id: "starter" | "business" | "professional";
+  name: string;
+  tagline: string;
+  badge?: string;
+  featured?: boolean;
+  /** Per month, billed monthly, VAT excluded — EGP in Egypt, SAR in Saudi Arabia. */
+  price: PerCountry<number>;
+  /** Users, branches, AI captures — the same in both countries. */
+  limits: string[];
+  /** The e-invoicing line, which is a different system in each country. */
+  einvoicing: PerCountry<string>;
+}
+
 /** A standalone legal page. `updated` is rendered, not a comment. */
 export interface LegalDoc {
   title: string;
@@ -538,6 +565,121 @@ export interface SiteContent {
     buying: { title: string; sub: string; items: Point[]; note: string };
     faq: { title: string; items: Faq[] };
     cta: { title: string; body: string; primary: string; secondary: string };
+  };
+
+  /**
+   * `/accounting-trial` — the self-serve trial of DevyaPOS Accounting.
+   *
+   * The form posts to Devya's control plane (`lib/trial.ts`), which hands the
+   * visitor an empty accounting system of their own and its setup token,
+   * ONCE. Accounting only: the POS trial is still set up with a person
+   * through /contact. No e-invoicing or tax-authority claim belongs here —
+   * /eta-einvoicing owns that position, and nothing may blur it.
+   */
+  accountingTrial: {
+    badge: string;
+    title: string;
+    sub: string;
+    /** What the trial includes, beside the form. */
+    includes: { title: string; items: Point[] };
+    /** What happens after the form, in order. */
+    steps: { title: string; items: Step[] };
+    form: {
+      title: string;
+      sub: string;
+      name: string;
+      company: string;
+      email: string;
+      phone: string;
+      /** Placeholder per country — a shape, never a dialable number. */
+      phonePlaceholder: { EG: string; SA: string };
+      country: string;
+      countries: { EG: string; SA: string };
+      /** What the country decides, shown under the choice. */
+      countryNote: { EG: string; SA: string };
+      submit: string;
+      sending: string;
+      /** Collection notice at the point of entry, linked to /privacy. */
+      privacy: string;
+      privacyLink: string;
+      errorTitle: string;
+      errorSummary: string;
+      /** Keyed by `TrialFieldError`, plus field-specific `invalid` wording. */
+      errors: {
+        required: string;
+        too_short: string;
+        too_long: string;
+        invalid: string;
+        invalidEmail: string;
+        invalidPhone: { EG: string; SA: string };
+      };
+    };
+    /** The one screen that shows the link and the token. */
+    result: {
+      title: string;
+      sub: string;
+      linkLabel: string;
+      tokenLabel: string;
+      /** The token is shown once and never again — said where it is shown. */
+      tokenWarning: string;
+      /** Interpolates {date}. */
+      expires: string;
+      copy: string;
+      copied: string;
+      open: string;
+      stepsTitle: string;
+      steps: string[];
+    };
+    /** Every answer that is not a stack. */
+    outcomes: {
+      poolEmptyTitle: string;
+      poolEmptyBody: string;
+      alreadyTitle: string;
+      alreadyBody: string;
+      rateLimitedTitle: string;
+      rateLimitedBody: string;
+      closedTitle: string;
+      closedBody: string;
+      errorTitle: string;
+      errorBody: string;
+      whatsapp: string;
+      /** Prefilled WhatsApp message for every fallback above. */
+      waTemplate: string;
+    };
+    /** What it costs after the trial, per country. */
+    pricing: {
+      eyebrow: string;
+      title: string;
+      sub: string;
+      /** Accessible name of the country switch; the options are `form.countries`. */
+      countryLabel: string;
+      monthly: string;
+      yearly: string;
+      /** Badge on the yearly option. */
+      save: string;
+      /** The unit after a figure, per country ("EGP", "SAR"). */
+      currency: PerCountry<string>;
+      perMonth: string;
+      perYear: string;
+      /** Under every price. */
+      vat: PerCountry<string>;
+      /** Yearly only. Interpolates {saved} — the two months not charged. */
+      yearlySaving: string;
+      plans: AccountingPlan[];
+      cta: string;
+      /** The banner under the cards. */
+      einvoicingIncluded: PerCountry<string>;
+      /** With DevyaPOS: a per-branch price. Interpolates {price}. */
+      withPos: { title: string; body: string; price: PerCountry<number> };
+      /** Interpolates {user} and {branch}, each a formatted price with its unit. */
+      extras: string;
+      extrasPrice: { user: PerCountry<number>; branch: PerCountry<number> };
+      noSetupFee: string;
+      enterprise: string;
+      /** Prefilled WhatsApp message behind the Enterprise line. */
+      enterpriseWa: string;
+    };
+    faq: { title: string; items: Faq[] };
   };
 
   /**

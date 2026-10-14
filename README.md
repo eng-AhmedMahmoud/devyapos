@@ -43,6 +43,7 @@ ignores `.env*` with no exception yet, so `.env.example` needs a
 | `LEAD_FORWARD_URL` | — | Where `POST /api/lead` forwards a validated lead. Unset is supported: the handler logs a warning and the lead survives only in the Vercel runtime logs, on an error-level `[lead] NOT FORWARDED` line. |
 | `LEAD_FORWARD_TOKEN` | — | Sent as `Authorization: Bearer <token>` on the forward. |
 | `LEAD_FORWARD_TIMEOUT_MS` | `4000` | Per-attempt timeout. Two attempts max; 4xx is treated as permanent and not retried. |
+| `NEXT_PUBLIC_TRIAL_CLAIM_URL` | — | Build-time. Where `/accounting-trial` posts a sign-up: Devya's control-plane claim route (`https://ops-api.devya.dev/api/trial/claim` in production, set by `docker-compose.prod.yml`). Unset, the page offers WhatsApp instead of posting, so a dev build never claims a real trial stack. |
 
 ### Lead forward contract
 

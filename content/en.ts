@@ -53,6 +53,11 @@ export const en: SiteContent = {
       description:
         "No terminal to buy. DevyaPOS runs in a browser on any tablet, laptop or touchscreen and prints to any ESC/POS thermal printer. What a branch really needs.",
     },
+    accountingTrial: {
+      title: "Free 14-day accounting trial | DevyaPOS",
+      description:
+        "Your own accounting system in a minute: ledger, invoices, receivables, payables, bank and VAT reports, for Egypt or Saudi Arabia. 14 days free, no card.",
+    },
     terms: {
       title: "Terms of service | DevyaPOS",
       description:
@@ -61,7 +66,7 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy | DevyaPOS",
       description:
-        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, Vercel hosting, and no cookies of our own.",
+        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, a server we run ourselves, and no cookies of our own.",
     },
     refund: {
       title: "Refund and cancellation | DevyaPOS",
@@ -649,6 +654,7 @@ export const en: SiteContent = {
           { label: "Features", href: "/features" },
           { label: "Pricing", href: "/pricing" },
           { label: "Hardware", href: "/hardware" },
+          { label: "Accounting free trial", href: "/accounting-trial" },
           { label: "How it works", href: "/#how" },
         ],
       },
@@ -1426,6 +1432,214 @@ export const en: SiteContent = {
     },
   },
 
+  accountingTrial: {
+    badge: "DevyaPOS Accounting — free trial",
+    title: "Your own accounting system, ready in a minute",
+    sub: "Fourteen days free, no card. You get a private accounting system of your own — not a shared demo — set up for Egypt or Saudi Arabia, in Arabic and English.",
+    includes: {
+      title: "What the trial includes",
+      items: [
+        {
+          title: "Your own books",
+          body: "A double-entry ledger that is yours alone: a separate system and a separate database, from the first click.",
+        },
+        {
+          title: "Invoices and bills",
+          body: "Sales and purchase documents, customers and suppliers, what is owed to you and what you owe.",
+        },
+        {
+          title: "Cash and bank",
+          body: "Bank accounts, reconciliation and payments, with reports read straight from the posted entries.",
+        },
+        {
+          title: "VAT reports",
+          body: "Output and input tax gathered from your own documents, at your country's rate.",
+        },
+        {
+          title: "Arabic and English",
+          body: "Every screen in both languages, in your currency and on your country's business day.",
+        },
+      ],
+    },
+    steps: {
+      title: "How it works",
+      items: [
+        {
+          n: "01",
+          title: "Tell us who you are",
+          body: "Your name, company, email and mobile, and whether the business is in Egypt or Saudi Arabia.",
+        },
+        {
+          n: "02",
+          title: "Get your link and setup token",
+          body: "Both appear on this page the moment you submit. Copy them — the token is shown only once.",
+        },
+        {
+          n: "03",
+          title: "Run the setup wizard",
+          body: "Open the link, enter the token, then name your company, pick a chart of accounts and create your administrator account.",
+        },
+        {
+          n: "04",
+          title: "Use it for 14 days",
+          body: "Enter real transactions. Before the trial ends we call to talk about keeping your books.",
+        },
+      ],
+    },
+    form: {
+      title: "Start your 14-day free trial",
+      sub: "It takes a minute. No card, and nothing is charged when it ends.",
+      name: "Your name",
+      company: "Company name",
+      email: "Work email",
+      phone: "Mobile number",
+      phonePlaceholder: { EG: "01X XXXX XXXX", SA: "05X XXX XXXX" },
+      country: "Where is the business?",
+      countries: { EG: "Egypt", SA: "Saudi Arabia" },
+      countryNote: {
+        EG: "Books in Egyptian pounds, on Cairo time.",
+        SA: "Books in Saudi riyals, on Riyadh time.",
+      },
+      submit: "Start my free trial",
+      sending: "Setting up your system…",
+      privacy:
+        "We use these details to set up your trial and to contact you about it. An ended trial's books are deleted after a short grace period.",
+      privacyLink: "Privacy policy",
+      errorTitle: "Please check the form",
+      errorSummary: "These fields need attention:",
+      errors: {
+        required: "Required.",
+        too_short: "Too short.",
+        too_long: "Too long.",
+        invalid: "Not valid.",
+        invalidEmail: "Enter a valid email address.",
+        invalidPhone: {
+          EG: "Enter an Egyptian number, like 01X XXXX XXXX.",
+          SA: "Enter a Saudi number, like 05X XXX XXXX.",
+        },
+      },
+    },
+    result: {
+      title: "Your accounting system is ready",
+      sub: "Here are your link and your setup token. Copy them now: for your security the token is shown only on this page, and only once.",
+      linkLabel: "Your link",
+      tokenLabel: "Setup token",
+      tokenWarning: "Save the token before you leave this page — we cannot show it again.",
+      expires: "Your trial runs until {date}.",
+      copy: "Copy",
+      copied: "Copied",
+      open: "Open the setup wizard",
+      stepsTitle: "Next steps",
+      steps: [
+        "Open your link — it takes you to the setup wizard.",
+        "Enter the setup token when the wizard asks for it.",
+        "Name your company, choose a chart of accounts and create your administrator account. Then sign in and start.",
+      ],
+    },
+    outcomes: {
+      poolEmptyTitle: "We are setting up more trial systems",
+      poolEmptyBody:
+        "Every trial system for that country is in use right now. We have your details and will contact you within one business day to get you started.",
+      alreadyTitle: "This email already has a running trial",
+      alreadyBody: "Use the link you saved when you signed up. Lost it? Message us and we will help.",
+      rateLimitedTitle: "Too many attempts",
+      rateLimitedBody: "Please try again in a little while, or message us and we will set it up for you.",
+      closedTitle: "Sign-ups are paused for the moment",
+      closedBody: "Message us on WhatsApp and we will set up your trial by hand.",
+      errorTitle: "Something went wrong",
+      errorBody: "Your trial was not created. Please try again, or message us on WhatsApp.",
+      whatsapp: "Message us on WhatsApp",
+      waTemplate: "Hello, I would like to try DevyaPOS Accounting.",
+    },
+    pricing: {
+      eyebrow: "After the trial",
+      title: "Every feature in every plan. You pay for your size.",
+      sub: "Choose your country to see its prices. E-invoicing is included in every plan, and there is no setup fee.",
+      countryLabel: "Prices for",
+      monthly: "Monthly",
+      yearly: "Yearly",
+      save: "2 months free",
+      currency: { EG: "EGP", SA: "SAR" },
+      perMonth: "/mo",
+      perYear: "/year",
+      vat: { EG: "VAT not included (14%)", SA: "VAT not included (15%)" },
+      yearlySaving: "Paid once a year: two months free, so you save {saved}.",
+      plans: [
+        {
+          id: "starter",
+          name: "Starter",
+          tagline: "One company, one branch, a small team.",
+          price: { EG: 499, SA: 119 },
+          limits: ["3 users", "1 branch", "50 AI bill captures a month"],
+          einvoicing: {
+            EG: "ETA e-invoice, and e-receipt on 1 point of sale",
+            SA: "ZATCA Phase 2 on 1 e-invoicing unit",
+          },
+        },
+        {
+          id: "business",
+          name: "Business",
+          tagline: "A growing company with a few branches.",
+          badge: "Recommended",
+          featured: true,
+          price: { EG: 999, SA: 229 },
+          limits: ["8 users", "3 branches", "200 AI bill captures a month"],
+          einvoicing: {
+            EG: "ETA e-invoice, and e-receipt on 3 points of sale",
+            SA: "ZATCA Phase 2 on 3 e-invoicing units",
+          },
+        },
+        {
+          id: "professional",
+          name: "Professional",
+          tagline: "Several branches and a finance team.",
+          price: { EG: 1999, SA: 349 },
+          limits: ["15 users", "10 branches", "500 AI bill captures a month"],
+          einvoicing: {
+            EG: "ETA e-invoice, and e-receipt on 10 points of sale",
+            SA: "ZATCA Phase 2 on 10 e-invoicing units",
+          },
+        },
+      ],
+      cta: "Start the free trial",
+      einvoicingIncluded: {
+        EG: "E-invoicing is included in every plan: ETA e-invoice and e-receipt, at no extra cost.",
+        SA: "E-invoicing is included in every plan: ZATCA Phase 2 clearance and reporting, at no extra cost.",
+      },
+      withPos: {
+        title: "Already on DevyaPOS?",
+        body: "Add accounting for {price} per branch a month. Each day's close posts to your books by itself, and you never pay more than the matching plan above.",
+        price: { EG: 299, SA: 79 },
+      },
+      extras: "An extra user is {user} a month. An extra branch, with its e-invoicing unit, is {branch} a month.",
+      extrasPrice: { user: { EG: 99, SA: 25 }, branch: { EG: 249, SA: 49 } },
+      noSetupFee: "No setup fee. Connecting you to the tax authority is part of every plan.",
+      enterprise: "More than 10 branches or 15 users? We quote an Enterprise plan.",
+      enterpriseWa: "Hello, I would like an Enterprise quote for DevyaPOS Accounting.",
+    },
+    faq: {
+      title: "Questions about the trial",
+      items: [
+        {
+          q: "Is it a shared demo?",
+          a: "No. Each trial is a separate accounting system with its own database. Nobody else sees your entries, and you see nobody else's.",
+        },
+        {
+          q: "What happens when the 14 days end?",
+          a: "The trial ends. We call before then; if you do not continue, the trial's books are deleted after a short grace period, so export anything you want to keep before it ends.",
+        },
+        {
+          q: "Does it work with a point of sale?",
+          a: "Accounting runs on its own, and it can also take a point of sale's daily close. Ask us about connecting yours when we talk.",
+        },
+        {
+          q: "Do I need a card?",
+          a: "No. Nothing is charged, and nothing renews by itself.",
+        },
+      ],
+    },
+  },
+
   legal: {
     terms: {
       title: "Terms of service",
@@ -1526,12 +1740,12 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy",
       sub: "What this website collects, which is very little, and what happens to it.",
-      updated: "Last updated 4 September 2026",
+      updated: "Last updated 13 October 2026",
       sections: [
         {
           title: "The short version",
           body: [
-            "This website has no accounts, no login and no profile of you. One thing on it sends us anything at all: the contact form. Everything below is the detail of what that form carries and where it goes.",
+            "This website has no accounts, no login and no profile of you. Two things on it send us anything at all: the contact form, and the sign-up for a free accounting trial. Everything below is the detail of what each carries and where it goes.",
           ],
         },
         {
@@ -1548,6 +1762,14 @@ export const en: SiteContent = {
             "When you press send, those details are posted to this site and passed on to the DevyaPOS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
             "Your IP address is used for a moment to stop the form being hammered by a script. It is not stored with your enquiry.",
             "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, the details go to us through WhatsApp or through your own email client, and no submission is recorded on this site.",
+          ],
+        },
+        {
+          title: "What the accounting trial sign-up collects",
+          body: [
+            "The free accounting trial asks for your name, your company's name, your email, your mobile number and whether the business is in Egypt or Saudi Arabia, and notes the language you signed up in. All of them are required: they are what sets the trial up and what we contact you about.",
+            "When you press start, your browser sends them straight to a server Devya runs, outside Egypt and Saudi Arabia. It gives you an accounting system of your own and records your sign-up so that we can follow up — including when every trial system is busy, which is when we call you instead. Your IP address is used for a moment to limit repeated sign-ups and is not stored with them.",
+            "What you type into the trial itself — your company, accounts and documents — stays in that trial's own database, which nobody else's trial can reach. It is deleted after the trial ends and a short grace period, and leaves our nightly backups within fourteen days after that.",
           ],
         },
         {
@@ -1575,8 +1797,8 @@ export const en: SiteContent = {
         {
           title: "Hosting, and where your details are",
           body: [
-            "This site is hosted on Vercel. Like any web host, Vercel processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. Vercel acts as our hosting provider under their own terms.",
-            "That means your details are processed on servers outside Egypt, and may be handled in the United States and the European Union. We use Vercel's standard data processing terms for that transfer. If you would rather not send anything through this site at all, the WhatsApp and email routes on the contact page reach us directly.",
+            "This site runs on a server Devya operates itself — a virtual private server we rent from a hosting company. Like any web server, it processes the technical data a request carries — IP address, browser and device type, the page requested, the time — in order to serve the site and protect it from abuse. The hosting company provides the machine and its network connection; the site and everything sent through it are run by us.",
+            "That server is outside Egypt, so your details are processed outside Egypt. If you would rather not send anything through this site at all, the WhatsApp and email routes on the contact page reach us directly.",
           ],
         },
         {
@@ -1594,7 +1816,6 @@ export const en: SiteContent = {
             "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
             "Your light or dark theme choice, and your answer to the consent banner, are the two things kept without asking. Both are a direct response to something you did, both stay on your device, and neither is sent to us.",
             "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie and it does not follow you to other websites — and like the analytics, it is not recorded at all unless you accepted.",
-            "Vercel may set technical cookies where they are needed to serve or protect the site.",
           ],
         },
         {
