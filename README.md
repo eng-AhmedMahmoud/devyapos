@@ -1,7 +1,7 @@
-# DevyaPOS — marketing site
+# Drinki POS — marketing site
 
-The public marketing site for **DevyaPOS**, Devya's restaurant operating
-system for the Egyptian market. Live at **https://pos.devya.dev** (Arabic by
+The public marketing site for **Drinki POS** (DevyaPOS until 2026-10-18),
+Devya's restaurant operating system for the Egyptian market. Live at **https://pos.devya.dev** (Arabic by
 default, `/en` for English; dark theme by default).
 
 Next.js App Router + next-intl (RTL-first) + Tailwind. Fully static content —

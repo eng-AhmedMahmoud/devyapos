@@ -6,7 +6,7 @@ import { brand } from "@/lib/brand";
  *
  * This is a marketing site whose whole job is to be found and quoted. A
  * restaurant owner asking an assistant "what POS works in Egypt and prices in
- * EGP?" is exactly the query we want DevyaPOS to turn up in, and a crawler
+ * EGP?" is exactly the query we want Drinki POS to turn up in, and a crawler
  * that is blocked cannot cite us. There is nothing here that is not already
  * public, so the usual reason to block them — training on private content —
  * does not apply. Listing them explicitly rather than leaning on the `*` rule

@@ -4,72 +4,72 @@ import type { SiteContent } from "./types";
 export const en: SiteContent = {
   meta: {
     home: {
-      title: "DevyaPOS | The restaurant OS — register, kitchen, online, stock",
+      title: "Drinki POS | The restaurant OS — register, kitchen, online, stock",
       description:
         "One system runs the whole restaurant: POS, live kitchen display, your own online ordering, loyalty, and recipe-costed inventory. Bilingual AR/EN, EGP-native, multi-branch.",
     },
     features: {
-      title: "Features | DevyaPOS",
+      title: "Features | Drinki POS",
       description:
-        "Everything DevyaPOS runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
+        "Everything Drinki POS runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
     },
     pricing: {
-      title: "Pricing | DevyaPOS",
+      title: "Pricing | Drinki POS",
       description:
         "A 14-day free trial, and Growth at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
     about: {
-      title: "About DevyaPOS | Why we built this",
+      title: "About Drinki POS | Why we built this",
       description:
-        "DevyaPOS was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
+        "Drinki POS was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
     howItWorks: {
-      title: "How it works | DevyaPOS",
+      title: "How it works | Drinki POS",
       description:
         "One order, four screens: register or phone to kitchen display in under a second, stock deducting itself, and the cost report ready at close. Plus what it takes to switch.",
     },
     compare: {
-      title: "DevyaPOS vs enterprise POS platforms | Pricing compared",
+      title: "Drinki POS vs enterprise POS platforms | Pricing compared",
       description:
         "Enterprise restaurant platforms bill per terminal and charge again per module. See the feature-by-feature comparison, and work out what aggregator commission is costing you a year.",
     },
     contact: {
-      title: "Contact | DevyaPOS",
+      title: "Contact | Drinki POS",
       description:
         "Book a 15-minute demo or message us on WhatsApp. We load your menu and migrate your data for free.",
     },
     etaInvoicing: {
-      title: "Egyptian VAT and ETA e-invoicing | DevyaPOS",
+      title: "Egyptian VAT and ETA e-invoicing | Drinki POS",
       description:
-        "Where DevyaPOS stands on Egyptian tax, in plain words: 14% VAT computed on every line, exportable sales records — and no ETA submission yet.",
+        "Where Drinki POS stands on Egyptian tax, in plain words: 14% VAT computed on every line, exportable sales records — and no ETA submission yet.",
     },
     foodicsAlternative: {
-      title: "Foodics alternative in Egypt | DevyaPOS",
+      title: "Foodics alternative in Egypt | Drinki POS",
       description:
-        "The published Egyptian entry bundle is 2,848.95 EGP per branch per month. DevyaPOS Growth is 199 EGP with every module included. Compared honestly.",
+        "The published Egyptian entry bundle is 2,848.95 EGP per branch per month. Drinki POS Growth is 199 EGP with every module included. Compared honestly.",
     },
     hardware: {
-      title: "POS hardware | Run DevyaPOS on what you own",
+      title: "POS hardware | Run Drinki POS on what you own",
       description:
-        "No terminal to buy. DevyaPOS runs in a browser on any tablet, laptop or touchscreen and prints to any ESC/POS thermal printer. What a branch really needs.",
+        "No terminal to buy. Drinki POS runs in a browser on any tablet, laptop or touchscreen and prints to any ESC/POS thermal printer. What a branch really needs.",
     },
     accountingTrial: {
-      title: "Free 14-day accounting trial | DevyaPOS",
+      title: "Free 14-day accounting trial | Drinki POS",
       description:
         "Your own accounting system in a minute: ledger, invoices, receivables, payables, bank and VAT reports, for Egypt or Saudi Arabia. 14 days free, no card.",
     },
     terms: {
-      title: "Terms of service | DevyaPOS",
+      title: "Terms of service | Drinki POS",
       description:
-        "The terms behind a DevyaPOS subscription: the 14-day trial, billing per branch in EGP, support, cancellation, and who owns your data. Updated September 2026.",
+        "The terms behind a Drinki POS subscription: the 14-day trial, billing per branch in EGP, support, cancellation, and who owns your data. Updated September 2026.",
     },
     privacy: {
-      title: "Privacy policy | DevyaPOS",
+      title: "Privacy policy | Drinki POS",
       description:
         "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, a server we run ourselves, and no cookies of our own.",
     },
     refund: {
-      title: "Refund and cancellation | DevyaPOS",
+      title: "Refund and cancellation | Drinki POS",
       description:
         "14 days free with no card, monthly or yearly billing, cancel any time, and a full export of your data on the way out. The policy in plain words.",
     },
@@ -125,7 +125,7 @@ export const en: SiteContent = {
     title: "The restaurant is busy — so where is the profit going?",
     sub: "This was never a menu problem. Every part of your restaurant is running on its own — and each of these has exactly one line that cancels it.",
     beforeLabel: "Today",
-    afterLabel: "With DevyaPOS",
+    afterLabel: "With Drinki POS",
     items: [
       {
         icon: "coins",
@@ -156,7 +156,7 @@ export const en: SiteContent = {
 
   bridge: {
     eyebrow: "The fix",
-    title: "DevyaPOS connects the register, the kitchen, the storefront and the stockroom",
+    title: "Drinki POS connects the register, the kitchen, the storefront and the stockroom",
     sub: "An order enters from anywhere — register, a customer's phone, or delivery — hits the kitchen screen in under a second, deducts its ingredients from that branch's stock, and lands in the cost report at close. Nobody re-types anything.",
     chips: [
       "One order",
@@ -321,8 +321,8 @@ export const en: SiteContent = {
   compare: {
     eyebrow: "Comparison",
     title: "Enterprise power, without the enterprise invoice",
-    sub: "The big platforms — Foodics and the like — do the job, then bill per terminal and charge again for each module. DevyaPOS gives you the whole system for a flat price per branch, and the parts you need changed, we change.",
-    us: "DevyaPOS",
+    sub: "The big platforms — Foodics and the like — do the job, then bill per terminal and charge again for each module. Drinki POS gives you the whole system for a flat price per branch, and the parts you need changed, we change.",
+    us: "Drinki POS",
     them: "Enterprise POS platforms",
     rows: [
       { label: "Digital QR menu", us: true, them: true },
@@ -345,7 +345,7 @@ export const en: SiteContent = {
       { label: "Billing model", us: "Flat, per branch", them: "Per terminal + modules" },
       { label: "Price per branch per month", us: "199 EGP", them: "Quote only" },
     ],
-    note: "DevyaPOS's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
+    note: "Drinki POS's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
   },
 
   roi: {
@@ -370,21 +370,21 @@ export const en: SiteContent = {
       aov: "The average bill on a delivery order, before the aggregator's cut. Take last month's delivery revenue and divide it by the number of delivery orders.",
       commission:
         "The cut the aggregator keeps on every order. Egyptian restaurants are typically quoted between 15% and 25%, depending on volume, area, and whether you list exclusively.",
-      branches: "Branches you would run on DevyaPOS. Pricing is per branch, so this drives the cost side.",
+      branches: "Branches you would run on Drinki POS. Pricing is per branch, so this drives the cost side.",
       paid: "Orders per branch x branches x average order value x commission, over twelve months.",
       recovered:
         "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
       cost: "199 EGP per branch per month on the Growth plan, for twelve months.",
-      net: "Recovered commission minus what DevyaPOS costs you. This is the number that matters.",
+      net: "Recovered commission minus what Drinki POS costs you. This is the number that matters.",
       payback:
-        "How long the recovered commission takes to cover a full year of DevyaPOS. Shorter is better.",
+        "How long the recovered commission takes to cover a full year of Drinki POS. Shorter is better.",
     },
     rateNote: "Typical range quoted to Egyptian restaurants.",
     summary: "That is {orders} delivery orders a month across the whole chain.",
     results: {
       paid: "Commission you pay per year",
       recovered: "Recovered if 30% shift to your own site",
-      cost: "DevyaPOS cost per year",
+      cost: "Drinki POS cost per year",
       net: "Net saving per year",
       payback: "You break even in",
       paybackUnit: "days",
@@ -398,8 +398,8 @@ export const en: SiteContent = {
 
   caseStudy: {
     eyebrow: "Our first client, still our toughest",
-    title: "DevyaPOS isn't slideware — 25 branches run on it daily",
-    body: "The first chain to put DevyaPOS on its tills still shapes the roadmap: a real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
+    title: "Drinki POS isn't slideware — 25 branches run on it daily",
+    body: "The first chain to put Drinki POS on its tills still shapes the roadmap: a real menu, real rush hours, and 25 branches that call the moment something is wrong. Every feature here exists because a shift needed it — not because it looked good in a deck.",
     statsTitle: "The deployment, in numbers",
     stats: [
       { value: "25", label: "live branches" },
@@ -418,7 +418,7 @@ export const en: SiteContent = {
       },
       {
         title: "It gets fixed the same shift",
-        body: "25 branches call when something is wrong, and they call during service. Most of what is in DevyaPOS today exists because a shift needed it before the next rush.",
+        body: "25 branches call when something is wrong, and they call during service. Most of what is in Drinki POS today exists because a shift needed it before the next rush.",
       },
       {
         title: "The same code runs your restaurant",
@@ -431,7 +431,7 @@ export const en: SiteContent = {
 
   testimonials: {
     eyebrow: "Customer stories",
-    title: "Restaurant owners on DevyaPOS",
+    title: "Restaurant owners on Drinki POS",
     // Intentionally empty until real, signed customer quotes exist —
     // the section hides itself while this array is empty.
     items: [],
@@ -574,7 +574,7 @@ export const en: SiteContent = {
       rows: [
         { name: "Foodics — Basic Bundle", price: "2,848.95 EGP", note: "Billed annually (3,019.89 quarterly). Loyalty, API, delivery aggregators and BI all cost extra" },
         { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top published Egyptian tier" },
-        { name: "DevyaPOS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
+        { name: "Drinki POS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
       ],
       note: "Competitor figures are their own published Egyptian prices at the date above and may change — check them yourself before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
     },
@@ -691,19 +691,19 @@ export const en: SiteContent = {
     ],
     legal: "All rights reserved.",
     madeBy: "A product by",
-    social: "DevyaPOS on social media",
+    social: "Drinki POS on social media",
   },
 
   about: {
-    badge: "About DevyaPOS",
+    badge: "About Drinki POS",
     title: "Built inside a restaurant — not inside a meeting",
-    sub: "Every feature in DevyaPOS came out of something that went wrong during a real shift, in a real branch, at peak hour.",
+    sub: "Every feature in Drinki POS came out of something that went wrong during a real shift, in a real branch, at peak hour.",
     storyTitle: "The story",
     story: [
       "It started as one project: build a complete system for an Egyptian bubble-tea chain with ten branches. Not a QR menu, not an ordering page — the whole thing: register, kitchen display, storefront, inventory and reporting.",
       "The moment it went into the branches, the real problem became obvious. It was never any single tool. It was that the market sells restaurants pieces: a menu tool, a loyalty tool, register software, and a spreadsheet for stock. Each piece works alone and they contradict each other together.",
       "What we learned there — that money must be stored as whole piasters, that Arabic has to be a first-class language rather than a translation, that an order must reach the kitchen in under a second, and that every cup needs a known cost — became the product's principles.",
-      "DevyaPOS is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 25 branches right now.",
+      "Drinki POS is that same system, packaged so any Egyptian restaurant can be live on it the same day. The same code that runs 25 branches right now.",
     ],
     principlesTitle: "The principles we build on",
     principlesSub: "Engineering decisions made once that protect you every day.",
@@ -763,7 +763,7 @@ export const en: SiteContent = {
       {
         n: "03",
         title: "Turned into a product",
-        body: "The same system was decoupled from one brand and became a platform any restaurant can run the same day — DevyaPOS.",
+        body: "The same system was decoupled from one brand and became a platform any restaurant can run the same day — Drinki POS.",
       },
     ],
     plansTitle: "The plans, briefly",
@@ -771,7 +771,7 @@ export const en: SiteContent = {
       "Growth for a working restaurant, Scale for when margin becomes the game, Enterprise for chains — all of them starting with a 14-day trial.",
     builtByTitle: "Who builds it",
     builtByBody:
-      "DevyaPOS is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
+      "Drinki POS is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
     builtByCta: "devya.dev",
     ctaTitle: "Want to see it on your own menu?",
     ctaBody:
@@ -791,9 +791,9 @@ export const en: SiteContent = {
       submitLead: "Send my details",
       submit: "Send on WhatsApp",
       submitEmail: "Send by email",
-      hint: "Your details come straight to the DevyaPOS team so we can call you back — or send them on WhatsApp instead, if that suits you better.",
+      hint: "Your details come straight to the Drinki POS team so we can call you back — or send them on WhatsApp instead, if that suits you better.",
       privacy:
-        "We use what you send here to answer you about DevyaPOS and nothing else. We don't sell it, share it with advertisers, or add you to a marketing list. Ask us to delete it any time.",
+        "We use what you send here to answer you about Drinki POS and nothing else. We don't sell it, share it with advertisers, or add you to a marketing list. Ask us to delete it any time.",
       privacyLink: "Read the privacy policy",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
@@ -840,7 +840,7 @@ export const en: SiteContent = {
         },
       ],
     },
-    waTemplate: "Hi DevyaPOS! I'd like to know more about the system for my restaurant.",
+    waTemplate: "Hi Drinki POS! I'd like to know more about the system for my restaurant.",
   },
 
   gallery: {
@@ -887,7 +887,7 @@ export const en: SiteContent = {
   promise: {
     eyebrow: "How we work",
     title: "We don't sell you a system. We build the experience your brand runs on.",
-    sub: "DevyaPOS is the foundation. What your customer actually sees is yours — your name, your colours, your menu, your flow. Every deployment is fitted to the restaurant instead of the restaurant being fitted to the software.",
+    sub: "Drinki POS is the foundation. What your customer actually sees is yours — your name, your colours, your menu, your flow. Every deployment is fitted to the restaurant instead of the restaurant being fitted to the software.",
     items: [
       {
         title: "Your brand, never ours",
@@ -1049,16 +1049,16 @@ export const en: SiteContent = {
   },
 
   trustLine: {
-    short: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it.",
-    withCr: "DevyaPOS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
+    short: "Drinki POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it.",
+    withCr: "Drinki POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
   },
 
   etaInvoicing: {
     badge: "VAT and e-invoicing in Egypt",
-    title: "Where DevyaPOS stands on Egyptian tax",
+    title: "Where Drinki POS stands on Egyptian tax",
     sub: "Most systems sold to Egyptian restaurants say nothing at all about this. Here is what the law asks of you, what this system does for you today, and what it does not do yet.",
     standfirst:
-      "DevyaPOS is not an Egyptian Tax Authority e-invoicing integration. It computes and shows 14% VAT, holds your tax registration number, and exports the sales records your accountant works from. It does not submit anything to the ETA on your behalf. If a vendor tells you their point of sale makes you compliant, ask them to show you a submitted document with an ETA reference on it, in a live account.",
+      "Drinki POS is not an Egyptian Tax Authority e-invoicing integration. It computes and shows 14% VAT, holds your tax registration number, and exports the sales records your accountant works from. It does not submit anything to the ETA on your behalf. If a vendor tells you their point of sale makes you compliant, ask them to show you a submitted document with an ETA reference on it, in a live account.",
     updated: "Reviewed 4 September 2026. Tax rules move; this page moves with them.",
     required: {
       title: "What a VAT-registered restaurant in Egypt is actually asked to do",
@@ -1088,7 +1088,7 @@ export const en: SiteContent = {
       note: "We build software, not tax positions. Every line above is a question worth asking, not a substitute for asking it.",
     },
     does: {
-      title: "What DevyaPOS does for you today",
+      title: "What Drinki POS does for you today",
       sub: "All of it ships now, on every plan, and you can watch it working during the trial on your own menu.",
       items: [
         {
@@ -1114,16 +1114,16 @@ export const en: SiteContent = {
       ],
     },
     doesNot: {
-      title: "What DevyaPOS does not do yet",
+      title: "What Drinki POS does not do yet",
       sub: "Written here so you read it now rather than discover it after signing.",
       items: [
         {
           title: "No submission to the ETA",
-          body: "DevyaPOS does not send invoices or receipts to the Egyptian Tax Authority's systems. Nothing is transmitted on your behalf, to anyone.",
+          body: "Drinki POS does not send invoices or receipts to the Egyptian Tax Authority's systems. Nothing is transmitted on your behalf, to anyone.",
         },
         {
           title: "No signed electronic documents",
-          body: "There is no e-signature, no e-seal, and no ETA-format document produced. A DevyaPOS receipt is a receipt, not a registered electronic tax document.",
+          body: "There is no e-signature, no e-seal, and no ETA-format document produced. A Drinki POS receipt is a receipt, not a registered electronic tax document.",
         },
         {
           title: "No ETA reference on the receipt",
@@ -1131,7 +1131,7 @@ export const en: SiteContent = {
         },
         {
           title: "No accreditation",
-          body: "DevyaPOS holds no certification, accreditation or approval from the Egyptian Tax Authority, and this site claims none anywhere.",
+          body: "Drinki POS holds no certification, accreditation or approval from the Egyptian Tax Authority, and this site claims none anywhere.",
         },
       ],
       note: "None of that is priced into what you pay. You are not being billed for a compliance module that does not exist.",
@@ -1140,8 +1140,8 @@ export const en: SiteContent = {
       title: "What that means if you are choosing a system now",
       body: "The honest answer turns on one thing: whether your restaurant is already required to submit electronically.",
       points: [
-        "If you are not yet in a mandated group, DevyaPOS covers the daily part — correct VAT on every line, clean records per branch, and an export your accountant can work from.",
-        "If you are already required to submit e-receipts or e-invoices, you need a route that submits. Run one alongside DevyaPOS, or wait for us. Do not buy this expecting it to close that gap today.",
+        "If you are not yet in a mandated group, Drinki POS covers the daily part — correct VAT on every line, clean records per branch, and an export your accountant can work from.",
+        "If you are already required to submit e-receipts or e-invoices, you need a route that submits. Run one alongside Drinki POS, or wait for us. Do not buy this expecting it to close that gap today.",
         "Ask every vendor you are talking to the same question in writing: does your system submit to the ETA, under whose accreditation, and can you show it happening in a live account? A logo on a slide is not an answer.",
         "When submission ships here, this page changes the same day, with the date on it. That is the only promise on this page.",
       ],
@@ -1150,20 +1150,20 @@ export const en: SiteContent = {
       title: "The awkward questions, answered",
       items: [
         {
-          q: "Is DevyaPOS compliant with Egyptian e-invoicing?",
-          a: "No, and we will not say otherwise. DevyaPOS computes and shows VAT and keeps your sales records. It does not submit documents to the Egyptian Tax Authority, and it holds no accreditation from them.",
+          q: "Is Drinki POS compliant with Egyptian e-invoicing?",
+          a: "No, and we will not say otherwise. Drinki POS computes and shows VAT and keeps your sales records. It does not submit documents to the Egyptian Tax Authority, and it holds no accreditation from them.",
         },
         {
           q: "Does it calculate VAT correctly?",
           a: "Yes. 14% is computed per line item as the order is built, and shown on the receipt and in reports. Amounts are stored as whole piasters, so the receipt and the report never disagree.",
         },
         {
-          q: "Can I file my VAT return from DevyaPOS?",
+          q: "Can I file my VAT return from Drinki POS?",
           a: "You can export the sales records a return is built from — by branch, by day, with tax separated. The filing itself happens through the Egyptian Tax Authority, by you or your accountant.",
         },
         {
           q: "My accountant says I have to submit e-receipts. What now?",
-          a: "Then you need a submission route DevyaPOS does not provide today. Tell us during the trial and we will say plainly whether the rest of the system is still worth your time — sometimes it is, sometimes it is not.",
+          a: "Then you need a submission route Drinki POS does not provide today. Tell us during the trial and we will say plainly whether the rest of the system is still worth your time — sometimes it is, sometimes it is not.",
         },
         {
           q: "Is ETA submission on the roadmap?",
@@ -1177,21 +1177,21 @@ export const en: SiteContent = {
     },
     cta: {
       title: "Ask us the awkward question first",
-      body: "Fifteen minutes, your menu, and your accountant's requirements on the table. If DevyaPOS is the wrong fit for where your restaurant stands, we would rather say so now than after you have paid.",
+      body: "Fifteen minutes, your menu, and your accountant's requirements on the table. If Drinki POS is the wrong fit for where your restaurant stands, we would rather say so now than after you have paid.",
       primary: "Book a 15-min demo",
       secondary: "Message us on WhatsApp",
     },
   },
 
   foodicsAlternative: {
-    badge: "DevyaPOS vs Foodics",
+    badge: "Drinki POS vs Foodics",
     title: "Looking for a Foodics alternative in Egypt?",
     sub: "Foodics is a serious product. It is also priced for a different restaurant than the one this page is written for. Here is the comparison with the numbers left in.",
     disclaimer:
-      "Foodics is a trademark of its owner and has no affiliation with DevyaPOS. Every figure below comes from Foodics' own published Egyptian pricing, retrieved September 2026. Their prices are theirs to change — check foodics.com yourself before you decide anything.",
+      "Foodics is a trademark of its owner and has no affiliation with Drinki POS. Every figure below comes from Foodics' own published Egyptian pricing, retrieved September 2026. Their prices are theirs to change — check foodics.com yourself before you decide anything.",
     positioning: {
       title: "The honest version",
-      body: "Foodics is a regional platform with its own hardware, its own payment rail and a marketplace of add-ons behind it. DevyaPOS is one system, built in Egypt for Egyptian restaurants, at a flat price per branch with every module already inside it. Neither sentence is an insult to the other product. They are two different bets, and which one is right depends on the size of your operation and how much of your budget you want going to software.",
+      body: "Foodics is a regional platform with its own hardware, its own payment rail and a marketplace of add-ons behind it. Drinki POS is one system, built in Egypt for Egyptian restaurants, at a flat price per branch with every module already inside it. Neither sentence is an insult to the other product. They are two different bets, and which one is right depends on the size of your operation and how much of your budget you want going to software.",
       points: [
         "Same job: take the order, feed the kitchen, sell online, count the stock.",
         "Different billing: bundles per branch with paid add-ons, against one flat per-branch price.",
@@ -1223,13 +1223,13 @@ export const en: SiteContent = {
           note: "On the Egyptian Basic bundle each of these is charged on top of the bundle price.",
         },
         {
-          label: "DevyaPOS — Growth",
+          label: "Drinki POS — Growth",
           value: "199 EGP",
           note: "Per branch per month. Register, kitchen display, ordering site, loyalty and reporting included, with no per-terminal fee.",
           ours: true,
         },
       ],
-      source: "Foodics figures are their own published Egyptian pricing, retrieved September 2026, and may have changed since. DevyaPOS figures are our own published prices.",
+      source: "Foodics figures are their own published Egyptian pricing, retrieved September 2026, and may have changed since. Drinki POS figures are our own published prices.",
     },
     pickThem: {
       title: "Pick Foodics if this is you",
@@ -1258,7 +1258,7 @@ export const en: SiteContent = {
       ],
     },
     pickUs: {
-      title: "Pick DevyaPOS if this is you",
+      title: "Pick Drinki POS if this is you",
       sub: "The cases where the flat per-branch price and an in-house team are the whole argument.",
       items: [
         {
@@ -1275,7 +1275,7 @@ export const en: SiteContent = {
         },
         {
           title: "You already own the hardware",
-          body: "DevyaPOS runs in a browser on the tablet, laptop or touchscreen you have, with any ESC/POS thermal printer. Nothing to buy on the way in and nothing to return on the way out.",
+          body: "Drinki POS runs in a browser on the tablet, laptop or touchscreen you have, with any ESC/POS thermal printer. Nothing to buy on the way in and nothing to return on the way out.",
         },
         {
           title: "You need the software changed to fit your operation",
@@ -1289,7 +1289,7 @@ export const en: SiteContent = {
     },
     cta: {
       title: "Get a straight comparison on your own numbers",
-      body: "Send us your branch count and what you are quoted today. We will tell you what DevyaPOS costs, what it does not do, and whether switching is worth the disruption at your size.",
+      body: "Send us your branch count and what you are quoted today. We will tell you what Drinki POS costs, what it does not do, and whether switching is worth the disruption at your size.",
       primary: "Book a 15-min demo",
       secondary: "Message us on WhatsApp",
       note: "14-day free trial, no credit card, and we load your menu before you decide.",
@@ -1299,7 +1299,7 @@ export const en: SiteContent = {
   hardware: {
     badge: "Hardware",
     title: "Buy nothing. Run it on what you already own.",
-    sub: "DevyaPOS runs in a browser. Any tablet, laptop or touchscreen big enough to tap is a register, and any ESC/POS thermal printer prints the receipt.",
+    sub: "Drinki POS runs in a browser. Any tablet, laptop or touchscreen big enough to tap is a register, and any ESC/POS thermal printer prints the receipt.",
     stance: {
       title: "Bring your own is the position, not the excuse",
       body: "Most point-of-sale vendors sell you a terminal, because the terminal is where the margin is — and once it is bolted to your counter, leaving costs you the hardware as well as the subscription. We took the other road deliberately. The system is a web app: it opens in a browser, on your device, and if you ever walk away, you keep the device.",
@@ -1416,7 +1416,7 @@ export const en: SiteContent = {
         },
         {
           q: "Can I use the touchscreen from my old POS?",
-          a: "Usually. If it runs a current browser it runs DevyaPOS. Old Windows tills locked to an ancient browser are the one case worth testing first, and we will test it with you before you commit.",
+          a: "Usually. If it runs a current browser it runs Drinki POS. Old Windows tills locked to an ancient browser are the one case worth testing first, and we will test it with you before you commit.",
         },
         {
           q: "What happens to my hardware if I leave?",
@@ -1433,7 +1433,7 @@ export const en: SiteContent = {
   },
 
   accountingTrial: {
-    badge: "DevyaPOS Accounting — free trial",
+    badge: "Drinki POS Accounting — free trial",
     title: "Your own accounting system, ready in a minute",
     sub: "Fourteen days free, no card. You get a private accounting system of your own — not a shared demo — set up for Egypt or Saudi Arabia, in Arabic and English.",
     includes: {
@@ -1549,7 +1549,7 @@ export const en: SiteContent = {
       errorTitle: "Something went wrong",
       errorBody: "Your trial was not created. Please try again, or message us on WhatsApp.",
       whatsapp: "Message us on WhatsApp",
-      waTemplate: "Hello, I would like to try DevyaPOS Accounting.",
+      waTemplate: "Hello, I would like to try Drinki POS Accounting.",
     },
     pricing: {
       eyebrow: "After the trial",
@@ -1607,7 +1607,7 @@ export const en: SiteContent = {
         SA: "E-invoicing is included in every plan: ZATCA Phase 2 clearance and reporting, at no extra cost.",
       },
       withPos: {
-        title: "Already on DevyaPOS?",
+        title: "Already on Drinki POS?",
         body: "Add accounting for {price} per branch a month. Each day's close posts to your books by itself, and you never pay more than the matching plan above.",
         price: { EG: 299, SA: 79 },
       },
@@ -1615,7 +1615,7 @@ export const en: SiteContent = {
       extrasPrice: { user: { EG: 99, SA: 25 }, branch: { EG: 249, SA: 49 } },
       noSetupFee: "No setup fee. Connecting you to the tax authority is part of every plan.",
       enterprise: "More than 10 branches or 15 users? We quote an Enterprise plan.",
-      enterpriseWa: "Hello, I would like an Enterprise quote for DevyaPOS Accounting.",
+      enterpriseWa: "Hello, I would like an Enterprise quote for Drinki POS Accounting.",
     },
     faq: {
       title: "Questions about the trial",
@@ -1643,14 +1643,14 @@ export const en: SiteContent = {
   legal: {
     terms: {
       title: "Terms of service",
-      sub: "The agreement behind a DevyaPOS subscription, in the plainest language we can write it in.",
+      sub: "The agreement behind a Drinki POS subscription, in the plainest language we can write it in.",
       updated: "Last updated 4 September 2026",
       sections: [
         {
           title: "1. Who you are contracting with",
           body: [
-            "DevyaPOS is a product operated by Devya Solutions (\"we\", \"us\"), the studio that built the platform and maintains it.",
-            "These terms cover your use of the DevyaPOS platform and of this website. Using either means you accept them. If you are agreeing on behalf of a company, you are confirming that you are allowed to.",
+            "Drinki POS is a product operated by Devya Solutions (\"we\", \"us\"), the studio that built the platform and maintains it.",
+            "These terms cover your use of the Drinki POS platform and of this website. Using either means you accept them. If you are agreeing on behalf of a company, you are confirming that you are allowed to.",
           ],
         },
         {
@@ -1751,7 +1751,7 @@ export const en: SiteContent = {
         {
           title: "Who is responsible for this",
           body: [
-            "DevyaPOS is operated by Devya Solutions, in Cairo, Egypt. We decide what this website collects and what happens to it, which makes us the controller of it.",
+            "Drinki POS is operated by Devya Solutions, in Cairo, Egypt. We decide what this website collects and what happens to it, which makes us the controller of it.",
             "For anything in this policy — a question, a correction, or a request to delete what we hold — write to devya.solutions@gmail.com or message +20 104 185 8781. A person reads both.",
           ],
         },
@@ -1759,7 +1759,7 @@ export const en: SiteContent = {
           title: "What the contact form collects",
           body: [
             "The form asks for your name, your restaurant's name, your mobile number, how many branches you run, and anything you type into the message box. The first three are required; the rest is optional.",
-            "When you press send, those details are posted to this site and passed on to the DevyaPOS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
+            "When you press send, those details are posted to this site and passed on to the Drinki POS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
             "Your IP address is used for a moment to stop the form being hammered by a script. It is not stored with your enquiry.",
             "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, the details go to us through WhatsApp or through your own email client, and no submission is recorded on this site.",
           ],
@@ -1821,7 +1821,7 @@ export const en: SiteContent = {
         {
           title: "The product is a separate matter",
           body: [
-            "This policy covers the marketing website. If you become a customer, the data your restaurant puts into the DevyaPOS platform — your menu, your orders, your own customers — is covered by your subscription agreement. It stays yours, we process it only to run the service for you, and you can export or delete it whenever you want.",
+            "This policy covers the marketing website. If you become a customer, the data your restaurant puts into the Drinki POS platform — your menu, your orders, your own customers — is covered by your subscription agreement. It stays yours, we process it only to run the service for you, and you can export or delete it whenever you want.",
           ],
         },
         {

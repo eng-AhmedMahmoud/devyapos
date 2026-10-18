@@ -1,6 +1,6 @@
 > Copy of `docs/specs/devyapos-site.md` from the [bohub-pos monorepo](https://github.com/eng-AhmedMahmoud/bohub-pos), which is the canonical home. Update there first.
 
-# DevyaPOS marketing site — reference spec
+# Drinki POS marketing site — reference spec
 
 Source repo: `github.com/eng-AhmedMahmoud/devyapos` (local checkout
 `~/Projects/devyapos`), extracted via `git subtree split` from this monorepo's
@@ -16,7 +16,7 @@ future lead-form POST (`next.config.ts`). Fully static marketing content.
 
 ## 1. Purpose
 
-Public marketing site for **DevyaPOS**, the productised, sellable version of
+Public marketing site for **Drinki POS** (named DevyaPOS until 2026-10-18; visible name only, identifiers keep `devyapos`), the productised, sellable version of
 the BóHub POS platform — "Devya's restaurant operating system for the
 Egyptian market." Live at **https://pos.devya.dev** (Vercel project
 `devyapos`, auto-deploys `main`; domain is an `A → 76.76.21.21` record on
@@ -59,7 +59,7 @@ moved to dedicated routes (see the file's own doc comment — it used to be a
    honestly fill yet. Two duplicate tracks, second `aria-hidden`.
 3. **Ledger** (`components/home/Ledger.tsx`) — before/after "problem → the
    line that cancels it" rows, one eye movement each (struck-through
-   "today" column, checked "with DevyaPOS" column).
+   "today" column, checked "with Drinki POS" column).
 4. **Promo video section** (`components/home/Promo.tsx`, `id="promo"`) — the
    four-second register recording in an oversized `IpadVideo` tablet mockup,
    on an espresso band. Target of the hero's "See it running" CTA
@@ -190,7 +190,7 @@ illustrate the level of specificity: hero stats "25 branches, 679
 items/sizes, <1s POS→kitchen"; pricing plans Growth (199 EGP/branch/mo,
 featured), Scale (499 EGP/branch/mo), Enterprise (custom); market-anchor
 rows dated "as of August 2026" citing Foodics Starter/Basic/Advanced
-(1,506 / 2,582 / 3,442 EGP) against DevyaPOS Growth (199 EGP); payments
+(1,506 / 2,582 / 3,442 EGP) against Drinki POS Growth (199 EGP); payments
 providers `[Paymob(live), Fawry, Kashier, Geidea, OPay, PayTabs]` with only
 Paymob marked `live: true`. `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty
@@ -203,8 +203,8 @@ could legitimately attack).
 
 ```ts
 export const brand = {
-  name: { ar: "DevyaPOS", en: "DevyaPOS" },
-  wordmark: "DevyaPOS",
+  name: { ar: "Drinki POS", en: "Drinki POS" },
+  wordmark: "Drinki POS",
   domain: "pos.devya.dev",
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
@@ -226,7 +226,7 @@ locale-aware message text passed in by the caller), `telLink` (constant
 
 The file's own comment records a naming decision worth preserving: the
 company is **Devya Solutions**, the domain is **devya.dev**, never
-`devya.solutions` — and DevyaPOS is deliberately *not* a sister brand with
+`devya.solutions` — and Drinki POS is deliberately *not* a sister brand with
 its own `.dev` registration, it's a product living on a `pos.` subdomain. A
 trailing comment also documents fields that were *removed* (`social`,
 `signupUrl`, `loginUrl`, `demoUrl`) because they had no live consumer once
