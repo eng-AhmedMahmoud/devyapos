@@ -70,14 +70,30 @@ moved to dedicated routes (see the file's own doc comment — it used to be a
 6. **Showcase carousel** (`components/home/Showcase.tsx` →
    `ScreenshotCarousel`) — 7 real product screenshots in device frames,
    ordered "as the day runs": register → kitchen → customer → back office.
+   Each screenshot is also a button that opens a **quick look**
+   (`components/QuickLook.tsx`): a native `<dialog>` (`showModal`, so the page
+   is inert behind it and Escape closes it) over a blurred backdrop, the same
+   iPad frame at full size, ‹ › and the arrow keys to step (physical keys, so
+   in Arabic ← is next), and the carousel moves to the last screen viewed and
+   takes the focus back on close. `/features` passes the same labels.
 7. **Brand promise** (`components/home/BrandPromise.tsx`) — "a fitted
    experience, not a licence to software," placed deliberately *after* the
    showcase so the claim reframes what was just seen, not before.
 8. **Testimonials** (`components/home/Testimonials.tsx`) — renders `null`
    when `testimonials.items` is empty (currently empty in both locales by
    design — no invented quotes; see §2 content notes).
-9. **CTA** (`components/CtaBand.tsx`) — closing espresso card, WhatsApp +
+9. **Contact** (`components/home/HomeContact.tsx`, `id="reach"`) — WhatsApp,
+   the business line and the inbox as three rows (values as isolated LTR
+   runs), beside `ReachDrawing`: a bubble, a phone and an envelope on dashed
+   lines into the brand tile. No form; `/contact` has it.
+10. **CTA** (`components/CtaBand.tsx`) — closing espresso card, WhatsApp +
    contact-page CTAs, direct `mailto:`/`tel:` links.
+
+Site-wide, `components/FloatingActions.tsx` puts a WhatsApp button and a
+back-to-the-top arrow (shown once the first screen is scrolled away; it moves
+focus to `<main id="main">`) at the inline end of every page. While the
+consent banner is up, the banner publishes its height as `--consent-h` and
+the stack rides above it.
 
 ### `/features` (`app/[locale]/features/page.tsx`)
 
@@ -401,6 +417,18 @@ the reading edge (logical `translate` — flips automatically in RTL via
 then the connecting arrow scales in at 290ms — so the before/after relation
 is carried by motion sequencing, not just the static arrow glyph. Every one
 of these transitions is separately zeroed under `prefers-reduced-motion`.
+
+**Scroll-linked touches** (the last block of `app/globals.css`): CSS view
+timelines, only inside `@supports (animation-timeline: view())` and
+`@media screen and (prefers-reduced-motion: no-preference)`, decorative and
+never hiding content — elsewhere the page is the still version. Feature tiles
+turn in (`.sl-pop`), pricing ticks fill row by row (`.sl-tick`), the
+`PearlRule` dividers are laid down from the reading edge, a glint crosses each
+`IpadShell`'s glass as the device passes (a named `--device` timeline, on the
+inline axis inside the carousel track, so it follows a swipe), and the contact
+drawing's dashes run while a pearl rides each line (`.reach-ride`: a
+round-capped zero-length dash moved by `stroke-dashoffset` on a
+`pathLength=100` path; CSS `offset-path` on SVG did not map to viewBox units).
 
 ## 5. Notable engineering decisions
 

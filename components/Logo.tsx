@@ -41,6 +41,21 @@ const CUP = "#FFF6EE";
 const GLYPH = "#D8A98F";
 const STRIPE = "#C8853C";
 
+/** The tile and the cup as SVG shapes in a 512-unit box, for any drawing that ends in the mark. */
+export function MarkShapes() {
+  return (
+    <>
+      <rect width="512" height="512" rx="160" fill={PLATE} />
+      {/* Cup, lid and straw */}
+      <path d={MARK.cup} fill={CUP} fillRule="evenodd" />
+      {/* The tablet and pen on the cup wall */}
+      <path d={MARK.glyph} fill={GLYPH} fillRule="evenodd" />
+      {/* The stripe, carried in gold so it holds against the cream cup */}
+      <path d={MARK.stripe} fill={STRIPE} fillRule="evenodd" />
+    </>
+  );
+}
+
 export default function Logo({
   tone = "auto",
   className = "",
@@ -57,16 +72,10 @@ export default function Logo({
         aria-hidden="true"
         className="shrink-0"
       >
-        <rect width="512" height="512" rx="160" fill={PLATE} />
-        {/* Cup, lid and straw */}
-        <path d={MARK.cup} fill={CUP} fillRule="evenodd" />
-        {/* The tablet and pen on the cup wall */}
-        <path d={MARK.glyph} fill={GLYPH} fillRule="evenodd" />
-        {/* The stripe, carried in gold so it holds against the cream cup */}
-        <path d={MARK.stripe} fill={STRIPE} fillRule="evenodd" />
+        <MarkShapes />
       </svg>
       <span
-        className={`font-display text-xl ${
+        className={`font-display text-xl whitespace-nowrap ${
           tone === "espresso" ? "text-on-espresso" : "text-ink"
         }`}
       >

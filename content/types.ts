@@ -446,6 +446,36 @@ export interface SiteContent {
     title: string;
     sub: string;
     items: { alt: string; caption: string }[];
+    /** The quick look a home-page screenshot opens (components/QuickLook.tsx). */
+    quickLook: {
+      /** Chip over a screenshot on hover and focus. */
+      hint: string;
+      /** Accessible name of a screenshot's button. Interpolates {caption}. */
+      open: string;
+      close: string;
+      previous: string;
+      next: string;
+      /** Where the visitor is in the set. Interpolates {n} and {total}. */
+      position: string;
+    };
+  };
+
+  /** The home page's contact section, just above the closing CTA. */
+  homeContact: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    whatsapp: string;
+    phone: string;
+    email: string;
+    /** Subject of the email the email row starts. */
+    emailSubject: string;
+  };
+
+  /** The two floating buttons on every page (components/FloatingActions.tsx). */
+  floating: {
+    top: string;
+    whatsapp: string;
   };
 
   /** Copy for the four-second register recording on the home page. As with

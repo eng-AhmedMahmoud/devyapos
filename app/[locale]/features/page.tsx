@@ -99,6 +99,7 @@ export default async function FeaturesPage({
           <div className="mt-9">
             <ScreenshotCarousel
               ariaLabel={c.gallery.title}
+              quickLook={c.gallery.quickLook}
               items={GALLERY.map((shot, i) => ({
                 src: shot.src,
                 alt: c.gallery.items[i].alt,

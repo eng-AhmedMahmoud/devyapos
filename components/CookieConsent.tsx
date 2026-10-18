@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useLocale } from "next-intl";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
@@ -24,6 +25,25 @@ export default function CookieConsent() {
   const locale = useLocale();
   const c = getContent(locale);
   const consent = useConsent();
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Publishes the banner's height as `--consent-h` while it is up, so the
+  // floating buttons (FloatingActions) sit above it instead of under it.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const publish = () =>
+      root.style.setProperty("--consent-h", `${el.offsetHeight}px`);
+    publish();
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(publish);
+    observer?.observe(el);
+    return () => {
+      observer?.disconnect();
+      root.style.removeProperty("--consent-h");
+    };
+  }, [consent]);
 
   if (consent !== "unset") return null;
 
@@ -31,6 +51,7 @@ export default function CookieConsent() {
 
   return (
     <div
+      ref={ref}
       role="dialog"
       aria-live="polite"
       aria-label={t.title}

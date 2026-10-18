@@ -856,6 +856,29 @@ export const en: SiteContent = {
       { alt: "Menu management", caption: "Categories, products and ingredients in one place" },
       { alt: "Branch inventory", caption: "Stock per branch, deducting itself as orders complete" },
     ],
+    quickLook: {
+      hint: "Quick look",
+      open: "Quick look: {caption}",
+      close: "Close",
+      previous: "Previous screen",
+      next: "Next screen",
+      position: "{n} of {total}",
+    },
+  },
+
+  homeContact: {
+    eyebrow: "Contact",
+    title: "Reach us the way that suits you",
+    sub: "A WhatsApp message, a call or an email. We reply the same business day, and we load your menu for free before you decide.",
+    whatsapp: "WhatsApp",
+    phone: "Call",
+    email: "Email",
+    emailSubject: "About Drinki POS",
+  },
+
+  floating: {
+    top: "Back to top",
+    whatsapp: "Message us on WhatsApp",
   },
 
   promo: {

@@ -65,7 +65,10 @@ export default function IpadShell({
   };
 
   return (
-    <div className={`mx-auto w-full ${className}`.trim()} style={{ maxWidth }}>
+    <div
+      className={`ipad-device mx-auto w-full ${className}`.trim()}
+      style={{ maxWidth }}
+    >
       <div className="relative w-full" style={deviceStyle}>
         {/* Front camera, centred in the top bezel in both writing directions. */}
         <span
@@ -103,6 +106,13 @@ export default function IpadShell({
               background:
                 "linear-gradient(154deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.03) 20%, transparent 44%)",
             }}
+          />
+          {/* A glint that crosses the glass as the device passes — scrolled
+              by on the page, swiped by in a carousel. Invisible unless the
+              scroll-linked rules in globals.css run it. */}
+          <span
+            aria-hidden="true"
+            className="ipad-glint pointer-events-none absolute inset-0"
           />
         </div>
       </div>

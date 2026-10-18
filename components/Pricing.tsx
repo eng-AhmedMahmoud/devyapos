@@ -176,7 +176,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                         <Check
                           width={16}
                           height={16}
-                          className="mt-0.5 shrink-0 text-mint"
+                          className="sl-tick mt-0.5 shrink-0 text-mint"
                         />
                         <span className="text-sm text-ink-2">{f}</span>
                       </li>
