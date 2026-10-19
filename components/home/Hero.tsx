@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { Arrow, Check } from "@/components/icons";
+import MarkDraw from "@/components/MarkDraw";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
 
@@ -151,14 +152,13 @@ function OrderFlowCard({ locale }: { locale: string }) {
         ))}
       </ol>
 
-      <div className="mt-6 flex items-center justify-between rounded-2xl bg-surface-2 px-4 py-3">
+      {/* The end of the strip is left to the mark, which overhangs the
+          card's corner and draws itself in as the hero settles. */}
+      <div className="mt-6 rounded-2xl bg-surface-2 py-3 ps-4 pe-18">
         <span className="text-xs text-ink-dim">{c.caseStudy.eyebrow}</span>
-        <span className="flex items-center gap-1.5" aria-hidden="true">
-          <span className="pearl" />
-          <span className="pearl" />
-          <span className="pearl pearl-lg" />
-        </span>
       </div>
+
+      <MarkDraw className="hero-mark" />
     </div>
   );
 }

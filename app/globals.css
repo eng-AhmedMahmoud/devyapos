@@ -1307,3 +1307,246 @@ html:has(.ql-dialog[open]) {
     opacity: 0;
   }
 }
+
+/* ── The mark in motion ─────────────────────────────────────────────────────
+   Three pieces built from the mark's own paths (components/Logo.tsx):
+
+   - MarkDraw, on the hero card: the plate settles, the cup is traced and
+     filled, the tablet lands, the stripe pours up, then pearls are sipped up
+     the straw now and again;
+   - BrandShapes: faint cups, tablets and receipts drifting behind a section;
+   - CupDivider: a section edge in the profile of the lid.
+
+   Every element's resting style is its finished state; the keyframes only say
+   where it comes from. So reduced motion, which switches them off, is the
+   still page — the plain mark, the shapes where they lie, the divider at full
+   height. Apart from the one-off trace, all of it is transform and opacity.
+   Loops carry `.motion-loop` and pause while their MotionScope is off screen. */
+
+[data-inview="false"] .motion-loop {
+  animation-play-state: paused;
+}
+
+/* Overhangs the hero card's end corner, tilted toward the reading direction.
+   The drawing is never mirrored; only where it sits and which way it leans. */
+.hero-mark {
+  --dir: 1;
+  position: absolute;
+  width: 5.5rem;
+  height: 5.5rem;
+  bottom: -1.75rem;
+  inset-inline-end: -0.5rem;
+  rotate: calc(6deg * var(--dir));
+  border-radius: 31.25%; /* the plate's rx 160 of 512 */
+  box-shadow: var(--shadow-lift);
+}
+[dir="rtl"] .hero-mark {
+  --dir: -1;
+}
+@media (min-width: 640px) {
+  .hero-mark {
+    width: 7rem;
+    height: 7rem;
+    bottom: -2.25rem;
+    inset-inline-end: -1.5rem;
+  }
+}
+
+.md-plate,
+.md-glyph,
+.md-stripe {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.md-plate {
+  animation: md-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+}
+/* A stroked copy of the cup, traced along its length (pathLength 100), then
+   faded once the fill beneath has arrived. At rest it is gone. */
+.md-trace {
+  opacity: 0;
+  stroke-dasharray: 100 100;
+  animation: md-trace 1.3s ease-in-out 0.7s both;
+}
+.md-cup {
+  animation: md-fade 0.5s ease-out 1.55s both;
+}
+.md-glyph {
+  animation: md-land 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.85s both;
+}
+/* Poured: it rises from the base of the cup. */
+.md-stripe {
+  transform-origin: 50% 100%;
+  animation: md-pour 0.8s cubic-bezier(0.65, 0, 0.35, 1) 2.05s both;
+}
+/* Pearls, hidden at rest: up the straw's upright, round the elbow, along the
+   slant and out at the tip. Translations are in the mark's 512-unit box. */
+.md-pearl {
+  opacity: 0;
+  animation: md-sip 5.2s ease-in-out 3.1s infinite both;
+}
+.md-pearl-2 {
+  animation-delay: 3.75s;
+}
+
+@keyframes md-settle {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+}
+@keyframes md-trace {
+  from {
+    opacity: 1;
+    stroke-dashoffset: 100;
+  }
+  75% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  to {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes md-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes md-land {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes md-pour {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes md-sip {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  6% {
+    opacity: 1;
+  }
+  30% {
+    transform: translate(8px, -37px);
+  }
+  56% {
+    opacity: 1;
+  }
+  62%,
+  100% {
+    opacity: 0;
+    transform: translate(70px, -75px);
+  }
+}
+
+/* Behind a section (which is `relative isolate`): clipped to it, below its
+   content. `clip` rather than `hidden` so the box is not a scroll container,
+   which would capture the shapes' view timeline; older browsers take `hidden`
+   and have no view timelines anyway. */
+.brand-shapes {
+  --dir: 1;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  overflow: clip;
+  pointer-events: none;
+  color: var(--caramel);
+}
+[dir="rtl"] .brand-shapes {
+  --dir: -1;
+}
+.brand-shapes-espresso {
+  color: var(--on-espresso);
+}
+.bs-shape {
+  position: absolute;
+  opacity: 0.1;
+  rotate: calc(var(--tilt) * var(--dir));
+}
+.brand-shapes-espresso .bs-shape {
+  opacity: 0.06;
+}
+.bs-shape svg {
+  animation: bs-float 16s ease-in-out var(--phase, 0s) infinite;
+}
+@keyframes bs-float {
+  50% {
+    transform: translate(calc(0.75rem * var(--dir)), -1.25rem)
+      rotate(calc(4deg * var(--dir)));
+  }
+}
+
+/* Just above the top edge of its section, overlapping the band before it by
+   one pixel so no hairline of the old colour shows through the seam. */
+.cup-divider {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(100% - 1px);
+  height: 1.5rem;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  .cup-divider {
+    height: 2.75rem;
+  }
+}
+.cup-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+}
+[dir="rtl"] .cup-divider svg {
+  scale: -1 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-plate,
+  .md-trace,
+  .md-cup,
+  .md-glyph,
+  .md-stripe,
+  .md-pearl,
+  .bs-shape svg {
+    animation: none;
+  }
+}
+
+/* Scroll-linked, in the manner of the touches above: the shapes drift at
+   their own depth as the section passes, and the lid rises as its seam
+   scrolls in. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .bs-shape {
+      animation: bs-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .cup-divider svg {
+      animation: cd-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
+@keyframes bs-drift {
+  from {
+    translate: 0 2.5rem;
+  }
+  to {
+    translate: 0 -2.5rem;
+  }
+}
+@keyframes cd-rise {
+  from {
+    transform: scaleY(0.35);
+  }
+}

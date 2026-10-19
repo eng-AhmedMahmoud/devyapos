@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
 import { Arrow, Mail, Phone, Whatsapp } from "@/components/icons";
+import CupDivider from "@/components/CupDivider";
 import PearlRule from "@/components/PearlRule";
 import ReachDrawing from "@/components/ReachDrawing";
 import Reveal from "@/components/Reveal";
@@ -59,8 +60,9 @@ export default async function HomeContact() {
     <section
       id="reach"
       aria-labelledby="reach-title"
-      className="band-cream py-20 sm:py-24"
+      className="band-cream relative py-20 sm:py-24"
     >
+      <CupDivider />
       <Container className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
         <div className="min-w-0">
           <PearlRule className="mb-8" />

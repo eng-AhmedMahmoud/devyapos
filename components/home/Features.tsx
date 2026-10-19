@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
+import BrandShapes from "@/components/BrandShapes";
 import FeatureGrid from "@/components/FeatureGrid";
 import PearlRule from "@/components/PearlRule";
 import { Arrow } from "@/components/icons";
@@ -12,7 +13,8 @@ export default async function Features() {
   const c = getContent(locale);
 
   return (
-    <section id="features" className="bg-bg py-20 sm:py-24">
+    <section id="features" className="relative isolate bg-bg py-20 sm:py-24">
+      <BrandShapes layout="features" />
       <Container>
         <PearlRule className="mb-10" />
         {/* Head and CTA share a row, so the section opens on a line rather than

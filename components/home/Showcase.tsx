@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import ScreenshotCarousel from "@/components/ScreenshotCarousel";
 import { Container } from "@/components/Section";
+import CupDivider from "@/components/CupDivider";
 import Reveal from "@/components/Reveal";
 import { PRODUCT_MEDIA_AVAILABLE, SHOTS } from "@/lib/screenshots";
 
@@ -39,7 +40,8 @@ export default async function Showcase() {
   const c = getContent(locale);
 
   return (
-    <section className="band-cream py-16 sm:py-24">
+    <section className="band-cream relative py-16 sm:py-24">
+      <CupDivider />
       <Container>
         <Reveal>
           <div className="flex flex-col gap-2">

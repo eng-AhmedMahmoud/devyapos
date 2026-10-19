@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
+import BrandShapes from "./BrandShapes";
 import { Arrow, Whatsapp } from "./icons";
 import Reveal from "./Reveal";
 import { Container } from "./Section";
@@ -19,7 +20,8 @@ export default async function CtaBand() {
     <section className="bg-bg py-20 sm:py-24">
       <Container>
         <Reveal>
-          <div className="band-espresso pearl-grid-dark relative overflow-hidden rounded-[2rem] px-6 py-14 sm:px-12">
+          <div className="band-espresso pearl-grid-dark relative isolate overflow-hidden rounded-[2rem] px-6 py-14 sm:px-12">
+            <BrandShapes layout="cta" tone="espresso" />
             <span
               aria-hidden="true"
               className="blob -top-24 h-72 w-72 bg-caramel"
