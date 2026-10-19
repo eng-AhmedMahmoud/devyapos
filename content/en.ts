@@ -1,3 +1,4 @@
+import { consentCopyBase } from "@/lib/consent/copy";
 import type { SiteContent } from "./types";
 
 /** English mirror of `ar.ts` — same tree, same order, same claims. */
@@ -636,12 +637,22 @@ export const en: SiteContent = {
     cta: "Back to home",
   },
 
+  // The shared consent copy (lib/consent/copy.ts); only the `vendors` lines
+  // are this site's own and must match lib/consent/config.ts.
   consent: {
-    title: "We value your privacy",
-    body: "No trackers, no third-party analytics. We'd only like to remember which link brought you — it stays in your browser until you close the tab, and nothing is stored unless you accept.",
-    policyLink: "Read the privacy policy",
-    accept: "Accept",
-    reject: "Reject",
+    ...consentCopyBase.en,
+    necessary: {
+      ...consentCopyBase.en.necessary,
+      vendors:
+        "On this site: devyapos.consent.v2 (this choice) and devyapos-theme (the appearance you pick) in your browser's local storage. No cookies.",
+    },
+    categories: {
+      marketing: {
+        ...consentCopyBase.en.categories.marketing,
+        vendors:
+          "On this site: the campaign link that brought you (UTM tags, the referring site and your first page), kept in this tab's storage until you close it and sent only with a form you choose to submit. No ad platform receives it.",
+      },
+    },
   },
 
   footer: {

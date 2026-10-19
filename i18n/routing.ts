@@ -18,6 +18,12 @@ export const routing = defineRouting({
    * /en as they navigate.
    */
   localeDetection: false,
+  /**
+   * No NEXT_LOCALE cookie. The locale is in every URL and detection is off,
+   * so the cookie was never read — it was only a device write made before
+   * any notice (ePrivacy Art. 5(3)). tests/privacy.test.ts keeps it off.
+   */
+  localeCookie: false,
 });
 
 export type Locale = (typeof routing.locales)[number];

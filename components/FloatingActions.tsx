@@ -15,7 +15,7 @@ import WhatsappLink from "./WhatsappLink";
  * so a keyboard user lands where the eye does. The stack is pinned to the
  * bottom inline-end corner; while the consent banner is up it rides above the
  * banner only where the banner reaches that corner — the banner publishes its
- * height as `--consent-h` (see CookieConsent) and `.fab-stack` decides when to
+ * height as `--consent-h` (see components/consent/ConsentManager) and `.fab-stack` decides when to
  * add it (globals.css).
  */
 export default function FloatingActions() {

@@ -1,12 +1,12 @@
 import {
   coarseTimestamp,
-  maskPhone,
   sanitizeAttribution,
   validateLead,
   type LeadAttribution,
   type LeadSubmission,
   type NormalisedLead,
 } from "@/lib/leads";
+import { keepInOutbox } from "@/lib/lead-outbox";
 
 /**
  * Lead intake for the contact form.
@@ -102,11 +102,19 @@ function rateLimit(ip: string): { allowed: boolean; retryAfter: number } {
   return { allowed: true, retryAfter: 0 };
 }
 
-/** Client IP as Vercel's proxy reports it. Used only for rate limiting. */
+/**
+ * Client IP, used only for rate limiting and never logged or stored.
+ *
+ * `X-Real-IP` first: nginx on the VPS sets it from the connection, so a
+ * client cannot choose it. The first `X-Forwarded-For` hop is whatever the
+ * client sent, which let a script rotate it to dodge the limiter.
+ */
 function clientIp(req: Request): string {
+  const real = req.headers.get("x-real-ip")?.trim();
+  if (real) return real;
   const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip")?.trim() || "unknown";
+  if (forwarded) return forwarded.split(",").at(-1)!.trim();
+  return "unknown";
 }
 
 /* ----------------------------------------------------------------- forward */
@@ -152,10 +160,9 @@ async function postOnce(url: string, payload: ForwardPayload): Promise<boolean> 
 async function forward(payload: ForwardPayload): Promise<boolean> {
   const url = process.env.LEAD_FORWARD_URL;
   if (!url) {
-    console.warn(
-      "[lead] LEAD_FORWARD_URL is not set — lead captured to logs only",
-      { id: payload.id },
-    );
+    console.warn("[lead] LEAD_FORWARD_URL is not set — lead goes to the outbox", {
+      id: payload.id,
+    });
     return false;
   }
   if (await postOnce(url, payload)) return true;
@@ -222,31 +229,32 @@ export async function POST(req: Request) {
     },
   };
 
-  // Info-level breadcrumb for funnel debugging. Masked phone, no message body:
-  // these lines end up in a log drain that is not a lead database.
+  // Info-level breadcrumb for funnel debugging. No name, phone or message —
+  // logs are not a lead database; the id ties the line to the lead.
   console.log("[lead] received", {
     id,
     locale: payload.lead.locale,
     branches: payload.lead.branches,
-    phone: maskPhone(payload.lead.phone),
     source: payload.attribution.source ?? "direct",
     campaign: payload.attribution.campaign ?? null,
   });
 
-  const delivered = await forward(payload);
-
-  if (!delivered) {
-    // Last-resort durable sink. Vercel retains runtime logs, so a lead written
-    // here is recoverable by hand — losing it entirely would be worse than
-    // having the full number in an error-level line. Info-level logging of the
-    // full number stays forbidden; this is the deliberate exception.
-    console.error("[lead] NOT FORWARDED — recover from this line", JSON.stringify(payload));
+  if (await forward(payload)) {
+    return json({ ok: true, id, delivered: ["forward"] }, 200);
   }
 
-  // The visitor is told "received" as soon as the lead is durable somewhere,
-  // and the log sink always is. Their side of the transaction is done; ours
-  // being misconfigured is not their problem to retry.
-  return json({ ok: true, id, delivered: delivered ? ["forward"] : ["log"] }, 200);
+  // Not forwarded: the outbox on the data volume is the durable sink
+  // (lib/lead-outbox.ts). Logs never carry the lead itself — no name, phone
+  // or message — only its id, so the line can be matched to the outbox entry.
+  if (await keepInOutbox(payload)) {
+    console.error("[lead] NOT FORWARDED — kept in the outbox", { id });
+    return json({ ok: true, id, delivered: ["outbox"] }, 200);
+  }
+
+  // Nowhere durable to put it. Say so, rather than tell the visitor it was
+  // received: the form offers WhatsApp and email on an error.
+  console.error("[lead] LOST — not forwarded and no outbox", { id });
+  return json({ ok: false, error: "unavailable" }, 503);
 }
 
 /** Anything but POST. Explicit, so a stray GET does not 405 through the rewrite. */

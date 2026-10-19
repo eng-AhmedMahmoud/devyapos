@@ -1,3 +1,4 @@
+import { consentCopyBase } from "@/lib/consent/copy";
 import type { SiteContent } from "./types";
 
 /**
@@ -640,12 +641,22 @@ export const ar: SiteContent = {
     cta: "العودة إلى الرئيسية",
   },
 
+  // The shared consent copy (lib/consent/copy.ts); only the `vendors` lines
+  // are this site's own and must match lib/consent/config.ts.
   consent: {
-    title: "خصوصيتك تهمّنا",
-    body: "لا متتبّعات ولا تحليلات من طرف ثالث. كل ما نودّه تذكّر رابط الحملة الذي جاء بك — يبقى في متصفحك حتى تغلق التبويب، ولا يُحفظ شيء إلا بموافقتك.",
-    policyLink: "اقرأ سياسة الخصوصية",
-    accept: "أوافق",
-    reject: "أرفض",
+    ...consentCopyBase.ar,
+    necessary: {
+      ...consentCopyBase.ar.necessary,
+      vendors:
+        "على هذا الموقع: \u200fdevyapos.consent.v2\u200f (اختيارك هنا) و\u200fdevyapos-theme\u200f (المظهر الذي تختاره) في التخزين المحلي للمتصفح. لا كوكيز.",
+    },
+    categories: {
+      marketing: {
+        ...consentCopyBase.ar.categories.marketing,
+        vendors:
+          "على هذا الموقع: رابط الحملة الذي جاء بك (وسوم UTM والموقع المُحيل وأول صفحة زرتها)، يُحفظ في تخزين هذا التبويب ويُمحى حين تغلقه، ولا يُرسل إلا مع نموذج تختار أنت إرساله. لا تصله أي منصة إعلانية.",
+      },
+    },
   },
 
   footer: {

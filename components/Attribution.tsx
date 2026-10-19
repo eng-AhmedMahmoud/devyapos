@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { captureFirstTouch, clearAttribution } from "@/lib/analytics";
-import { useConsent } from "./useConsent";
+import { consent } from "@/lib/consent/config";
+import { useConsent } from "@/lib/consent/react";
 
 /**
  * First-touch attribution, mounted once in the root layout.
@@ -17,7 +18,8 @@ import { useConsent } from "./useConsent";
  * the record back), returns null during SSR, and swallows its own storage
  * errors, so this stays a no-op in private mode and for bots. Renders nothing.
  *
- * Gated on consent, because knowing which advert brought someone is marketing
+ * Gated on the "marketing" consent category (lib/consent/config.ts — and
+ * again inside `captureFirstTouch`), because knowing which advert brought someone is marketing
  * measurement and not something the site needs in order to work. The cost of
  * that is real and worth stating: a visitor who accepts on the second page has
  * already lost the UTMs from the first, so paid traffic that consents late is
@@ -27,10 +29,12 @@ import { useConsent } from "./useConsent";
  * sentence false.
  */
 export default function Attribution() {
-  const consent = useConsent();
+  const snapshot = useConsent();
 
   useEffect(() => {
-    if (consent === "granted") {
+    // Hydrating: the stored answer is not known yet, so do nothing either way.
+    if (snapshot.status === "pending") return;
+    if (consent.allows(snapshot, "marketing")) {
       captureFirstTouch();
       return;
     }
@@ -39,7 +43,7 @@ export default function Attribution() {
        visitor who accepted in another tab, refused here, and would otherwise
        keep a record this tab never noticed being written. */
     clearAttribution();
-  }, [consent]);
+  }, [snapshot]);
 
   return null;
 }

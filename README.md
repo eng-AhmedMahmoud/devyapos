@@ -37,8 +37,25 @@ pnpm build
 
 ## Deploy
 
-Vercel project `devyapos`, auto-deploys `main`. Domain `pos.devya.dev` is an
-`A → 76.76.21.21` record on Hostinger's devya.dev zone.
+`bash scripts/deploy.sh` ships `origin/main` to the Devya VPS (Hostinger,
+Germany — `72.61.81.59`): a `git archive` over SSH, a backup of the running
+release under `/root/devyapos-pre-*`, then `docker compose -f
+docker-compose.prod.yml up -d --build`, container `devya-devyapos` on
+`127.0.0.1:3009` behind nginx and a Let's Encrypt certificate for
+`pos.devya.dev` (an `A → 72.61.81.59` record). `--rollback` puts the newest
+backup back. The site left Vercel on 2026-09-25; the old Vercel project
+should be disconnected from this repo so it cannot serve a second copy.
+
+### Leads that are not forwarded
+
+With `LEAD_FORWARD_URL` unset or the forward failing, a lead is written to
+the outbox on the `devyapos-leads` volume (`/data/leads-outbox.jsonl`,
+owner-only, entries older than `LEAD_OUTBOX_RETENTION_DAYS` — 365 — dropped
+on each write) and the log line carries only its id. Read it with
+`docker exec devya-devyapos cat /data/leads-outbox.jsonl`. Host-only
+settings such as `LEAD_FORWARD_URL` go in `.env.production.local` beside the
+release on the VPS; `scripts/deploy.sh` carries it from one release to the
+next.
 
 ## Environment
 
@@ -50,7 +67,9 @@ ignores `.env*` with no exception yet, so `.env.example` needs a
 | Variable | Default | What it does |
 | --- | --- | --- |
 | `API_URL` | `http://localhost:3001` | Target of the `/api/:path*` rewrite in `next.config.ts`. `/api/lead` is a real route handler and is matched *before* the rewrite, so this only affects other `/api` paths. |
-| `LEAD_FORWARD_URL` | — | Where `POST /api/lead` forwards a validated lead. Unset is supported: the handler logs a warning and the lead survives only in the Vercel runtime logs, on an error-level `[lead] NOT FORWARDED` line. |
+| `LEAD_FORWARD_URL` | — | Where `POST /api/lead` forwards a validated lead. Unset is supported: the lead goes to the outbox (below) and the log line carries only its id — never the lead. |
+| `LEAD_OUTBOX_DIR` | — (`/data` in `docker-compose.prod.yml`) | Directory of the durable outbox for leads that were not forwarded (`lib/lead-outbox.ts`). Unset and not forwarded, the route answers 503 and the form offers WhatsApp and email. |
+| `LEAD_OUTBOX_RETENTION_DAYS` | `365` | Outbox entries older than this are dropped on the next write. |
 | `LEAD_FORWARD_TOKEN` | — | Sent as `Authorization: Bearer <token>` on the forward. |
 | `LEAD_FORWARD_TIMEOUT_MS` | `4000` | Per-attempt timeout. Two attempts max; 4xx is treated as permanent and not retried. |
 | `NEXT_PUBLIC_TRIAL_CLAIM_URL` | — | Build-time. Where `/accounting-trial` posts a sign-up: Devya's control-plane claim route (`https://ops-api.devya.dev/api/trial/claim` in production, set by `docker-compose.prod.yml`). Unset, the page offers WhatsApp instead of posting, so a dev build never claims a real trial stack. |
@@ -84,7 +103,7 @@ receiving endpoint against it. `POST application/json`:
   "context": {
     "userAgent": "<string | null>",
     "referer": "<request referer | null>",
-    "country": "<x-vercel-ip-country | null>"
+    "country": "<x-vercel-ip-country | null — always null on the VPS>"
   }
 }
 ```

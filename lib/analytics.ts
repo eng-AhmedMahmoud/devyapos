@@ -13,11 +13,13 @@
  * What still runs: `captureFirstTouch`, which records the campaign that
  * brought a visitor so it can travel with a lead they choose to send. That is
  * storage on the visitor's own device and nothing else — it is never sent
- * anywhere until they press send on the contact form — and it is gated behind
- * consent all the same (`components/Attribution.tsx`).
+ * anywhere until they press send on the contact form — and it runs only with
+ * the "marketing" consent category (`lib/consent/config.ts`), enforced inside
+ * the functions below rather than by their callers.
  */
 
-import { UTM_KEYS, coarseTimestamp, type LeadAttribution } from "./leads";
+import { consent } from "./consent/config";
+import { ATTRIBUTION_KEY, UTM_KEYS, coarseTimestamp, type LeadAttribution } from "./leads";
 
 /**
  * The event vocabulary, retained for the call sites described above. A closed
@@ -58,7 +60,7 @@ type PropValue = string | number | boolean | null | undefined;
  * you wire a provider here, the consent gate has to move with it, because the
  * banner promises that nothing non-essential runs before the visitor accepts,
  * and a `track()` that phones home from a component would walk straight past
- * `components/Attribution.tsx` where the gate currently lives.
+ * `lib/consent/config.ts` and `<ConsentGate>`, where the gate lives.
  *
  * Props are flattened scalars. Never pass anything that identifies a person:
  * names, phone numbers and free-text messages stay out of events.
@@ -74,14 +76,17 @@ export function track(
   }
 }
 
-/**
- * sessionStorage key for the first-touch attribution record.
- *
- * Session-scoped, not a cookie: it dies with the tab, is never sent
- * automatically, and needs no consent banner. Versioned so a shape change does
- * not have to read old records.
+/*
+ * The first-touch record lives in sessionStorage under `ATTRIBUTION_KEY`
+ * (lib/leads.ts): it dies with the tab and is never sent automatically. It is
+ * still a device write for marketing measurement, so it waits for the
+ * "marketing" consent category — checked here, at the only place that writes
+ * or reads it, so no caller can skip the gate.
  */
-const ATTRIBUTION_KEY = "devyapos.attribution.v1";
+
+function marketingAllowed(): boolean {
+  return consent.allows(consent.read(), "marketing");
+}
 
 function readStore(): LeadAttribution | null {
   try {
@@ -106,7 +111,7 @@ function readStore(): LeadAttribution | null {
  * mount — after the first call it just reads the stored record back.
  */
 export function captureFirstTouch(): LeadAttribution | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || !marketingAllowed()) return null;
 
   const existing = readStore();
   if (existing) return existing;
@@ -142,7 +147,7 @@ export function captureFirstTouch(): LeadAttribution | null {
 
 /** The stored first-touch record, or null. Read at submit time. */
 export function readAttribution(): LeadAttribution | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || !marketingAllowed()) return null;
   return readStore();
 }
 

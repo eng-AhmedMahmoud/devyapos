@@ -28,7 +28,11 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
     HOSTNAME=0.0.0.0
-RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+# /data is the lead outbox volume (docker-compose.prod.yml): a new named
+# volume copies this directory's owner and mode, so the app can write and no
+# one else can read.
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001 \
+    && mkdir -p /data && chown nextjs:nodejs /data && chmod 700 /data
 COPY --from=builder --chown=nextjs:nodejs /app ./
 USER nextjs
 EXPOSE 3000

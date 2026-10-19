@@ -271,6 +271,20 @@ body {
  * reading a variable is cheaper to reason about than parallel `html[lang]`
  * rules on every typographic class.
  */
+/* The shared consent design (components/consent/consent.css) on this
+   palette; it follows the theme because every value is a theme variable. */
+:root {
+  --consent-bg: var(--surface);
+  --consent-fg: var(--ink);
+  --consent-muted: var(--ink-dim);
+  --consent-line: var(--line);
+  --consent-btn-bg: var(--ink);
+  --consent-btn-fg: var(--bg);
+  --consent-focus: var(--caramel);
+  --consent-on: var(--gold);
+  --consent-radius: 16px;
+}
+
 :root {
   --font-body: var(--font-plex-arabic), var(--font-plex-sans);
   --font-head: var(--font-reem-kufi), var(--font-plex-arabic);
@@ -984,9 +998,10 @@ html[lang="ar"] .kicker {
    button by.
 
    The consent banner publishes its height as `--consent-h` while it is up
-   (CookieConsent). The stack only rides above it where the banner can reach
-   the corner: its card is `max-w-4xl` (56rem) and centred, so from 67rem up —
-   56 + 2 × (1.5rem gutter + 3.25rem button + 0.75rem clearance) — the card's
+   (components/consent/ConsentManager). The stack only rides above it where
+   the banner can reach the corner: its card is 60rem wide and centred, so
+   from 71rem up — 60 + 2 × (1.5rem gutter + 3.25rem button + 0.75rem
+   clearance) — the card's
    side margin already clears the stack, and lifting it there only left the
    buttons floating at mid-height. */
 .fab-stack {
@@ -1013,7 +1028,7 @@ html[lang="ar"] .kicker {
     --fab-gutter: 1.5rem;
   }
 }
-@media (min-width: 67rem) {
+@media (min-width: 71rem) {
   .fab-stack {
     --fab-lift: 0px;
   }
