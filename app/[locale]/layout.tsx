@@ -13,6 +13,7 @@ import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import Attribution from "@/components/Attribution";
 import CookieConsent from "@/components/CookieConsent";
+import Cursor from "@/components/Cursor";
 import FloatingActions from "@/components/FloatingActions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -132,6 +133,7 @@ export default async function LocaleLayout({
             loaded on this site at all, which is why the consent banner now has
             only this one thing left to gate. */}
         <Attribution />
+        <Cursor />
       </body>
     </html>
   );
