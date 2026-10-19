@@ -1,0 +1,256 @@
+/*
+ * The shared consent design (docs/compliance/consent-design.md). Each site maps
+ * these tokens onto its own palette in its global stylesheet; nothing below
+ * names a site colour. Logical properties only, so RTL needs no overrides.
+ *
+ *   --consent-bg        card / panel surface
+ *   --consent-fg        text
+ *   --consent-muted     secondary text
+ *   --consent-line      borders and dividers
+ *   --consent-btn-bg    button fill   (all three buttons — equal weight)
+ *   --consent-btn-fg    button text
+ *   --consent-focus     focus ring
+ *   --consent-on        switch fill when on
+ *   --consent-radius    corner radius
+ *   --consent-shadow    card shadow
+ */
+
+.consent-banner {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 70;
+  padding: 12px;
+  pointer-events: none;
+}
+
+.consent-card {
+  pointer-events: auto;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 60rem;
+  padding: 18px;
+  border: 1px solid var(--consent-line);
+  border-radius: var(--consent-radius, 16px);
+  background: var(--consent-bg);
+  color: var(--consent-fg);
+  box-shadow: var(--consent-shadow, 0 12px 40px rgb(0 0 0 / 0.18));
+}
+
+@media (min-width: 48rem) {
+  .consent-banner {
+    padding: 20px;
+  }
+  .consent-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 24px;
+  }
+  .consent-card .consent-text {
+    flex: 1 1 auto;
+  }
+  .consent-card .consent-actions {
+    flex: 0 0 auto;
+  }
+}
+
+.consent-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--consent-fg);
+}
+
+.consent-body {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--consent-muted);
+}
+
+.consent-link {
+  color: var(--consent-fg);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.consent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* One class for Reject, Customize and Accept: same size, same weight. */
+.consent-btn {
+  flex: 1 1 0;
+  min-width: max-content;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--consent-btn-bg);
+  border-radius: calc(var(--consent-radius, 16px) - 6px);
+  background: var(--consent-btn-bg);
+  color: var(--consent-btn-fg);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.consent-btn:hover {
+  filter: brightness(1.08);
+}
+
+.consent-btn:focus-visible,
+.consent-close:focus-visible,
+.consent-switch:focus-visible,
+.consent-link:focus-visible {
+  outline: 2px solid var(--consent-focus);
+  outline-offset: 2px;
+}
+
+/* `margin: auto` restores the native modal centring that CSS resets
+   (Tailwind's preflight, normalize) take away. */
+.consent-panel {
+  margin: auto;
+  width: min(36rem, calc(100vw - 24px));
+  max-height: min(44rem, calc(100dvh - 24px));
+  padding: 22px;
+  border: 1px solid var(--consent-line);
+  border-radius: var(--consent-radius, 16px);
+  background: var(--consent-bg);
+  color: var(--consent-fg);
+  box-shadow: var(--consent-shadow, 0 12px 40px rgb(0 0 0 / 0.18));
+  overflow: auto;
+}
+
+/* The choice stays in view on a short screen: the buttons stick to the
+   panel's bottom edge while the categories scroll under them. */
+.consent-panel > .consent-actions {
+  position: sticky;
+  inset-block-end: -22px;
+  margin: 0 -22px -22px;
+  padding: 14px 22px 22px;
+  border-block-start: 1px solid var(--consent-line);
+  background: var(--consent-bg);
+}
+
+.consent-panel::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+.consent-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.consent-close {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-inline-end: -10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--consent-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.consent-list {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--consent-line);
+}
+
+.consent-item {
+  padding: 14px 0;
+}
+
+.consent-item + .consent-item {
+  border-block-start: 1px solid var(--consent-line);
+}
+
+.consent-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+}
+
+.consent-item-title {
+  font-weight: 600;
+  color: var(--consent-fg);
+}
+
+.consent-item-body,
+.consent-vendors {
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--consent-muted);
+}
+
+.consent-vendors {
+  font-size: 0.8125rem;
+}
+
+.consent-always {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--consent-muted);
+}
+
+/* A checkbox drawn as a switch; still a checkbox to assistive tech. */
+.consent-switch {
+  appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 28px;
+  margin: 0;
+  border: 1px solid var(--consent-line);
+  border-radius: 999px;
+  background: var(--consent-line);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.consent-switch::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--consent-bg);
+  transition: inset-inline-start 0.15s ease;
+}
+
+.consent-switch:checked {
+  background: var(--consent-on);
+  border-color: var(--consent-on);
+}
+
+.consent-switch:checked::after {
+  inset-inline-start: 21px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent-switch,
+  .consent-switch::after {
+    transition: none;
+  }
+}

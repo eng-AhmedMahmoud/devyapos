@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/routing";
+import type { ConsentCopy } from "@/lib/consent/copy";
 
 /**
  * Marketing copy lives in typed modules rather than next-intl message JSON.
@@ -344,17 +345,11 @@ export interface SiteContent {
   };
   notFound: { title: string; body: string; cta: string };
   /**
-   * The consent banner. `body` must stay true to what `lib/consent.ts`
-   * actually gates — if something new starts loading before the click, this
-   * copy is the thing that becomes a lie.
+   * The shared consent design's copy (lib/consent/copy.ts), word for word —
+   * only the `vendors` lines are this site's own, and they must stay true to
+   * what lib/consent/config.ts gates.
    */
-  consent: {
-    title: string;
-    body: string;
-    policyLink: string;
-    accept: string;
-    reject: string;
-  };
+  consent: ConsentCopy;
   footer: {
     blurb: string;
     cols: { title: string; links: { label: string; href: string }[] }[];

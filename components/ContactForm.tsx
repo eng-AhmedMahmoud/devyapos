@@ -84,7 +84,8 @@ export default function ContactForm() {
   };
 
   // First touch is recorded here as well as on landing: someone who arrives on
-  // /contact directly from an ad has their UTMs only in this page's URL.
+  // /contact directly from an ad has their UTMs only in this page's URL. Only
+  // with "marketing" consent — `captureFirstTouch` returns null without it.
   useEffect(() => {
     captureFirstTouch();
     track("lead_form_view", { locale });

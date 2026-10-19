@@ -9,10 +9,11 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { getContent } from "@/content";
 import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import Attribution from "@/components/Attribution";
-import CookieConsent from "@/components/CookieConsent";
+import ConsentManager from "@/components/consent/ConsentManager";
 import Cursor from "@/components/Cursor";
 import FloatingActions from "@/components/FloatingActions";
 import Footer from "@/components/Footer";
@@ -120,13 +121,14 @@ export default async function LocaleLayout({
           </main>
           <Footer />
           <FloatingActions />
-          {/* Inside the intl provider: the banner is client-side and reads its
-              copy through `useLocale()`. */}
-          <CookieConsent />
+          {/* The shared consent banner and panel
+              (docs/compliance/consent-design.md); copy from content/. */}
+          <ConsentManager copy={getContent(locale).consent} />
         </NextIntlClientProvider>
         {/* Records the campaign the visit started on, before the visitor
-            navigates away from the tagged landing page — but only once consent
-            is granted, and it clears itself if consent is withdrawn.
+            navigates away from the tagged landing page — but only with the
+            "marketing" consent category, and it clears itself if that is
+            refused or withdrawn.
 
             Nothing else measures anything here. Vercel Web Analytics and Speed
             Insights were removed on 21 September 2026: no third-party script is

@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { brand, brandName, mailtoLink, socialLinks, telLink } from "@/lib/brand";
+import { CookieSettingsButton } from "./consent/ConsentManager";
 import { Icon } from "./icons";
 import Logo from "./Logo";
 
@@ -94,8 +95,15 @@ export default async function Footer() {
         </p>
 
         <div className="mt-6 flex flex-col gap-3 text-xs text-on-espresso-dim sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {brandName(locale)}. {c.footer.legal}
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>
+              © {year} {brandName(locale)}. {c.footer.legal}
+            </span>
+            {/* The way back into the consent panel, on every page. */}
+            <CookieSettingsButton
+              label={c.consent.settingsLink}
+              className="min-h-11 cursor-pointer underline-offset-2 transition-colors hover:text-on-espresso hover:underline"
+            />
           </p>
           <p>
             {c.footer.madeBy}{" "}

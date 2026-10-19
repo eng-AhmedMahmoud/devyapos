@@ -73,6 +73,13 @@ export interface NormalisedLead {
 }
 
 /** UTM query keys, in the order they are read off the URL. */
+/**
+ * sessionStorage key for the first-touch attribution record
+ * (`lib/analytics.ts`). Here rather than there so the consent config can list
+ * it for clean-up without importing the analytics module.
+ */
+export const ATTRIBUTION_KEY = "devyapos.attribution.v1";
+
 export const UTM_KEYS = [
   "utm_source",
   "utm_medium",

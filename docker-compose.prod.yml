@@ -15,9 +15,31 @@ services:
       # Loopback-only — nginx reverse-proxies to localhost:3009. Without the
       # 127.0.0.1 prefix Docker publishes on 0.0.0.0, which ufw does not filter.
       - "127.0.0.1:3009:3000"
+    environment:
+      # Leads that cannot be forwarded go to an owner-only file on the volume
+      # below, never to the logs (lib/lead-outbox.ts). Kept 365 days — the
+      # privacy policy's twelve months.
+      LEAD_OUTBOX_DIR: /data
+      LEAD_OUTBOX_RETENTION_DAYS: "365"
+    # Optional: LEAD_FORWARD_URL / LEAD_FORWARD_TOKEN in this file next to the
+    # compose file on the VPS (never committed) to forward leads to a CRM.
+    env_file:
+      - path: .env.production.local
+        required: false
+    volumes:
+      - devyapos-leads:/data
+    # The app's own log lines carry no personal data; cap them anyway.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 25s
+
+volumes:
+  devyapos-leads:
