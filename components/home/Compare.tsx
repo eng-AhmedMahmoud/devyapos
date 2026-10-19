@@ -36,7 +36,7 @@ export default async function Compare() {
                   </th>
                   <th className="border-b-2 border-brand bg-brand-soft px-5 py-4 text-center">
                     <span className="inline-flex justify-center">
-                      <Logo />
+                      <Logo locale={locale} />
                     </span>
                   </th>
                   <th className="px-5 py-4 text-center font-semibold text-ink-dim">

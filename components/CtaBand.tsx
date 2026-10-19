@@ -20,13 +20,8 @@ export default async function CtaBand() {
     <section className="bg-bg py-20 sm:py-24">
       <Container>
         <Reveal>
-          <div className="band-espresso pearl-grid-dark relative isolate overflow-hidden rounded-[2rem] px-6 py-14 sm:px-12">
+          <div className="band-espresso pearl-grid-dark relative isolate overflow-hidden rounded-[2px] px-6 py-14 sm:px-12">
             <BrandShapes layout="cta" tone="espresso" />
-            <span
-              aria-hidden="true"
-              className="blob -top-24 h-72 w-72 bg-caramel"
-              style={{ insetInlineEnd: "-3rem" }}
-            />
             <div className="relative flex flex-col items-start gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 className="font-display max-w-xl text-3xl text-balance text-on-espresso sm:text-4xl">

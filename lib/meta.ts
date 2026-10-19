@@ -1,7 +1,7 @@
 import type { Metadata, MetadataRoute } from "next";
 import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
-import { brand } from "./brand";
+import { brand, brandName } from "./brand";
 
 /**
  * One route manifest for the whole site.
@@ -68,16 +68,25 @@ export function alternateLanguages(path = "") {
 }
 
 /**
- * The generated OG card for a locale — `app/[locale]/opengraph-image.tsx`.
- *
- * Wired explicitly rather than left to Next's file convention because
- * `buildMetadata` sets `openGraph` on every page: once a level declares
- * `openGraph.images`, Next stops merging the file-based image into it.
+ * The OG card for a locale: a static PNG in `public/og/`, rendered from HTML
+ * by `scripts/render-brand-assets.mjs` with headless Chrome. Not `next/og` —
+ * satori rejects the GSUB tables of the Arabic faces the site now sets (Reem
+ * Kufi, IBM Plex Sans Arabic) and fails the build; Moving Stores and the
+ * moving.devya.dev umbrella site render their cards the same way. Re-run the
+ * script whenever the hero copy or the product name changes.
+ */
+export function ogImageUrl(locale: string) {
+  return `${brand.url}/og/og-${locale === "en" ? "en" : "ar"}.png`;
+}
+
+/**
+ * Wired explicitly on every page because `buildMetadata` sets `openGraph`
+ * per page, and a level that declares `openGraph` replaces the parent's.
  */
 export function ogImage(locale: string, alt: string) {
   return [
     {
-      url: `${brand.url}/${locale}/opengraph-image`,
+      url: ogImageUrl(locale),
       width: 1200,
       height: 630,
       alt,
@@ -111,7 +120,7 @@ export function buildMetadata(
       url,
       title: meta.title,
       description: meta.description,
-      siteName: brand.wordmark,
+      siteName: brandName(locale),
       locale: locale === "ar" ? "ar_EG" : "en_US",
       images,
     },

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import {
-  Baloo_Bhaijaan_2,
-  Cairo,
-  Fraunces,
-  Schibsted_Grotesk,
+  IBM_Plex_Mono,
+  IBM_Plex_Sans,
+  IBM_Plex_Sans_Arabic,
+  Reem_Kufi,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -20,49 +20,42 @@ import JsonLd from "@/components/JsonLd";
 import { themeBootScript } from "@/components/ThemeToggle";
 import "../globals.css";
 
-/* House type, inherited from the BóHub brand site: Cairo for body copy and
-   Baloo Bhaijaan 2 for display. Both cover Arabic and Latin, so a mixed string
-   ("إشعارات Push") stays on one metric and headlines get a real rounded
-   display cut in either script rather than bolded body text. */
-const cairo = Cairo({
-  variable: "--font-cairo",
-  subsets: ["arabic", "latin"],
+/* Moving Stores' type (devya-commerce apps/admin/app/[locale]/layout.tsx):
+   IBM Plex Sans Arabic and IBM Plex Sans for text, Reem Kufi for display in
+   both scripts — a Kufic face, the family the mark's letter is cut from — and
+   Plex Mono for indexes and labels. `globals.css` puts the right text face
+   first on `html[lang]`. */
+const plexArabic = IBM_Plex_Sans_Arabic({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["arabic"],
+  variable: "--font-plex-arabic",
   display: "swap",
 });
 
-const baloo = Baloo_Bhaijaan_2({
-  variable: "--font-display",
+const reemKufi = Reem_Kufi({
   subsets: ["arabic", "latin"],
+  variable: "--font-reem-kufi",
   display: "swap",
 });
 
-/* Latin-only pair, used on the English side of the site: Fraunces for display
-   and Schibsted Grotesk for body — the same combination as the Oz Puzzle site.
-   Cairo and Baloo are competent in Latin but they are Arabic faces first, and
-   English set in them reads a little generic; Fraunces gives the headlines an
-   actual voice.
-
-   These CANNOT replace the Arabic pair — neither family ships Arabic glyphs, so
-   applying them site-wide would silently drop every Arabic headline back to a
-   system fallback. `globals.css` swaps between the two pairs on `html[lang]`,
-   and all four variables are attached below so the swap is a variable lookup
-   rather than a conditional font load. */
-/* `preload: false` because next/font emits its preload hints per ROUTE, from
-   the font calls in the module graph — not from which className is actually
-   rendered. With it on, every Arabic page (the default locale, so most of the
-   traffic) fetched both Latin files to style nothing. Without the hint the
-   @font-face still resolves the moment English matches it; the only cost is
-   that English requests them a beat later, which `display: "swap"` covers. */
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+/* `preload: false` on the Latin text face and the mono because next/font
+   emits its preload hints per ROUTE, from the font calls in the module graph —
+   not from which className is actually rendered. With it on, every Arabic
+   page (the default locale, so most of the traffic) fetched both Latin files
+   for a handful of Latin words. Without the hint the @font-face still resolves
+   the moment a page uses it; `display: "swap"` covers the beat. */
+const plexSans = IBM_Plex_Sans({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  variable: "--font-plex-sans",
   display: "swap",
   preload: false,
 });
 
-const schibsted = Schibsted_Grotesk({
-  variable: "--font-schibsted",
+const plexMono = IBM_Plex_Mono({
+  weight: ["400", "500"],
   subsets: ["latin"],
+  variable: "--font-plex-mono",
   display: "swap",
   preload: false,
 });
@@ -91,14 +84,10 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  /* Arabic pages never attach the Latin pair — there is nothing for it to set,
-     and it would be two font files fetched to style nothing. English keeps the
-     Arabic pair attached as a fallback, because English pages still carry
-     Arabic strings (the brand name, the odd product term). */
-  const fontVars =
-    locale === "ar"
-      ? `${cairo.variable} ${baloo.variable}`
-      : `${schibsted.variable} ${fraunces.variable} ${cairo.variable} ${baloo.variable}`;
+  /* All four variables on both locales: Arabic copy carries Latin words
+     ("POS", "ESC/POS"), and an English page can still hold an Arabic string,
+     so each page keeps the other script's text face behind its own. */
+  const fontVars = `${plexArabic.variable} ${plexSans.variable} ${reemKufi.variable} ${plexMono.variable}`;
 
   return (
     <html

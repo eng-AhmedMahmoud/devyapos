@@ -62,7 +62,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
       onClick={toggle}
       aria-label={dark ? t("themeLight") : t("themeDark")}
       title={dark ? t("themeLight") : t("themeDark")}
-      className={`grid h-9 w-9 place-items-center rounded-full border border-line text-ink-2 transition-colors hover:border-caramel hover:text-caramel ${className}`}
+      className={`grid h-10 w-10 place-items-center rounded-xl text-ink-2 transition-colors hover:bg-line hover:text-ink ${className}`}
     >
       {/* Sun and moon both render; the stylesheet hides the wrong one, so the
           icon is correct even before hydration. */}

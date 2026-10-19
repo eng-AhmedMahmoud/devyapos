@@ -1,6 +1,6 @@
 > Copy of `docs/specs/devyapos-site.md` from the [bohub-pos monorepo](https://github.com/eng-AhmedMahmoud/bohub-pos), which is the canonical home. Update there first.
 
-# Drinki POS marketing site — reference spec
+# Moving POS marketing site — reference spec
 
 Source repo: `github.com/eng-AhmedMahmoud/devyapos` (local checkout
 `~/Projects/devyapos`), extracted via `git subtree split` from this monorepo's
@@ -16,7 +16,7 @@ future lead-form POST (`next.config.ts`). Fully static marketing content.
 
 ## 1. Purpose
 
-Public marketing site for **Drinki POS** (named DevyaPOS until 2026-10-18; visible name only, identifiers keep `devyapos`), the productised, sellable version of
+Public marketing site for **Moving POS** (named DevyaPOS until 2026-10-18 and Drinki POS until 2026-10-19; visible name only, identifiers keep `devyapos`), the productised, sellable version of
 the BóHub POS platform — "Devya's restaurant operating system for the
 Egyptian market." Live at **https://pos.devya.dev** (Vercel project
 `devyapos`, auto-deploys `main`; domain is an `A → 76.76.21.21` record on
@@ -59,7 +59,7 @@ moved to dedicated routes (see the file's own doc comment — it used to be a
    honestly fill yet. Two duplicate tracks, second `aria-hidden`.
 3. **Ledger** (`components/home/Ledger.tsx`) — before/after "problem → the
    line that cancels it" rows, one eye movement each (struck-through
-   "today" column, checked "with Drinki POS" column).
+   "today" column, checked "with Moving POS" column).
 4. **Promo video section** (`components/home/Promo.tsx`, `id="promo"`) — the
    four-second register recording in an oversized `IpadVideo` tablet mockup,
    on an espresso band. Target of the hero's "See it running" CTA
@@ -206,7 +206,7 @@ illustrate the level of specificity: hero stats "25 branches, 679
 items/sizes, <1s POS→kitchen"; pricing plans Growth (199 EGP/branch/mo,
 featured), Scale (499 EGP/branch/mo), Enterprise (custom); market-anchor
 rows dated "as of August 2026" citing Foodics Starter/Basic/Advanced
-(1,506 / 2,582 / 3,442 EGP) against Drinki POS Growth (199 EGP); payments
+(1,506 / 2,582 / 3,442 EGP) against Moving POS Growth (199 EGP); payments
 providers `[Paymob(live), Fawry, Kashier, Geidea, OPay, PayTabs]` with only
 Paymob marked `live: true`. `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty
@@ -219,8 +219,8 @@ could legitimately attack).
 
 ```ts
 export const brand = {
-  name: { ar: "Drinki POS", en: "Drinki POS" },
-  wordmark: "Drinki POS",
+  name: { ar: "موفينج POS", en: "Moving POS" },
+  wordmark: { ar: ["موفينج", "POS"], en: ["Moving", "POS"] },
   domain: "pos.devya.dev",
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
@@ -242,8 +242,14 @@ locale-aware message text passed in by the caller), `telLink` (constant
 
 The file's own comment records a naming decision worth preserving: the
 company is **Devya Solutions**, the domain is **devya.dev**, never
-`devya.solutions` — and Drinki POS is deliberately *not* a sister brand with
-its own `.dev` registration, it's a product living on a `pos.` subdomain. A
+`devya.solutions` — and Moving POS is deliberately *not* a sister brand with
+its own `.dev` registration, it's a product living on a `pos.` subdomain.
+Since 2026-10-19 it is a member of the **Moving** family (Moving Stores in
+devya-commerce, the umbrella site at moving.devya.dev), which writes its name
+in Arabic on Arabic pages — موفينج POS, as موفينج ستورز — so `name` differs
+per locale and `brandName(locale)` is what titles, JSON-LD and the footer
+read. `wordmark` is the lockup's split: the family name bold, the product
+regular at 70%. A
 trailing comment also documents fields that were *removed* (`social`,
 `signupUrl`, `loginUrl`, `demoUrl`) because they had no live consumer once
 the hero's "see it running" CTA moved to the on-page `#promo` recording — the
@@ -280,10 +286,14 @@ just that the rename is what shipped.
 
 ## 4. Design system
 
-Palette and motifs are the **house palette inherited from the BóHub brand
-site** (per `app/globals.css` header comment: "Nothing here is borrowed from
-a competitor"): deep maroon chrome, terracotta caramel display, gold
-highlights, peach/cream surfaces, espresso bands, boba-pearl motif.
+Since 2026-10-19 the look is **Moving Stores'** — the palette, type and mark of
+its landing (devya-commerce `apps/admin/features/landing/landing.css`,
+`apps/admin/app/tokens.css`, decision 0004), the same values the
+moving.devya.dev umbrella site carries: bone paper, warm ink, one saffron
+accent used as a fill and never as text on paper, square corners, hairline
+rules, a construction grid, and a square-Kufic "م" for a mark. (Until then it
+was the BóHub house palette: maroon, caramel, espresso, boba pearls.) Change a
+colour in devya-commerce first, then here.
 
 ### Token-driven palette, light + dark
 
@@ -292,15 +302,25 @@ and `:root[data-theme="dark"]` in `app/globals.css` — plus a third
 `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }`
 block that mirrors the dark set for visitors who never touch the toggle but
 whose OS is dark. Because the theme *default* is dark (`data-theme="dark"`
-hardcoded in `app/[locale]/layout.tsx`), light mode is the one visitors have
-to opt into. Token families: `--bg/--surface/--surface-2/--surface-3/--line`
-(surfaces), `--ink/--ink-2/--ink-dim` (type), `--brand/--brand-hover/
---brand-soft/--on-brand` (maroon chrome), `--caramel/--gold/--pink/--mint`
-(warm accents), `--espresso/--espresso-2/--espresso-line/--on-espresso/
---on-espresso-dim` (dark band family), `--pearl-hi/--pearl-lo` (pearl
-gradient stops), `--ok/--danger`. All mapped into Tailwind v4's `@theme
-inline` block so component code never branches on theme — it just uses
-`bg-bg`, `text-ink`, etc.
+hardcoded in `app/[locale]/layout.tsx`, as the umbrella site boots), light
+mode is the one visitors have to opt into.
+
+The token *names* predate the palette and were kept so the rebrand was a
+change of values, not of every component: `--bg/--surface/--surface-2/
+--surface-3/--line/--line-strong` (paper, card, deep paper; hairlines),
+`--ink/--ink-2/--ink-dim` (warm ink, muted), `--brand/--brand-hover/
+--brand-soft/--on-brand` (the primary: ink on paper, bone on night),
+`--saffron/--on-saffron` (the accent fill), `--caramel` (the amber *text*
+accent: `#8a5600` on paper, saffron on night), `--gold` (saffron),
+`--pink` (a warm stone, a fifth icon-tile hue), `--mint/--ok/--danger`,
+`--espresso/--espresso-2/--espresso-line/--on-espresso/--on-espresso-dim`
+(the dark band: Moving's ink band in light, a deeper night in dark),
+`--grid-line`, and `--mark-tile/--mark-glyph/--mark-accent` (the mark, which
+flips with the theme). Tailwind's `--radius-lg/xl/2xl` are pinned to 2px in
+the `@theme inline` block, so `rounded-xl` panels are square like the
+reference; `rounded-full` (dots, toggles, FABs) and `rounded-3xl` (the phone
+mock) keep their curves. `tests/tokens.test.ts` recomputes the WCAG contrast
+of every text pair from `globals.css` in both themes.
 
 Custom `@custom-variant dark` (`app/globals.css`) makes `dark:` follow the
 explicit `data-theme` choice first, OS preference only as fallback — same
@@ -308,61 +328,67 @@ precedence as the token blocks. Used almost nowhere except `ThemeToggle`'s
 own sun/moon SVG swap (both icons always render; CSS hides the wrong one, so
 it's correct even pre-hydration).
 
-### Espresso bands
+### Dark bands
 
-`.band-espresso` (`background: var(--espresso); color: var(--on-espresso)`)
-is the recurring **dark interruption** between cream (`.band-cream` =
-`var(--surface-2)`) and page-background (`bg-bg`) sections — used for
-Marquee, Promo, BrandPromise, the ROI-calculator result panel, the About
-"numbers" and "built by" sections, and the CtaBand card. Often paired with
-`.pearl-grid-dark` (a radial-gradient dot grid, 26px tiles, faint
-`rgba(253,243,234,0.08)` dots) for texture. The reasoning stated in
-`components/home/Promo.tsx`'s comment: three cream sections in a row (Ledger,
-Features, CTA are all `bg-bg`) would read as "more of the same" — the
-espresso interruption is deliberate rhythm, not decoration.
+`.band-espresso` is the recurring **dark interruption** between paper
+(`bg-bg`) and deep-paper (`.band-cream` = `var(--surface-2)`) sections —
+used for Marquee, Promo, BrandPromise, the ROI-calculator result panel, the
+About "numbers" and "built by" sections, the CtaBand card and the footer.
+Inside it, the tokens that would vanish against ink are **re-pointed** the
+way Moving Stores' bands re-point theirs — `--ink-dim` → the band's dim,
+`--caramel` → saffron, `--line` → the band's rule, the mark to a bone tile —
+so components need no band-specific classes. Often paired with
+`.pearl-grid-dark` (a faint 2rem construction grid). The reasoning stated in
+`components/home/Promo.tsx`'s comment: three paper sections in a row would
+read as "more of the same" — the dark interruption is deliberate rhythm.
 
-### Boba pearls
+### Saffron cells, labels, indexes
 
-`.pearl` (`app/globals.css`) — a 0.6rem circle with a radial gradient
-(`--pearl-hi` → `--pearl-lo`) — is the house motif reused from the BóHub
-brand site, standing in for the generic "pill chip" or bullet dot pattern
-seen on most SaaS sites. Appears in section `.kicker` eyebrows, list items,
-the `Logo` SVG (two pearls on a cup+straw glyph, `components/Logo.tsx`), and
-carousel captions. `.pearl-lg` is a 1rem variant for standalone use (e.g.
-About timeline cards).
+`.pearl` (class name kept from the boba pearl it replaced) is now a 0.625rem
+saffron square — a cell of the grid the mark is drawn on — in every
+`.kicker` eyebrow, list item, `PearlRule` divider and carousel caption.
+`.kicker` is Moving Stores' eyebrow: small mono caps with 0.1em tracking in
+English, Plex Arabic without caps or tracking in Arabic, muted. `.t-index`
+sets Latin digits in Plex Mono as one LTR run: the hero's "00" and the
+numbered header nav ("01 Features"). The hero's accent line is `.text-band`:
+a saffron marker band behind ink type on paper, saffron type on night.
+Buttons are square (2px), 1.5px-bordered, and change colour on hover (ink →
+saffron) rather than lifting; cards are ruled, square boxes whose hover
+raises the ground and darkens the hairline. The header is solid paper with a
+hairline, no glass.
 
-### Type pairs per language
+### Type
 
-Two font pairs, chosen by document language, wired in
-`app/[locale]/layout.tsx` + `app/globals.css`:
+Moving Stores' type, wired in `app/[locale]/layout.tsx` + `app/globals.css`:
+**IBM Plex Sans Arabic** (Arabic text, `--font-plex-arabic`) and **IBM Plex
+Sans** (Latin text, `--font-plex-sans`), each first on its own locale with
+the other behind it, so "POS" inside Arabic copy stays in the family;
+**Reem Kufi** (display, both scripts, `--font-reem-kufi`); **IBM Plex Mono**
+(indexes and English labels, `--font-plex-mono`). `.font-display` is Reem
+Kufi 700 at `-0.015em` / `1.04` in Latin and no tracking / `1.32` in Arabic
+(tracking breaks the joins; the descenders need the line).
 
-- **Arabic** (default): `Cairo` (body, `--font-cairo`) + `Baloo Bhaijaan 2`
-  (display, `--font-display`). Both cover Arabic and Latin subsets, so a
-  mixed string like "إشعارات Push" stays on one metric family.
-- **English**: `Schibsted_Grotesk` (body, `--font-schibsted`) + `Fraunces`
-  (display, `--font-fraunces`) — "the same combination as the Oz Puzzle
-  site" per the layout's comment. These are Latin-only faces; applying them
-  site-wide would silently drop every Arabic headline to a system fallback,
-  so they're scoped via `html[lang="en"]` overriding `--font-body`/
-  `--font-head` in `app/globals.css`. The Arabic pair stays appended last in
-  every font stack even on English pages, so an Arabic string embedded in
-  English copy (brand name, odd product term) still shapes correctly instead
-  of hitting `system-ui`.
+**`preload: false`** on the Latin text face and the mono — deliberate, not an
+oversight. next/font emits preload hints per *route* from the module graph,
+not from which className actually renders, so with preload on, every Arabic
+page (default locale, most of the traffic) fetched Latin files for a handful
+of Latin words. `display: "swap"` covers the one-beat-later cost.
 
-**`preload: false`** on both Latin font calls (`fraunces`, `schibsted` in
-`app/[locale]/layout.tsx`) — deliberate, not an oversight. next/font emits
-preload hints per *route* from the module graph, not from which className
-actually renders, so with preload on, every Arabic page (default locale,
-most of the traffic) was fetching both unused Latin font files. Without the
-hint, the `@font-face` still resolves the moment English content matches it;
-`display: "swap"` covers the one-beat-later cost on English pages.
+### Mark, icons and OG cards
 
-`.font-display` (`app/globals.css`) sets `font-weight: 700`, tight
-`letter-spacing: -0.01em`, `line-height: 1.12` for the Arabic/default case;
-an `html[lang="en"] .font-display` override tightens further
-(`-0.02em`/`1.08`) because Fraunces (high-contrast serif) sets noticeably
-larger/looser than Baloo at the same nominal size — the negative tracking
-tuned for a rounded sans reads cramped on a serif otherwise.
+The mark is Moving Stores' (`components/Logo.tsx` `MARK`): on an 8 × 8 grid
+of 8-unit cells, a square-Kufic "م" whose counter is a lit saffron window,
+coloured from `--mark-*` so it flips with the theme and the band. The lockup
+is Moving Stores': Reem Kufi at 0.68 of the mark, gap 0.4, the family name
+bold and "POS" regular at 70%, Arabic name on Arabic pages. `app/icon.svg`
+follows `prefers-color-scheme` the way Moving Stores' favicon does. The baked
+rasters — `app/apple-icon.png`, `public/brand/devyapos-icon-{192,512}.png`
+and the OG cards `public/og/og-{ar,en}.png` — are rendered from HTML by
+`node scripts/render-brand-assets.mjs` (system Chrome, headless). Not
+`next/og`: satori rejects the GSUB tables of Reem Kufi / Plex Sans Arabic
+and fails the build. Re-run the script after changing the hero copy, the
+product name or the mark, and commit the PNGs; `lib/meta.ts` `ogImageUrl()`
+points every page's Open Graph and Twitter card at them.
 
 ### Device mockups: `IpadShell` / `IpadFrame` / `IpadVideo`
 
@@ -426,8 +452,8 @@ turn in (`.sl-pop`), pricing ticks fill row by row (`.sl-tick`), the
 `PearlRule` dividers are laid down from the reading edge, a glint crosses each
 `IpadShell`'s glass as the device passes (a named `--device` timeline, on the
 inline axis inside the carousel track, so it follows a swipe), and the contact
-drawing's dashes run while a pearl rides each line (`.reach-ride`: a
-round-capped zero-length dash moved by `stroke-dashoffset` on a
+drawing's dashes run while a square rides each line (`.reach-ride`: a
+square-capped zero-length dash moved by `stroke-dashoffset` on a
 `pathLength=100` path; CSS `offset-path` on SVG did not map to viewBox units).
 
 **The mark in motion** (block after the scroll-linked touches in
@@ -435,19 +461,19 @@ round-capped zero-length dash moved by `stroke-dashoffset` on a
 `components/Logo.tsx`, never a copy:
 
 - `components/MarkDraw.tsx` overhangs the hero card's end corner and draws
-  itself in from server-HTML keyframes: plate settles, cup traced
-  (`stroke-dashoffset`, once) then filled, glyph lands, stripe pours up
-  (`scaleY` from the base), then boba pearls are sipped up the straw on a
-  loop. Each element's resting style is its final state, so reduced motion
-  is the plain mark. Never mirrored in RTL; only its corner and tilt follow
-  the reading direction.
-- `components/BrandShapes.tsx` scatters faint cups, tablets (the mark's
-  glyph) and receipts behind Features, the proof band (`CaseStudy`) and the
-  `CtaBand` card: a slow transform-only float, plus view-timeline parallax.
-  Placement, tilt and drift mirror in RTL (`--dir`); the artwork does not.
-- `components/CupDivider.tsx` gives the top of `CaseStudy`, `Showcase` and
-  `HomeContact` the lid's profile, absolutely positioned above the section so
-  it adds no height; mirrored in RTL, and it rises as it scrolls in.
+  itself in from server-HTML keyframes: the tile settles, the letter's edge
+  is traced (`stroke-dashoffset`, once) then filled, the window lands, then
+  now and again the window flickers off and on like a shop sign. Each
+  element's resting style is its final state, so reduced motion is the plain
+  mark. Never mirrored in RTL; only its corner follows the reading direction.
+- `components/BrandShapes.tsx` scatters faint letters, letter outlines (drawn
+  like Moving Stores' Kufic trail frames) and receipts behind Features, the
+  proof band (`CaseStudy`) and the `CtaBand` card: a slow transform-only
+  float, plus view-timeline parallax. Placement, tilt and drift mirror in RTL
+  (`--dir`); the artwork does not.
+- `components/StepDivider.tsx` gives the top of `CaseStudy`, `Showcase` and
+  `HomeContact` a square-Kufic step, absolutely positioned above the section
+  so it adds no height; mirrored in RTL, and it rises as it scrolls in.
 - `components/MotionScope.tsx` pauses `.motion-loop` children off screen via
   an IntersectionObserver (`data-inview`); without JS the loops just run.
 

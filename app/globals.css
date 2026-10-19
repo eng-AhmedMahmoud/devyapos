@@ -1,113 +1,133 @@
 @import "tailwindcss";
 
 /*
- * Drinki POS — SaaS marketing site.
+ * Moving POS — SaaS marketing site.
  *
- * The palette is the house palette, inherited from the BóHub brand site in
- * this monorepo (web-app/app/globals.css): deep maroon chrome, terracotta
- * caramel display, gold highlights, peach/cream surfaces, espresso bands, and
- * the boba-pearl motif. Nothing here is borrowed from a competitor.
+ * The look is Moving Stores': the palette of its landing (devya-commerce
+ * apps/admin/features/landing/landing.css, decision 0004) — bone paper, warm
+ * ink, one saffron accent used as a fill, never as text on paper — and its
+ * type (IBM Plex Sans + Plex Sans Arabic for text, Reem Kufi for display, Plex
+ * Mono for numbers and labels). The moving.devya.dev umbrella site carries the
+ * same values; change a colour in devya-commerce first, then here.
  *
- * Every colour is a semantic token defined twice — once for light, once for
- * dark — so components never branch on theme. Arabic is the default locale and
- * the site is RTL-first, so all directional rules use logical properties.
+ * The token names are older than the palette — `--espresso` is the dark band,
+ * `--caramel` the amber text accent, `--gold` saffron, `.pearl` the square
+ * bullet — and were kept so the rebrand is a change of values, not of every
+ * component. Every colour is a semantic token defined twice — once for light,
+ * once for dark — so components never branch on theme. Arabic is the default
+ * locale and the site is RTL-first, so all directional rules use logical
+ * properties.
  */
 
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces — warm sand, not white. The previous values sat between #fff and
-     #faf3ea, which on a bright screen read as one flat white sheet: the cards
-     lost their edges and the alternating bands stopped alternating. Each step
-     is now deep enough to be seen against its neighbour. */
-  --bg: #f6efe6;
-  --surface: #fffaf4;
-  --surface-2: #efe4d6;
-  --surface-3: #e7d8c6;
-  --line: #d9c5ae;
-  --line-soft: #e6d6c2;
+  /* Surfaces — bone paper, a deeper paper for alternating bands, and a
+     lighter card. */
+  --bg: #f2ede3;
+  --surface: #f8f4ec;
+  --surface-2: #e9e2d4;
+  --surface-3: #e0d8c8;
+  --line: rgb(26 22 18 / 0.14);
+  --line-soft: rgb(26 22 18 / 0.08);
+  --line-strong: rgb(26 22 18 / 0.72);
 
-  /* Type */
-  --ink: #45241d;
-  --ink-2: #6b4436;
-  --ink-dim: #9a7261;
+  /* Type — warm ink. */
+  --ink: #1a1612;
+  --ink-2: #3a322a;
+  --ink-dim: #5c554b;
 
-  /* Brand chrome — the maroon of the BóHub nav and cart. */
-  --brand: #853d3f;
-  --brand-hover: #692e30;
-  --brand-soft: #f7eae8;
-  --on-brand: #fff6ee;
+  /* Primary — ink on paper (Moving Stores' --primary); buttons turn saffron
+     on hover rather than darker. */
+  --brand: #1a1612;
+  --brand-hover: #3a322a;
+  --brand-soft: #f8eed8;
+  --on-brand: #f2ede3;
 
-  /* Warm accents */
-  --caramel: #c16733;
-  --gold: #c8853c;
-  --pink: #f97aa0;
-  --mint: #226b43;
+  /* The one accent. Saffron is a fill — buttons on hover, the bullets, the
+     mark's window, the headline band — never text on paper: on paper the
+     amber text accent (--caramel) carries it. */
+  --saffron: #e8a11a;
+  --on-saffron: #1a1612;
+  --caramel: #8a5600;
+  --gold: #e8a11a;
+  --pink: #7a6f60;
+  --mint: #1e6b45;
 
-  /* Espresso bands — the dark interruptions between cream sections. */
-  --espresso: #2f1410;
-  --espresso-2: #421f1a;
-  --espresso-line: #573029;
-  --on-espresso: #fdf3ea;
-  --on-espresso-dim: #c6a897;
+  /* Dark bands — the ink band of Moving Stores' landing. */
+  --espresso: #1a1612;
+  --espresso-2: #25201a;
+  --espresso-line: #3c3833;
+  --on-espresso: #f2ede3;
+  --on-espresso-dim: #b9b0a2;
 
-  /* Boba pearl gradient stops */
-  --pearl-hi: #c58a4a;
-  --pearl-lo: #4a311f;
+  /* The construction grid the Kufic letter is drawn on. */
+  --grid-line: rgb(26 22 18 / 0.08);
 
-  --ok: #226b43;
+  /* The mark: ink tile, bone letter, saffron window. */
+  --mark-tile: #1a1612;
+  --mark-glyph: #f2ede3;
+  --mark-accent: #e8a11a;
+
+  --ok: #1e6b45;
   --danger: #b3362a;
 
-  --shadow-warm: 0 1px 2px rgba(69, 36, 29, 0.05),
-    0 14px 34px -18px rgba(69, 36, 29, 0.28);
-  --shadow-lift: 0 2px 4px rgba(69, 36, 29, 0.06),
-    0 26px 52px -24px rgba(133, 61, 63, 0.42);
+  /* Nearly flat, as the reference is: a hairline at rest, one soft drop for
+     the things that float (the hero mark, an open drawer). */
+  --shadow-warm: 0 1px 0 rgb(26 22 18 / 0.04);
+  --shadow-lift: 0 28px 48px -28px rgb(26 22 18 / 0.45);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* The dark theme is the same espresso family, not a neutral grey. */
-  --bg: #1b0e0c;
-  --surface: #241412;
-  --surface-2: #2c1a17;
-  --surface-3: #34201b;
-  --line: #4a2c26;
-  --line-soft: #3a231e;
+  /* The night ground of the Moving family, not a neutral grey. */
+  --bg: #15120f;
+  --surface: #211c17;
+  --surface-2: #1c1814;
+  --surface-3: #27221c;
+  --line: rgb(239 232 218 / 0.14);
+  --line-soft: rgb(239 232 218 / 0.08);
+  --line-strong: rgb(239 232 218 / 0.7);
 
-  --ink: #fdf3ea;
-  --ink-2: #e5cfc1;
-  --ink-dim: #b3907d;
+  --ink: #efe8da;
+  --ink-2: #d9d0c1;
+  --ink-dim: #aba294;
 
-  /* Maroon lifted until it clears contrast against an espresso page. */
-  --brand: #c9605f;
-  --brand-hover: #dc706d;
-  --brand-soft: #3a1d1c;
-  --on-brand: #24100f;
+  /* Primary — bone on night. */
+  --brand: #efe8da;
+  --brand-hover: #ffffff;
+  --brand-soft: #3a2d14;
+  --on-brand: #15120f;
 
-  --caramel: #dd8a4c;
-  --gold: #dda45c;
-  --pink: #f992b1;
-  --mint: #4ba871;
+  /* On the night ground saffron reads as type too. */
+  --saffron: #f0ae35;
+  --on-saffron: #15120f;
+  --caramel: #f0ae35;
+  --gold: #f0ae35;
+  --pink: #b9b0a2;
+  --mint: #4fbf86;
 
   /* Bands go deeper than the page so they still separate. */
-  --espresso: #120807;
-  --espresso-2: #1d0f0d;
-  --espresso-line: #3d221d;
-  --on-espresso: #fdf3ea;
-  --on-espresso-dim: #b3907d;
+  --espresso: #0d0b09;
+  --espresso-2: #191511;
+  --espresso-line: #2e2822;
+  --on-espresso: #efe8da;
+  --on-espresso-dim: #aba294;
 
-  --pearl-hi: #d9a267;
-  --pearl-lo: #2a1a10;
+  --grid-line: rgb(239 232 218 / 0.07);
 
-  --ok: #4ba871;
+  /* Dark: a bone tile, ink letter, saffron window — the plain mark. */
+  --mark-tile: #efe8da;
+  --mark-glyph: #15120f;
+  --mark-accent: #f0ae35;
+
+  --ok: #4fbf86;
   --danger: #e2695c;
 
-  --shadow-warm: 0 1px 2px rgba(0, 0, 0, 0.4),
-    0 14px 34px -18px rgba(0, 0, 0, 0.7);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45),
-    0 26px 52px -24px rgba(0, 0, 0, 0.85);
+  --shadow-warm: 0 1px 0 rgb(0 0 0 / 0.3);
+  --shadow-lift: 0 28px 48px -28px rgb(0 0 0 / 0.8);
 }
 
 /* Visitors who never touch the toggle follow their OS. The toggle writes
@@ -116,43 +136,52 @@
   :root:not([data-theme]) {
     color-scheme: dark;
 
-    --bg: #1b0e0c;
-    --surface: #241412;
-    --surface-2: #2c1a17;
-    --surface-3: #34201b;
-    --line: #4a2c26;
-    --line-soft: #3a231e;
+    /* The night ground of the Moving family, not a neutral grey. */
+    --bg: #15120f;
+    --surface: #211c17;
+    --surface-2: #1c1814;
+    --surface-3: #27221c;
+    --line: rgb(239 232 218 / 0.14);
+    --line-soft: rgb(239 232 218 / 0.08);
+    --line-strong: rgb(239 232 218 / 0.7);
 
-    --ink: #fdf3ea;
-    --ink-2: #e5cfc1;
-    --ink-dim: #b3907d;
+    --ink: #efe8da;
+    --ink-2: #d9d0c1;
+    --ink-dim: #aba294;
 
-    --brand: #c9605f;
-    --brand-hover: #dc706d;
-    --brand-soft: #3a1d1c;
-    --on-brand: #24100f;
+    /* Primary — bone on night. */
+    --brand: #efe8da;
+    --brand-hover: #ffffff;
+    --brand-soft: #3a2d14;
+    --on-brand: #15120f;
 
-    --caramel: #dd8a4c;
-    --gold: #dda45c;
-    --pink: #f992b1;
-    --mint: #4ba871;
+    /* On the night ground saffron reads as type too. */
+    --saffron: #f0ae35;
+    --on-saffron: #15120f;
+    --caramel: #f0ae35;
+    --gold: #f0ae35;
+    --pink: #b9b0a2;
+    --mint: #4fbf86;
 
-    --espresso: #120807;
-    --espresso-2: #1d0f0d;
-    --espresso-line: #3d221d;
-    --on-espresso: #fdf3ea;
-    --on-espresso-dim: #b3907d;
+    /* Bands go deeper than the page so they still separate. */
+    --espresso: #0d0b09;
+    --espresso-2: #191511;
+    --espresso-line: #2e2822;
+    --on-espresso: #efe8da;
+    --on-espresso-dim: #aba294;
 
-    --pearl-hi: #d9a267;
-    --pearl-lo: #2a1a10;
+    --grid-line: rgb(239 232 218 / 0.07);
 
-    --ok: #4ba871;
+    /* Dark: a bone tile, ink letter, saffron window — the plain mark. */
+    --mark-tile: #efe8da;
+    --mark-glyph: #15120f;
+    --mark-accent: #f0ae35;
+
+    --ok: #4fbf86;
     --danger: #e2695c;
 
-    --shadow-warm: 0 1px 2px rgba(0, 0, 0, 0.4),
-      0 14px 34px -18px rgba(0, 0, 0, 0.7);
-    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.45),
-      0 26px 52px -24px rgba(0, 0, 0, 0.85);
+    --shadow-warm: 0 1px 0 rgb(0 0 0 / 0.3);
+    --shadow-lift: 0 28px 48px -28px rgb(0 0 0 / 0.8);
   }
 }
 
@@ -163,6 +192,7 @@
   --color-surface-3: var(--surface-3);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
 
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
@@ -173,6 +203,8 @@
   --color-brand-soft: var(--brand-soft);
   --color-on-brand: var(--on-brand);
 
+  --color-saffron: var(--saffron);
+  --color-on-saffron: var(--on-saffron);
   --color-caramel: var(--caramel);
   --color-gold: var(--gold);
   --color-pink: var(--pink);
@@ -189,6 +221,14 @@
 
   /* Resolves per language — see the --font-body switch below. */
   --font-sans: var(--font-body);
+  --font-mono: var(--font-num);
+
+  /* Square, as Moving Stores' landing is: 2px on buttons, fields and panels.
+     `rounded-full` (dots, toggles, the floating buttons) and `rounded-3xl`
+     (the phone mock) keep their curves. */
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
 }
 
 /*
@@ -221,39 +261,38 @@ body {
 }
 
 /*
- * Two type pairs, chosen by document language.
+ * Moving Stores' type, chosen by document language.
  *
- * Arabic gets Cairo + Baloo Bhaijaan 2; English gets Schibsted Grotesk +
- * Fraunces. The indirection exists because neither Latin face has Arabic
- * glyphs — switching them in globally would drop every Arabic headline to a
- * system fallback — and because a single `font-family` declaration reading a
- * variable is cheaper to reason about than parallel `html[lang]` rules on every
- * typographic class.
- *
- * The Arabic pair stays last in each stack even on English, so an Arabic string
- * inside an English page still shapes correctly instead of hitting system-ui.
+ * Text is IBM Plex Sans Arabic on Arabic pages and IBM Plex Sans on English
+ * ones, each with the other behind it so a Latin word in Arabic copy (or the
+ * reverse) still has a face of the same family. Display is Reem Kufi in both
+ * scripts — the Kufic face the mark itself is cut from. Numbers, labels and
+ * the section indexes are Plex Mono. A single `font-family` declaration
+ * reading a variable is cheaper to reason about than parallel `html[lang]`
+ * rules on every typographic class.
  */
 :root {
-  --font-body: var(--font-cairo);
-  --font-head: var(--font-display);
+  --font-body: var(--font-plex-arabic), var(--font-plex-sans);
+  --font-head: var(--font-reem-kufi), var(--font-plex-arabic);
+  --font-num: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 html[lang="en"] {
-  --font-body: var(--font-schibsted);
-  --font-head: var(--font-fraunces);
+  --font-body: var(--font-plex-sans), var(--font-plex-arabic);
+  --font-head: var(--font-reem-kufi), var(--font-plex-sans);
 }
 
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-body), var(--font-cairo), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
 
 ::selection {
-  background: var(--brand);
-  color: var(--on-brand);
+  background: var(--saffron);
+  color: var(--on-saffron);
 }
 
 button,
@@ -283,135 +322,192 @@ textarea,
 
 /* ------------------------------------------------------------- typography */
 
-/* Display face — Baloo Bhaijaan 2 in Arabic, Fraunces in English (see the
-   --font-head switch above). Both give headlines a real display cut rather
-   than bolded body copy. */
+/* Display face — Reem Kufi in both scripts. Tight and slightly negative in
+   Latin, as Moving Stores sets it; Arabic gets no tracking (it breaks the
+   joins) and the taller line its descenders need. */
 .font-display {
-  font-family: var(--font-head), var(--font-display), var(--font-cairo),
-    system-ui, sans-serif;
+  font-family: var(--font-head), system-ui, sans-serif;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.12;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+html[lang="ar"] .font-display {
+  letter-spacing: normal;
+  line-height: 1.32;
 }
 
-/* Fraunces is a high-contrast serif and sets noticeably tighter and larger on
-   the body than Baloo does; the negative tracking that suits a rounded sans
-   makes it look cramped. Scoped to English so the Arabic display metrics are
-   untouched. */
-html[lang="en"] .font-display {
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-}
-
-.text-caramel-grad {
-  background: linear-gradient(
-    115deg,
-    var(--caramel) 8%,
-    var(--gold) 52%,
-    var(--brand) 96%
+/* The headline's accent line on a saffron band, like a marker stroke. On the
+   night ground bone type cannot sit half on saffron, so there the accent line
+   is saffron type instead. */
+.text-band {
+  background-image: linear-gradient(
+    transparent 0 56%,
+    var(--saffron) 56% 90%,
+    transparent 90%
   );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-inline: 0.05em;
+}
+html[lang="ar"] .text-band {
+  background-image: linear-gradient(
+    transparent 0 50%,
+    var(--saffron) 50% 84%,
+    transparent 84%
+  );
+}
+:root[data-theme="dark"] .text-band {
+  background-image: none;
+  color: var(--saffron);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .text-band {
+    background-image: none;
+    color: var(--saffron);
+  }
+}
+@media (forced-colors: active) {
+  .text-band {
+    background: none;
+    text-decoration: underline;
+  }
 }
 
-/* Section label — a pearl followed by small caps, replacing the pill chip. */
+/* Section label — a saffron cell, then the label in small mono caps (Arabic:
+   Plex Arabic, no caps, no tracking), as Moving Stores sets its eyebrows. */
 .kicker {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  gap: 0.75rem;
+  font-family: var(--font-num);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
   text-transform: uppercase;
-  color: var(--caramel);
+  color: var(--ink-dim);
+}
+html[lang="ar"] .kicker {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
-/* ---------------------------------------------------------------- pearls */
+/* Latin digits as one left-to-right run, in the mono face: section and nav
+   indexes ("01"), even inside Arabic. */
+.t-index {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
 
-/* Boba pearl — the recurring brand motif, reused from the BóHub site. */
+/* ---------------------------------------------------------------- bullets */
+
+/* The bullet — a saffron cell of the grid the mark is drawn on. (The class
+   name is the boba pearl it replaced.) */
 .pearl {
   display: inline-block;
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle at 35% 30%,
-    var(--pearl-hi),
-    var(--pearl-lo) 80%
-  );
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--saffron);
 }
 .pearl-lg {
   width: 1rem;
   height: 1rem;
 }
 
-.pearl-grid {
-  background-image: radial-gradient(var(--line) 1.5px, transparent 1.5px);
-  background-size: 26px 26px;
-}
+/* The construction grid, faint, behind the dark bands. */
 .pearl-grid-dark {
-  background-image: radial-gradient(
-    rgba(253, 243, 234, 0.08) 1.5px,
-    transparent 1.5px
-  );
-  background-size: 26px 26px;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+  background-position: -1px -1px;
+}
+
+/* The construction grid the Kufic letter is drawn on. */
+.grid-paper {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--cell, 2rem) var(--cell, 2rem);
+  background-position: -1px -1px;
 }
 
 /* ---------------------------------------------------------------- surfaces */
 
-/* Hero wash — peach radials melting into the page background. */
+/* Hero ground — plain paper over the construction grid, the grid fading out
+   toward the content so it reads as a drawing board, not a pattern. No
+   gradients, no blobs: the reference has neither. */
 .hero-wash {
-  background:
-    radial-gradient(
-      ellipse 60% 55% at 82% 18%,
-      color-mix(in srgb, var(--caramel) 9%, transparent) 0%,
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 55% 50% at 12% 8%,
-      color-mix(in srgb, var(--pink) 8%, transparent) 0%,
-      transparent 60%
-    ),
-    linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 78%);
+  position: relative;
+  isolation: isolate;
+  background: var(--bg);
+}
+.hero-wash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+  background-position: -1px -1px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  pointer-events: none;
 }
 
 .band-cream {
   background: var(--surface-2);
 }
 
+/* The dark band. Inside it the tokens that would vanish against ink are
+   re-pointed, the way Moving Stores' bands re-point theirs, so a component
+   needs no band-specific classes: muted type takes the band's dim, the amber
+   accent becomes saffron, and the mark flips to a bone tile. */
 .band-espresso {
+  --ink-dim: var(--on-espresso-dim);
+  --caramel: var(--saffron);
+  --line: var(--espresso-line);
+  --mark-tile: var(--on-espresso);
+  --mark-glyph: var(--espresso);
   background: var(--espresso);
   color: var(--on-espresso);
 }
 
+/* Cards are ruled boxes, square-cornered: a hairline, no float. */
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 1.25rem;
+  border-radius: 2px;
   box-shadow: var(--shadow-warm);
 }
 .card-flat {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 1.25rem;
+  border-radius: 2px;
 }
 .card-espresso {
   background: color-mix(in srgb, var(--on-espresso) 5%, transparent);
   border: 1px solid var(--espresso-line);
-  border-radius: 1.25rem;
+  border-radius: 2px;
 }
 
+/* Hover is a change of ground and rule, not a float — Moving Stores' card
+   links raise their background and darken their hairline. */
 .lift {
   transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 .lift:hover {
-  transform: translateY(-5px);
-  border-color: color-mix(in srgb, var(--caramel) 55%, transparent);
-  box-shadow: var(--shadow-lift);
+  background-color: var(--surface-3);
+  border-color: var(--line-strong);
 }
 
 /* Icon tile — hue supplied per card via --tile. */
@@ -420,7 +516,7 @@ html[lang="en"] .font-display {
   place-items: center;
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: 0.9rem;
+  border-radius: 2px;
   color: var(--tile, var(--brand));
   background: color-mix(in srgb, var(--tile, var(--brand)) 14%, transparent);
 }
@@ -444,55 +540,70 @@ html[lang="en"] .font-display {
 
 /* ----------------------------------------------------------------- buttons */
 
+/* Moving Stores' buttons: square (2px), a 1.5px border in the fill colour,
+   and on hover a change of colour rather than a lift — ink turns saffron. */
 .btn {
   display: inline-flex;
+  min-height: 3rem;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  padding: 0.85rem 1.5rem;
-  font-weight: 700;
-  font-size: 0.95rem;
-  line-height: 1;
+  gap: 0.6rem;
+  border: 1.5px solid transparent;
+  border-radius: 2px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
   transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
 }
 .btn-primary {
+  border-color: var(--brand);
   background: var(--brand);
   color: var(--on-brand);
-  box-shadow: 0 12px 26px -14px color-mix(in srgb, var(--brand) 85%, transparent);
 }
 .btn-primary:hover {
-  background: var(--brand-hover);
-  transform: translateY(-2px);
+  border-color: var(--saffron);
+  background: var(--saffron);
+  color: var(--on-saffron);
+}
+/* The header's size: a little shorter and tighter. */
+.btn-sm {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
 }
 .btn-ghost {
+  border-color: currentColor;
   background: transparent;
   color: var(--ink);
-  border: 1px solid var(--line);
 }
 .btn-ghost:hover {
-  border-color: var(--caramel);
-  color: var(--caramel);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
 }
+/* On the dark band the primary is saffron, and turns bone on hover. */
 .btn-on-espresso {
+  border-color: var(--saffron);
+  background: var(--saffron);
+  color: var(--on-saffron);
+}
+.btn-on-espresso:hover {
+  border-color: var(--on-espresso);
   background: var(--on-espresso);
   color: var(--espresso);
 }
-.btn-on-espresso:hover {
-  background: color-mix(in srgb, var(--on-espresso) 88%, var(--gold));
-  transform: translateY(-2px);
-}
 .btn-outline-espresso {
-  border: 1px solid color-mix(in srgb, var(--on-espresso) 38%, transparent);
+  border-color: currentColor;
   color: var(--on-espresso);
 }
 .btn-outline-espresso:hover {
-  background: color-mix(in srgb, var(--on-espresso) 10%, transparent);
+  border-color: var(--on-espresso);
+  background: var(--on-espresso);
+  color: var(--espresso);
 }
 
 /* Directional glyphs point "forward" in both writing directions. */
@@ -506,32 +617,34 @@ html[lang="en"] .font-display {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
-  border-bottom: 1px solid transparent;
-  transition:
-    background 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.3s ease;
 }
+/* Solid paper with a hairline, as Moving Stores' bar is — no glass. */
 .site-header[data-scrolled="true"] {
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  border-bottom-color: var(--line);
-  box-shadow: 0 14px 34px -26px rgba(69, 36, 29, 0.55);
+  background: var(--bg);
 }
 
-/* Nav underline grows from centre, identical in LTR and RTL. */
+/* A numbered nav, as Moving Stores': a mono index, then the label. The
+   saffron underline grows from centre, identical in LTR and RTL. */
 .nav-link {
   position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink-2);
   transition: color 0.2s ease;
 }
+.nav-link .t-index {
+  font-size: 0.6875rem;
+  color: var(--ink-dim);
+}
 .nav-link:hover,
 .nav-link[data-active="true"] {
-  color: var(--brand);
+  color: var(--ink);
 }
 .nav-link::after {
   content: "";
@@ -540,8 +653,7 @@ html[lang="en"] .font-display {
   left: 50%;
   width: 100%;
   height: 2px;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, var(--caramel), var(--pink));
+  background: var(--saffron);
   transform: translateX(-50%) scaleX(0);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -657,27 +769,6 @@ html[lang="en"] .font-display {
   animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Soft blurred brand blobs behind the hero visual. */
-.blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(58px);
-  /* Kept faint on purpose. These are atmosphere, not artwork — at the old 0.34
-     the caramel and pink read as coloured patches sitting on top of the page
-     rather than light bleeding through it. */
-  opacity: 0.18;
-  animation: blob-float 15s ease-in-out infinite;
-}
-@keyframes blob-float {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(1.4rem, -1.2rem);
-  }
-}
-
 /* ------------------------------------------------------------------ motion */
 
 .reveal-armed {
@@ -720,7 +811,6 @@ html[lang="en"] .font-display {
   }
   .marquee-track,
   .pulse-ring,
-  .blob,
   .reveal-now {
     animation: none;
   }
@@ -1309,13 +1399,13 @@ html:has(.ql-dialog[open]) {
 }
 
 /* ── The mark in motion ─────────────────────────────────────────────────────
-   Three pieces built from the mark's own paths (components/Logo.tsx):
+   Three pieces built from the mark's own shapes (components/Logo.tsx):
 
-   - MarkDraw, on the hero card: the plate settles, the cup is traced and
-     filled, the tablet lands, the stripe pours up, then pearls are sipped up
-     the straw now and again;
-   - BrandShapes: faint cups, tablets and receipts drifting behind a section;
-   - CupDivider: a section edge in the profile of the lid.
+   - MarkDraw, on the hero card: the tile settles, the letter is traced along
+     its edge and filled, the window lights, then flickers now and again;
+   - BrandShapes: faint letters, outlines and receipts drifting behind a
+     section;
+   - StepDivider: a section edge cut in the square-Kufic step.
 
    Every element's resting style is its finished state; the keyframes only say
    where it comes from. So reduced motion, which switches them off, is the
@@ -1327,66 +1417,55 @@ html:has(.ql-dialog[open]) {
   animation-play-state: paused;
 }
 
-/* Overhangs the hero card's end corner, tilted toward the reading direction.
-   The drawing is never mirrored; only where it sits and which way it leans. */
+/* Overhangs the hero card's end corner, square to the grid. The drawing is
+   never mirrored; only which corner it sits on follows the reading
+   direction. */
 .hero-mark {
-  --dir: 1;
   position: absolute;
-  width: 5.5rem;
-  height: 5.5rem;
-  bottom: -1.75rem;
+  width: 5rem;
+  height: 5rem;
+  bottom: -1.5rem;
   inset-inline-end: -0.5rem;
-  rotate: calc(6deg * var(--dir));
-  border-radius: 31.25%; /* the plate's rx 160 of 512 */
+  border-radius: 4.6875%; /* the tile's rx 3 of 64 */
   box-shadow: var(--shadow-lift);
-}
-[dir="rtl"] .hero-mark {
-  --dir: -1;
 }
 @media (min-width: 640px) {
   .hero-mark {
-    width: 7rem;
-    height: 7rem;
-    bottom: -2.25rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    bottom: -2rem;
     inset-inline-end: -1.5rem;
   }
 }
 
 .md-plate,
 .md-glyph,
-.md-stripe {
+.md-window {
   transform-box: fill-box;
   transform-origin: center;
 }
 .md-plate {
-  animation: md-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  animation: md-settle 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s both;
 }
-/* A stroked copy of the cup, traced along its length (pathLength 100), then
-   faded once the fill beneath has arrived. At rest it is gone. */
+/* A stroked copy of the letter's edge, traced along its length (pathLength
+   100), then faded once the fill beneath has arrived. At rest it is gone. */
 .md-trace {
   opacity: 0;
   stroke-dasharray: 100 100;
-  animation: md-trace 1.3s ease-in-out 0.7s both;
-}
-.md-cup {
-  animation: md-fade 0.5s ease-out 1.55s both;
+  animation: md-trace 1.2s ease-in-out 0.7s both;
 }
 .md-glyph {
-  animation: md-land 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.85s both;
+  animation: md-fade 0.45s ease-out 1.5s both;
 }
-/* Poured: it rises from the base of the cup. */
-.md-stripe {
-  transform-origin: 50% 100%;
-  animation: md-pour 0.8s cubic-bezier(0.65, 0, 0.35, 1) 2.05s both;
+/* The window lands, a step behind the letter. */
+.md-window {
+  animation: md-land 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 1.8s both;
 }
-/* Pearls, hidden at rest: up the straw's upright, round the elbow, along the
-   slant and out at the tip. Translations are in the mark's 512-unit box. */
-.md-pearl {
+/* The window going dark for a beat, twice, every few seconds: a cover in the
+   letter's colour, hidden at rest. */
+.md-flicker {
   opacity: 0;
-  animation: md-sip 5.2s ease-in-out 3.1s infinite both;
-}
-.md-pearl-2 {
-  animation-delay: 3.75s;
+  animation: md-flicker 6.5s steps(1, end) 3.2s infinite both;
 }
 
 @keyframes md-settle {
@@ -1417,32 +1496,26 @@ html:has(.ql-dialog[open]) {
 @keyframes md-land {
   from {
     opacity: 0;
-    transform: scale(0.6);
+    transform: scale(0.4);
   }
 }
-@keyframes md-pour {
-  from {
-    transform: scaleY(0);
-  }
-}
-@keyframes md-sip {
-  0% {
+@keyframes md-flicker {
+  0%,
+  86% {
     opacity: 0;
-    transform: translate(0, 0);
   }
-  6% {
+  88% {
     opacity: 1;
   }
-  30% {
-    transform: translate(8px, -37px);
+  90% {
+    opacity: 0;
   }
-  56% {
+  92% {
     opacity: 1;
   }
-  62%,
+  94%,
   100% {
     opacity: 0;
-    transform: translate(70px, -75px);
   }
 }
 
@@ -1486,7 +1559,7 @@ html:has(.ql-dialog[open]) {
 
 /* Just above the top edge of its section, overlapping the band before it by
    one pixel so no hairline of the old colour shows through the seam. */
-.cup-divider {
+.step-divider {
   position: absolute;
   inset-inline: 0;
   bottom: calc(100% - 1px);
@@ -1494,34 +1567,33 @@ html:has(.ql-dialog[open]) {
   pointer-events: none;
 }
 @media (min-width: 640px) {
-  .cup-divider {
+  .step-divider {
     height: 2.75rem;
   }
 }
-.cup-divider svg {
+.step-divider svg {
   display: block;
   width: 100%;
   height: 100%;
   transform-origin: 50% 100%;
 }
-[dir="rtl"] .cup-divider svg {
+[dir="rtl"] .step-divider svg {
   scale: -1 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .md-plate,
   .md-trace,
-  .md-cup,
   .md-glyph,
-  .md-stripe,
-  .md-pearl,
+  .md-window,
+  .md-flicker,
   .bs-shape svg {
     animation: none;
   }
 }
 
 /* Scroll-linked, in the manner of the touches above: the shapes drift at
-   their own depth as the section passes, and the lid rises as its seam
+   their own depth as the section passes, and the step rises as its seam
    scrolls in. */
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
@@ -1530,7 +1602,7 @@ html:has(.ql-dialog[open]) {
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
     }
-    .cup-divider svg {
+    .step-divider svg {
       animation: cd-rise linear both;
       animation-timeline: view();
       animation-range: entry 0% cover 25%;

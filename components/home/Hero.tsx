@@ -17,23 +17,15 @@ export default async function Hero() {
 
   return (
     <section className="hero-wash relative overflow-hidden py-16 sm:py-24">
-      {/* Soft brand blobs behind the visual column. */}
-      <span
-        aria-hidden="true"
-        className="blob -top-24 h-80 w-80 bg-caramel"
-        style={{ insetInlineEnd: "-4rem" }}
-      />
-      <span
-        aria-hidden="true"
-        className="blob bottom-0 h-64 w-64 bg-pink"
-        style={{ insetInlineStart: "-3rem", animationDelay: "-7s" }}
-      />
 
       <Container className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <Reveal immediate>
             <span className="kicker">
               <span className="pearl" aria-hidden="true" />
+              <span className="t-index text-ink" aria-hidden="true">
+                00
+              </span>
               {c.hero.badge}
             </span>
           </Reveal>
@@ -41,7 +33,9 @@ export default async function Hero() {
           <Reveal immediate delay={60}>
             <h1 className="font-display mt-5 text-[2.6rem] text-balance text-ink sm:text-6xl">
               {c.hero.line1}{" "}
-              <span className="text-caramel-grad">{c.hero.line2}</span>
+              <span className="block">
+                <span className="text-band">{c.hero.line2}</span>
+              </span>
             </h1>
           </Reveal>
 

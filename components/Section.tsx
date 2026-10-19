@@ -16,8 +16,8 @@ export function Container({
 }
 
 /**
- * Section header. The label is a boba pearl followed by small caps — the house
- * motif doing the job a coloured chip would do elsewhere.
+ * Section header. The label is a saffron cell followed by small mono caps —
+ * Moving Stores' eyebrow, doing the job a coloured chip would do elsewhere.
  *
  * `align` defaults to `start` because this site sets its sections left/right
  * aligned rather than stacking everything down the centre line.

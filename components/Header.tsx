@@ -55,17 +55,22 @@ export default function Header() {
             stays, so the logo lines up with the page under it. */}
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-5 sm:h-[4.5rem] sm:gap-4 sm:px-8">
           <Link href="/" aria-label={t("home")} className="shrink-0">
-            <Logo />
+            <Logo locale={locale} />
           </Link>
 
-          <nav className="hidden items-center gap-7 md:flex">
-            {c.nav.links.map((l) => (
+          {/* Numbered, as Moving Stores' bar is: the index is decoration, the
+              label is the link's name. */}
+          <nav className="hidden items-center gap-6 md:flex">
+            {c.nav.links.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className="nav-link"
                 data-active={pathname === l.href}
               >
+                <span className="t-index" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 {l.label}
               </Link>
             ))}
@@ -78,7 +83,7 @@ export default function Header() {
             <Link
               href={pathname}
               locale={other}
-              className="hidden rounded-full border border-line px-3 py-1.5 text-xs font-bold text-ink-2 transition-colors hover:border-caramel hover:text-caramel sm:inline-flex"
+              className="hidden rounded-xl px-2 py-1.5 text-sm font-semibold text-ink-2 transition-colors hover:bg-line hover:text-ink sm:inline-flex"
             >
               {t("switchLanguage")}
             </Link>
@@ -93,7 +98,7 @@ export default function Header() {
             <span className="max-[339px]:hidden">
               <Link
                 href="/contact"
-                className="btn btn-primary !px-3 !py-2.5 text-sm max-sm:whitespace-nowrap sm:!px-4"
+                className="btn btn-primary btn-sm max-sm:whitespace-nowrap max-sm:!px-3"
               >
                 {c.nav.cta}
                 <Arrow width={16} height={16} className="flip-rtl hidden sm:block" />
@@ -103,7 +108,7 @@ export default function Header() {
               type="button"
               onClick={() => setOpen(true)}
               aria-label={t("openMenu")}
-              className="grid h-9 w-9 place-items-center rounded-full border border-line text-ink-2 md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-xl text-ink-2 transition-colors hover:bg-line md:hidden"
             >
               <Menu />
             </button>
@@ -122,7 +127,7 @@ export default function Header() {
         aria-hidden={!open}
       >
         <div className="flex h-16 items-center justify-between gap-2 border-b border-line px-5">
-          <Logo />
+          <Logo locale={locale} />
           <span className="ms-auto">
             <ThemeToggle />
           </span>
@@ -130,21 +135,24 @@ export default function Header() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label={t("closeMenu")}
-            className="grid h-9 w-9 place-items-center rounded-full border border-line text-ink-2"
+            className="grid h-10 w-10 place-items-center rounded-xl text-ink-2 transition-colors hover:bg-line"
             tabIndex={open ? 0 : -1}
           >
             <Close />
           </button>
         </div>
         <nav className="flex flex-col gap-1 p-4">
-          {c.nav.links.map((l) => (
+          {c.nav.links.map((l, i) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
               tabIndex={open ? 0 : -1}
-              className="rounded-xl px-3 py-3 text-base font-semibold text-ink-2 transition-colors hover:bg-brand-soft hover:text-brand"
+              className="flex items-baseline gap-3 rounded-xl border-b border-line px-3 py-3 text-base font-semibold text-ink-2 transition-colors hover:bg-brand-soft hover:text-brand"
             >
+              <span className="t-index text-xs text-ink-dim" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               {l.label}
             </Link>
           ))}

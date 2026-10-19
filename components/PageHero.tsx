@@ -1,7 +1,7 @@
 import Reveal from "./Reveal";
 import { Container } from "./Section";
 
-/** Compact hero for interior pages — same peach wash as home, start-aligned. */
+/** Compact hero for interior pages — the same grid ground as home, start-aligned. */
 export default function PageHero({
   badge,
   title,
@@ -13,11 +13,6 @@ export default function PageHero({
 }) {
   return (
     <section className="hero-wash relative overflow-hidden py-16 sm:py-20">
-      <span
-        aria-hidden="true"
-        className="blob -top-20 h-64 w-64 bg-caramel"
-        style={{ insetInlineEnd: "-3rem" }}
-      />
       <Container className="relative">
         <Reveal immediate>
           <span className="kicker">

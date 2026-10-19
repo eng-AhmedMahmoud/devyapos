@@ -535,7 +535,7 @@ export interface SiteContent {
   /**
    * `/eta-einvoicing`.
    *
-   * The one page on this site where being unimpressive is the point. Drinki POS
+   * The one page on this site where being unimpressive is the point. Moving POS
    * has no Egyptian Tax Authority integration; `does` and `doesNot` draw that
    * line, and nothing anywhere may blur it. Do not add a compliance,
    * certification or accreditation claim to this block.
@@ -598,7 +598,7 @@ export interface SiteContent {
   };
 
   /**
-   * `/accounting-trial` — the self-serve trial of Drinki POS Accounting.
+   * `/accounting-trial` — the self-serve trial of Moving POS Accounting.
    *
    * The form posts to Devya's control plane (`lib/trial.ts`), which hands the
    * visitor an empty accounting system of their own and its setup token,
@@ -699,7 +699,7 @@ export interface SiteContent {
       cta: string;
       /** The banner under the cards. */
       einvoicingIncluded: PerCountry<string>;
-      /** With Drinki POS: a per-branch price. Interpolates {price}. */
+      /** With Moving POS: a per-branch price. Interpolates {price}. */
       withPos: { title: string; body: string; price: PerCountry<number> };
       /** Interpolates {user} and {branch}, each a formatted price with its unit. */
       extras: string;
