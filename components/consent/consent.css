@@ -15,11 +15,14 @@
  *   --consent-shadow    card shadow
  */
 
+/* z-index 50: above page content and the header (40), below the sites'
+   custom cursors (55–60) and their drawers — the cursor must stay visible
+   over Reject and Accept. The panel is a <dialog> in the top layer. */
 .consent-banner {
   position: fixed;
   inset-inline: 0;
   inset-block-end: 0;
-  z-index: 70;
+  z-index: 50;
   padding: 12px;
   pointer-events: none;
 }
