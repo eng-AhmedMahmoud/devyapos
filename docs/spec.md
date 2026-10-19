@@ -430,6 +430,27 @@ drawing's dashes run while a pearl rides each line (`.reach-ride`: a
 round-capped zero-length dash moved by `stroke-dashoffset` on a
 `pathLength=100` path; CSS `offset-path` on SVG did not map to viewBox units).
 
+**The mark in motion** (block after the scroll-linked touches in
+`app/globals.css`), all built from the exported `MARK` paths and colours in
+`components/Logo.tsx`, never a copy:
+
+- `components/MarkDraw.tsx` overhangs the hero card's end corner and draws
+  itself in from server-HTML keyframes: plate settles, cup traced
+  (`stroke-dashoffset`, once) then filled, glyph lands, stripe pours up
+  (`scaleY` from the base), then boba pearls are sipped up the straw on a
+  loop. Each element's resting style is its final state, so reduced motion
+  is the plain mark. Never mirrored in RTL; only its corner and tilt follow
+  the reading direction.
+- `components/BrandShapes.tsx` scatters faint cups, tablets (the mark's
+  glyph) and receipts behind Features, the proof band (`CaseStudy`) and the
+  `CtaBand` card: a slow transform-only float, plus view-timeline parallax.
+  Placement, tilt and drift mirror in RTL (`--dir`); the artwork does not.
+- `components/CupDivider.tsx` gives the top of `CaseStudy`, `Showcase` and
+  `HomeContact` the lid's profile, absolutely positioned above the section so
+  it adds no height; mirrored in RTL, and it rises as it scrolls in.
+- `components/MotionScope.tsx` pauses `.motion-loop` children off screen via
+  an IntersectionObserver (`data-inview`); without JS the loops just run.
+
 ## 5. Notable engineering decisions
 
 - **`localeDetection: false`, Arabic for everyone at `/`**
