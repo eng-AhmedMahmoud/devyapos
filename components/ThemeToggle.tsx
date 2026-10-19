@@ -4,8 +4,8 @@ import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
 /* Renamed with the product. A visitor who had stored a preference under
-   the old key falls back to the dark default once, then re-stores under this
-   one — acceptable because dark is the default the site now ships. */
+   the old key falls back to the light default once, then re-stores under
+   this one. */
 export const THEME_KEY = "devyapos-theme";
 
 /**

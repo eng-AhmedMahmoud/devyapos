@@ -35,7 +35,7 @@ if (!CHROME) throw new Error("no Chrome found — set CHROME_BIN");
 const root = fileURLToPath(new URL("../", import.meta.url));
 
 /* The light-theme mark for the icons (as Moving Stores bakes its own), and
-   the dark theme the site boots into for the cards. */
+   the dark theme for the cards — the bone mark on the night ground. */
 const LIGHT = { tile: "#1a1612", glyph: "#f2ede3", window: "#e8a11a" };
 const C = {
   night: "#15120f",
