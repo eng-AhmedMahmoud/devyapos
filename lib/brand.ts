@@ -2,23 +2,25 @@
  * Single source of truth for the SaaS brand.
  *
  * The platform in this monorepo was built for a real 25-branch Egyptian
- * chain. DevyaPOS is the productised version of that platform sold to other
- * restaurants.
+ * chain. Drinki POS is the productised version of that platform sold to other
+ * restaurants. It was called DevyaPOS until 18 October 2026; the rename is the
+ * visible name only, so identifiers keep `devyapos`: storage keys, file and
+ * image paths, the container, the repo, and the social handles below.
  *
  * It is named as a Devya product rather than a sister brand, so it lives on a
  * subdomain of the studio's own `devya.dev` instead of taking a new `.dev`
  * registration. Note the house rule: the company is Devya Solutions but the
  * domain is devya.dev, never devya.solutions.
  *
- * The wordmark is Latin in both locales. Arabic copy writes "DevyaPOS" inline,
+ * The wordmark is Latin in both locales. Arabic copy writes "Drinki POS" inline,
  * which is how Latin product names are normally set in Arabic technical prose.
  *
  * Rename the product here and the whole site follows.
  */
 export const brand = {
-  name: { ar: "DevyaPOS", en: "DevyaPOS" },
+  name: { ar: "Drinki POS", en: "Drinki POS" },
   /** Latin wordmark — used in the logo lockup in both locales. */
-  wordmark: "DevyaPOS",
+  wordmark: "Drinki POS",
   domain: "pos.devya.dev",
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",

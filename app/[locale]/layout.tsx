@@ -13,6 +13,7 @@ import { siteJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import Attribution from "@/components/Attribution";
 import CookieConsent from "@/components/CookieConsent";
+import FloatingActions from "@/components/FloatingActions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -122,8 +123,13 @@ export default async function LocaleLayout({
         <JsonLd data={siteJsonLd(locale)} />
         <NextIntlClientProvider>
           <Header />
-          <main className="flex-1">{children}</main>
+          {/* Focusable so "back to the top" can hand the keyboard to the
+              page's start, not only scroll there. */}
+          <main id="main" tabIndex={-1} className="flex-1 outline-none">
+            {children}
+          </main>
           <Footer />
+          <FloatingActions />
           {/* Inside the intl provider: the banner is client-side and reads its
               copy through `useLocale()`. */}
           <CookieConsent />

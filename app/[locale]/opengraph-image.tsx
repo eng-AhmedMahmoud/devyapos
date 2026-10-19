@@ -5,7 +5,7 @@ import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
 import { brand } from "@/lib/brand";
 
-export const alt = "DevyaPOS — the restaurant OS";
+export const alt = "Drinki POS — the restaurant OS";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

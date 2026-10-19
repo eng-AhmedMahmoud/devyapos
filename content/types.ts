@@ -446,6 +446,36 @@ export interface SiteContent {
     title: string;
     sub: string;
     items: { alt: string; caption: string }[];
+    /** The quick look a home-page screenshot opens (components/QuickLook.tsx). */
+    quickLook: {
+      /** Chip over a screenshot on hover and focus. */
+      hint: string;
+      /** Accessible name of a screenshot's button. Interpolates {caption}. */
+      open: string;
+      close: string;
+      previous: string;
+      next: string;
+      /** Where the visitor is in the set. Interpolates {n} and {total}. */
+      position: string;
+    };
+  };
+
+  /** The home page's contact section, just above the closing CTA. */
+  homeContact: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    whatsapp: string;
+    phone: string;
+    email: string;
+    /** Subject of the email the email row starts. */
+    emailSubject: string;
+  };
+
+  /** The two floating buttons on every page (components/FloatingActions.tsx). */
+  floating: {
+    top: string;
+    whatsapp: string;
   };
 
   /** Copy for the four-second register recording on the home page. As with
@@ -505,7 +535,7 @@ export interface SiteContent {
   /**
    * `/eta-einvoicing`.
    *
-   * The one page on this site where being unimpressive is the point. DevyaPOS
+   * The one page on this site where being unimpressive is the point. Drinki POS
    * has no Egyptian Tax Authority integration; `does` and `doesNot` draw that
    * line, and nothing anywhere may blur it. Do not add a compliance,
    * certification or accreditation claim to this block.
@@ -568,7 +598,7 @@ export interface SiteContent {
   };
 
   /**
-   * `/accounting-trial` — the self-serve trial of DevyaPOS Accounting.
+   * `/accounting-trial` — the self-serve trial of Drinki POS Accounting.
    *
    * The form posts to Devya's control plane (`lib/trial.ts`), which hands the
    * visitor an empty accounting system of their own and its setup token,
@@ -669,7 +699,7 @@ export interface SiteContent {
       cta: string;
       /** The banner under the cards. */
       einvoicingIncluded: PerCountry<string>;
-      /** With DevyaPOS: a per-branch price. Interpolates {price}. */
+      /** With Drinki POS: a per-branch price. Interpolates {price}. */
       withPos: { title: string; body: string; price: PerCountry<number> };
       /** Interpolates {user} and {branch}, each a formatted price with its unit. */
       extras: string;

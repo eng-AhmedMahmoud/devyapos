@@ -1,6 +1,6 @@
 > Copy of `docs/specs/devyapos-site.md` from the [bohub-pos monorepo](https://github.com/eng-AhmedMahmoud/bohub-pos), which is the canonical home. Update there first.
 
-# DevyaPOS marketing site — reference spec
+# Drinki POS marketing site — reference spec
 
 Source repo: `github.com/eng-AhmedMahmoud/devyapos` (local checkout
 `~/Projects/devyapos`), extracted via `git subtree split` from this monorepo's
@@ -16,7 +16,7 @@ future lead-form POST (`next.config.ts`). Fully static marketing content.
 
 ## 1. Purpose
 
-Public marketing site for **DevyaPOS**, the productised, sellable version of
+Public marketing site for **Drinki POS** (named DevyaPOS until 2026-10-18; visible name only, identifiers keep `devyapos`), the productised, sellable version of
 the BóHub POS platform — "Devya's restaurant operating system for the
 Egyptian market." Live at **https://pos.devya.dev** (Vercel project
 `devyapos`, auto-deploys `main`; domain is an `A → 76.76.21.21` record on
@@ -59,7 +59,7 @@ moved to dedicated routes (see the file's own doc comment — it used to be a
    honestly fill yet. Two duplicate tracks, second `aria-hidden`.
 3. **Ledger** (`components/home/Ledger.tsx`) — before/after "problem → the
    line that cancels it" rows, one eye movement each (struck-through
-   "today" column, checked "with DevyaPOS" column).
+   "today" column, checked "with Drinki POS" column).
 4. **Promo video section** (`components/home/Promo.tsx`, `id="promo"`) — the
    four-second register recording in an oversized `IpadVideo` tablet mockup,
    on an espresso band. Target of the hero's "See it running" CTA
@@ -70,14 +70,30 @@ moved to dedicated routes (see the file's own doc comment — it used to be a
 6. **Showcase carousel** (`components/home/Showcase.tsx` →
    `ScreenshotCarousel`) — 7 real product screenshots in device frames,
    ordered "as the day runs": register → kitchen → customer → back office.
+   Each screenshot is also a button that opens a **quick look**
+   (`components/QuickLook.tsx`): a native `<dialog>` (`showModal`, so the page
+   is inert behind it and Escape closes it) over a blurred backdrop, the same
+   iPad frame at full size, ‹ › and the arrow keys to step (physical keys, so
+   in Arabic ← is next), and the carousel moves to the last screen viewed and
+   takes the focus back on close. `/features` passes the same labels.
 7. **Brand promise** (`components/home/BrandPromise.tsx`) — "a fitted
    experience, not a licence to software," placed deliberately *after* the
    showcase so the claim reframes what was just seen, not before.
 8. **Testimonials** (`components/home/Testimonials.tsx`) — renders `null`
    when `testimonials.items` is empty (currently empty in both locales by
    design — no invented quotes; see §2 content notes).
-9. **CTA** (`components/CtaBand.tsx`) — closing espresso card, WhatsApp +
+9. **Contact** (`components/home/HomeContact.tsx`, `id="reach"`) — WhatsApp,
+   the business line and the inbox as three rows (values as isolated LTR
+   runs), beside `ReachDrawing`: a bubble, a phone and an envelope on dashed
+   lines into the brand tile. No form; `/contact` has it.
+10. **CTA** (`components/CtaBand.tsx`) — closing espresso card, WhatsApp +
    contact-page CTAs, direct `mailto:`/`tel:` links.
+
+Site-wide, `components/FloatingActions.tsx` puts a WhatsApp button and a
+back-to-the-top arrow (shown once the first screen is scrolled away; it moves
+focus to `<main id="main">`) at the inline end of every page. While the
+consent banner is up, the banner publishes its height as `--consent-h` and
+the stack rides above it.
 
 ### `/features` (`app/[locale]/features/page.tsx`)
 
@@ -190,7 +206,7 @@ illustrate the level of specificity: hero stats "25 branches, 679
 items/sizes, <1s POS→kitchen"; pricing plans Growth (199 EGP/branch/mo,
 featured), Scale (499 EGP/branch/mo), Enterprise (custom); market-anchor
 rows dated "as of August 2026" citing Foodics Starter/Basic/Advanced
-(1,506 / 2,582 / 3,442 EGP) against DevyaPOS Growth (199 EGP); payments
+(1,506 / 2,582 / 3,442 EGP) against Drinki POS Growth (199 EGP); payments
 providers `[Paymob(live), Fawry, Kashier, Geidea, OPay, PayTabs]` with only
 Paymob marked `live: true`. `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty
@@ -203,8 +219,8 @@ could legitimately attack).
 
 ```ts
 export const brand = {
-  name: { ar: "DevyaPOS", en: "DevyaPOS" },
-  wordmark: "DevyaPOS",
+  name: { ar: "Drinki POS", en: "Drinki POS" },
+  wordmark: "Drinki POS",
   domain: "pos.devya.dev",
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
@@ -226,7 +242,7 @@ locale-aware message text passed in by the caller), `telLink` (constant
 
 The file's own comment records a naming decision worth preserving: the
 company is **Devya Solutions**, the domain is **devya.dev**, never
-`devya.solutions` — and DevyaPOS is deliberately *not* a sister brand with
+`devya.solutions` — and Drinki POS is deliberately *not* a sister brand with
 its own `.dev` registration, it's a product living on a `pos.` subdomain. A
 trailing comment also documents fields that were *removed* (`social`,
 `signupUrl`, `loginUrl`, `demoUrl`) because they had no live consumer once
@@ -401,6 +417,18 @@ the reading edge (logical `translate` — flips automatically in RTL via
 then the connecting arrow scales in at 290ms — so the before/after relation
 is carried by motion sequencing, not just the static arrow glyph. Every one
 of these transitions is separately zeroed under `prefers-reduced-motion`.
+
+**Scroll-linked touches** (the last block of `app/globals.css`): CSS view
+timelines, only inside `@supports (animation-timeline: view())` and
+`@media screen and (prefers-reduced-motion: no-preference)`, decorative and
+never hiding content — elsewhere the page is the still version. Feature tiles
+turn in (`.sl-pop`), pricing ticks fill row by row (`.sl-tick`), the
+`PearlRule` dividers are laid down from the reading edge, a glint crosses each
+`IpadShell`'s glass as the device passes (a named `--device` timeline, on the
+inline axis inside the carousel track, so it follows a swipe), and the contact
+drawing's dashes run while a pearl rides each line (`.reach-ride`: a
+round-capped zero-length dash moved by `stroke-dashoffset` on a
+`pathLength=100` path; CSS `offset-path` on SVG did not map to viewBox units).
 
 ## 5. Notable engineering decisions
 

@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import BrandPromise from "@/components/home/BrandPromise";
 import Features from "@/components/home/Features";
+import HomeContact from "@/components/home/HomeContact";
 import Hero from "@/components/home/Hero";
 import Ledger from "@/components/home/Ledger";
 import Marquee from "@/components/home/Marquee";
@@ -30,6 +31,7 @@ import CtaBand from "@/components/CtaBand";
  *   showcase  — the product itself, so the claims stop being abstract
  *   promise   — and it gets fitted to your brand, not licensed as-is
  *   testimonials — hides itself until real quotes exist
+ *   contact   — every direct route, for the visitor who will not fill a form
  *   cta       — the ask
  *
  * Depth lives at /how-it-works, /compare, /features and /pricing.
@@ -55,6 +57,7 @@ export default async function HomePage({
       <Showcase />
       <BrandPromise />
       <Testimonials />
+      <HomeContact />
       <CtaBand />
     </>
   );

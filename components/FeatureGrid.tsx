@@ -56,7 +56,7 @@ export default function FeatureGrid({
               style={{ ["--tile" as string]: hueVar[f.hue] }}
             >
               <div className="flex items-start justify-between gap-3">
-                <span className="icon-tile">
+                <span className="icon-tile sl-pop">
                   <Icon name={f.icon} />
                 </span>
                 <span className="rounded-full border border-line px-2.5 py-1 text-xs font-bold text-ink-dim">

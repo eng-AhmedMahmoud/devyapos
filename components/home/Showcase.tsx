@@ -56,6 +56,7 @@ export default async function Showcase() {
         <div className="mt-9">
           <ScreenshotCarousel
             ariaLabel={c.gallery.title}
+            quickLook={c.gallery.quickLook}
             items={ORDER.map((shot, i) => ({
               src: shot.src,
               alt: c.gallery.items[i].alt,

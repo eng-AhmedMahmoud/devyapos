@@ -20,11 +20,14 @@ export default function WhatsappLink({
   href,
   place,
   className,
+  label,
   children,
 }: {
   href: string;
   place: string;
   className?: string;
+  /** Accessible name, for a link whose content is only an icon. */
+  label?: string;
   children: React.ReactNode;
 }) {
   const locale = useLocale();
@@ -34,6 +37,8 @@ export default function WhatsappLink({
       href={href}
       target="_blank"
       rel="noreferrer"
+      aria-label={label}
+      title={label}
       className={className}
       onClick={() => track("whatsapp_click", { locale, place })}
     >

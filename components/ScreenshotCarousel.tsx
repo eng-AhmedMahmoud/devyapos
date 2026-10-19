@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import IpadFrame from "@/components/IpadFrame";
+import QuickLook, { type QuickLookLabels } from "@/components/QuickLook";
+import { Expand } from "./icons";
 
 export interface CarouselItem {
   src: string;
@@ -22,19 +24,27 @@ export interface CarouselItem {
  * Auto-play stops for good on first interaction. A carousel that yanks itself
  * forward while the visitor is reading a caption is worse than no carousel, and
  * `prefers-reduced-motion` disables it outright.
+ *
+ * With `quickLook` labels, every screenshot is also a button that opens it
+ * full size (QuickLook). Closing hands back the screen the visitor stepped
+ * to, and the carousel moves there and takes the focus back.
  */
 export default function ScreenshotCarousel({
   items,
   ariaLabel,
   intervalMs = 5200,
+  quickLook,
 }: {
   items: CarouselItem[];
   ariaLabel: string;
   intervalMs?: number;
+  quickLook?: QuickLookLabels;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const [index, setIndex] = useState(0);
   const [engaged, setEngaged] = useState(false);
+  const [look, setLook] = useState<number | null>(null);
 
   /**
    * Centre slide `i`.
@@ -116,75 +126,115 @@ export default function ScreenshotCarousel({
 
   const stop = useCallback(() => setEngaged(true), []);
 
-  return (
-    <div
-      className="flex flex-col gap-5"
-      role="region"
-      aria-roledescription="carousel"
-      aria-label={ariaLabel}
-      onPointerDown={stop}
-      onWheel={stop}
-      onKeyDown={(e) => {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        stop();
-        // Arrow keys are physical, not logical: in RTL the visually-right key
-        // still moves to the next slide because the track itself is flipped.
-        const dir = e.key === "ArrowRight" ? 1 : -1;
-        const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
-        const next = Math.min(
-          items.length - 1,
-          Math.max(0, index + (rtl ? -dir : dir)),
-        );
-        setIndex(next);
-        goTo(next);
-      }}
-      tabIndex={0}
-    >
-      <div
-        ref={trackRef}
-        className="
-          flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain
-          pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-        "
-      >
-        {items.map((item, i) => (
-          <figure
-            key={item.src}
-            className="w-[86%] shrink-0 snap-center sm:w-[68%] lg:w-[52%]"
-            aria-label={`${i + 1} / ${items.length}`}
-          >
-            <IpadFrame
-              src={item.src}
-              alt={item.alt}
-              orientation={item.orientation}
-              /* Only the first is eager; the rest are below the fold of the
-                 track and would otherwise all decode on load. */
-              priority={i === 0}
-            />
-            <figcaption className="mt-3 flex items-start gap-2 text-sm text-ink-dim">
-              <span className="pearl mt-2 shrink-0" aria-hidden="true" />
-              <span className="text-start">{item.caption}</span>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
+  const closeLook = (last: number) => {
+    setLook(null);
+    setIndex(last);
+    buttons.current[last]?.focus({ preventScroll: true });
+    goTo(last);
+  };
 
-      <div className="flex items-center justify-center gap-2">
-        {items.map((item, i) => (
-          <button
-            key={item.src}
-            type="button"
-            onClick={() => { stop(); setIndex(i); goTo(i); }}
-            aria-label={item.caption}
-            aria-current={i === index}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index
-                ? "w-7 bg-[var(--espresso)] dark:bg-[var(--on-espresso)]"
-                : "w-2 bg-ink-dim/30 hover:bg-ink-dim/60"
-            }`}
-          />
-        ))}
+  return (
+    <>
+      <div
+        className="flex flex-col gap-5"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={ariaLabel}
+        onPointerDown={stop}
+        onWheel={stop}
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          stop();
+          // Arrow keys are physical, not logical: in RTL the visually-right key
+          // still moves to the next slide because the track itself is flipped.
+          const dir = e.key === "ArrowRight" ? 1 : -1;
+          const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+          const next = Math.min(
+            items.length - 1,
+            Math.max(0, index + (rtl ? -dir : dir)),
+          );
+          setIndex(next);
+          goTo(next);
+        }}
+        tabIndex={0}
+      >
+        <div
+          ref={trackRef}
+          className="
+            shot-track flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain
+            pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+          "
+        >
+          {items.map((item, i) => (
+            <figure
+              key={item.src}
+              className="w-[86%] shrink-0 snap-center sm:w-[68%] lg:w-[52%]"
+              aria-label={`${i + 1} / ${items.length}`}
+            >
+              <div className="relative">
+                <IpadFrame
+                  src={item.src}
+                  alt={item.alt}
+                  orientation={item.orientation}
+                  /* Only the first is eager; the rest are below the fold of the
+                     track and would otherwise all decode on load. */
+                  priority={i === 0}
+                />
+                {quickLook ? (
+                  <button
+                    ref={(el) => {
+                      buttons.current[i] = el;
+                    }}
+                    type="button"
+                    aria-haspopup="dialog"
+                    aria-label={quickLook.open.replace("{caption}", item.caption)}
+                    onClick={() => {
+                      stop();
+                      setLook(i);
+                    }}
+                    className="ql-trigger"
+                  >
+                    <span className="ql-hint" aria-hidden="true">
+                      <Expand width={15} height={15} />
+                      {quickLook.hint}
+                    </span>
+                  </button>
+                ) : null}
+              </div>
+              <figcaption className="mt-3 flex items-start gap-2 text-sm text-ink-dim">
+                <span className="pearl mt-2 shrink-0" aria-hidden="true" />
+                <span className="text-start">{item.caption}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-center gap-2">
+          {items.map((item, i) => (
+            <button
+              key={item.src}
+              type="button"
+              onClick={() => { stop(); setIndex(i); goTo(i); }}
+              aria-label={item.caption}
+              aria-current={i === index}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === index
+                  ? "w-7 bg-[var(--espresso)] dark:bg-[var(--on-espresso)]"
+                  : "w-2 bg-ink-dim/30 hover:bg-ink-dim/60"
+              }`}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+      {quickLook ? (
+        <QuickLook
+          items={items}
+          index={look}
+          labels={quickLook}
+          onStep={setLook}
+          onClose={closeLook}
+        />
+      ) : null}
+    </>
   );
 }

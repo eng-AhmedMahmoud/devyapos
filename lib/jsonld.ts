@@ -37,7 +37,7 @@ function unitText(c: SiteContent) {
   return `${c.pricing.perBranch} / ${c.pricing.per.replace(/^\//, "")}`;
 }
 
-/** DevyaPOS the vendor, with Devya Solutions as the parent company. */
+/** Drinki POS the vendor, with Devya Solutions as the parent company. */
 export function organizationJsonLd(locale: string): JsonLdNode {
   const c = getContent(locale);
 
@@ -175,7 +175,7 @@ export const FAQ_PATHS = ["/pricing", "/contact"] as const;
 /**
  * Human name for a route: the nav label when the route is in the nav,
  * otherwise the first half of its `<title>` (every page title is
- * "Something | DevyaPOS" or "DevyaPOS | something").
+ * "Something | Drinki POS" or "Drinki POS | something").
  */
 function routeName(c: SiteContent, path: string, key: string) {
   const link = c.nav.links.find((l) => l.href === path);

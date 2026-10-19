@@ -197,6 +197,25 @@ const Chevron = (p: IconProps) => (
   </Base>
 );
 
+const Phone = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M6.6 3.5h2.6l1.4 4-2 1.3a11 11 0 0 0 6.6 6.6l1.3-2 4 1.4v2.6a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" />
+  </Base>
+);
+
+const Mail = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
+  </Base>
+);
+
+const Expand = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </Base>
+);
+
 const Menu = (p: IconProps) => (
   <Base {...p}>
     <path d="M4 7h16M4 12h16M4 17h16" />
@@ -269,4 +288,4 @@ export function Icon({ name, ...props }: { name: string } & IconProps) {
   return <Cmp {...props} />;
 }
 
-export { Check, Close, Minus, Arrow, Chevron, Menu, Whatsapp, Bolt };
+export { Check, Close, Minus, Arrow, Chevron, Menu, Whatsapp, Bolt, Phone, Mail, Expand };
