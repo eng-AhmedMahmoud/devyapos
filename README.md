@@ -3,7 +3,7 @@
 The public marketing site for **Moving POS** — موفينج POS on Arabic pages —
 (Drinki POS until 2026-10-19, DevyaPOS until 2026-10-18),
 Devya's restaurant operating system for the Egyptian market. Live at **https://pos.devya.dev** (Arabic by
-default, `/en` for English; dark theme by default).
+default, `/en` for English; light theme by default, the toggle remembers a choice).
 
 Next.js App Router + next-intl (RTL-first) + Tailwind. Fully static content —
 no backend, no database; every screenshot and the four-second register

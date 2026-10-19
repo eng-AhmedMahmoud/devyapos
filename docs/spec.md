@@ -26,8 +26,8 @@ Hostinger's `devya.dev` zone).
   `defaultLocale: "ar"` and `localeDetection: false` — bare `/` always
   resolves to `/ar` regardless of the visitor's `Accept-Language`. This is a
   deliberate override of next-intl's default negotiation (see §5).
-- **Dark default, everyone**: `app/[locale]/layout.tsx` hardcodes
-  `data-theme="dark"` on `<html>` rather than reading `prefers-color-scheme`.
+- **Light default, everyone**: `app/[locale]/layout.tsx` hardcodes
+  `data-theme="light"` on `<html>` rather than reading `prefers-color-scheme`.
   A boot script (`components/ThemeToggle.tsx` → `themeBootScript`) inlined in
   `<head>` applies any stored `localStorage` choice before first paint so
   there's no flash; the toggle itself lives in the header.
@@ -300,10 +300,10 @@ colour in devya-commerce first, then here.
 Every color is a CSS custom property defined **twice** — `:root[data-theme="light"]`
 and `:root[data-theme="dark"]` in `app/globals.css` — plus a third
 `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }`
-block that mirrors the dark set for visitors who never touch the toggle but
-whose OS is dark. Because the theme *default* is dark (`data-theme="dark"`
-hardcoded in `app/[locale]/layout.tsx`, as the umbrella site boots), light
-mode is the one visitors have to opt into.
+block that mirrors the dark set for a page without the attribute (none ships
+without it). Because the theme *default* is light (`data-theme="light"`
+hardcoded in `app/[locale]/layout.tsx`, as the umbrella site boots), dark
+mode is the one visitors opt into, and the toggle remembers it.
 
 The token *names* predate the palette and were kept so the rebrand was a
 change of values, not of every component: `--bg/--surface/--surface-2/
