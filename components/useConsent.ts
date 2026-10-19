@@ -1,38 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { CONSENT_EVENT, readConsent, type ConsentState } from "@/lib/consent";
 
 /**
  * The current consent choice, kept in sync across every component that asks.
  *
- * Starts at "unset" rather than reading storage during render: the pages are
- * prerendered, so a first render that depended on localStorage would not match
- * the server HTML. The real value arrives in the effect, one tick later, which
- * is also the moment the banner is allowed to appear.
+ * Read through `useSyncExternalStore`: the server snapshot is "unset", so the
+ * prerendered HTML and the hydrating render agree, and React swaps in the
+ * stored value straight after hydration. Before that we genuinely do not know,
+ * and "unset" is the answer that keeps trackers off — the safe direction for
+ * the few milliseconds it lasts. (It also means the banner is in the server
+ * HTML and leaves at hydration for a visitor who has already answered.)
  *
  * `storage` is listened to as well as our own event, so accepting in one tab
  * stops the banner nagging in another.
  */
 export function useConsent(): ConsentState {
-  const [consent, setConsent] = useState<ConsentState>("unset");
-  const [ready, setReady] = useState(false);
+  return useSyncExternalStore(subscribe, readConsent, () => "unset");
+}
 
-  useEffect(() => {
-    setConsent(readConsent());
-    setReady(true);
-
-    const sync = () => setConsent(readConsent());
-    window.addEventListener(CONSENT_EVENT, sync);
-    window.addEventListener("storage", sync);
-    return () => {
-      window.removeEventListener(CONSENT_EVENT, sync);
-      window.removeEventListener("storage", sync);
-    };
-  }, []);
-
-  /* Before the effect runs we genuinely do not know, and "unset" is the answer
-     that keeps trackers off and the banner hidden — neither of which is wrong
-     for the few milliseconds it lasts. */
-  return ready ? consent : "unset";
+function subscribe(onChange: () => void): () => void {
+  window.addEventListener(CONSENT_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(CONSENT_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
 }
