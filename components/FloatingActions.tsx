@@ -12,9 +12,11 @@ import WhatsappLink from "./WhatsappLink";
  * (once the first screen is out of view) and a WhatsApp chat.
  *
  * Back to the top moves focus to the start of `<main>` as well as scrolling,
- * so a keyboard user lands where the eye does. While the consent banner is up
- * the stack rides above it: the banner publishes its height as `--consent-h`
- * (see CookieConsent), and `.fab-stack` adds it to its offset.
+ * so a keyboard user lands where the eye does. The stack is pinned to the
+ * bottom inline-end corner; while the consent banner is up it rides above the
+ * banner only where the banner reaches that corner — the banner publishes its
+ * height as `--consent-h` (see CookieConsent) and `.fab-stack` decides when to
+ * add it (globals.css).
  */
 export default function FloatingActions() {
   const locale = useLocale();
@@ -53,7 +55,7 @@ export default function FloatingActions() {
         className="fab fab-whatsapp"
         label={c.floating.whatsapp}
       >
-        <Whatsapp width={28} height={28} />
+        <Whatsapp width={26} height={26} />
       </WhatsappLink>
     </div>
   );

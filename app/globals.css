@@ -977,14 +977,27 @@ html[lang="ar"] .kicker {
 }
 
 /* ── Floating buttons (components/FloatingActions.tsx) ──────────────────────
-   At the inline end, so Arabic puts them bottom-left. `--consent-h` is the
-   consent banner's height while it is up (CookieConsent publishes it), so the
-   stack rides above the banner instead of under it. WhatsApp keeps its own
-   green: it is the one colour a visitor recognises the button by. */
+   One stack, pinned to the bottom inline-end corner (bottom-left in Arabic),
+   the gutter measured from the safe area so a notch or home indicator never
+   crowds it. Both buttons are one size, so their edges and centres line up.
+   WhatsApp keeps its own green: it is the one colour a visitor recognises the
+   button by.
+
+   The consent banner publishes its height as `--consent-h` while it is up
+   (CookieConsent). The stack only rides above it where the banner can reach
+   the corner: its card is `max-w-4xl` (56rem) and centred, so from 67rem up —
+   56 + 2 × (1.5rem gutter + 3.25rem button + 0.75rem clearance) — the card's
+   side margin already clears the stack, and lifting it there only left the
+   buttons floating at mid-height. */
 .fab-stack {
+  --fab: 3.25rem;
+  --fab-gutter: 1rem;
+  --fab-lift: var(--consent-h, 0px);
   position: fixed;
-  inset-inline-end: 1rem;
-  bottom: calc(1rem + var(--consent-h, 0px));
+  inset-inline-end: calc(var(--fab-gutter) + env(safe-area-inset-right, 0px));
+  bottom: calc(
+    var(--fab-gutter) + env(safe-area-inset-bottom, 0px) + var(--fab-lift)
+  );
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -992,16 +1005,24 @@ html[lang="ar"] .kicker {
   gap: 0.75rem;
   transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+[dir="rtl"] .fab-stack {
+  inset-inline-end: calc(var(--fab-gutter) + env(safe-area-inset-left, 0px));
+}
 @media (min-width: 640px) {
   .fab-stack {
-    inset-inline-end: 1.5rem;
-    bottom: calc(1.5rem + var(--consent-h, 0px));
+    --fab-gutter: 1.5rem;
+  }
+}
+@media (min-width: 67rem) {
+  .fab-stack {
+    --fab-lift: 0px;
   }
 }
 .fab {
   display: inline-flex;
-  width: 3rem;
-  height: 3rem;
+  width: var(--fab);
+  height: var(--fab);
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
@@ -1019,8 +1040,6 @@ html[lang="ar"] .kicker {
   outline-offset: 3px;
 }
 .fab-whatsapp {
-  width: 3.5rem;
-  height: 3.5rem;
   background: #25d366;
   color: #ffffff;
 }
