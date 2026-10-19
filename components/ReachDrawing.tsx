@@ -2,9 +2,9 @@ import { MarkShapes } from "./Logo";
 
 /**
  * The contact section's line drawing: a chat bubble, a phone and an envelope,
- * each on a dashed line that runs into the Drinki POS tile.
+ * each on a dashed line that runs into the Moving POS tile.
  *
- * Decorative only (`aria-hidden`). The dashes run and a pearl rides each line
+ * Decorative only (`aria-hidden`). The dashes run and a square rides each line
  * as the drawing scrolls by, where the browser has view timelines and motion
  * is welcome (globals.css, "Scroll-linked touches"); otherwise it is a still
  * drawing. In Arabic the sources sit on the right and the lines run left into
@@ -34,16 +34,16 @@ export default function ReachDrawing({
       className={className}
     >
       <g transform={flip}>
-        {/* A chat bubble with three pearls in it. */}
+        {/* A chat bubble with three dots in it — cells of the Kufic grid. */}
         <path
           d="M16 8H66A10 10 0 0 1 76 18V40A10 10 0 0 1 66 50H34L20 61V50H16A10 10 0 0 1 6 40V18A10 10 0 0 1 16 8Z"
           stroke="currentColor"
           strokeWidth="2.5"
           strokeLinejoin="round"
         />
-        <circle cx="27" cy="29" r="4" fill="currentColor" />
-        <circle cx="41" cy="29" r="4" fill="var(--caramel)" />
-        <circle cx="55" cy="29" r="4" fill="currentColor" />
+        <rect x="23" y="25" width="8" height="8" fill="currentColor" />
+        <rect x="37" y="25" width="8" height="8" fill="var(--gold)" />
+        <rect x="51" y="25" width="8" height="8" fill="currentColor" />
 
         {/* A phone. */}
         <rect
@@ -84,16 +84,16 @@ export default function ReachDrawing({
             key={d}
             className="reach-dash"
             d={d}
-            stroke={i === 1 ? "var(--caramel)" : "currentColor"}
+            stroke={i === 1 ? "var(--gold)" : "currentColor"}
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         ))}
-        {/* Pearls where the lines turn, always drawn. */}
-        <circle cx="122" cy="49" r="4.5" fill="var(--caramel)" />
-        <circle cx="122" cy="121" r="4.5" fill="currentColor" />
-        {/* Pearls that ride the lines, only while they animate: a round-capped
+        {/* Squares where the lines turn, always drawn. */}
+        <rect x="117.5" y="44.5" width="9" height="9" fill="var(--gold)" />
+        <rect x="117.5" y="116.5" width="9" height="9" fill="currentColor" />
+        {/* Squares that ride the lines, only while they animate: a square-capped
             dash of length zero, moved along its line by its dash offset. */}
         {LINES.map((d) => (
           <path
@@ -103,12 +103,12 @@ export default function ReachDrawing({
             pathLength={100}
             stroke="var(--gold)"
             strokeWidth="8"
-            strokeLinecap="round"
+            strokeLinecap="square"
           />
         ))}
       </g>
-      {/* The tile stays outside the flip: a mirrored cup is not the mark. */}
-      <g transform={`translate(${rtl ? 6 : 180} 50) scale(0.1445)`}>
+      {/* The tile stays outside the flip: a mirrored letter is not the mark. */}
+      <g transform={`translate(${rtl ? 6 : 180} 50) scale(1.156)`}>
         <MarkShapes />
       </g>
     </svg>

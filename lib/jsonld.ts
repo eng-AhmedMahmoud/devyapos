@@ -1,6 +1,6 @@
 import { getContent, type SiteContent } from "@/content";
-import { brand, socialLinks } from "./brand";
-import { localeHref, routes } from "./meta";
+import { brand, brandName, socialLinks } from "./brand";
+import { localeHref, ogImageUrl, routes } from "./meta";
 
 /**
  * Structured data, generated from the same content tree the page renders.
@@ -37,17 +37,18 @@ function unitText(c: SiteContent) {
   return `${c.pricing.perBranch} / ${c.pricing.per.replace(/^\//, "")}`;
 }
 
-/** Drinki POS the vendor, with Devya Solutions as the parent company. */
+/** Moving POS the vendor, with Devya Solutions as the parent company. */
 export function organizationJsonLd(locale: string): JsonLdNode {
   const c = getContent(locale);
 
   return {
     "@type": "Organization",
     "@id": ORG_ID,
-    name: brand.wordmark,
+    name: brandName(locale),
+    alternateName: brandName(locale === "ar" ? "en" : "ar"),
     url: brand.url,
     logo: `${brand.url}/icon.svg`,
-    image: `${brand.url}/${locale}/opengraph-image`,
+    image: ogImageUrl(locale),
     description: c.meta.home.description,
     email: brand.email,
     telephone: tel,
@@ -122,14 +123,15 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
   return {
     "@type": "SoftwareApplication",
     "@id": APP_ID,
-    name: brand.wordmark,
+    name: brandName(locale),
+    alternateName: brandName(locale === "ar" ? "en" : "ar"),
     url: localeHref(locale),
     applicationCategory: "BusinessApplication",
     applicationSubCategory: "Point of Sale",
     operatingSystem: "Web",
     description: c.meta.home.description,
     inLanguage: ["ar", "en"],
-    image: `${brand.url}/${locale}/opengraph-image`,
+    image: ogImageUrl(locale),
     publisher: { "@id": ORG_ID },
     featureList: c.features.items.map((f) => f.title),
     offers: {
@@ -175,15 +177,15 @@ export const FAQ_PATHS = ["/pricing", "/contact"] as const;
 /**
  * Human name for a route: the nav label when the route is in the nav,
  * otherwise the first half of its `<title>` (every page title is
- * "Something | Drinki POS" or "Drinki POS | something").
+ * "Something | Moving POS" or "Moving POS | something").
  */
-function routeName(c: SiteContent, path: string, key: string) {
+function routeName(c: SiteContent, locale: string, path: string, key: string) {
   const link = c.nav.links.find((l) => l.href === path);
   if (link) return link.label;
 
   const title = (c.meta[key] ?? c.meta.home).title;
   const [first, second] = title.split("|").map((part) => part.trim());
-  return first === brand.wordmark && second ? second : first;
+  return first === brandName(locale) && second ? second : first;
 }
 
 /** Home > Page. Home is the breadcrumb root, so it gets no list of its own. */
@@ -203,13 +205,13 @@ export function breadcrumbJsonLd(
       {
         "@type": "ListItem",
         position: 1,
-        name: brand.wordmark,
+        name: brandName(locale),
         item: localeHref(locale),
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: routeName(c, path, route.key),
+        name: routeName(c, locale, path, route.key),
         item: localeHref(locale, path),
       },
     ],

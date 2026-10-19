@@ -2,25 +2,35 @@
  * Single source of truth for the SaaS brand.
  *
  * The platform in this monorepo was built for a real 25-branch Egyptian
- * chain. Drinki POS is the productised version of that platform sold to other
- * restaurants. It was called DevyaPOS until 18 October 2026; the rename is the
- * visible name only, so identifiers keep `devyapos`: storage keys, file and
- * image paths, the container, the repo, and the social handles below.
+ * chain. Moving POS is the productised version of that platform sold to other
+ * restaurants. It was called DevyaPOS until 18 October 2026 and Drinki POS
+ * until 19 October 2026; each rename is the visible name only, so identifiers
+ * keep `devyapos`: storage keys, file and image paths, the container, the
+ * repo, and the social handles below.
  *
  * It is named as a Devya product rather than a sister brand, so it lives on a
  * subdomain of the studio's own `devya.dev` instead of taking a new `.dev`
  * registration. Note the house rule: the company is Devya Solutions but the
  * domain is devya.dev, never devya.solutions.
  *
- * The wordmark is Latin in both locales. Arabic copy writes "Drinki POS" inline,
- * which is how Latin product names are normally set in Arabic technical prose.
+ * Moving is a product family — Moving Stores (devya-commerce) and the umbrella
+ * site at moving.devya.dev (moving-landing) — and the family writes its name
+ * in Arabic on Arabic pages: موفينج ستورز, موفينج POS. "POS" stays Latin, the
+ * way the term is set in Arabic technical prose.
  *
  * Rename the product here and the whole site follows.
  */
 export const brand = {
-  name: { ar: "Drinki POS", en: "Drinki POS" },
-  /** Latin wordmark — used in the logo lockup in both locales. */
-  wordmark: "Drinki POS",
+  name: { ar: "موفينج POS", en: "Moving POS" },
+  /**
+   * The lockup's two words — the family name, set bold, and the product, set
+   * regular and dimmed — split the way Moving Stores' lockup splits
+   * "Moving Stores" (devya-commerce apps/admin/components/brand/wordmark.tsx).
+   */
+  wordmark: {
+    ar: ["موفينج", "POS"],
+    en: ["Moving", "POS"],
+  },
   domain: "pos.devya.dev",
   url: "https://pos.devya.dev",
   email: "devya.solutions@gmail.com",
@@ -63,6 +73,11 @@ export const brand = {
    * is ever wanted somewhere the label actually fits.
    */
 } as const;
+
+/** The product name as a page in `locale` prints it. */
+export function brandName(locale: string) {
+  return locale === "ar" ? brand.name.ar : brand.name.en;
+}
 
 /** The social profiles as a flat list, in the order the footer renders them. */
 export const socialLinks = [

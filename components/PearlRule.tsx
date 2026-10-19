@@ -1,7 +1,9 @@
 /**
- * A string of pearls and a hairline from the reading edge across the column:
- * the house motif as a divider. Decorative. Where the scroll-linked rules in
- * globals.css run, it is laid down from the reading edge as it scrolls in.
+ * Three cells of the Kufic grid and a hairline from the reading edge across
+ * the column: the house motif as a divider. The cells are `.pearl` — saffron
+ * squares now, the class name kept from the boba pearls they replaced.
+ * Decorative. Where the scroll-linked rules in globals.css run, it is laid
+ * down from the reading edge as it scrolls in.
  */
 export default function PearlRule({ className = "" }: { className?: string }) {
   return (

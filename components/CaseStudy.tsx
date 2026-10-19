@@ -2,7 +2,7 @@ import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Arrow, Check } from "./icons";
 import BrandShapes from "./BrandShapes";
-import CupDivider from "./CupDivider";
+import StepDivider from "./StepDivider";
 import Reveal from "./Reveal";
 import { Container, SectionHead } from "./Section";
 
@@ -34,7 +34,7 @@ export default async function CaseStudy() {
 
   return (
     <section id="proof" className="band-cream relative isolate py-20 sm:py-24">
-      <CupDivider />
+      <StepDivider />
       <BrandShapes layout="proof" />
       <Container>
         <SectionHead kicker={s.eyebrow} title={s.title} sub={s.body} />

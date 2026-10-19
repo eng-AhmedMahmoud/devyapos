@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand, mailtoLink, socialLinks, telLink } from "@/lib/brand";
+import { brand, brandName, mailtoLink, socialLinks, telLink } from "@/lib/brand";
 import { Icon } from "./icons";
 import Logo from "./Logo";
 
@@ -15,7 +15,7 @@ export default async function Footer() {
       <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div className="flex flex-col gap-4">
-            <Logo tone="espresso" />
+            <Logo locale={locale} tone="espresso" size={36} />
             <p className="max-w-xs text-sm leading-relaxed text-on-espresso-dim">
               {c.footer.blurb}
             </p>
@@ -95,7 +95,7 @@ export default async function Footer() {
 
         <div className="mt-6 flex flex-col gap-3 text-xs text-on-espresso-dim sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {brand.wordmark}. {c.footer.legal}
+            © {year} {brandName(locale)}. {c.footer.legal}
           </p>
           <p>
             {c.footer.madeBy}{" "}

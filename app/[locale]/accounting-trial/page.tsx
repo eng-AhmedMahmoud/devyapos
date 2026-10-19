@@ -26,7 +26,7 @@ export async function generateMetadata({
 }
 
 /**
- * The self-serve trial of Drinki POS Accounting.
+ * The self-serve trial of Moving POS Accounting.
  *
  * The form is the page: a visitor who fills it leaves with an accounting
  * system of their own and the token that opens it (`components/TrialForm`).

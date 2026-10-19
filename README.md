@@ -1,6 +1,7 @@
-# Drinki POS — marketing site
+# Moving POS — marketing site
 
-The public marketing site for **Drinki POS** (DevyaPOS until 2026-10-18),
+The public marketing site for **Moving POS** — موفينج POS on Arabic pages —
+(Drinki POS until 2026-10-19, DevyaPOS until 2026-10-18),
 Devya's restaurant operating system for the Egyptian market. Live at **https://pos.devya.dev** (Arabic by
 default, `/en` for English; dark theme by default).
 
@@ -23,6 +24,15 @@ are produced from that codebase, so refreshing them means re-capturing there
 ```bash
 pnpm install
 portless devyapos -- pnpm dev   # → https://devyapos.localhost
+```
+
+Checks (CI runs all four):
+
+```bash
+pnpm lint        # eslint
+pnpm typecheck   # tsc --noEmit
+pnpm test        # vitest: ar/en content parity, the product name, palette contrast
+pnpm build
 ```
 
 ## Deploy
@@ -90,5 +100,13 @@ trust signal. Any 2xx is treated as accepted.
 - Brand facts (name, domain, WhatsApp, parent company) live in `lib/brand.ts`
   and everything derives from them — including canonical URLs, the sitemap and
   robots.txt.
+- The look is Moving Stores' (devya-commerce `apps/admin/features/landing/`):
+  palette and type in `app/globals.css`, the mark in `components/Logo.tsx`.
+  Change a colour in devya-commerce first, then here; `pnpm test` recomputes
+  the contrast of every text pair.
+- The baked brand rasters — `app/apple-icon.png`, the 192/512 PNGs in
+  `public/brand/` and the OG cards in `public/og/` — come from
+  `node scripts/render-brand-assets.mjs` (needs Google Chrome). Re-run it after
+  changing the hero copy, the product name or the mark, and commit the PNGs.
 - Competitor prices on `/pricing` are dated claims: refresh
   `pricing.marketAnchor` in both content files when they drift.
