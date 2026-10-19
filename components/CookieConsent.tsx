@@ -28,7 +28,8 @@ export default function CookieConsent() {
   const ref = useRef<HTMLDivElement>(null);
 
   // Publishes the banner's height as `--consent-h` while it is up, so the
-  // floating buttons (FloatingActions) sit above it instead of under it.
+  // floating buttons (FloatingActions) can sit above it wherever it reaches
+  // their corner (`.fab-stack` in globals.css).
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
