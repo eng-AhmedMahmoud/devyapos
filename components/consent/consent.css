@@ -13,13 +13,17 @@
  *   --consent-on        switch fill when on
  *   --consent-radius    corner radius
  *   --consent-shadow    card shadow
+ *   --consent-z         the banner's stacking layer (default 50)
  */
 
+/* `--consent-z` (default 50): above the page and its header, below the
+   site's custom cursor and drawers — the cursor must stay visible over
+   Reject and Accept. The panel is a <dialog> in the top layer. */
 .consent-banner {
   position: fixed;
   inset-inline: 0;
   inset-block-end: 0;
-  z-index: 70;
+  z-index: var(--consent-z, 50);
   padding: 12px;
   pointer-events: none;
 }
