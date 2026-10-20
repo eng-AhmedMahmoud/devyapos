@@ -22,6 +22,8 @@ const MODAL =
   'dialog[open], [aria-modal="true"], [role="dialog"][data-state="open"], .nav-drawer.is-open';
 /** Share of the gap the ring closes per 1/60 s. */
 const EASE = 0.22;
+/** Keys that only change another key: holding one (for a Shift- or Cmd-click) leaves the cursor be. */
+const MODIFIERS = new Set(["Shift", "Control", "Alt", "AltGraph", "Meta", "CapsLock", "Fn"]);
 
 type State = "idle" | "link" | "text" | "label" | "native";
 
@@ -54,6 +56,16 @@ function isEnabled() {
  * cursor is hidden (`.cursor-on` on <html>) only while this one is on screen:
  * not before the first mouse move, never for touch or pen, and not over a
  * framed page or while a modal is open — the cursor sits under modals.
+ *
+ * The keyboard has the page to itself: a key that types or moves focus (Tab,
+ * the arrows, Enter, a letter — not a bare modifier or a Cmd/Ctrl shortcut)
+ * puts the custom cursor away and gives the system cursor back, as the system
+ * hides its own while you type, so it never sits on a focus ring or shows the
+ * state of something focus has scrolled away. Only a real mouse move brings
+ * it back, in the state of whatever is under the pointer by then. Focus
+ * leaving the window puts it away too, and drops a press whose release the
+ * page will never see.
+ *
  * Movement is one requestAnimationFrame loop writing transforms; it reads no
  * layout and stops when the ring comes to rest.
  */
@@ -83,6 +95,9 @@ function CursorLayer() {
     let inside = false;
     /** Over a framed page, or a modal is open: the system cursor's turn. */
     let native = false;
+    /** A key was pressed: away until the mouse really moves. */
+    let keyboard = false;
+    let pressed = false;
 
     const show = (visible: boolean) => {
       if (visible === shown) return;
@@ -90,9 +105,28 @@ function CursorLayer() {
       r.dataset.visible = d.dataset.visible = String(visible);
       root.classList.toggle("cursor-on", visible);
     };
+    const press = (down: boolean) => {
+      if (down === pressed) return;
+      pressed = down;
+      if (down) r.dataset.pressed = "true";
+      else delete r.dataset.pressed;
+    };
     const hide = () => {
       inside = false;
+      // A press whose release goes elsewhere (focus left, a native picker opened) ends here.
+      press(false);
       show(false);
+    };
+    /** The state of what is under the pointer. */
+    const settle = (target: EventTarget | null) => {
+      const element = target instanceof Element ? target : null;
+      const state = stateOf(element);
+      native = state === "native";
+      if (native) return show(false);
+      if (state === "label") {
+        l.textContent = element?.closest<HTMLElement>("[data-cursor]")?.dataset.cursor ?? "";
+      }
+      r.dataset.state = d.dataset.state = state;
     };
     const tick = (now: number) => {
       // Frame-rate independent: the same easing at 60, 120 or 144 Hz.
@@ -114,32 +148,38 @@ function CursorLayer() {
     };
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return hide();
+      // After a key the browser can report the still pointer again (focus
+      // scrolled the page under it): only a real move ends the keyboard's turn.
+      if (keyboard && event.clientX === x && event.clientY === y) return;
+      keyboard = false;
       inside = true;
       x = event.clientX;
       y = event.clientY;
+      // No button held: a release the page never saw.
+      if (pressed && !event.buttons) press(false);
       if (!shown) {
-        // Appearing: the ring starts on the pointer rather than flying in.
+        // Appearing: the ring starts on the pointer rather than flying in, in
+        // the state of what is under it now — a key, focus or a dialog may
+        // have changed the page since it was last on screen.
         rx = x;
         ry = y;
+        settle(event.target);
       }
       if (!frame) frame = requestAnimationFrame(tick);
     };
     const onOver = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      const target = event.target instanceof Element ? event.target : null;
-      const state = stateOf(target);
-      native = state === "native";
-      if (native) return show(false);
-      if (state === "label") {
-        l.textContent = target?.closest<HTMLElement>("[data-cursor]")?.dataset.cursor ?? "";
-      }
-      r.dataset.state = d.dataset.state = state;
+      if (event.pointerType === "mouse") settle(event.target);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || MODIFIERS.has(event.key)) return;
+      keyboard = true;
+      hide();
     };
     const onDown = (event: PointerEvent) => {
-      if (event.pointerType === "mouse") r.dataset.pressed = "true";
+      if (event.pointerType === "mouse") press(true);
     };
     const onUp = () => {
-      delete r.dataset.pressed;
+      press(false);
       // A click can open a modal under a still pointer: step aside for it.
       requestAnimationFrame(() => {
         if (document.querySelector(MODAL)) {
@@ -157,6 +197,8 @@ function CursorLayer() {
     window.addEventListener("pointerdown", onDown, { passive: true });
     window.addEventListener("pointerup", onUp, { passive: true });
     document.addEventListener("mouseout", onOut, { passive: true });
+    // Capture: a key the page handles and stops still counts.
+    window.addEventListener("keydown", onKey, true);
     window.addEventListener("blur", hide);
     return () => {
       window.removeEventListener("pointermove", onMove);
@@ -164,6 +206,7 @@ function CursorLayer() {
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);
       document.removeEventListener("mouseout", onOut);
+      window.removeEventListener("keydown", onKey, true);
       window.removeEventListener("blur", hide);
       cancelAnimationFrame(frame);
       root.classList.remove("cursor-on");
