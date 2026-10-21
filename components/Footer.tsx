@@ -5,6 +5,7 @@ import { brand, brandName, mailtoLink, socialLinks, telLink } from "@/lib/brand"
 import { CookieSettingsButton } from "./consent/ConsentManager";
 import { Icon } from "./icons";
 import Logo from "./Logo";
+import ParentCompany from "./ParentCompany";
 
 export default async function Footer() {
   const locale = await getLocale();
@@ -105,16 +106,12 @@ export default async function Footer() {
               className="min-h-11 cursor-pointer underline-offset-2 transition-colors hover:text-on-espresso hover:underline"
             />
           </p>
+          {/* The parent company, in the same words on every Moving property. */}
           <p>
-            {c.footer.madeBy}{" "}
-            <a
-              href={brand.parent.url}
+            <ParentCompany
+              sentence={c.parentCompany.credit}
               className="font-bold text-gold transition-colors hover:text-on-espresso"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {brand.parent.name}
-            </a>
+            />
           </p>
         </div>
       </div>
