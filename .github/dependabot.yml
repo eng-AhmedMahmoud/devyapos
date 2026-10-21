@@ -1,0 +1,30 @@
+# Weekly dependency updates. Security updates (Dependabot alerts) are enabled
+# on the repository and open PRs as soon as an advisory lands; these entries
+# keep everything else from drifting behind. Every PR still has to pass CI's
+# `check` job, which includes `pnpm audit --prod --audit-level high`.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    open-pull-requests-limit: 5
+    groups:
+      next:
+        patterns: ["next", "eslint-config-next", "@next/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      tooling:
+        dependency-type: development
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
