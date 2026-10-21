@@ -86,11 +86,15 @@ exit 0
 `,
 };
 
-/** A check-runs answer from GitHub with these runs. */
-function checkRuns(...runs: { id: number; status: string; conclusion: string | null; name?: string }[]) {
+const GITHUB_ACTIONS = { id: 15368, slug: "github-actions" };
+
+/** A check-runs answer from GitHub with these runs (from GitHub Actions unless said). */
+function checkRuns(
+  ...runs: { id: number; status: string; conclusion: string | null; name?: string; app?: { id: number; slug: string } }[]
+) {
   return JSON.stringify({
     total_count: runs.length,
-    check_runs: runs.map((r) => ({ name: "check", ...r })),
+    check_runs: runs.map((r) => ({ name: "check", app: GITHUB_ACTIONS, ...r })),
   });
 }
 
@@ -270,6 +274,14 @@ describe("deploy.sh CI gate", SLOW, () => {
     ["a newer failed re-run", checkRuns({ id: 5, status: "completed", conclusion: "success" }, { id: 6, status: "completed", conclusion: "cancelled" }), /concluded cancelled/],
     ["a run still in progress", checkRuns({ id: 7, status: "in_progress", conclusion: null }), /still in_progress/],
     ["no check run at all", checkRuns(), /no 'check' run/],
+    [
+      "a passing `check` from another app",
+      checkRuns(
+        { id: 5, status: "completed", conclusion: "failure" },
+        { id: 8, status: "completed", conclusion: "success", app: { id: 999, slug: "some-ci" } },
+      ),
+      /concluded failure/,
+    ],
     ["an unreadable answer", "<html>rate limited</html>", /could not be read/],
   ])("refuses %s", (_label, answer, message) => {
     writeFileSync(ghJson, answer);

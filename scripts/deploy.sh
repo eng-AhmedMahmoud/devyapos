@@ -45,6 +45,10 @@ DOMAIN="pos.devya.dev"
 PORT=3009
 CONTAINER="devya-devyapos"
 CI_CHECK="check"
+# GitHub Actions' app id: the same integration main's ruleset requires the
+# check from, so another installed app's run that happens to be named
+# "check" cannot stand in for CI.
+CI_APP_ID=15368
 SSH=(ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=8 "$HOST")
 
 usage() { echo "usage: $0 [--dry-run] [--skip-ci-check | --rollback]"; }
@@ -75,8 +79,8 @@ die() { echo "✗ $*" >&2; exit 2; }
 # ------------------------------------------------------------------ CI gate
 
 # Reads GitHub's check-runs JSON on stdin and prints one word for the newest
-# run named $CI_CHECK: success, pending:<status>, failed:<conclusion>,
-# missing or unreadable. Node, because it is already a requirement here and
+# run named $CI_CHECK from GitHub Actions: success, pending:<status>,
+# failed:<conclusion>, missing or unreadable. Node, because it is already a requirement here and
 # jq is not.
 ci_verdict() {
   node -e '
@@ -85,13 +89,15 @@ ci_verdict() {
       let runs;
       try { runs = JSON.parse(text).check_runs; } catch { runs = undefined; }
       if (!Array.isArray(runs)) return console.log("unreadable");
-      const named = runs.filter((run) => run && run.name === process.argv[1]);
+      const named = runs.filter(
+        (run) => run && run.name === process.argv[1] && run.app && run.app.id === Number(process.argv[2]),
+      );
       if (named.length === 0) return console.log("missing");
       const newest = named.reduce((a, b) => (b.id > a.id ? b : a));
       if (newest.status !== "completed") return console.log("pending:" + newest.status);
       console.log(newest.conclusion === "success" ? "success" : "failed:" + newest.conclusion);
     });
-  ' "$CI_CHECK"
+  ' "$CI_CHECK" "$CI_APP_ID"
 }
 
 # ci_gate <sha>: succeeds only when CI's `check` run on <sha> concluded
@@ -202,16 +208,21 @@ outbox_report() {
 
 # Strips the host's settings file from every backup (deploys before
 # 2026-10-22 copied it into each one) and keeps the newest $KEEP (0: all).
+# One name per line, never word-split, and only directories under the prefix:
+# backups made before DEPLOY_LABEL was checked could hold any character. The
+# list comes in through `< <(…)` because stdin is the rest of this script.
 prune_backups() {
   local n=0 b
-  for b in $(ls -1dt "$BACKUP_PREFIX"* 2>/dev/null); do
+  while IFS= read -r b; do
+    case "$b" in "$BACKUP_PREFIX"?*) ;; *) continue ;; esac
+    [ -d "$b" ] || continue
     rm -f "$b/.env.production.local"
     n=$((n + 1))
     if [ "$KEEP" -gt 0 ] && [ "$n" -gt "$KEEP" ]; then
-      rm -rf "$b"
+      rm -rf -- "$b"
       echo "pruned $b"
     fi
-  done
+  done < <(ls -1dt "$BACKUP_PREFIX"* 2>/dev/null)
   echo "backups: $(ls -1d "$BACKUP_PREFIX"* 2>/dev/null | wc -l | tr -d ' ') under ${BACKUP_PREFIX}*"
 }
 
