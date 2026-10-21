@@ -48,12 +48,18 @@ export async function POST(req: Request) {
   }
   if (raw.length > 2_000) return new Response(null, { status: 413 });
 
-  let body: Record<string, unknown>;
+  let parsed: unknown;
   try {
-    body = JSON.parse(raw) as Record<string, unknown>;
+    parsed = JSON.parse(raw);
   } catch {
     return new Response(null, { status: 400 });
   }
+  // `null`, a number, a string or an array is valid JSON but not a receipt.
+  // `null` used to reach `body.choices` and throw, answering 500.
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return new Response(null, { status: 400 });
+  }
+  const body = parsed as Record<string, unknown>;
   const choices = (body.choices ?? {}) as Record<string, unknown>;
   if (
     !(

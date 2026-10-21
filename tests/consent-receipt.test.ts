@@ -93,6 +93,12 @@ describe("consent receipts", () => {
     expect(existsSync(file())).toBe(false);
   });
 
+  it.each(["null", "42", '"receipt"', "[]", "true"])("answers 400, not 500, to the JSON body %s", async (raw) => {
+    const res = await send(raw);
+    expect(res.status).toBe(400);
+    expect(existsSync(file())).toBe(false);
+  });
+
   it("refuses free text smuggled into the timestamp or the policy version", async () => {
     // Date.parse accepts both of these `at` values.
     expect((await send(receipt({ at: "2026-10-22 (Jane Doe +201012345678)" }))).status).toBe(400);
