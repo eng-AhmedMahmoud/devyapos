@@ -1,0 +1,6 @@
+# Moving POS marketing site: how to report a security issue (RFC 9116).
+# Renew before Expires: tests/ops.test.ts fails once this file has lapsed.
+Contact: mailto:devya.solutions@gmail.com
+Expires: 2027-10-21T00:00:00.000Z
+Canonical: https://pos.devya.dev/.well-known/security.txt
+Preferred-Languages: ar, en
