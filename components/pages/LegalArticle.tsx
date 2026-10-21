@@ -3,6 +3,7 @@ import { getContent, type LegalDoc } from "@/content";
 import { Link } from "@/i18n/navigation";
 import { Arrow } from "@/components/icons";
 import PageHero from "@/components/PageHero";
+import ParentCompany from "@/components/ParentCompany";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
 
@@ -67,7 +68,11 @@ export default async function LegalArticle({ doc }: { doc: LegalDoc }) {
                 {/* Who the contract is actually with, stated on the page that
                     describes the contract. */}
                 <p className="w-full border-t border-line pt-4 text-xs leading-relaxed text-ink-dim">
-                  {c.trustLine.short}
+                  {c.trustLine.short}{" "}
+                  <ParentCompany
+                    sentence={c.parentCompany.notice}
+                    className="font-bold text-ink-2 underline underline-offset-2 hover:text-ink"
+                  />
                 </p>
               </div>
             </Reveal>

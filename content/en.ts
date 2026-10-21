@@ -701,7 +701,6 @@ export const en: SiteContent = {
       },
     ],
     legal: "All rights reserved.",
-    madeBy: "A product by",
     social: "Moving POS on social media",
   },
 
@@ -1085,6 +1084,14 @@ export const en: SiteContent = {
   trustLine: {
     short: "Moving POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it.",
     withCr: "Moving POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
+  },
+
+  parentCompany: {
+    credit: { text: "Moving Systems is a Devya Solutions company", link: "Devya Solutions" },
+    notice: {
+      text: "Moving Systems is a subsidiary of Devya Solutions, its parent company.",
+      link: "Devya Solutions",
+    },
   },
 
   etaInvoicing: {

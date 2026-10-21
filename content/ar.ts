@@ -693,7 +693,6 @@ export const ar: SiteContent = {
       },
     ],
     legal: "جميع الحقوق محفوظة.",
-    madeBy: "منتج من",
     social: "موفينج POS على السوشيال ميديا",
   },
 
@@ -1077,6 +1076,14 @@ export const ar: SiteContent = {
   trustLine: {
     short: "موفينج POS منتج من Devya Solutions، استوديو البرمجيات المصري الذي بنى المنصة ويشغّلها.",
     withCr: "موفينج POS منتج من Devya Solutions، استوديو البرمجيات المصري الذي بنى المنصة ويشغّلها — سجل تجاري رقم {cr}.",
+  },
+
+  parentCompany: {
+    credit: { text: "موفينج سيستمز إحدى شركات ديفيا سوليوشنز", link: "ديفيا سوليوشنز" },
+    notice: {
+      text: "موفينج سيستمز شركة تابعة لشركة ديفيا سوليوشنز، الشركة الأم.",
+      link: "ديفيا سوليوشنز",
+    },
   },
 
   etaInvoicing: {

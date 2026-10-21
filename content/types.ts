@@ -354,7 +354,6 @@ export interface SiteContent {
     blurb: string;
     cols: { title: string; links: { label: string; href: string }[] }[];
     legal: string;
-    madeBy: string;
     /** Group label for the social icon row — read by screen readers only. */
     social: string;
   };
@@ -525,6 +524,18 @@ export interface SiteContent {
   trustLine: {
     short: string;
     withCr: string;
+  };
+
+  /**
+   * Moving Systems, the company behind Moving POS, is a subsidiary of Devya
+   * Solutions. Both sentences are word for word the same on every Moving
+   * property (movingsystems.tech, Moving Stores): `text` is the sentence,
+   * `link` the part of it that links to devya.dev. `credit` closes every
+   * footer; `notice` sits on /about and on the legal pages.
+   */
+  parentCompany: {
+    credit: { text: string; link: string };
+    notice: { text: string; link: string };
   };
 
   /**
