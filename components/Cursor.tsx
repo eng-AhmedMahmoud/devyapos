@@ -7,14 +7,12 @@ export const FINE = "(hover: hover) and (pointer: fine)";
 /** Where it never runs: reduced motion, or colours the system forces. */
 export const QUIET = "(prefers-reduced-motion: reduce), (forced-colors: active)";
 
-const CLICKABLE =
-  'a[href], button, summary, label, select, [role="button"], [role="link"], [role="tab"], [role="radio"], [role="checkbox"], [role="switch"], [role="menuitem"], [role="option"], input[type="button"], input[type="submit"], input[type="reset"], input[type="checkbox"], input[type="radio"], input[type="range"], input[type="color"], input[type="file"], input[type="image"]';
-/** Text fields: the system's caret stays, the ring shows the text state. */
+/** Text fields wear the default look, even inside a clickable <label>. */
 const FIELD =
   'textarea, [contenteditable]:not([contenteditable="false"]), input:not([type="button"], [type="submit"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="image"], [type="hidden"])';
-/** Selectable copy keeps the system's I-beam too (the same list as the CSS). */
-const TEXT =
-  "p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, figcaption, td, th, pre, address";
+/** What the focus look grows over: anything a click acts on. */
+const CLICKABLE =
+  'a[href], button, summary, label, select, [role="button"], [role="link"], [role="tab"], [role="radio"], [role="checkbox"], [role="switch"], [role="menuitem"], [role="option"], input[type="button"], input[type="submit"], input[type="reset"], input[type="checkbox"], input[type="radio"], input[type="range"], input[type="color"], input[type="file"], input[type="image"]';
 /** Where the system cursor takes over entirely: framed pages, and anything open above the page. */
 const NATIVE = "iframe";
 /** The quick look is a modal <dialog>; the phone menu's drawer is one too, over its scrim. */
@@ -25,14 +23,13 @@ const EASE = 0.22;
 /** Keys that only change another key: holding one (for a Shift- or Cmd-click) leaves the cursor be. */
 const MODIFIERS = new Set(["Shift", "Control", "Alt", "AltGraph", "Meta", "CapsLock", "Fn"]);
 
-type State = "idle" | "link" | "text" | "label" | "native";
+/** Two looks: the default ("idle") and the focus look over clickables ("link"); "native" is the system cursor's turn. */
+type State = "idle" | "link" | "native";
 
 function stateOf(target: Element | null): State {
   if (!target || target.closest(NATIVE) || document.querySelector(MODAL)) return "native";
-  if (target.closest("[data-cursor]")) return "label";
-  if (target.closest(FIELD)) return "text";
-  if (target.closest(CLICKABLE)) return "link";
-  return target.closest(TEXT) ? "text" : "idle";
+  if (target.closest(FIELD)) return "idle";
+  return target.closest(CLICKABLE) ? "link" : "idle";
 }
 
 function subscribe(onChange: () => void) {
@@ -46,11 +43,10 @@ function isEnabled() {
 }
 
 /**
- * The site's cursor, Moving Stores' (devya-commerce landing-cursor.tsx): a
- * dot on the pointer and a ring that trails it, grows over anything
- * clickable, turns into a text frame over copy and fields (the system's
- * I-beam and caret stay), shows a label where an element asks for one with
- * `data-cursor`, and presses with the button.
+ * The site's cursor, Moving Stores' (devya-commerce landing-cursor.tsx), in
+ * two looks only: the default — a dot on the pointer and a ring that trails
+ * it — and the focus look, the ring grown over anything clickable. Copy, text
+ * fields and everything else wear the default.
  *
  * Mounted only for a hovering fine pointer with motion allowed. The system
  * cursor is hidden (`.cursor-on` on <html>) only while this one is on screen:
@@ -62,9 +58,8 @@ function isEnabled() {
  * puts the custom cursor away and gives the system cursor back, as the system
  * hides its own while you type, so it never sits on a focus ring or shows the
  * state of something focus has scrolled away. Only a real mouse move brings
- * it back, in the state of whatever is under the pointer by then. Focus
- * leaving the window puts it away too, and drops a press whose release the
- * page will never see.
+ * it back, in the look of whatever is under the pointer by then. Focus
+ * leaving the window puts it away too.
  *
  * Movement is one requestAnimationFrame loop writing transforms; it reads no
  * layout and stops when the ring comes to rest.
@@ -78,11 +73,10 @@ export default function Cursor() {
 function CursorLayer() {
   const ring = useRef<HTMLDivElement>(null);
   const dot = useRef<HTMLDivElement>(null);
-  const label = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const [r, d, l] = [ring.current, dot.current, label.current];
-    if (!r || !d || !l) return;
+    const [r, d] = [ring.current, dot.current];
+    if (!r || !d) return;
     const root = document.documentElement;
     let x = 0;
     let y = 0;
@@ -97,7 +91,6 @@ function CursorLayer() {
     let native = false;
     /** A key was pressed: away until the mouse really moves. */
     let keyboard = false;
-    let pressed = false;
 
     const show = (visible: boolean) => {
       if (visible === shown) return;
@@ -105,27 +98,15 @@ function CursorLayer() {
       r.dataset.visible = d.dataset.visible = String(visible);
       root.classList.toggle("cursor-on", visible);
     };
-    const press = (down: boolean) => {
-      if (down === pressed) return;
-      pressed = down;
-      if (down) r.dataset.pressed = "true";
-      else delete r.dataset.pressed;
-    };
     const hide = () => {
       inside = false;
-      // A press whose release goes elsewhere (focus left, a native picker opened) ends here.
-      press(false);
       show(false);
     };
-    /** The state of what is under the pointer. */
+    /** The look of what is under the pointer. */
     const settle = (target: EventTarget | null) => {
-      const element = target instanceof Element ? target : null;
-      const state = stateOf(element);
+      const state = stateOf(target instanceof Element ? target : null);
       native = state === "native";
       if (native) return show(false);
-      if (state === "label") {
-        l.textContent = element?.closest<HTMLElement>("[data-cursor]")?.dataset.cursor ?? "";
-      }
       r.dataset.state = d.dataset.state = state;
     };
     const tick = (now: number) => {
@@ -155,8 +136,6 @@ function CursorLayer() {
       inside = true;
       x = event.clientX;
       y = event.clientY;
-      // No button held: a release the page never saw.
-      if (pressed && !event.buttons) press(false);
       if (!shown) {
         // Appearing: the ring starts on the pointer rather than flying in, in
         // the state of what is under it now — a key, focus or a dialog may
@@ -175,11 +154,7 @@ function CursorLayer() {
       keyboard = true;
       hide();
     };
-    const onDown = (event: PointerEvent) => {
-      if (event.pointerType === "mouse") press(true);
-    };
     const onUp = () => {
-      press(false);
       // A click can open a modal under a still pointer: step aside for it.
       requestAnimationFrame(() => {
         if (document.querySelector(MODAL)) {
@@ -194,7 +169,6 @@ function CursorLayer() {
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
-    window.addEventListener("pointerdown", onDown, { passive: true });
     window.addEventListener("pointerup", onUp, { passive: true });
     document.addEventListener("mouseout", onOut, { passive: true });
     // Capture: a key the page handles and stops still counts.
@@ -203,7 +177,6 @@ function CursorLayer() {
     return () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
-      window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);
       document.removeEventListener("mouseout", onOut);
       window.removeEventListener("keydown", onKey, true);
@@ -217,8 +190,6 @@ function CursorLayer() {
     <>
       <div ref={ring} aria-hidden="true" className="cursor" data-visible="false" data-state="idle">
         <span className="cursor-ring" />
-        <span className="cursor-caret" />
-        <span ref={label} className="cursor-label" />
       </div>
       <div ref={dot} aria-hidden="true" className="cursor-dot" data-visible="false" data-state="idle" />
     </>
