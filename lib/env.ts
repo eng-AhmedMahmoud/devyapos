@@ -6,10 +6,11 @@ import { join } from "node:path";
  * The server's runtime configuration, checked once at boot and on demand by
  * the health route.
  *
- * Every setting the lead path reads is optional and falls back quietly: a
- * mistyped LEAD_FORWARD_URL sends every lead to the outbox, a non-numeric
- * timeout becomes the default, and an outbox directory nobody can write to is
- * discovered only when a real lead arrives and is lost. This module surfaces
+ * Every setting the lead and consent paths read is optional and falls back
+ * quietly: a mistyped LEAD_FORWARD_URL sends every lead to the outbox, a
+ * non-numeric timeout or retention becomes the default, and a data directory
+ * nobody can write to is discovered only when a real lead arrives and is
+ * refused. This module surfaces
  * those cases at boot instead, as one structured log line per problem
  * (instrumentation.ts), and as `config: "degraded"` on GET /api/health, which
  * scripts/deploy.sh refuses to call a healthy release.
@@ -49,8 +50,12 @@ export interface ConfigReport {
 
 type Env = Readonly<Record<string, string | undefined>>;
 
-/** Variables the lead path parses with `Number(x) || default`. */
-const POSITIVE_NUMBERS = ["LEAD_FORWARD_TIMEOUT_MS", "LEAD_OUTBOX_RETENTION_DAYS"] as const;
+/** Numbers the server reads, each silently replaced by a default when unusable. */
+const POSITIVE_NUMBERS = [
+  "LEAD_FORWARD_TIMEOUT_MS",
+  "LEAD_OUTBOX_RETENTION_DAYS",
+  "CONSENT_RECEIPT_RETENTION_DAYS",
+] as const;
 
 /** Set means non-empty: the app treats `""` exactly like a missing variable. */
 function setValue(env: Env, name: string): string | undefined {
@@ -94,10 +99,10 @@ function checkPositiveNumber(env: Env, name: string, problems: ConfigProblem[]):
 }
 
 /**
- * Writes and removes a probe file the way lib/lead-outbox.ts writes the
- * outbox (directory created owner-only if missing, file owner-only), so a
- * read-only or wrongly owned volume shows up now rather than on the first
- * lead.
+ * Writes and removes a probe file the way lib/jsonl-sink.ts writes the lead
+ * outbox and the consent receipts (directory created owner-only if missing,
+ * file owner-only), so a read-only or wrongly owned volume shows up now
+ * rather than on the first lead.
  */
 async function checkOutbox(env: Env, problems: ConfigProblem[]): Promise<ConfigReport["outbox"]> {
   const dir = setValue(env, "LEAD_OUTBOX_DIR");

@@ -55,7 +55,7 @@ describe("checkConfig", () => {
     expect(JSON.stringify(report)).not.toContain(HIDDEN);
   });
 
-  it.each(["LEAD_FORWARD_TIMEOUT_MS", "LEAD_OUTBOX_RETENTION_DAYS"])(
+  it.each(["LEAD_FORWARD_TIMEOUT_MS", "LEAD_OUTBOX_RETENTION_DAYS", "CONSENT_RECEIPT_RETENTION_DAYS"])(
     "refuses %s unless it round-trips as a positive number",
     async (name) => {
       for (const value of ["4000ms", "1e3", "0x10", "Infinity", "abc", "04000", "  "]) {
