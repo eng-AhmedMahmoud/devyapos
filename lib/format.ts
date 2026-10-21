@@ -26,10 +26,6 @@ export function formatEgp(locale: string, value: number) {
   return nf(locale, { maximumFractionDigits: 0 }).format(Math.round(value));
 }
 
-export function formatPercent(locale: string, value: number) {
-  return nf(locale, { maximumFractionDigits: 0 }).format(value);
-}
-
 /**
  * The reverse of `ar-EG` formatting: Arabic-Indic (U+0660–U+0669) and
  * Extended Arabic-Indic (U+06F0–U+06F9) digits → ASCII. Everything else is

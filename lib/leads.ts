@@ -105,15 +105,6 @@ export function normalizeEgyptMobile(raw: string): string | null {
   return normalisePhone(raw, "EG", { mobileOnly: true, lenient: true });
 }
 
-/**
- * Phone with the middle blanked out, for logs and analytics.
- * `+201055930032` → `+2010•••••32`. Enough to correlate, useless to leak.
- */
-export function maskPhone(phone: string): string {
-  if (phone.length < 8) return "•".repeat(phone.length);
-  return `${phone.slice(0, 6)}${"•".repeat(phone.length - 8)}${phone.slice(-2)}`;
-}
-
 function asText(value: unknown): string {
   return typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
 }
