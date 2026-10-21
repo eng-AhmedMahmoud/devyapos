@@ -70,6 +70,9 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # It only reads the repo; artifacts need no token scope.
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
