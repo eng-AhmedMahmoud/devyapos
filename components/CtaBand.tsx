@@ -1,7 +1,13 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand, mailtoLink, telLink, whatsappLink } from "@/lib/brand";
+import {
+  brand,
+  mailtoLink,
+  telLink,
+  whatsappLink,
+  type WhatsappSource,
+} from "@/lib/brand";
 import BrandShapes from "./BrandShapes";
 import { Arrow, Whatsapp } from "./icons";
 import Reveal from "./Reveal";
@@ -11,8 +17,16 @@ import WhatsappLink from "./WhatsappLink";
 /**
  * Closing CTA — an espresso card floated on the page rather than a full-bleed
  * band, so it does not merge into the footer directly beneath it.
+ *
+ * `source` tags the WhatsApp message (lib/brand.ts). The band is the same on
+ * every page, so it is "cta" everywhere except where knowing the page is worth
+ * a code of its own — /pricing, the page the launch plan sends social traffic to.
  */
-export default async function CtaBand() {
+export default async function CtaBand({
+  source = "cta",
+}: {
+  source?: WhatsappSource;
+}) {
   const locale = await getLocale();
   const c = getContent(locale);
 
@@ -60,7 +74,7 @@ export default async function CtaBand() {
                   <Arrow width={18} height={18} className="flip-rtl" />
                 </Link>
                 <WhatsappLink
-                  href={whatsappLink(c.contact.waTemplate)}
+                  href={whatsappLink(c.contact.waTemplate, source)}
                   place="cta_band"
                   className="btn btn-outline-espresso"
                 >

@@ -18,6 +18,11 @@ updates:
       tooling:
         dependency-type: development
         update-types: [minor, patch]
+    ignore:
+      # @types/node follows the runtime (Node 24 LTS in the Dockerfile and CI),
+      # not the newest Node release.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -28,3 +33,8 @@ updates:
     schedule:
       interval: weekly
       day: sunday
+    ignore:
+      # Stay on the Node 24 LTS line; a major (25 is not LTS) is a deliberate
+      # change made together with CI's node-version and @types/node.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]

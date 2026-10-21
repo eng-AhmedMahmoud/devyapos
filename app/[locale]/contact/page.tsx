@@ -36,10 +36,10 @@ export default async function ContactPage({
   // The two WhatsApp cards are tracked apart — "message us" and "book a demo"
   // are different intents even though they open the same thread.
   const channels: { href: string; place?: string }[] = [
-    { href: whatsappLink(c.contact.waTemplate), place: "contact_channel" },
+    { href: whatsappLink(c.contact.waTemplate, "contact"), place: "contact_channel" },
     { href: telLink },
     { href: mailtoLink(c.meta.contact.title) },
-    { href: whatsappLink(c.contact.waTemplate), place: "contact_channel_demo" },
+    { href: whatsappLink(c.contact.waTemplate, "demo"), place: "contact_channel_demo" },
   ];
 
   return (
