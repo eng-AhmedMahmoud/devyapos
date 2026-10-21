@@ -3,10 +3,11 @@
 # Vercel on 2026-09-25 (and moving-landing's scripts/deploy.sh copies): a
 # `git archive` of the commit goes over SSH (the VPS has no GitHub
 # credentials), the running release is kept as a backup, and Docker Compose
-# rebuilds the container behind nginx. nginx and the certificate for
-# pos.devya.dev are already installed on the host.
+# rebuilds the container behind nginx. The nginx site is deploy/nginx.conf:
+# pos.movingsystems.tech serves the site, pos.devya.dev 301s to it.
 #
 #   bash scripts/deploy.sh                 # deploy origin/main, once its CI is green
+#   bash scripts/deploy.sh --setup         # also install deploy/nginx.conf and issue or expand the certificate
 #   bash scripts/deploy.sh --dry-run       # check CI and print the plan; change nothing
 #   bash scripts/deploy.sh --skip-ci-check # emergencies only: ship without CI's verdict
 #   bash scripts/deploy.sh --rollback      # put the newest backup back and rebuild it
@@ -21,6 +22,10 @@
 #   3. Smoke-tests it on the host: /ar and /en answer 200, /api/health
 #      answers 200 with this commit and `config: "ok"`, and POST /api/lead
 #      with malformed JSON answers 400 (the route is alive; no lead is made).
+#   With --setup, once the smoke test passes: installs deploy/nginx.conf
+#      (the previous site is kept as /root/devyapos-nginx-pre-<stamp>.conf)
+#      and has certbot issue or expand one certificate, named after the
+#      first of DOMAINS, for every name. DNS for each must point at the host.
 #   4. Prunes backups to the newest DEPLOY_KEEP_BACKUPS, writes
 #      .deployed-commit on the host and pushes an annotated tag
 #      release-<UTC yyyymmddHHMM>-<short sha> (a rollback pushes
@@ -41,7 +46,11 @@ REPO="${DEPLOY_REPO:-eng-AhmedMahmoud/devyapos}"
 APP_DIR="${DEPLOY_APP_DIR:-/home/devya/projects/devya-devyapos}"
 BACKUP_PREFIX="${DEPLOY_BACKUP_PREFIX:-/root/devyapos-pre-}"
 UPLOAD_DIR="${DEPLOY_UPLOAD_DIR:-/tmp}"
-DOMAIN="pos.devya.dev"
+# The canonical host first; certbot names the certificate after it. The rest
+# are old addresses that deploy/nginx.conf answers with a 301 to the first.
+DOMAINS=(pos.movingsystems.tech pos.devya.dev)
+DOMAIN="${DOMAINS[0]}"
+NGINX_SITE="/etc/nginx/sites-available/devya-devyapos"
 PORT=3009
 CONTAINER="devya-devyapos"
 CI_CHECK="check"
@@ -51,13 +60,15 @@ CI_CHECK="check"
 CI_APP_ID=15368
 SSH=(ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=8 "$HOST")
 
-usage() { echo "usage: $0 [--dry-run] [--skip-ci-check | --rollback]"; }
+usage() { echo "usage: $0 [--dry-run] [--setup] [--skip-ci-check | --rollback]"; }
 
 MODE="deploy"
 DRY_RUN=0
 SKIP_CI=0
+SETUP=0
 for arg in "$@"; do
   case "$arg" in
+    --setup) SETUP=1 ;;
     --rollback) MODE="rollback" ;;
     --dry-run) DRY_RUN=1 ;;
     --skip-ci-check) SKIP_CI=1 ;;
@@ -68,6 +79,7 @@ done
 
 die() { echo "✗ $*" >&2; exit 2; }
 [ "$MODE" = deploy ] || [ "$SKIP_CI" = 0 ] || die "--skip-ci-check applies to a deploy, not to --rollback"
+[ "$MODE" = deploy ] || [ "$SETUP" = 0 ] || die "--setup applies to a deploy, not to --rollback"
 # These end up inside the remote script and in rm -rf, so they are checked
 # for shape rather than trusted.
 [[ "$KEEP" =~ ^[0-9]+$ ]] || die "DEPLOY_KEEP_BACKUPS must be a whole number (0 keeps every backup)"
@@ -320,6 +332,7 @@ fi
 if [ "$DRY_RUN" = 1 ]; then
   echo "→ would deploy $REF ($SHA) to $HOST:$APP_DIR"
   echo "  RELEASE=$FULL_SHA ci=$CI_STATE; backups kept: $KEEP (0 = all) under ${BACKUP_PREFIX}*"
+  [ "$SETUP" = 0 ] || echo "  then install deploy/nginx.conf and certbot -d ${DOMAINS[*]} --cert-name $DOMAIN"
   echo "  then tag release-$(date -u +%Y%m%d%H%M)-$(git rev-parse --short=7 "$FULL_SHA")"
   exit 0
 fi
@@ -329,6 +342,7 @@ TARBALL=$(mktemp -t devyapos.XXXXXX)
 TMP_FILES+=("$TARBALL")
 git archive --format=tar.gz -o "$TARBALL" "$FULL_SHA"
 scp -q "$TARBALL" "$HOST:$UPLOAD_DIR/devyapos-$SHA.tar.gz"
+[ "$SETUP" = 0 ] || scp -q deploy/nginx.conf "$HOST:$UPLOAD_DIR/devyapos-nginx.conf"
 
 "${SSH[@]}" "bash -s" <<EOF
 set -euo pipefail
@@ -374,6 +388,20 @@ docker compose -f docker-compose.prod.yml up -d
 wait_healthy || { echo "the container is not healthy; \$rollback_hint" >&2; exit 1; }
 smoke "$FULL_SHA" || { echo "the release failed its smoke test; \$rollback_hint" >&2; exit 1; }
 
+if [ "$SETUP" = 1 ]; then
+  # The installed site carries certbot's TLS lines; keep it for a rollback.
+  [ ! -f "$NGINX_SITE" ] || cp -p "$NGINX_SITE" "/root/devyapos-nginx-pre-\$STAMP.conf"
+  mv "$UPLOAD_DIR/devyapos-nginx.conf" "$NGINX_SITE"
+  ln -sf "$NGINX_SITE" /etc/nginx/sites-enabled/devya-devyapos
+  nginx -t
+  # HTTP-01 through nginx. certbot adds the TLS listeners to both server
+  # blocks and reloads nginx.
+  certbot --nginx ${DOMAINS[*]/#/-d } --cert-name $DOMAIN \
+    --non-interactive --agree-tos --redirect --expand \
+    -m hello@devya.dev --keep-until-expiring
+  nginx -t && systemctl reload nginx
+fi
+
 prune_backups
 outbox_report
 docker image prune -f >/dev/null
@@ -381,6 +409,9 @@ EOF
 
 curl -fsS -o /dev/null -w "https://$DOMAIN/ar → %{http_code}\n" "https://$DOMAIN/ar"
 curl -fsS -o /dev/null -w "https://$DOMAIN/api/health → %{http_code}\n" "https://$DOMAIN/api/health"
+for old in "${DOMAINS[@]:1}"; do
+  curl -sS -o /dev/null -w "https://$old/ar → %{http_code} %{redirect_url}\n" "https://$old/ar" || true
+done
 if [ "$CI_STATE" = skipped ]; then
   record_release release "$FULL_SHA" "CI check: SKIPPED (--skip-ci-check)."
 else

@@ -1,7 +1,7 @@
 # Quality gates. `main` is protected by a ruleset that requires this job
 # (`check`) to pass on every pull request, and production is the Devya VPS,
 # shipped by scripts/deploy.sh — so a red check here is the last stop before a
-# broken build reaches pos.devya.dev.
+# broken build reaches pos.movingsystems.tech.
 
 name: CI
 

@@ -1,4 +1,4 @@
-# Production image for the Moving POS marketing site (pos.devya.dev), run on
+# Production image for the Moving POS marketing site (pos.movingsystems.tech), run on
 # the Devya VPS behind nginx. Moved off Vercel 2026-09-25. Near-static; the
 # one server hop is the lead form (app/api/lead). The one value it carries is
 # the accounting trial's claim URL, baked at build (see the builder stage).
