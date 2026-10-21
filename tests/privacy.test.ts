@@ -31,7 +31,7 @@ const sources = SOURCE_DIRS.flatMap((d) => files(join(root, d))).map((path) => (
 
 /** Hosts the source may name: this site, its family, and plain navigation targets. */
 const ALLOWED_HOSTS = new Set([
-  "pos.devya.dev",
+  "pos.movingsystems.tech",
   "devya.dev",
   "wa.me",
   "schema.org",

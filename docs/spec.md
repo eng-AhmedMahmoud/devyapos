@@ -18,9 +18,10 @@ future lead-form POST (`next.config.ts`). Fully static marketing content.
 
 Public marketing site for **Moving POS** (named DevyaPOS until 2026-10-18 and Drinki POS until 2026-10-19; visible name only, identifiers keep `devyapos`), the productised, sellable version of
 the BóHub POS platform — "Devya's restaurant operating system for the
-Egyptian market." Live at **https://pos.devya.dev** (Vercel project
-`devyapos`, auto-deploys `main`; domain is an `A → 76.76.21.21` record on
-Hostinger's `devya.dev` zone).
+Egyptian market." Live at **https://pos.movingsystems.tech** (Devya VPS
+behind nginx, `scripts/deploy.sh`; DNS-only `A → 72.61.81.59` on Cloudflare's
+`movingsystems.tech` zone). The address until 2026-10-22, `pos.devya.dev`,
+answers with a 301 to the same path and query there (`deploy/nginx.conf`).
 
 - **Arabic default, everyone**: `i18n/routing.ts` sets
   `defaultLocale: "ar"` and `localeDetection: false` — bare `/` always
@@ -31,9 +32,9 @@ Hostinger's `devya.dev` zone).
   A boot script (`components/ThemeToggle.tsx` → `themeBootScript`) inlined in
   `<head>` applies any stored `localStorage` choice before first paint so
   there's no flash; the toggle itself lives in the header.
-- The product is framed as a Devya Solutions product on a subdomain
-  (`pos.devya.dev`) rather than a sister brand with its own `.dev`
-  registration — see `lib/brand.ts` header comment.
+- The product lives on a subdomain of the Moving family's domain
+  (`pos.movingsystems.tech`), beside the umbrella site (`movingsystems.tech`)
+  — see `lib/brand.ts` header comment.
 - The whole site is proven against one real reference deployment: BóHub, a
   25-branch Egyptian bubble-tea chain (`brand.flagship` in `lib/brand.ts`,
   linked from `/about`). All screenshots, the promo clip, and the concrete
@@ -221,8 +222,8 @@ could legitimately attack).
 export const brand = {
   name: { ar: "موفينج POS", en: "Moving POS" },
   wordmark: { ar: ["موفينج", "POS"], en: ["Moving", "POS"] },
-  domain: "pos.devya.dev",
-  url: "https://pos.devya.dev",
+  domain: "pos.movingsystems.tech",
+  url: "https://pos.movingsystems.tech",
   email: "devya.solutions@gmail.com",
   whatsapp: "201055930032",           // E.164, no plus
   phoneDisplay: "+20 105 593 0032",

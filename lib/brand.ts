@@ -8,13 +8,14 @@
  * keep `devyapos`: storage keys, file and image paths, the container, the
  * repo, and the social handles below.
  *
- * It is named as a Devya product rather than a sister brand, so it lives on a
- * subdomain of the studio's own `devya.dev` instead of taking a new `.dev`
- * registration. Note the house rule: the company is Devya Solutions but the
- * domain is devya.dev, never devya.solutions.
+ * It lives on a subdomain of the Moving family's own domain, movingsystems.tech
+ * (pos.movingsystems.tech since 22 October 2026). The old address,
+ * pos.devya.dev, answers with a 301 to the same path and query here
+ * (deploy/nginx.conf). The studio behind it is Devya Solutions, whose domain
+ * is devya.dev, never devya.solutions.
  *
  * Moving is a product family — Moving Stores (devya-commerce) and the umbrella
- * site at moving.devya.dev (moving-landing) — and the family writes its name
+ * site at movingsystems.tech (moving-landing) — and the family writes its name
  * in Arabic on Arabic pages: موفينج ستورز, موفينج POS. "POS" stays Latin, the
  * way the term is set in Arabic technical prose.
  *
@@ -31,8 +32,8 @@ export const brand = {
     ar: ["موفينج", "POS"],
     en: ["Moving", "POS"],
   },
-  domain: "pos.devya.dev",
-  url: "https://pos.devya.dev",
+  domain: "pos.movingsystems.tech",
+  url: "https://pos.movingsystems.tech",
   email: "devya.solutions@gmail.com",
   /** E.164, no plus — used to build wa.me deep links and tel: hrefs. */
   whatsapp: "201041858781",
