@@ -7,6 +7,11 @@ import { describe, expect, it } from "vitest";
  * the component themselves (components/Cursor.tsx): nothing hides the system
  * cursor unless the custom one is on screen, copy and fields keep the I-beam,
  * and the layer never takes a click.
+ *
+ * These are source-contract tests, not behaviour tests: the `source`
+ * assertions pin lines of the component, so a faithful rewrite fails them and
+ * a broken one written the same way passes. What the cursor does in a real
+ * browser belongs to the browser journeys, not to this file.
  */
 const css = readFileSync(join(process.cwd(), "app/globals.css"), "utf8").replace(
   /\/\*[\s\S]*?\*\//g,
