@@ -1,11 +1,22 @@
 # Settings only — this is a single-package repo. pnpm reads overrides and build
-# allowances from here rather than package.json. The overrides carry the audit
-# fixes the bohub-pos workspace had for next@16's pinned postcss/sharp
-# (GHSA-6g55-p6wh-862q, GHSA-r28c-9q8g-f849, sharp <0.35.0); drop them once
-# next bumps its own pins.
+# allowances from here rather than package.json. The overrides carry audit
+# fixes for packages next@16 pins below their patched versions:
+# postcss (GHSA-6g55-p6wh-862q, GHSA-r28c-9q8g-f849), sharp <0.35.5
+# (GHSA-rgj7-g3m4-5g8c, GHSA-wq5f-xc86-pv6w) and postcss's source-map-js
+# <1.2.2 (GHSA-68fv-2mgg-jv7q). Drop each once next bumps its own pin;
+# CI's `pnpm audit --prod` says when one is needed again.
+# The last three are dev-only (eslint's minimatch and @eslint/eslintrc):
+# brace-expansion (GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7,
+# GHSA-q2hr-2g5m-vwhr) and js-yaml (GHSA-2883-xcg3-v3hh). braces <=3.0.3
+# (GHSA-vfj7-8cjw-p6xm, via @next/eslint-plugin-next) has no patched release;
+# it runs only under `pnpm lint`, never in a request path.
 overrides:
-  sharp: ^0.35.0
+  sharp: ^0.35.5
   postcss: ^8.5.18
+  source-map-js: ^1.2.2
+  brace-expansion@<1.1.21: ^1.1.21
+  brace-expansion@>=4.0.0 <5.0.12: ^5.0.12
+  js-yaml@>=4.0.0 <4.3.2: ^4.3.2
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - sharp
