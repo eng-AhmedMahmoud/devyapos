@@ -1847,7 +1847,6 @@ export const en: SiteContent = {
           title: "Cookies and browser storage",
           body: [
             "This site sets no cookies of its own — no advertising cookies, no tracking pixels, no third-party trackers.",
-            "Your light or dark theme choice is saved in your browser's local storage so the site remembers it. It stays on your device and is never sent to us.",
             "Your light or dark theme choice, and your answer to the consent banner, are the two things kept without asking. Both are a direct response to something you did, both stay on your device, and neither is sent to us.",
             "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie and it does not follow you to other websites — and like the analytics, it is not recorded at all unless you accepted.",
           ],

@@ -11,18 +11,9 @@ import { brand, brandName } from "@/lib/brand";
  * and it cannot see a product name that was renamed in one language only.
  */
 
-/**
- * Lists known to differ in length, each a bug to fix in the copy rather than a
- * licence. The English privacy policy's cookies section still carries the
- * superseded "theme choice" paragraph beside the one that replaced it (found
- * 2026-10-19, left for its own change). Delete the entry with the fix.
- */
-const KNOWN_DIVERGENCE = new Set(["legal.privacy.sections[9].body"]);
-
 /** Every leaf path with its list lengths, e.g. `faq.items[3].q`. */
 function shape(value: unknown, path = ""): string[] {
   if (Array.isArray(value)) {
-    if (KNOWN_DIVERGENCE.has(path)) return [`${path}[]`];
     return [`${path}[]=${value.length}`, ...value.flatMap((v, i) => shape(v, `${path}[${i}]`))];
   }
   if (value && typeof value === "object") {
