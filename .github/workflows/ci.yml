@@ -60,3 +60,8 @@ jobs:
           retention-days: 30
       - name: Build
         run: pnpm run build
+      # First-load JS of every prerendered page, gzipped, against the budget in
+      # scripts/check-bundle.mjs (the measured maximum plus ~10%). A page that
+      # outgrows it fails the job; the per-page table lands in the job summary.
+      - name: Bundle budget
+        run: pnpm run check:bundle
