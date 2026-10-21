@@ -27,13 +27,14 @@ export default defineConfig({
       // A ratchet. Each number is the measured coverage rounded down, so a
       // change that loses coverage fails CI. Raise them when coverage rises;
       // never lower one to get a change through. Measured 2026-10-22 with the
-      // conversion-path tests (#18): statements 78.09, branches 79.94,
-      // functions 62.6, lines 78.46. Before them: 28.44 / 19.28 / 34.78 / 30.22.
+      // conversion-path tests (#18) on top of the lead-durability work (#50):
+      // statements 80.41, branches 81.22, functions 67.4, lines 81.1. Before
+      // either: 28.44 / 19.28 / 34.78 / 30.22.
       thresholds: {
-        statements: 78,
-        branches: 79,
-        functions: 62,
-        lines: 78,
+        statements: 80,
+        branches: 81,
+        functions: 67,
+        lines: 81,
       },
     },
   },
