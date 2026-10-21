@@ -50,7 +50,7 @@ export default function FloatingActions() {
         <Arrow width={20} height={20} className="-rotate-90" />
       </button>
       <WhatsappLink
-        href={whatsappLink(c.contact.waTemplate)}
+        href={whatsappLink(c.contact.waTemplate, "float")}
         place="floating"
         className="fab fab-whatsapp"
         label={c.floating.whatsapp}

@@ -4,3 +4,12 @@ node_modules
 .env*
 !.env.example
 *.tsbuildinfo
+# Not part of the build: tests, docs, CI and deploy tooling, and the release
+# stamp scripts/deploy.sh writes on the host.
+tests
+docs
+scripts
+deploy
+.github
+.githooks
+.deployed-commit

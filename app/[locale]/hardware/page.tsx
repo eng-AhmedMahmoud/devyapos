@@ -192,6 +192,7 @@ export default async function HardwarePage({
         primary={h.cta.primary}
         secondary={h.cta.secondary}
         whatsappFirst
+        source="hardware"
       />
 
       <CtaBand />

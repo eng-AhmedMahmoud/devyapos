@@ -98,9 +98,6 @@ describe("privacy", () => {
     }
   });
 
-  it("sends a same-origin-only CSP and HSTS in production", () => {
-    const config = readFileSync(join(root, "next.config.ts"), "utf8");
-    expect(config).toMatch(/"default-src 'self'"/);
-    expect(config).toMatch(/Strict-Transport-Security/);
-  });
+  // The browser-side half — a same-origin CSP and HSTS in production — is
+  // checked against the headers Next actually sends, in tests/headers.test.ts.
 });

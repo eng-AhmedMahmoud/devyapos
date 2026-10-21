@@ -2,23 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
-
-/* Renamed with the product. A visitor who had stored a preference under
-   the old key falls back to the light default once, then re-stores under
-   this one. */
-export const THEME_KEY = "devyapos-theme";
-
-/**
- * Inlined in <head> so the stored theme is applied before first paint.
- *
- * Without this the page would render in the OS theme and then snap to the
- * stored one on hydration — a full-page flash on every navigation. Kept as a
- * string constant so the script and the component below can never drift on the
- * storage key or the attribute they agree on.
- */
-export const themeBootScript = `(function(){try{var t=localStorage.getItem(${JSON.stringify(
-  THEME_KEY,
-)});if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();`;
+// The key and the boot script live in a plain module so the server layout can
+// import the script as text — see lib/theme.ts for why that matters.
+import { THEME_KEY } from "@/lib/theme";
 
 /** Theme lives on the document element, so it is read through the store API. */
 function subscribe(onChange: () => void) {

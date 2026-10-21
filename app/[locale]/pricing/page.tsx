@@ -49,7 +49,7 @@ export default async function PricingPage({
       <MarketAnchor />
 
       <Faq />
-      <CtaBand />
+      <CtaBand source="pricing" />
     </>
   );
 }

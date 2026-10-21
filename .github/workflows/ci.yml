@@ -1,6 +1,7 @@
-# Quality gates. Deployment is Vercel's auto-deploy on main — CI only has to
-# stop a broken build from reaching it (Vercel builds anyway, but a red check
-# on the PR is earlier and cheaper than a failed production build).
+# Quality gates. `main` is protected by a ruleset that requires this job
+# (`check`) to pass on every pull request, and production is the Devya VPS,
+# shipped by scripts/deploy.sh — so a red check here is the last stop before a
+# broken build reaches pos.movingsystems.tech.
 
 name: CI
 
@@ -18,19 +19,83 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # pnpm's version comes from package.json's packageManager field — the
+      # same one corepack activates in the Dockerfile.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The lockfile the Docker image installs from. Production dependencies
+      # only: a high or critical advisory fails the build. Dev-only advisories
+      # (lint tooling) are handled by Dependabot, not by blocking merges.
+      - name: Audit
+        run: pnpm audit --prod --audit-level high
       - name: Lint
         run: pnpm run lint
       - name: Typecheck
         run: npx tsc --noEmit
+      # The whole suite, measured: below the floor in vitest.config.mts
+      # (coverage.thresholds) fails the job, so coverage can rise but not fall.
       - name: Test
-        run: pnpm test
+        run: pnpm run test:coverage
+      - name: Coverage summary
+        if: ${{ !cancelled() && hashFiles('coverage/coverage.txt') != '' }}
+        run: |
+          {
+            echo '### Coverage (app/api, lib, proxy.ts)'
+            echo '```'
+            cat coverage/coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload coverage
+        if: ${{ !cancelled() && hashFiles('coverage/coverage.txt') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            coverage/coverage.txt
+            coverage/coverage-summary.json
+          retention-days: 30
       - name: Build
         run: pnpm run build
+
+  # Browser smoke journeys (e2e/, playwright.config.ts) against a production
+  # build: home in both locales, header navigation, the lead form (its POST is
+  # intercepted, so no lead leaves the run), the consent banner's two answers,
+  # the accounting trial page, and zero console or page errors on every page —
+  # the guard against the React #418 hydration error returning. A separate job
+  # so `check` stays as fast as it was; the two run side by side.
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # It only reads the repo; artifacts need no token scope.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Playwright's own Chromium, matched to the @playwright/test version.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      # NEXT_PUBLIC_TRIAL_CLAIM_URL stays unset: the trial spec expects the
+      # closed-sign-ups state a build without it renders.
+      - name: Build
+        run: pnpm run build
+      - name: Browser journeys
+        run: pnpm e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

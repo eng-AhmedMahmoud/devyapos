@@ -84,8 +84,8 @@ describe("brand", () => {
   });
 
   it("builds wa.me links with the first line typed and encoded", () => {
-    expect(whatsappLink("أهلاً & hi")).toBe(
-      `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent("أهلاً & hi")}`,
+    expect(whatsappLink("أهلاً & hi", "float")).toBe(
+      `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent("أهلاً & hi\n\n[P-float]")}`,
     );
   });
 });
