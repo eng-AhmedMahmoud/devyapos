@@ -1,11 +1,16 @@
+import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /*
  * POST /api/consent, called as the route handler: the consent banner posts one
  * receipt per choice (GDPR Art. 7(1)). A well-formed receipt is accepted with
- * an empty 204, anything else is refused, and nothing that could identify the
- * visitor — IP, user agent, referer, cookies, or fields the client slipped in —
- * is echoed back or written down.
+ * an empty 204 and kept on the data volume, anything else is refused and kept
+ * nowhere, and nothing that could identify the visitor — IP, user agent,
+ * referer, cookies, or fields the client slipped in — is echoed back, stored or
+ * logged. tests/consent-receipt.test.ts covers the file itself (append-only,
+ * retention, owner-only, rate limit).
  */
 
 const RECEIPT = {
@@ -17,7 +22,7 @@ const RECEIPT = {
   locale: "ar",
 };
 
-/** Request headers that identify a visitor; none may reach a response or a log. */
+/** Request headers that identify a visitor; none may reach a response, the file or a log. */
 const VISITOR = {
   "x-real-ip": "203.0.113.9",
   "x-forwarded-for": "192.0.2.44, 203.0.113.9",
@@ -27,9 +32,12 @@ const VISITOR = {
 };
 
 let logs: string[];
+let dir: string;
 
 beforeEach(() => {
   vi.resetModules();
+  dir = mkdtempSync(join(tmpdir(), "consent-route-"));
+  vi.stubEnv("LEAD_OUTBOX_DIR", dir);
   logs = [];
   for (const level of ["log", "info", "warn", "error", "debug"] as const) {
     vi.spyOn(console, level).mockImplementation((...args: unknown[]) => {
@@ -40,6 +48,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
 async function post(body: unknown, raw?: string) {
@@ -54,8 +63,24 @@ async function post(body: unknown, raw?: string) {
   );
 }
 
-/** The receipts the route wrote to the log, parsed. */
-function receipts(): Record<string, unknown>[] {
+/** Everything written under the data directory, whichever file it went to. */
+function storedText(): string {
+  return readdirSync(dir)
+    .filter((name) => !name.endsWith(".tmp"))
+    .map((name) => readFileSync(join(dir, name), "utf8"))
+    .join("");
+}
+
+/** The receipts kept on the data volume, parsed. */
+function stored(): Record<string, unknown>[] {
+  return storedText()
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => JSON.parse(line) as Record<string, unknown>);
+}
+
+/** The receipt breadcrumbs the route wrote to the log, parsed. */
+function logged(): Record<string, unknown>[] {
   return logs
     .map((line) => {
       try {
@@ -72,9 +97,10 @@ describe("POST /api/consent", () => {
     const res = await post({ ...RECEIPT, action });
     expect(res.status).toBe(204);
     expect(await res.text()).toBe("");
+    expect(stored()).toHaveLength(1);
   });
 
-  it("records the choice, and only the choice", async () => {
+  it("keeps the choice, and only the choice, on the data volume and in the log", async () => {
     await post({
       ...RECEIPT,
       // Fields a client might add; none of them belongs in a receipt.
@@ -85,20 +111,22 @@ describe("POST /api/consent", () => {
       choices: { ...RECEIPT.choices, tracking: true },
     });
 
-    const [receipt] = receipts();
-    expect(receipt).toMatchObject({
+    const [receipt] = stored();
+    expect(receipt).toEqual({
       event: "consent",
       site: "pos.devya.dev",
       id: RECEIPT.id,
       at: RECEIPT.at,
+      receivedAt: expect.stringMatching(/^\d{4}-\d\d-\d\dT[\d:.]+Z$/),
       policy: RECEIPT.policy,
       action: "save",
       choices: RECEIPT.choices,
       locale: "ar",
     });
-    expect(Date.parse(String(receipt.receivedAt))).not.toBeNaN();
+    // The log line is a breadcrumb of the same record, nothing more.
+    expect(logged()).toEqual([receipt]);
 
-    const all = logs.join("\n");
+    const everywhere = `${storedText()}\n${logs.join("\n")}`;
     for (const trace of [
       ...Object.values(VISITOR),
       "203.0.113.9",
@@ -109,26 +137,41 @@ describe("POST /api/consent", () => {
       "01055930032",
       "tracking",
     ]) {
-      expect(all).not.toContain(trace);
+      expect(everywhere).not.toContain(trace);
     }
   });
 
   it("records an unknown locale as null rather than whatever was sent", async () => {
     await post({ ...RECEIPT, locale: "<script>" });
-    expect(receipts()[0].locale).toBeNull();
-    expect(logs.join("\n")).not.toContain("<script>");
+    expect(stored()[0].locale).toBeNull();
+    expect(`${storedText()}\n${logs.join("\n")}`).not.toContain("<script>");
+  });
+
+  it("still answers 204 without a data directory, and says the receipt was not stored", async () => {
+    vi.stubEnv("LEAD_OUTBOX_DIR", "");
+    const res = await post(RECEIPT);
+    // The beacon never reads the answer; an unconfigured volume is a
+    // deployment gap for the logs, not the visitor's problem.
+    expect(res.status).toBe(204);
+    expect(logs.filter((line) => /NOT STORED/.test(line))).toEqual([
+      `[consent] receipt NOT STORED id=${RECEIPT.id} error=not_configured`,
+    ]);
   });
 
   it.each([
     ["broken JSON", "{not json"],
     ["an empty body", ""],
+    ["JSON null", "null"],
+    ["a JSON number", "42"],
+    ["a JSON boolean", "true"],
     ["a JSON string", '"accept_all"'],
     ["a JSON array", "[]"],
-  ])("refuses %s with 400", async (_label, raw) => {
+  ])("refuses %s with 400, not 500", async (_label, raw) => {
     const res = await post(null, raw);
     expect(res.status).toBe(400);
     expect(await res.text()).toBe("");
-    expect(receipts()).toEqual([]);
+    expect(stored()).toEqual([]);
+    expect(logged()).toEqual([]);
   });
 
   it.each([
@@ -138,8 +181,11 @@ describe("POST /api/consent", () => {
     ["a 65-char id", { id: "a".repeat(65) }],
     ["no timestamp", { at: undefined }],
     ["a timestamp that is not a date", { at: "yesterday-ish" }],
+    ["a date without a time", { at: "2026-10-22" }],
+    ["a timestamp with free text after it", { at: "2026-10-22T09:41:00.000Z (call me)" }],
     ["no policy", { policy: undefined }],
     ["a 33-char policy", { policy: "p".repeat(33) }],
+    ["a policy with spaces", { policy: "v 1" }],
     ["an unknown action", { action: "maybe" }],
     ["no action", { action: undefined }],
     ["no choices", { choices: undefined }],
@@ -148,7 +194,8 @@ describe("POST /api/consent", () => {
   ])("refuses a receipt with %s", async (_label, patch) => {
     const res = await post({ ...RECEIPT, ...patch });
     expect(res.status).toBe(400);
-    expect(receipts()).toEqual([]);
+    expect(stored()).toEqual([]);
+    expect(logged()).toEqual([]);
   });
 
   it("refuses with 400 when the body cannot be read", async () => {
@@ -166,13 +213,13 @@ describe("POST /api/consent", () => {
       } as RequestInit & { duplex: "half" }),
     );
     expect(res.status).toBe(400);
-    expect(receipts()).toEqual([]);
+    expect(stored()).toEqual([]);
   });
 
   it("refuses a body over 2,000 characters with 413, before parsing it", async () => {
     const res = await post(null, JSON.stringify({ ...RECEIPT, pad: "x".repeat(2_000) }));
     expect(res.status).toBe(413);
-    expect(receipts()).toEqual([]);
+    expect(stored()).toEqual([]);
   });
 
   it("accepts a receipt right at the 2,000-character cap", async () => {
@@ -180,12 +227,9 @@ describe("POST /api/consent", () => {
     const raw = JSON.stringify({ ...RECEIPT, pad: "x".repeat(2_000 - base.length) });
     expect(raw).toHaveLength(2_000);
     expect((await post(null, raw)).status).toBe(204);
+    // The padding was read past, not kept.
+    expect(storedText()).not.toContain("xxxx");
   });
-
-  // `JSON.parse("null")` is null, and the route reads `body.choices` off it
-  // without a guard, so the handler throws (Next answers 500) instead of
-  // refusing with 400. Not fixed here — this track does not change app code.
-  it.todo("refuses a JSON null body with 400 rather than throwing");
 
   it("answers 405 to GET", async () => {
     const { GET } = await import("@/app/api/consent/route");
