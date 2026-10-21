@@ -259,12 +259,21 @@ latest=\$(ls -1dt ${BACKUP_PREFIX}* 2>/dev/null | head -1 || true)
 release=\$(awk '{print \$2}' "\$latest/.deployed-commit" 2>/dev/null || true)
 case "\$release" in '' | *[!0-9a-f]*) release=unknown ;; esac
 echo "rolling back to \$latest (\$release)"
+# The host's settings come from the release being replaced, never from a
+# backup: backups no longer carry them. The file is parked beside the release
+# (moved, not copied) while the directories swap, so a rollback that stops
+# halfway and is run again still finds it rather than deleting the only copy
+# with the .failed directory.
+parked="${APP_DIR}.env-rollback"
+if [ -f "$APP_DIR/.env.production.local" ]; then
+  mv -f "$APP_DIR/.env.production.local" "\$parked"
+elif [ ! -f "\$parked" ] && [ -f "${APP_DIR}.failed/.env.production.local" ]; then
+  mv "${APP_DIR}.failed/.env.production.local" "\$parked"
+fi
 rm -rf "${APP_DIR}.failed" && mv "$APP_DIR" "${APP_DIR}.failed"
 cp -a "\$latest" "$APP_DIR"
-# The host's settings come from the release being replaced, never from a
-# backup: backups no longer carry them.
-if [ -f "${APP_DIR}.failed/.env.production.local" ]; then
-  mv "${APP_DIR}.failed/.env.production.local" "$APP_DIR/.env.production.local"
+if [ -f "\$parked" ]; then
+  mv "\$parked" "$APP_DIR/.env.production.local"
 fi
 cd "$APP_DIR"
 export RELEASE="\$release"
@@ -332,8 +341,13 @@ fi
 rm -rf "$APP_DIR.next" && mkdir -p "$APP_DIR.next"
 tar -xzf "$UPLOAD_DIR/devyapos-$SHA.tar.gz" -C "$APP_DIR.next"
 rm -f "$UPLOAD_DIR/devyapos-$SHA.tar.gz"
-# Host-only settings (LEAD_FORWARD_URL, …) live beside the release, never in git.
-[ -f "$APP_DIR/.env.production.local" ] && cp -p "$APP_DIR/.env.production.local" "$APP_DIR.next/"
+# Host-only settings (LEAD_FORWARD_URL, …) live beside the release, never in
+# git; a rollback that stopped halfway leaves them parked beside it instead.
+if [ -f "$APP_DIR/.env.production.local" ]; then
+  cp -p "$APP_DIR/.env.production.local" "$APP_DIR.next/"
+elif [ -f "$APP_DIR.env-rollback" ]; then
+  mv "$APP_DIR.env-rollback" "$APP_DIR.next/.env.production.local"
+fi
 echo "\$(date -u +%Y-%m-%dT%H:%M:%SZ) $FULL_SHA ci=$CI_STATE" > "$APP_DIR.next/.deployed-commit"
 rm -rf "$APP_DIR" && mv "$APP_DIR.next" "$APP_DIR"
 

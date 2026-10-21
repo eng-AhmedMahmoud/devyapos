@@ -379,5 +379,25 @@ describe("deploy.sh release", SLOW, () => {
     expect(run.log).toContain(`build --pull RELEASE=${secondSha}`);
     const tag = remoteTags().find((t) => t.startsWith("rollback-"));
     expect(tag).toMatch(new RegExp(`^rollback-\\d{12}-${secondSha.slice(0, 7)}$`));
+    expect(existsSync(`${appDir}.env-rollback`)).toBe(false);
+  });
+
+  it("finds the env file again when a rollback is re-run after stopping halfway", () => {
+    // A rollback that died after parking the file and moving the release
+    // aside: the live directory has no settings file, .failed has none either.
+    rmSync(join(appDir, ".env.production.local"));
+    writeFileSync(`${appDir}.env-rollback`, "LEAD_FORWARD_TOKEN=parked\n");
+
+    const run = deploy(["--rollback"]);
+    expect(run.status, run.stderr + run.stdout).toBe(0);
+    expect(readFileSync(join(appDir, ".env.production.local"), "utf8")).toBe("LEAD_FORWARD_TOKEN=parked\n");
+    expect(existsSync(`${appDir}.env-rollback`)).toBe(false);
+
+    // The same goes for a deploy run after such a rollback.
+    rmSync(join(appDir, ".env.production.local"));
+    writeFileSync(`${appDir}.env-rollback`, "LEAD_FORWARD_TOKEN=parked-again\n");
+    expect(deploy(["--skip-ci-check"]).status).toBe(0);
+    expect(readFileSync(join(appDir, ".env.production.local"), "utf8")).toBe("LEAD_FORWARD_TOKEN=parked-again\n");
+    expect(existsSync(`${appDir}.env-rollback`)).toBe(false);
   });
 });
