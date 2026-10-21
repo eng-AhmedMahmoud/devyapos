@@ -5,9 +5,13 @@
  * never disagree: the client uses these functions for inline validation, the
  * server re-runs them because a client check is a courtesy, not a control.
  *
- * Deliberately dependency-free and free of Node built-ins — this module has to
- * import cleanly inside a client component and inside the nodejs runtime.
+ * Deliberately free of packages and Node built-ins (lib/format and lib/phone
+ * are the same) — this module has to import cleanly inside a client component
+ * and inside the nodejs runtime.
  */
+
+import { foldDigits } from "@/lib/format";
+import { normalisePhone } from "@/lib/phone";
 
 /** Caps, not opinions: enough room for a real answer, not enough for a payload. */
 export const LEAD_LIMITS = {
@@ -89,21 +93,7 @@ export const UTM_KEYS = [
 ] as const;
 
 /**
- * Arabic-Indic and Eastern Arabic-Indic digits → ASCII.
- *
- * An Arabic keyboard on an Egyptian phone types ٠١٠٥٥…, and a phone number
- * typed that way is a real number, not a typo. Normalise before validating.
- */
-export function toAsciiDigits(input: string): string {
-  return input.replace(/[٠-٩۰-۹]/g, (d) => {
-    const code = d.charCodeAt(0);
-    const base = code >= 0x06f0 ? 0x06f0 : 0x0660;
-    return String(code - base);
-  });
-}
-
-/**
- * Egyptian mobile → E.164.
+ * Egyptian mobile → E.164, by the lead rule (lib/phone.ts).
  *
  * Accepts the four shapes people actually type: `01xxxxxxxxx`, `+201xxxxxxxxx`,
  * `0020 1xx…`, and the bare `1xxxxxxxxx`. Separators, Arabic digits and a
@@ -112,13 +102,7 @@ export function toAsciiDigits(input: string): string {
  * follow-up on every one of these leads happens over WhatsApp.
  */
 export function normalizeEgyptMobile(raw: string): string | null {
-  let digits = toAsciiDigits(raw).replace(/[^\d+]/g, "");
-  if (digits.startsWith("+")) digits = digits.slice(1);
-  if (digits.startsWith("00")) digits = digits.slice(2);
-  if (digits.startsWith("20")) digits = digits.slice(2);
-  else if (digits.startsWith("0")) digits = digits.slice(1);
-  // Whatever remains must be the national number: 1, an operator digit, 8 more.
-  return /^1[0125]\d{8}$/.test(digits) ? `+20${digits}` : null;
+  return normalisePhone(raw, "EG", { mobileOnly: true, lenient: true });
 }
 
 /**
@@ -175,7 +159,7 @@ export function validateLead(
       ? String(input.branches)
       : asText(input.branches ?? "");
   if (rawBranches) {
-    const parsed = Number(toAsciiDigits(rawBranches));
+    const parsed = Number(foldDigits(rawBranches));
     if (
       !Number.isInteger(parsed) ||
       parsed < 1 ||

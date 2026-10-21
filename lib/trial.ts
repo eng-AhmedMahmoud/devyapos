@@ -9,11 +9,14 @@
  * this site's origin by CORS and takes JSON only.
  *
  * Validation runs here for the inline hints and again in the store, which is
- * the one that decides. The phone and email rules below are a copy of the
- * store's (bohub-pos `ops-store/src/trial/validate.ts`) — keep them in step;
- * a mismatch only ever shows a hint the store disagrees with, never a sign-up
- * the store would refuse silently.
+ * the one that decides. The email rule below and the phone rule (lib/phone.ts,
+ * `normalisePhone` with no options) are a copy of the store's (bohub-pos
+ * `ops-store/src/trial/validate.ts`) — keep them in step; a mismatch only ever
+ * shows a hint the store disagrees with, never a sign-up the store would
+ * refuse silently.
  */
+
+import { normalisePhone } from "@/lib/phone";
 
 export const TRIAL_COUNTRIES = ["EG", "SA"] as const;
 export type TrialCountry = (typeof TRIAL_COUNTRIES)[number];
@@ -48,48 +51,7 @@ export const TRIAL_HONEYPOT = "website";
 export const TRIAL_CLAIM_URL: string | null =
   process.env.NEXT_PUBLIC_TRIAL_CLAIM_URL?.trim() || null;
 
-// U+0660–U+0669 (Arabic-Indic) and U+06F0–U+06F9 (Extended).
-const ARABIC_DIGITS = /[٠-٩۰-۹]/g;
-
-export function foldDigits(value: string): string {
-  return value.replace(ARABIC_DIGITS, (ch) => {
-    const code = ch.charCodeAt(0);
-    return String(code >= 0x06f0 ? code - 0x06f0 : code - 0x0660);
-  });
-}
-
 const EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[^\s@.]{2,}$/;
-
-/**
- * A phone typed for `country`, as E.164 — or null. Shape only, never the
- * block: EG a mobile `1` + 9 digits or a landline `2`–`9` + 7–8; SA a mobile
- * `5` + 8 or a landline `1` + 8. International, `00`, national `0` and bare
- * forms are all accepted, with spaces, dashes, dots and brackets.
- */
-export function normalisePhone(raw: string, country: TrialCountry): string | null {
-  const folded = foldDigits(raw.trim());
-  if (!/^\+?[\d\s().\-‎‏]+$/.test(folded)) return null;
-  let digits = folded.replace(/[^\d+]/g, "");
-  const plus = digits.startsWith("+");
-  digits = digits.replace(/\+/g, "");
-
-  const cc = country === "EG" ? "20" : "966";
-  let national: string;
-  if (plus) {
-    if (!digits.startsWith(cc)) return null;
-    national = digits.slice(cc.length);
-  } else if (digits.startsWith(`00${cc}`)) {
-    national = digits.slice(cc.length + 2);
-  } else if (digits.startsWith("0")) {
-    national = digits.slice(1);
-  } else if (digits.startsWith(cc) && digits.length > (country === "EG" ? 11 : 10)) {
-    national = digits.slice(cc.length);
-  } else {
-    national = digits;
-  }
-  const shape = country === "EG" ? /^(1\d{9}|[2-9]\d{7,8})$/ : /^(5\d{8}|1\d{8})$/;
-  return shape.test(national) ? `+${cc}${national}` : null;
-}
 
 function text(value: string, limits: { min: number; max: number }): TrialFieldError | null {
   const v = value.replace(/\s+/g, " ").trim();
