@@ -18,6 +18,7 @@ import {
   type TrialField,
   type TrialValues,
 } from "@/lib/trial";
+import Field from "./form/Field";
 import { Arrow, Check, Whatsapp } from "./icons";
 
 /**
@@ -486,45 +487,5 @@ function OutcomeCard({ outcome, inline = false }: { outcome: Outcome; inline?: b
         {o.whatsapp}
       </a>
     </div>
-  );
-}
-
-/** One labelled input with its error tied to it — the contact form's shape. */
-function Field({
-  id,
-  errorId: describedBy,
-  label,
-  error,
-  value,
-  onValue,
-  ...props
-}: {
-  id: string;
-  errorId: string;
-  label: string;
-  error?: string;
-  value: string;
-  onValue: (value: string) => void;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "id">) {
-  return (
-    <label className="flex flex-col gap-1.5" htmlFor={id}>
-      <span className="text-sm font-medium text-ink-2">{label}</span>
-      <input
-        {...props}
-        id={id}
-        value={value}
-        onChange={(e) => onValue(e.target.value)}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? describedBy : undefined}
-        className={`rounded-xl border bg-surface-2 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-caramel disabled:opacity-60 ${
-          error ? "border-danger" : "border-line"
-        }`}
-      />
-      {error ? (
-        <span id={describedBy} className="text-xs text-danger">
-          {error}
-        </span>
-      ) : null}
-    </label>
   );
 }

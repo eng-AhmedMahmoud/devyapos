@@ -13,6 +13,7 @@ import {
   type LeadErrors,
   type LeadField,
 } from "@/lib/leads";
+import Field from "./form/Field";
 import { Whatsapp } from "./icons";
 
 /**
@@ -416,54 +417,5 @@ export default function ContactForm() {
         </Link>
       </p>
     </form>
-  );
-}
-
-/**
- * One labelled input, with its error wired to the label through
- * `aria-describedby` so the message is announced with the field rather than
- * floating free.
- */
-function Field({
-  id,
-  errorId: describedBy,
-  label,
-  hint,
-  error,
-  value,
-  onValue,
-  ...props
-}: {
-  id: string;
-  errorId: string;
-  label: string;
-  hint?: string;
-  error?: string;
-  value: string;
-  onValue: (value: string) => void;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "id">) {
-  return (
-    <label className="flex flex-col gap-1.5" htmlFor={id}>
-      <span className="flex items-baseline gap-2">
-        <span className="text-sm font-medium text-ink-2">{label}</span>
-        {hint ? <span className="text-xs text-ink-dim">({hint})</span> : null}
-      </span>
-      <input
-        {...props}
-        id={id}
-        value={value}
-        onChange={(e) => onValue(e.target.value)}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? describedBy : undefined}
-        className={`rounded-xl border bg-surface-2 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-caramel disabled:opacity-60 ${
-          error ? "border-danger" : "border-line"
-        }`}
-      />
-      {error ? (
-        <span id={describedBy} className="text-xs text-danger">
-          {error}
-        </span>
-      ) : null}
-    </label>
   );
 }

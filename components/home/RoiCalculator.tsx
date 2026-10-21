@@ -77,7 +77,7 @@ export default function RoiCalculator() {
           <div className="mt-12 grid gap-5 lg:grid-cols-[1fr_1fr]">
             {/* Inputs */}
             <div className="card flex flex-col gap-7 p-6 sm:p-8">
-              <Field
+              <Slider
                 label={c.roi.fields.orders}
                 tip={c.roi.tips.orders}
                 hint={c.roi.hints.orders}
@@ -88,7 +88,7 @@ export default function RoiCalculator() {
                 step={50}
                 locale={locale}
               />
-              <Field
+              <Slider
                 label={c.roi.fields.aov}
                 tip={c.roi.tips.aov}
                 hint={c.roi.hints.aov}
@@ -99,7 +99,7 @@ export default function RoiCalculator() {
                 step={10}
                 locale={locale}
               />
-              <Field
+              <Slider
                 label={c.roi.fields.branches}
                 tip={c.roi.tips.branches}
                 hint={c.roi.hints.branches}
@@ -218,7 +218,12 @@ export default function RoiCalculator() {
   );
 }
 
-function Field({
+/**
+ * One labelled range input with its value read out beside the label. Not the
+ * forms' text `Field` (components/form/Field.tsx): a slider has no error to
+ * wire and shows its value as it moves.
+ */
+function Slider({
   label,
   tip,
   hint,
