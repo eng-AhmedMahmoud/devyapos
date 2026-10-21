@@ -2,12 +2,13 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { getRewrittenUrl, unstable_getResponseFromNextConfig } from "next/experimental/testing/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { brand } from "@/lib/brand";
 
 /*
  * How the site is built, served and run in production: next.config's
- * headers and (absent) rewrites, the standalone Docker image and its
+ * (absent) rewrites and standalone output, the Docker image and its
  * healthcheck, security.txt, the error boundaries and the server-error log
  * line. scripts/deploy.sh has its own file (tests/deploy.test.ts).
  */
@@ -24,38 +25,29 @@ afterEach(() => {
   vi.resetModules();
 });
 
-describe("next.config", () => {
+// The first import of next.config.ts loads next-intl's plugin, which is slow
+// under coverage; tests/headers.test.ts gives it the same headroom and covers
+// the security headers themselves.
+describe("next.config", { timeout: 20_000 }, () => {
   async function config() {
     return (await import("@/next.config")).default;
   }
 
-  it("has no /api rewrite, so an unknown /api path is a 404 and not a proxied 500", async () => {
+  it("proxies no /api path, so an unknown one is a 404 and not a proxied 500", async () => {
+    // Even with the old variable set, nothing routes to it any more.
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("API_URL", "http://localhost:3001");
     const c = await config();
     expect(c.rewrites).toBeUndefined();
+    for (const path of ["/api/health", "/api/does-not-exist", "/api/lead", "/api/v1/anything"]) {
+      const res = await unstable_getResponseFromNextConfig({ url: `https://pos.devya.dev${path}`, nextConfig: c });
+      expect(getRewrittenUrl(res), path).toBeNull();
+    }
     expect(read(".env.example")).not.toMatch(/API_URL/);
   });
 
   it("builds the standalone server the Docker image runs", async () => {
     expect((await config()).output).toBe("standalone");
-  });
-
-  it("still sends the security headers, with CSP and HSTS in production", async () => {
-    vi.stubEnv("NODE_ENV", "production");
-    const c = await config();
-    const [rule] = await c.headers!();
-    expect(rule.source).toBe("/:path*");
-    const keys = rule.headers.map((h) => h.key);
-    for (const key of [
-      "X-Content-Type-Options",
-      "Referrer-Policy",
-      "X-Frame-Options",
-      "Permissions-Policy",
-      "Content-Security-Policy",
-      "Strict-Transport-Security",
-    ]) {
-      expect(keys).toContain(key);
-    }
-    expect(c.poweredByHeader).toBe(false);
   });
 });
 
