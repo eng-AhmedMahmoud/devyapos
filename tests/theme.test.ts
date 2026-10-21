@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { THEME_KEY, themeBootScript } from "@/components/ThemeToggle";
+import { THEME_KEY, themeBootScript } from "@/lib/theme";
 
 /**
  * The site opens light for a visitor with no stored choice, whatever the OS
