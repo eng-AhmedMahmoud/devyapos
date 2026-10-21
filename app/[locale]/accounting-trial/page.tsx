@@ -59,7 +59,7 @@ export default async function AccountingTrialPage({
         <Container>
           <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
             <Reveal className="min-w-0">
-              <TrialForm />
+              <TrialForm copy={{ form: t.form, result: t.result, outcomes: t.outcomes }} />
             </Reveal>
 
             <Reveal delay={100} className="flex min-w-0 flex-col gap-6">
@@ -106,7 +106,12 @@ export default async function AccountingTrialPage({
         </Container>
       </section>
 
-      <AccountingPricing formId={FORM_ID} />
+      <AccountingPricing
+        formId={FORM_ID}
+        copy={t.pricing}
+        countries={t.form.countries}
+        whatsapp={t.outcomes.whatsapp}
+      />
 
       {/* Plain background, so the cream plans band above keeps its edges. */}
       <PageFaq title={t.faq.title} items={t.faq.items} band="bg-bg" />

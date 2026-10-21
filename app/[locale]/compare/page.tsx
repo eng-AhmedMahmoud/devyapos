@@ -35,13 +35,13 @@ export default async function ComparePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  getContent(locale);
+  const c = getContent(locale);
 
   return (
     <>
       <JsonLd data={pageJsonLd(locale, "/compare")} />
       <Compare />
-      <RoiCalculator />
+      <RoiCalculator copy={c.roi} currency={c.pricing.currency} />
       <CtaBand />
     </>
   );

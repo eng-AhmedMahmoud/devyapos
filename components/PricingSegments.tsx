@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Check } from "./icons";
 import Reveal from "./Reveal";
 import { Container, SectionHead } from "./Section";
@@ -24,10 +23,12 @@ import { Container, SectionHead } from "./Section";
  * reader who has just finished the company story does not need to re-qualify
  * themselves before seeing the plans.
  */
-export default function PricingSegments() {
-  const locale = useLocale();
-  const c = getContent(locale);
-  const s = c.pricing.segments;
+export default function PricingSegments({
+  copy: s,
+}: {
+  /** `pricing.segments`, passed down by the server page. */
+  copy: SiteContent["pricing"]["segments"];
+}) {
   const [activeId, setActiveId] = useState(s.items[0].id);
   const active = s.items.find((i) => i.id === activeId) ?? s.items[0];
 

@@ -55,7 +55,9 @@ export default async function ContactPage({
         <Container>
           <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
             <Reveal>
-              <ContactForm />
+              <ContactForm
+                copy={{ badge: c.contact.badge, form: c.contact.form, waTemplate: c.contact.waTemplate }}
+              />
             </Reveal>
 
             <Reveal delay={100}>

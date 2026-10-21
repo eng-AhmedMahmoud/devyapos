@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Arrow, Close, Menu } from "./icons";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
@@ -22,12 +22,15 @@ function isScrolled() {
  * Sticky glass header — translucent at rest, then a hairline border and a soft
  * shadow once the page scrolls. Sticky rather than fixed so the hero does not
  * need to reserve height for it.
+ *
+ * `nav` comes from the layout (a server component): this is on every page, so
+ * reading the content module here put both locales' whole copy in the shared
+ * client chunk.
  */
-export default function Header() {
+export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" | "cta"> }) {
   const locale = useLocale();
   const t = useTranslations("a11y");
   const pathname = usePathname();
-  const c = getContent(locale);
 
   const [open, setOpen] = useState(false);
 
@@ -61,7 +64,7 @@ export default function Header() {
           {/* Numbered, as Moving Stores' bar is: the index is decoration, the
               label is the link's name. */}
           <nav className="hidden items-center gap-6 md:flex">
-            {c.nav.links.map((l, i) => (
+            {nav.links.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
@@ -100,7 +103,7 @@ export default function Header() {
                 href="/contact"
                 className="btn btn-primary btn-sm max-sm:whitespace-nowrap max-sm:!px-3"
               >
-                {c.nav.cta}
+                {nav.cta}
                 <Arrow width={16} height={16} className="flip-rtl hidden sm:block" />
               </Link>
             </span>
@@ -142,7 +145,7 @@ export default function Header() {
           </button>
         </div>
         <nav className="flex flex-col gap-1 p-4">
-          {c.nav.links.map((l, i) => (
+          {nav.links.map((l, i) => (
             <Link
               key={l.href}
               href={l.href}
@@ -171,7 +174,7 @@ export default function Header() {
             tabIndex={open ? 0 : -1}
             className="btn btn-primary mt-3"
           >
-            {c.nav.cta}
+            {nav.cta}
             <Arrow width={16} height={16} className="flip-rtl" />
           </Link>
         </nav>

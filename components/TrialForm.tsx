@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/analytics";
 import { whatsappLink } from "@/lib/brand";
@@ -32,15 +32,19 @@ import { Arrow, Check, Whatsapp } from "./icons";
  * WhatsApp.
  */
 
+/**
+ * The copy this form reads, passed down by its page (a server component) so the
+ * browser receives one locale's strings, not both content trees.
+ */
+export type TrialFormCopy = Pick<SiteContent["accountingTrial"], "form" | "result" | "outcomes">;
+
 const FIELD_ORDER: TrialField[] = ["name", "company", "email", "phone", "country"];
 
 type Outcome = Exclude<ClaimResult, { kind: "claimed" } | { kind: "invalid" }>;
 
-export default function TrialForm() {
+export default function TrialForm({ copy }: { copy: TrialFormCopy }) {
   const locale = useLocale();
-  const c = getContent(locale);
-  const tr = c.accountingTrial;
-  const f = tr.form;
+  const f = copy.form;
 
   const [values, setValues] = useState<TrialValues>({
     name: "",
@@ -123,11 +127,11 @@ export default function TrialForm() {
   }
 
   if (claimed) {
-    return <ClaimedCard result={claimed} country={values.country} />;
+    return <ClaimedCard result={claimed} country={values.country} copy={copy.result} />;
   }
 
   if (!TRIAL_CLAIM_URL) {
-    return <OutcomeCard outcome={{ kind: "closed" }} />;
+    return <OutcomeCard outcome={{ kind: "closed" }} copy={copy.outcomes} />;
   }
 
   const listed = FIELD_ORDER.filter((key) => errors[key]);
@@ -160,7 +164,7 @@ export default function TrialForm() {
             </ul>
           </div>
         ) : outcome ? (
-          <OutcomeCard outcome={outcome} inline />
+          <OutcomeCard outcome={outcome} copy={copy.outcomes} inline />
         ) : null}
       </div>
 
@@ -291,12 +295,13 @@ export default function TrialForm() {
 function ClaimedCard({
   result,
   country,
+  copy: r,
 }: {
   result: Extract<ClaimResult, { kind: "claimed" }>;
   country: TrialCountry;
+  copy: TrialFormCopy["result"];
 }) {
   const locale = useLocale();
-  const r = getContent(locale).accountingTrial.result;
   const [tokenCopied, setTokenCopied] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -452,9 +457,16 @@ function CopyValue({
   );
 }
 
-function OutcomeCard({ outcome, inline = false }: { outcome: Outcome; inline?: boolean }) {
+function OutcomeCard({
+  outcome,
+  copy: o,
+  inline = false,
+}: {
+  outcome: Outcome;
+  copy: TrialFormCopy["outcomes"];
+  inline?: boolean;
+}) {
   const locale = useLocale();
-  const o = getContent(locale).accountingTrial.outcomes;
   const copy: Record<Outcome["kind"], { title: string; body: string }> = {
     pool_empty: { title: o.poolEmptyTitle, body: o.poolEmptyBody },
     already_has_trial: { title: o.alreadyTitle, body: o.alreadyBody },

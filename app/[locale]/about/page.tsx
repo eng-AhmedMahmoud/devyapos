@@ -153,7 +153,7 @@ export default async function AboutPage({
           />
         </Container>
         <div className="mt-8">
-          <Pricing compact />
+          <Pricing copy={c.pricing} compact />
         </div>
         <Container>
           <Reveal delay={120}>

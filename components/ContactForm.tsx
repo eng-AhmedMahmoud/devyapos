@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { captureFirstTouch, readAttribution, track } from "@/lib/analytics";
 import { brand, whatsappLink } from "@/lib/brand";
@@ -30,6 +30,12 @@ import { Whatsapp } from "./icons";
  * cannot drift apart.
  */
 
+/**
+ * The copy this form reads, passed down by its page (a server component) so the
+ * browser receives one locale's strings, not both content trees.
+ */
+export type ContactFormCopy = Pick<SiteContent["contact"], "badge" | "form" | "waTemplate">;
+
 type Values = Record<"name" | "restaurant" | "branches" | "phone" | "message", string>;
 
 const EMPTY: Values = {
@@ -51,10 +57,9 @@ const FIELD_ORDER: LeadField[] = [
   "message",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
   const locale = useLocale();
-  const c = getContent(locale);
-  const f = c.contact.form;
+  const f = copy.form;
   // Status and field-error copy used to be hardcoded here in both locales
   // because the form gained a backend before the copy existed. It lives in the
   // content tree now, keyed the same way, so a translator changes it in one
@@ -102,7 +107,7 @@ export default function ContactForm() {
   /** The filled form as plain text — the WhatsApp and email routes share it. */
   function compose() {
     return [
-      c.contact.waTemplate,
+      copy.waTemplate,
       "",
       `${f.name}: ${values.name}`,
       `${f.restaurant}: ${values.restaurant}`,
@@ -196,7 +201,7 @@ export default function ContactForm() {
     const form = e.currentTarget.form;
     if (form && !form.reportValidity()) return;
     track("email_click", { locale, place: "contact_form" });
-    const subject = `${c.contact.badge} — ${values.restaurant || values.name}`;
+    const subject = `${copy.badge} — ${values.restaurant || values.name}`;
     window.location.href = `mailto:${brand.email}?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(compose())}`;
