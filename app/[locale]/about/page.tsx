@@ -9,6 +9,7 @@ import CtaBand from "@/components/CtaBand";
 import { Arrow, Icon } from "@/components/icons";
 import JsonLd from "@/components/JsonLd";
 import PageHero from "@/components/PageHero";
+import ParentCompany from "@/components/ParentCompany";
 import Pricing from "@/components/Pricing";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
@@ -184,6 +185,12 @@ export default async function AboutPage({
                 </h2>
                 <p className="mt-4 max-w-xl leading-relaxed text-on-espresso-dim">
                   {a.builtByBody}
+                </p>
+                <p className="mt-3 max-w-xl leading-relaxed text-on-espresso-dim">
+                  <ParentCompany
+                    sentence={c.parentCompany.notice}
+                    className="font-bold text-on-espresso underline underline-offset-4 transition-colors hover:text-gold"
+                  />
                 </p>
                 <a
                   href={brand.parent.url}
