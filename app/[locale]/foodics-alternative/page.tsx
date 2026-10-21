@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getContent } from "@/content";
+import { formatDate } from "@/lib/format";
 import { pageJsonLd } from "@/lib/jsonld";
 import { buildMetadata } from "@/lib/meta";
 import CtaBand from "@/components/CtaBand";
@@ -25,8 +26,10 @@ export async function generateMetadata({
  * The named comparison.
  *
  * `disclaimer` sits directly under the hero and `facts.source` directly under
- * the rows: the figures are someone else's published prices, and the two lines
- * that date and hedge them travel with them or the table stops being honest.
+ * the rows: the figures are our own dated record of someone else's prices —
+ * Foodics does not publish them — and the two lines that date and hedge them
+ * travel with them or the table stops being honest. The date is rendered from
+ * `facts.retrievedAt`, which a test keeps under 90 days old.
  *
  * `pickThem` and `pickUs` are rendered identically — same band weight, same
  * card, same heading scale. A "reasons to buy the competitor" section styled
@@ -41,6 +44,7 @@ export default async function FoodicsAlternativePage({
   setRequestLocale(locale);
   const c = getContent(locale);
   const f = c.foodicsAlternative;
+  const date = formatDate(locale, f.facts.retrievedAt);
 
   return (
     <>
@@ -53,7 +57,7 @@ export default async function FoodicsAlternativePage({
         <Container>
           <Reveal>
             <p className="card-flat max-w-3xl p-5 text-xs leading-relaxed text-ink-dim">
-              {f.disclaimer}
+              {f.disclaimer.replace("{date}", date)}
             </p>
           </Reveal>
         </Container>
@@ -98,7 +102,10 @@ export default async function FoodicsAlternativePage({
           anchor — one comparison language across the site. */}
       <section className="band-cream py-16 sm:py-20">
         <Container>
-          <SectionHead title={f.facts.title} sub={f.facts.sub} />
+          <SectionHead
+            title={f.facts.title}
+            sub={f.facts.sub.replace("{date}", date)}
+          />
           <Reveal delay={90}>
             <ul className="mt-9 flex flex-col gap-3">
               {f.facts.rows.map((row) => (
@@ -138,7 +145,7 @@ export default async function FoodicsAlternativePage({
           </Reveal>
           <Reveal delay={140}>
             <p className="mt-5 max-w-3xl text-xs leading-relaxed text-ink-dim">
-              {f.facts.source}
+              {f.facts.source.replace("{date}", date)}
             </p>
           </Reveal>
         </Container>
@@ -193,6 +200,7 @@ export default async function FoodicsAlternativePage({
         primary={f.cta.primary}
         secondary={f.cta.secondary}
         note={f.cta.note}
+        source="foodics"
       />
 
       <CtaBand />

@@ -86,7 +86,7 @@ export default async function HomeContact() {
             <ul className="mt-8 flex flex-col border-t border-line">
               <li className="border-b border-line">
                 <WhatsappLink
-                  href={whatsappLink(c.contact.waTemplate)}
+                  href={whatsappLink(c.contact.waTemplate, "home")}
                   place="home_contact"
                   className={row}
                 >

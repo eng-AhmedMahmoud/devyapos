@@ -183,7 +183,7 @@ export default function ContactForm() {
   /** Secondary route: hand the filled form to WhatsApp. */
   function onWhatsapp() {
     track("whatsapp_click", { locale, place: "contact_form" });
-    window.open(whatsappLink(compose()), "_blank", "noopener,noreferrer");
+    window.open(whatsappLink(compose(), "form"), "_blank", "noopener,noreferrer");
   }
 
   /**

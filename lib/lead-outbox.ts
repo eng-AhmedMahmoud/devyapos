@@ -1,5 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { createJsonlSink, type SinkEntry, type SinkResult } from "@/lib/jsonl-sink";
 
 /**
  * The durable sink for a lead that could not be forwarded.
@@ -7,71 +6,37 @@ import { join } from "node:path";
  * It replaces the old last resort — the whole lead (name, phone, message) on
  * an error-level log line — which put personal data in logs and was not
  * durable either: on the VPS, `docker compose up --build` recreates the
- * container and its logs go with it. Now the lead goes to an append-only
- * JSON-lines file on a Docker volume (`LEAD_OUTBOX_DIR`, `/data` in
+ * container and its logs go with it. Now the lead goes to the append-only
+ * `leads-outbox.jsonl` on the data volume (`LEAD_OUTBOX_DIR`, `/data` in
  * production — docker-compose.prod.yml), owner-only (0600), and the log line
- * carries the lead's id and nothing else.
+ * carries the lead's id and nothing else. lib/jsonl-sink.ts says what the file
+ * guarantees.
  *
- * Retention: every write drops entries older than `LEAD_OUTBOX_RETENTION_DAYS`
- * (default 365 — the twelve months the privacy policy promises). Recover leads
- * with `docker exec devya-devyapos cat /data/leads-outbox.jsonl`; the README
- * says how.
+ * Retention: entries older than `LEAD_OUTBOX_RETENTION_DAYS` (default 365 —
+ * the twelve months the privacy policy promises) are dropped by the first
+ * write after a start and then at most daily. `scripts/leads.sh status`
+ * counts what is waiting and `scripts/leads.sh pull <dir>` copies it off the
+ * box; neither prints or removes a lead on the server.
  */
 
-const FILE = "leads-outbox.jsonl";
-const DAY_MS = 86_400_000;
+const outbox = createJsonlSink({
+  file: "leads-outbox.jsonl",
+  retentionEnv: "LEAD_OUTBOX_RETENTION_DAYS",
+  defaultRetentionDays: 365,
+  // A lead is at most a few kilobytes: this is thousands of leads, and a
+  // ceiling on what a flood of submissions can take of a shared disk.
+  maxBytes: 32 * 1024 * 1024,
+});
 
-/** Writes run one at a time: read-prune-rewrite must not interleave. */
-let queue: Promise<unknown> = Promise.resolve();
-
-export function outboxConfigured(): boolean {
-  return Boolean(process.env.LEAD_OUTBOX_DIR);
+export function keepInOutbox(entry: SinkEntry & { id: string }): Promise<SinkResult> {
+  return outbox.append(entry);
 }
 
-export function keepInOutbox(entry: { id: string; receivedAt: string }): Promise<boolean> {
-  const run = queue.then(() => write(entry));
-  queue = run.catch(() => undefined);
-  return run;
-}
-
-async function write(entry: { id: string; receivedAt: string }): Promise<boolean> {
-  const dir = process.env.LEAD_OUTBOX_DIR;
-  if (!dir) return false;
-  const retentionDays = Number(process.env.LEAD_OUTBOX_RETENTION_DAYS) || 365;
+/** How many leads the outbox holds, for the log line; null when it cannot be read. */
+export async function outboxPending(): Promise<number | null> {
   try {
-    await mkdir(dir, { recursive: true, mode: 0o700 });
-    const path = join(dir, FILE);
-    const kept = pruned(await readOrEmpty(path), Date.now() - retentionDays * DAY_MS);
-    const tmp = `${path}.${process.pid}.tmp`;
-    await writeFile(tmp, kept + JSON.stringify(entry) + "\n", { mode: 0o600 });
-    await rename(tmp, path);
-    return true;
+    return (await outbox.status())?.entries ?? null;
   } catch {
-    return false;
+    return null;
   }
-}
-
-async function readOrEmpty(path: string): Promise<string> {
-  try {
-    return await readFile(path, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** Lines received at or after `cutoff`; an unreadable line is kept, not lost. */
-export function pruned(text: string, cutoff: number): string {
-  return text
-    .split("\n")
-    .filter(Boolean)
-    .filter((line) => {
-      try {
-        const at = Date.parse((JSON.parse(line) as { receivedAt?: string }).receivedAt ?? "");
-        return !Number.isFinite(at) || at >= cutoff;
-      } catch {
-        return true;
-      }
-    })
-    .map((line) => `${line}\n`)
-    .join("");
 }

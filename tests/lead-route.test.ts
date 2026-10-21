@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
@@ -11,14 +11,20 @@ import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vite
  * appeared, what reached the logs — so they hold however the route is
  * arranged inside.
  *
- * The module is re-imported for every test: the rate limiter and the forward
- * timeout are module state, read once at import.
+ * It covers validation and the rate limit (X-Ray QEN-F1, AIN-F5) and the
+ * delivery paths: the versioned forward contract, a 4xx that is final, a
+ * transient failure retried once, and the one loud, PII-free log line every
+ * unforwarded lead must produce (ARC-F6, REQ-F5, ARC-F1, AIN-F9).
+ *
+ * The module is re-imported for every test: the rate limiter, the outbox's
+ * write queue and the forward timeout are module state, read once at import.
  */
 
 const FORWARD_URL = "https://crm.example.test/hooks/lead";
 const BEARER = "t3-bearer";
 const IP = "203.0.113.7";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const asRoot = process.getuid?.() === 0;
 
 /** A lead as the browser posts it: Egyptian mobile typed with spaces, extra attribution junk. */
 const LEAD = {
@@ -37,10 +43,50 @@ const LEAD = {
   company: "",
 };
 
+/** What of LEAD (and of the request around it) must never reach a log line. */
+const PII = [
+  "Ahmed",
+  "Mahmoud",
+  "Koshary",
+  "1055930032",
+  "0105 593 0032",
+  "three branches",
+  "T3 test",
+  "/en/contact",
+  IP,
+];
+
 type Fetch = Mock<(input: string | URL | Request, init?: RequestInit) => Promise<Response>>;
+type Level = "log" | "info" | "warn" | "error" | "debug";
 
 let fetchMock: Fetch;
-let logs: string[];
+let logged: { level: Level; args: unknown[] }[];
+
+/** Everything the route logged, one line per call. */
+function logText(): string {
+  return logged
+    .map(({ args }) => args.map((a) => (typeof a === "string" ? a : JSON.stringify(a))).join(" "))
+    .join("\n");
+}
+
+function errorCalls() {
+  return logged.filter((entry) => entry.level === "error");
+}
+
+/**
+ * The single error line an unforwarded lead produces: one call, one argument,
+ * one line, `key=value` fields — and nothing of the lead itself.
+ */
+function loudLine() {
+  const calls = errorCalls();
+  expect(calls).toHaveLength(1);
+  expect(calls[0].args).toHaveLength(1);
+  const message = String(calls[0].args[0]);
+  expect(message).not.toContain("\n");
+  for (const value of PII) expect(message).not.toContain(value);
+  const fields = Object.fromEntries([...message.matchAll(/(\w+)=(\S+)/g)].map(([, k, v]) => [k, v]));
+  return { message, fields };
+}
 
 beforeEach(() => {
   vi.resetModules();
@@ -51,12 +97,12 @@ beforeEach(() => {
   fetchMock = vi.fn(async () => new Response(null, { status: 202 }));
   vi.stubGlobal("fetch", fetchMock);
 
-  // Everything the route logs, as one string per call, for the "no lead in
-  // the logs" checks. Silenced so the run stays readable.
-  logs = [];
+  // Everything the route logs, for the log-line and "no lead in the logs"
+  // checks. Silenced so the run stays readable.
+  logged = [];
   for (const level of ["log", "info", "warn", "error", "debug"] as const) {
     vi.spyOn(console, level).mockImplementation((...args: unknown[]) => {
-      logs.push(args.map((a) => (typeof a === "string" ? a : JSON.stringify(a))).join(" "));
+      logged.push({ level, args });
     });
   }
 });
@@ -131,7 +177,7 @@ function answers(...statuses: number[]) {
 }
 
 describe("POST /api/lead — accepted", () => {
-  it("forwards a valid lead in the documented shape, with the bearer token", async () => {
+  it("forwards a valid lead in the documented, versioned shape, with the bearer token", async () => {
     const before = Date.now();
     const { res, json } = await send(LEAD);
 
@@ -147,7 +193,7 @@ describe("POST /api/lead — accepted", () => {
     expect(headers.get("content-type")).toMatch(/^application\/json/);
 
     const [payload] = forwarded();
-    expect(payload).toMatchObject({ type: "lead", id: json.id, site: "pos.devya.dev" });
+    expect(payload).toMatchObject({ type: "lead", version: 1, id: json.id, site: "pos.devya.dev" });
     expect(payload.lead).toEqual({
       name: "Ahmed Mahmoud",
       restaurant: "Koshary El Tahrir",
@@ -176,6 +222,8 @@ describe("POST /api/lead — accepted", () => {
 
     // The client's IP is used for rate limiting only — never forwarded.
     expect(JSON.stringify(payload)).not.toContain(IP);
+    // A delivered lead is not an incident.
+    expect(errorCalls()).toEqual([]);
   });
 
   it("sends no authorization header when no token is configured", async () => {
@@ -296,7 +344,7 @@ describe("POST /api/lead — refused before anything leaves the box", () => {
 });
 
 describe("POST /api/lead — when the forward fails", () => {
-  it("retries a 5xx once with the same id, and stops at the first success", async () => {
+  it("retries a 5xx once with the same id, and is done when the retry lands", async () => {
     answers(503, 200);
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(200);
@@ -305,9 +353,10 @@ describe("POST /api/lead — when the forward fails", () => {
     const [first, second] = forwarded();
     expect(second.id).toBe(first.id);
     expect(first.id).toBe(json.id);
+    expect(errorCalls()).toEqual([]);
   });
 
-  it("keeps the lead in the outbox after two 5xx answers", async () => {
+  it("keeps the lead in the outbox after two 5xx answers, and says so once", async () => {
     const dir = outboxDir();
     answers(500, 502);
     const { res, json } = await send(LEAD);
@@ -315,34 +364,28 @@ describe("POST /api/lead — when the forward fails", () => {
     expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"] });
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
-    // One line, carrying the lead under the id the visitor was given — however
-    // the outbox chooses to wrap it.
+    // One line, carrying the lead under the id the visitor was given.
     const lines = outboxLines(dir);
     expect(lines).toHaveLength(1);
-    const kept = JSON.stringify(lines[0]);
-    expect(kept).toContain(`"${String(json.id)}"`);
-    expect(kept).toContain('"+201055930032"');
-    expect(kept).toContain('"Koshary El Tahrir"');
+    expect(lines[0]).toMatchObject({ type: "lead", version: 1, id: json.id, lead: { phone: "+201055930032" } });
+
+    const { message, fields } = loudLine();
+    expect(message).toMatch(/NOT FORWARDED/);
+    expect(fields).toMatchObject({ id: json.id, reason: "failed", pending: "1" });
   });
 
-  it("keeps the lead in the outbox when the target refuses it with a 4xx", async () => {
+  it("does not retry a 4xx: the receiver's no is final, and the lead goes to the outbox", async () => {
     const dir = outboxDir();
-    answers(422, 422);
+    answers(422, 200);
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(200);
     expect(json.delivered).toEqual(["outbox"]);
-    expect(fetchMock.mock.calls.length).toBeGreaterThanOrEqual(1);
-    expect(fetchMock.mock.calls.length).toBeLessThanOrEqual(2);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ reason: "rejected", status: "422", pending: "1" });
   });
 
-  // README (LEAD_FORWARD_TIMEOUT_MS) promises "4xx is treated as permanent and
-  // not retried", and the route's own comment agrees, but forward() calls
-  // postOnce() a second time whatever the first answer was. Routed to the lead
-  // durability track (T2), which owns the forward contract.
-  it.todo("does not retry a 4xx — one forward call, then the outbox");
-
-  it("keeps the lead in the outbox when the target cannot be reached", async () => {
+  it("retries a network failure once, then keeps the lead in the outbox", async () => {
     const dir = outboxDir();
     fetchMock.mockRejectedValue(new TypeError("fetch failed"));
     const { res, json } = await send(LEAD);
@@ -350,6 +393,7 @@ describe("POST /api/lead — when the forward fails", () => {
     expect(json.delivered).toEqual(["outbox"]);
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ reason: "failed" });
   });
 
   it("gives up on a target that hangs, after the timeout, and keeps the lead", async () => {
@@ -369,22 +413,29 @@ describe("POST /api/lead — when the forward fails", () => {
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(200);
     expect(json.delivered).toEqual(["outbox"]);
-    expect(signals.length).toBeGreaterThanOrEqual(1);
+    // A timeout is transient: both attempts ran, and both were cut off.
+    expect(signals).toHaveLength(2);
     expect(signals.every((s) => s.aborted)).toBe(true);
     // Two attempts at 40 ms each: well inside one attempt at the 4 s default,
     // with room for a busy CI runner.
     expect(Date.now() - started).toBeLessThan(3_500);
     expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ reason: "failed" });
   });
 
-  it("goes straight to the outbox when no forward target is configured", async () => {
+  it("with no forward target, goes straight to the outbox with one line per lead and a running count", async () => {
     const dir = outboxDir();
     vi.stubEnv("LEAD_FORWARD_URL", "");
-    const { res, json } = await send(LEAD);
-    expect(res.status).toBe(200);
-    expect(json.delivered).toEqual(["outbox"]);
+    const first = await send(LEAD);
+    expect(first.res.status).toBe(200);
+    expect(first.json.delivered).toEqual(["outbox"]);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ id: first.json.id, reason: "not_configured", pending: "1" });
+
+    logged.length = 0;
+    const second = await send(LEAD);
+    expect(loudLine().fields).toMatchObject({ id: second.json.id, reason: "not_configured", pending: "2" });
+    expect(outboxLines(dir)).toHaveLength(2);
   });
 
   it("answers 503 when the lead can be neither forwarded nor kept", async () => {
@@ -392,9 +443,12 @@ describe("POST /api/lead — when the forward fails", () => {
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(503);
     expect(json).toEqual({ ok: false, error: "unavailable" });
+    const { message, fields } = loudLine();
+    expect(message).toMatch(/LOST/);
+    expect(fields).toMatchObject({ reason: "failed", outbox: "not_configured" });
   });
 
-  it("answers 503 when the outbox cannot be written", async () => {
+  it("answers 503 when the outbox directory cannot be created", async () => {
     const dir = mkdtempSync(join(tmpdir(), "lead-route-"));
     const file = join(dir, "not-a-directory");
     writeFileSync(file, "");
@@ -403,6 +457,29 @@ describe("POST /api/lead — when the forward fails", () => {
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(503);
     expect(json).toEqual({ ok: false, error: "unavailable" });
+    expect(loudLine().fields).toMatchObject({ reason: "not_configured", outbox: "ENOTDIR" });
+  });
+
+  // Root reads a 0000 file regardless, so the refusal cannot be staged there.
+  it.skipIf(asRoot)("answers 503 and leaves the outbox intact when it cannot be read", async () => {
+    const dir = outboxDir();
+    vi.stubEnv("LEAD_FORWARD_URL", "");
+    const path = join(dir, "leads-outbox.jsonl");
+    const before = `{"id":"earlier","receivedAt":"${new Date().toISOString()}"}\n`;
+    writeFileSync(path, before, { mode: 0o600 });
+    chmodSync(path, 0o000);
+    let answer: Awaited<ReturnType<typeof send>>;
+    try {
+      answer = await send(LEAD);
+    } finally {
+      chmodSync(path, 0o600);
+    }
+    expect(answer.res.status).toBe(503);
+    expect(answer.json).toEqual({ ok: false, error: "unavailable" });
+    const { message, fields } = loudLine();
+    expect(message).toMatch(/LOST/);
+    expect(fields).toMatchObject({ reason: "not_configured", outbox: "EACCES" });
+    expect(readFileSync(path, "utf8")).toBe(before);
   });
 
   it("never puts the lead itself in the logs, whichever way it went", async () => {
@@ -415,19 +492,9 @@ describe("POST /api/lead — when the forward fails", () => {
     await send({ ...LEAD, company: "bot" }); // honeypot
     expect(outboxLines(dir)).toHaveLength(1);
 
-    const all = logs.join("\n");
-    expect(logs.length).toBeGreaterThan(0);
-    for (const secret of [
-      "Ahmed Mahmoud",
-      "Koshary",
-      "1055930032",
-      "1155930032",
-      "0105 593 0032",
-      "three branches",
-      "Mozilla/5.0 (T3 test)",
-      "/en/contact",
-      IP,
-    ]) {
+    const all = logText();
+    expect(logged.length).toBeGreaterThan(0);
+    for (const secret of [...PII, "1155930032", "+20 115 593 0032"]) {
       expect(all).not.toContain(secret);
     }
   });
