@@ -85,9 +85,49 @@ export const socialLinks = [
   { key: "facebook", href: brand.social.facebook, label: "Facebook" },
 ] as const;
 
-/** wa.me link with a prefilled, locale-aware first message. */
-export function whatsappLink(message: string) {
-  return `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(message)}`;
+/**
+ * Every place on the site that opens a WhatsApp chat, and the reference code
+ * its prefilled message ends with (`[P-float]`, `[P-pricing]`, …).
+ *
+ * The site runs no tracker (lib/analytics.ts), and a WhatsApp conversation is
+ * the funnel the launch plan measures, so the code is how the founder labels
+ * a chat by the button that started it — read off the first message, inside
+ * WhatsApp, with nothing recorded on our side. It names a placement and
+ * nothing else: no UTM, no stored value, nothing about the visitor, and they
+ * see it in the message before they press send. The descriptions below are the
+ * legend for reading a code back; docs/social-launch-plan.md §7.1 points here.
+ */
+export const whatsappSources = {
+  float: "Floating button, every page",
+  cta: "Closing band (CtaBand), every page that has one except /pricing",
+  pricing: "Closing band on /pricing",
+  home: "Home page contact section",
+  contact: "Contact page, 'message us' card",
+  demo: "Contact page, 'book a demo' card",
+  form: "Contact form, 'send on WhatsApp' route",
+  foodics: "Closing card on /foodics-alternative",
+  hardware: "Closing card on /hardware",
+  eta: "Closing card on /eta-einvoicing",
+  trial: "Accounting trial, fallback after a failed sign-up",
+  quote: "Accounting pricing, Enterprise quote",
+} as const;
+
+export type WhatsappSource = keyof typeof whatsappSources;
+
+/** The reference code a placement's prefilled message ends with. */
+export function whatsappCode(source: WhatsappSource) {
+  return `[P-${source}]`;
+}
+
+/**
+ * wa.me link with a prefilled, locale-aware first message, tagged with the
+ * placement it was opened from. The code goes on a line of its own: a
+ * Latin-only line keeps its left-to-right order after an Arabic message
+ * instead of having its brackets reordered into the sentence before it.
+ */
+export function whatsappLink(message: string, source: WhatsappSource) {
+  const text = `${message}\n\n${whatsappCode(source)}`;
+  return `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
 /** `tel:` href for the same business number the WhatsApp CTAs use. */

@@ -735,12 +735,13 @@ Assume **5,000–15,000 EGP/month**. Buy in this order and do not skip ahead.
    post (3.1) or the "call us for a quote isn't a price" post (3.2). An Egyptian
    restaurant owner will not fill in a web form; he will send a voice note. Buy the
    conversation, not the click. *~50% of budget.*
-2. **Retargeting.** Install the Meta pixel on `pos.devya.dev` (it is a Next.js app
-   on Vercel — a ten-minute job) and retarget everyone who hit `/ar/pricing`,
-   `/ar/compare` or `/ar/foodics-alternative`. Highest-intent audience we will ever
-   have. This audience does not exist until the pixel has been live a few weeks —
-   **which is why the pixel goes in during week 0, not when you start spending.**
-   *~25%.*
+2. **Retargeting — on Meta's side only. No pixel (decided 2026-10-22).** The site
+   runs no third-party tracker: analytics were removed on 2026-09-21 at the
+   owner's instruction, and `tests/privacy.test.ts` fails the build if a pixel or
+   any other tracker script is added. So there is no website-visitor audience.
+   Retarget people who engaged with the Instagram account or the Facebook Page
+   instead (Meta engagement audiences), which needs nothing on the site. This
+   replaces the pixel steps in §6.5(5) and §7.4. *~25%.*
 3. **One reel, boosted properly.** Take whichever of 1.2 / 1.3 / 1.4 performed best
    organically and put real money behind that one — not a fresh creative. *~15%.*
 4. **A small always-on awareness layer** in Cairo, Giza and Alexandria against
@@ -946,8 +947,19 @@ pipeline. Do not build a dashboard that would have told Foodics they were winnin
 | **Trial → paid conversion rate** | The only number that says whether the *product* is landing |
 | **Branches activated** (not accounts) | Revenue is per branch per month. A 4-branch customer is four units. |
 | **MRR and MRR per branch** | |
-| **CAC per activated branch, by channel** | Tag every conversation with its source. Without this, §5's budget order is faith. |
+| **CAC per activated branch, by channel** | Tag every conversation with its source (see *Source codes* below). Without this, §5's budget order is faith. |
 | **Payback period** | At 199 EGP/branch/month, a 3,000 EGP CAC takes 15 months to repay before churn. This number governs how much paid is sane. |
+
+**Source codes, not a tracker (decided 2026-10-22).** The site loads no
+third-party tracker (§5.2(2)), so attribution happens inside WhatsApp. Every
+WhatsApp button on the site prefills a short code on the last line of the first
+message — `[P-pricing]`, `[P-float]`, `[P-foodics]` and so on, one per button;
+the legend is `whatsappSources` in `lib/brand.ts`. The code names the button and
+nothing else: no campaign, no visitor data, and the visitor sees it before
+sending. Label each new chat in WhatsApp Business by its code. Chats from a
+Click-to-WhatsApp ad are counted by Meta in Ads Manager and need no code. A chat
+with no code did not start from a site button (the Instagram or Facebook contact
+button, a shared or typed number), or the visitor deleted the code.
 
 **Content metrics that are actually leading indicators** — and note that likes is not
 among them:
@@ -1062,9 +1074,10 @@ Stated plainly so nothing here is quietly assumed into existence:
   the owner's own is fine and probably better than a hire.
 - **No business verification yet**, which blocks the WhatsApp API, higher spend
   limits, and the verified badge (§6.5). Start week 0.
-- **No pixel history**, which means retargeting — the highest-ROI paid tactic
-  available — does not work in month one no matter what is spent. Install the pixel
-  in week 0 so month two has something to retarget.
+- **No pixel, by decision (2026-10-22).** The site runs no third-party tracker, so
+  website-visitor retargeting is off the table; retargeting means Meta engagement
+  audiences, and attribution means the WhatsApp source codes in §7.1. Do not
+  install the pixel §6.5(5) still lists.
 - **No social proof of scale.** 25 branches is a real number and a good one; it is
   not "500 restaurants" and must never be inflated into one. Use the real number:
   *٢٥ فرعاً شغّالين عليه دلوقتي* is more persuasive than a round number nobody

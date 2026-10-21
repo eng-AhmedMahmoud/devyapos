@@ -206,7 +206,7 @@ export default function AccountingPricing({ formId }: { formId: string }) {
                 <p>
                   {p.enterprise}{" "}
                   <WhatsappLink
-                    href={whatsappLink(p.enterpriseWa)}
+                    href={whatsappLink(p.enterpriseWa, "quote")}
                     place="accounting_pricing"
                     className="font-bold text-brand underline-offset-4 hover:underline"
                   >
