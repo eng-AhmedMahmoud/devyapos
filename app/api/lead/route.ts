@@ -6,10 +6,20 @@ import {
   type LeadSubmission,
   type NormalisedLead,
 } from "@/lib/leads";
-import { keepInOutbox } from "@/lib/lead-outbox";
+import { keepInOutbox, outboxPending } from "@/lib/lead-outbox";
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 
 /**
  * Lead intake for the contact form.
+ *
+ * Production is the Docker container `devya-devyapos` on the Devya VPS. A
+ * lead is forwarded to `LEAD_FORWARD_URL` when one is set; otherwise, or when
+ * the forward fails, it goes to the outbox file on the data volume
+ * (lib/lead-outbox.ts), which survives deploys. Container logs do not survive
+ * a deploy, so they are never where a lead is kept: every unforwarded lead
+ * gets one error-level line with its id, the reason and the outbox count, and
+ * nothing that identifies the person. `scripts/leads.sh` reads the outbox
+ * from outside.
  *
  * Note on routing: `next.config.ts` rewrites `/api/:path*` to the platform API.
  * That rewrite is returned as a plain array, which Next treats as `afterFiles`
@@ -27,16 +37,29 @@ export const dynamic = "force-dynamic";
 type RequestBody = LeadSubmission;
 
 /**
+ * Version of the forward contract below. Bump it on any change a receiver
+ * would notice — a renamed, removed or retyped field — so the receiver can
+ * tell the shapes apart.
+ */
+const FORWARD_CONTRACT_VERSION = 1;
+
+/**
  * The payload forwarded to `LEAD_FORWARD_URL`.
  *
  * This contract is defined here, by us — it is not a known endpoint's schema.
  * Whatever consumes it (the platform API, a webhook, a Sheet) must accept this
  * shape; it is documented in `.env.example` and the README so the receiving end
  * can be built against it.
+ *
+ * Every string field is raw user input as far as a receiver is concerned —
+ * validated for shape and length here, never escaped for HTML, SQL, a sheet
+ * formula or a shell — and must be treated that way.
  */
 interface ForwardPayload {
   /** Constant discriminator, so one webhook can serve several senders. */
   type: "lead";
+  /** Contract version, `FORWARD_CONTRACT_VERSION`. */
+  version: typeof FORWARD_CONTRACT_VERSION;
   /** Server-generated UUID. Stable across the retry, so the receiver can dedupe. */
   id: string;
   /** Where it came from — this site, this locale. */
@@ -56,72 +79,33 @@ interface ForwardPayload {
 /* -------------------------------------------------------------- rate limit */
 
 /**
- * In-memory fixed-window limiter.
- *
- * LIMITATION, on purpose: this lives in one serverless instance's memory. Vercel
- * runs several instances and recycles them, so the real ceiling is
- * `MAX_PER_WINDOW × live instances`, and it resets on every cold start. That is
- * the right trade for a marketing form — it stops a script hammering one
- * endpoint from a single IP without adding Redis, a bill, and a dependency to a
- * site whose whole point is that it has no infrastructure. Move to Vercel KV or
- * the platform API's own limiter if lead spam ever becomes a real problem.
+ * Per-address limit (lib/rate-limit.ts). Generous on purpose: a slot is
+ * consumed before the body is parsed, so a rejected submission costs one too —
+ * and someone mistyping their phone number three times must not be locked out
+ * of the only form on the site. Twelve in ten minutes is above any honest
+ * retry count and far below what a script is after.
  */
-const WINDOW_MS = 10 * 60 * 1000;
-/**
- * Generous on purpose. A slot is consumed before the body is parsed, so a
- * rejected submission costs one too — and someone mistyping their phone number
- * three times must not be locked out of the only form on the site. Twelve is
- * above any honest retry count and far below what a script is after.
- */
-const MAX_PER_WINDOW = 12;
-/** Hard cap on tracked IPs so a distributed flood cannot grow the heap. */
-const MAX_TRACKED_IPS = 5_000;
-
-const hits = new Map<string, number[]>();
-
-function rateLimit(ip: string): { allowed: boolean; retryAfter: number } {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-
-  if (recent.length >= MAX_PER_WINDOW) {
-    hits.set(ip, recent);
-    const retryAfter = Math.ceil((WINDOW_MS - (now - recent[0])) / 1000);
-    return { allowed: false, retryAfter };
-  }
-
-  recent.push(now);
-  // Map preserves insertion order, so re-setting moves this IP to the back and
-  // the first key is always the least recently seen — a poor man's LRU.
-  hits.delete(ip);
-  hits.set(ip, recent);
-  while (hits.size > MAX_TRACKED_IPS) {
-    const oldest = hits.keys().next().value;
-    if (oldest === undefined) break;
-    hits.delete(oldest);
-  }
-  return { allowed: true, retryAfter: 0 };
-}
-
-/**
- * Client IP, used only for rate limiting and never logged or stored.
- *
- * `X-Real-IP` first: nginx on the VPS sets it from the connection, so a
- * client cannot choose it. The first `X-Forwarded-For` hop is whatever the
- * client sent, which let a script rotate it to dodge the limiter.
- */
-function clientIp(req: Request): string {
-  const real = req.headers.get("x-real-ip")?.trim();
-  if (real) return real;
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",").at(-1)!.trim();
-  return "unknown";
-}
+const limiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 12, maxTracked: 5_000 });
 
 /* ----------------------------------------------------------------- forward */
 
 const FORWARD_TIMEOUT_MS = Number(process.env.LEAD_FORWARD_TIMEOUT_MS) || 4000;
 
-async function postOnce(url: string, payload: ForwardPayload): Promise<boolean> {
+/**
+ * - `ok`: a 2xx; the receiver has it.
+ * - `permanent`: a 4xx. The receiver judged this payload and said no; the
+ *   retry would send the same payload, so it is not retried.
+ * - `transient`: a 5xx, a timeout or a network error. Worth one more try.
+ */
+type Attempt = { outcome: "ok" } | { outcome: "permanent"; status: number } | { outcome: "transient" };
+
+/** Why a lead was not forwarded, for the log line. */
+type NotForwarded =
+  | { reason: "not_configured" }
+  | { reason: "rejected"; status: number }
+  | { reason: "failed" };
+
+async function postOnce(url: string, payload: ForwardPayload): Promise<Attempt> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FORWARD_TIMEOUT_MS);
   try {
@@ -136,15 +120,11 @@ async function postOnce(url: string, payload: ForwardPayload): Promise<boolean> 
       signal: controller.signal,
       cache: "no-store",
     });
-    if (res.ok) return true;
-    // 4xx means the payload is wrong; retrying sends the same wrong payload.
-    if (res.status < 500) {
-      console.error("[lead] forward rejected", { id: payload.id, status: res.status });
-      return false;
-    }
-    return false;
+    if (res.ok) return { outcome: "ok" };
+    if (res.status < 500) return { outcome: "permanent", status: res.status };
+    return { outcome: "transient" };
   } catch {
-    return false;
+    return { outcome: "transient" };
   } finally {
     clearTimeout(timer);
   }
@@ -153,23 +133,34 @@ async function postOnce(url: string, payload: ForwardPayload): Promise<boolean> 
 /**
  * Forward the lead to whatever durable store is configured.
  *
- * One retry, because the common failure here is a cold container on the other
- * end rather than a broken request. Unconfigured is a supported state: the site
- * still ships without a CRM, and the lead falls back to the log sink below.
+ * One retry, for a transient failure only, because the common one is a cold
+ * receiver rather than a broken request; a 4xx is final (the contract in the
+ * README says so). Unconfigured is a supported state — the site ships without
+ * a CRM — and the lead falls back to the outbox below. Null means forwarded.
  */
-async function forward(payload: ForwardPayload): Promise<boolean> {
+async function forward(payload: ForwardPayload): Promise<NotForwarded | null> {
   const url = process.env.LEAD_FORWARD_URL;
-  if (!url) {
-    console.warn("[lead] LEAD_FORWARD_URL is not set — lead goes to the outbox", {
-      id: payload.id,
-    });
-    return false;
+  if (!url) return { reason: "not_configured" };
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const result = await postOnce(url, payload);
+    if (result.outcome === "ok") return null;
+    if (result.outcome === "permanent") return { reason: "rejected", status: result.status };
   }
-  if (await postOnce(url, payload)) return true;
-  return postOnce(url, payload);
+  return { reason: "failed" };
 }
 
 /* ------------------------------------------------------------------ route */
+
+/**
+ * `key=value` on one line. Node prints an object argument across several
+ * lines once it passes 80 characters, and a log alert matches lines. Values
+ * here are ids, codes and counts — never lead data.
+ */
+function logFields(fields: Record<string, string | number | null>): string {
+  return Object.entries(fields)
+    .map(([key, value]) => `${key}=${value}`)
+    .join(" ");
+}
 
 function json(body: unknown, status: number, headers?: HeadersInit) {
   return Response.json(body, { status, headers });
@@ -181,7 +172,7 @@ export async function POST(req: Request) {
   }
 
   const ip = clientIp(req);
-  const limit = rateLimit(ip);
+  const limit = limiter.check(ip);
   if (!limit.allowed) {
     return json(
       { ok: false, error: "rate_limited", retryAfter: limit.retryAfter },
@@ -216,6 +207,7 @@ export async function POST(req: Request) {
 
   const payload: ForwardPayload = {
     type: "lead",
+    version: FORWARD_CONTRACT_VERSION,
     id,
     site: "pos.devya.dev",
     receivedAt: coarseTimestamp(),
@@ -224,7 +216,9 @@ export async function POST(req: Request) {
     context: {
       userAgent: req.headers.get("user-agent")?.slice(0, 300) ?? null,
       referer: req.headers.get("referer")?.slice(0, 500) ?? null,
-      // Vercel's geo header. Absent locally, which is fine.
+      // A leftover of the Vercel days: nginx on the VPS sets no geo header,
+      // so this is null unless the client sends one itself — raw input, like
+      // every other string here.
       country: req.headers.get("x-vercel-ip-country") ?? null,
     },
   };
@@ -239,21 +233,25 @@ export async function POST(req: Request) {
     campaign: payload.attribution.campaign ?? null,
   });
 
-  if (await forward(payload)) {
+  const missed = await forward(payload);
+  if (!missed) {
     return json({ ok: true, id, delivered: ["forward"] }, 200);
   }
 
   // Not forwarded: the outbox on the data volume is the durable sink
-  // (lib/lead-outbox.ts). Logs never carry the lead itself — no name, phone
-  // or message — only its id, so the line can be matched to the outbox entry.
-  if (await keepInOutbox(payload)) {
-    console.error("[lead] NOT FORWARDED — kept in the outbox", { id });
+  // (lib/lead-outbox.ts). Exactly one error-level line per unforwarded lead,
+  // so a log alert can count them — and never the lead itself (no name,
+  // phone or message), only its id, the reason and how many are waiting.
+  const kept = await keepInOutbox(payload);
+  if (kept.ok) {
+    const pending = await outboxPending();
+    console.error(`[lead] NOT FORWARDED — kept in the outbox ${logFields({ id, ...missed, pending })}`);
     return json({ ok: true, id, delivered: ["outbox"] }, 200);
   }
 
   // Nowhere durable to put it. Say so, rather than tell the visitor it was
   // received: the form offers WhatsApp and email on an error.
-  console.error("[lead] LOST — not forwarded and no outbox", { id });
+  console.error(`[lead] LOST — not forwarded and not stored ${logFields({ id, ...missed, outbox: kept.error })}`);
   return json({ ok: false, error: "unavailable" }, 503);
 }
 

@@ -1,0 +1,40 @@
+# Weekly dependency updates. Security updates (Dependabot alerts) are enabled
+# on the repository and open PRs as soon as an advisory lands; these entries
+# keep everything else from drifting behind. Every PR still has to pass CI's
+# `check` job, which includes `pnpm audit --prod --audit-level high`.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    open-pull-requests-limit: 5
+    groups:
+      next:
+        patterns: ["next", "eslint-config-next", "@next/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      tooling:
+        dependency-type: development
+        update-types: [minor, patch]
+    ignore:
+      # @types/node follows the runtime (Node 24 LTS in the Dockerfile and CI),
+      # not the newest Node release.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    ignore:
+      # Stay on the Node 24 LTS line; a major (25 is not LTS) is a deliberate
+      # change made together with CI's node-version and @types/node.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]

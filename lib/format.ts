@@ -29,3 +29,17 @@ export function formatEgp(locale: string, value: number) {
 export function formatPercent(locale: string, value: number) {
   return nf(locale, { maximumFractionDigits: 0 }).format(value);
 }
+
+/**
+ * A calendar date (`YYYY-MM-DD`) as the page's language writes it: "4 September
+ * 2026", "٤ سبتمبر ٢٠٢٦". Formatted in UTC because a date-only ISO string parses
+ * as UTC midnight, and any zone west of it would print the day before.
+ */
+export function formatDate(locale: string, iso: string) {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(iso));
+}

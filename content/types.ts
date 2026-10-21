@@ -106,10 +106,17 @@ export interface Prose {
 }
 
 /**
+ * A calendar date written `YYYY-MM-DD`. The template type only stops the
+ * grossest slips; `tests/content.test.ts` checks that the value is a real date.
+ */
+export type IsoDate = `${number}-${number}-${number}`;
+
+/**
  * One dated, sourced figure in a competitor fact table.
  *
- * Same discipline as `pricing.marketAnchor`: the retrieval date and the "check
- * it yourself" hedge live on the block that owns the rows, never on the row.
+ * Same discipline as `pricing.marketAnchor`: the retrieval date (`retrievedAt`)
+ * and the "ask them for a current quote" hedge live on the block that owns the
+ * rows, never on the row.
  */
 export interface Fact {
   label: string;
@@ -321,15 +328,23 @@ export interface SiteContent {
     };
     plans: Plan[];
     /**
-     * Published competitor pricing, so "affordable" is a number a visitor can
-     * check rather than a claim. Dated and hedged in `note` on purpose — these
-     * are someone else's prices and they move.
+     * Competitor pricing as we recorded it, so "affordable" is a number rather
+     * than a claim. Foodics does not publish these prices (social-launch-plan
+     * §1.5), so the copy must never call them published: it says whose record
+     * they are and when it was taken, and hedges in `note` — these are someone
+     * else's prices and they move.
      */
     marketAnchor: {
       title: string;
+      /** Interpolates {date}, rendered from `retrievedAt`. */
       sub: string;
       rows: { name: string; price: string; note: string; ours?: boolean }[];
       note: string;
+      /**
+       * The day the competitor figures were recorded. A test fails once it is
+       * more than 90 days old, so a stale price cannot ship unnoticed.
+       */
+      retrievedAt: IsoDate;
     };
     note: string;
     founding: string;
@@ -566,17 +581,28 @@ export interface SiteContent {
    * `/foodics-alternative`.
    *
    * The only page that names a competitor throughout, so it carries the
-   * strictest sourcing: every figure in `facts.rows` is from Foodics' own
-   * published Egyptian pricing, and `disclaimer` + `facts.source` must stay
+   * strictest sourcing: every Foodics figure in `facts.rows` is our own dated
+   * record of its Egyptian pricing — Foodics does not publish it, so nothing
+   * here may call it published — and `disclaimer` + `facts.source` must stay
    * attached wherever the rows are rendered.
    */
   foodicsAlternative: {
     badge: string;
     title: string;
     sub: string;
+    /** Interpolates {date}, rendered from `facts.retrievedAt`. */
     disclaimer: string;
     positioning: { title: string; body: string; points: string[] };
-    facts: { title: string; sub: string; rows: Fact[]; source: string };
+    facts: {
+      title: string;
+      /** Interpolates {date}. */
+      sub: string;
+      rows: Fact[];
+      /** Interpolates {date}. */
+      source: string;
+      /** As `pricing.marketAnchor.retrievedAt`: tested to be under 90 days old. */
+      retrievedAt: IsoDate;
+    };
     /** Deliberately not a straw man. Reasons to buy the other product. */
     pickThem: { title: string; sub: string; items: Point[] };
     pickUs: { title: string; sub: string; items: Point[] };
