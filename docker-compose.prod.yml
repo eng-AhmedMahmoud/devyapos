@@ -8,6 +8,9 @@ services:
         # override from the shell for a staging store, never leave it pointing
         # at production from a laptop build.
         NEXT_PUBLIC_TRIAL_CLAIM_URL: ${NEXT_PUBLIC_TRIAL_CLAIM_URL:-https://ops-api.devya.dev/api/trial/claim}
+        # The commit being built; scripts/deploy.sh exports it. GET /api/health
+        # reports it, and the deploy refuses a release that reports another.
+        RELEASE: ${RELEASE:-unknown}
     image: devya-devyapos:latest
     container_name: devya-devyapos
     restart: unless-stopped
@@ -34,12 +37,16 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    # GET /api/health answers 200 whenever the server can answer at all (a
+    # degraded config is the deploy's call, not a restart's). Checked every 3s
+    # while starting, so a deploy sees "healthy" in seconds, then every 30s.
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 25s
+      start_interval: 3s
 
 volumes:
   devyapos-leads:

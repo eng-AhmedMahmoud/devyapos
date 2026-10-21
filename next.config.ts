@@ -44,13 +44,15 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  // Marketing site: fully static content, no catalog fetches. The only
-  // server-side hop is the demo/lead form posting to the platform API, so a
-  // single /api rewrite keeps browser requests same-origin.
-  async rewrites() {
-    const apiUrl = process.env.API_URL ?? "http://localhost:3001";
-    return [{ source: "/api/:path*", destination: `${apiUrl}/api/:path*` }];
-  },
+  // The Docker image runs `.next/standalone/server.js` with only the files the
+  // server traces, not the repo and its devDependencies (Dockerfile, runner
+  // stage).
+  output: "standalone",
+  // No rewrites. The /api/:path* rewrite to the platform API (API_URL) outlived
+  // the platform era: nothing listened behind it in production, so every
+  // unknown /api path answered 500. Both /api routes are handlers in this app
+  // and the trial posts cross-origin by design, so an unknown /api path now
+  // answers 404 (tests/ops.test.ts keeps it that way).
   async headers() {
     return [
       {
