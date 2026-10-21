@@ -35,10 +35,22 @@ describe("custom cursor", () => {
     }
   });
 
-  it("keeps the I-beam over copy and the caret in text fields", () => {
-    const text = rules.filter((r) => /cursor:\s*text/.test(r.body)).flatMap((r) => r.selectors);
-    expect(text.some((s) => s.startsWith(":root.cursor-on :is(p, h1"))).toBe(true);
-    expect(text.some((s) => s.startsWith(":root.cursor-on :is(textarea"))).toBe(true);
+  it("has two looks only: the default and the focus look over clickables", () => {
+    // No text frame, no label, no press: copy and fields wear the default.
+    const own = rules.flatMap((r) => r.selectors).filter((s) => /\.cursor|cursor-on/.test(s));
+    for (const s of own) {
+      expect(s).not.toMatch(/data-pressed|cursor-caret|cursor-label/);
+      const state = s.match(/data-state="([^"]+)"/);
+      if (state) expect(state[1]).toBe("link");
+    }
+    expect(rule('.cursor[data-state="link"] .cursor-ring')).toMatch(/scale:/);
+    expect(source).toContain('type State = "idle" | "link" | "native";');
+    // A text field wears the default, even inside a clickable <label>.
+    expect(source).toContain('if (target.closest(FIELD)) return "idle";');
+    // The system cursor no longer shows over copy or fields while the custom one is on.
+    expect(rules.some((r) => /cursor:\s*text/.test(r.body))).toBe(false);
+    const hidden = rules.filter((r) => /cursor:\s*none/.test(r.body)).flatMap((r) => r.selectors).join(" ");
+    for (const field of ["input", "textarea", "[contenteditable]"]) expect(hidden).toContain(field);
   });
 
   it("is a fixed layer that never takes a click and does not mirror", () => {
@@ -60,16 +72,15 @@ describe("custom cursor", () => {
     }
   });
 
-  it("gives the keyboard the page, and lets go of a press when focus leaves", () => {
+  it("gives the keyboard the page, and steps aside when focus leaves", () => {
     // Any key but a bare modifier or a Cmd/Ctrl shortcut puts the cursor away…
     expect(source).toContain('window.addEventListener("keydown", onKey, true)');
     expect(source).toMatch(/if \(event\.metaKey \|\| event\.ctrlKey \|\| MODIFIERS\.has\(event\.key\)\) return/);
     // …until the mouse really moves, and it comes back in the state under the pointer.
     expect(source).toMatch(/if \(keyboard && event\.clientX === x && event\.clientY === y\) return/);
     expect(source).toMatch(/if \(!shown\) \{[^}]*settle\(event\.target\)/);
-    // Focus leaving the window hides it and drops the press.
+    // Focus leaving the window hides it.
     expect(source).toContain('window.addEventListener("blur", hide)');
-    expect(source).toMatch(/const hide = \(\) => \{[^}]*press\(false\)/);
   });
 
   it("runs only for a hovering fine pointer, never under reduced motion", () => {

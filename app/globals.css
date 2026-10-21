@@ -1659,9 +1659,11 @@ html:has(.ql-dialog[open]) {
 
 /* ── Cursor (components/Cursor.tsx) ──────────────────────────────────────
  *
- * Moving Stores' cursor: a saffron dot on the pointer and an ink ring that
- * trails it, both haloed in paper so they read on paper, saffron and the
- * espresso bands. Unlayered like the rest of this file, so these rules beat
+ * Moving Stores' cursor, in two looks only. The default: a saffron dot on the
+ * pointer and an ink ring that trails it, both haloed in paper so they read
+ * on paper, saffron and the espresso bands. The focus look: over anything
+ * clickable the ring grows and fills with saffron. Copy and text fields wear
+ * the default too. Unlayered like the rest of this file, so these rules beat
  * the `cursor-*` utilities without `!important`.
  *
  * Physical left/top: the pointer's viewport coordinates do not mirror in RTL.
@@ -1692,109 +1694,37 @@ html:has(.ql-dialog[open]) {
   border-radius: 999px;
   background-color: var(--saffron);
   box-shadow: 0 0 0 1.5px var(--ink);
-  transition:
-    opacity 160ms ease,
-    scale 180ms ease;
-}
-/* Over copy and fields the system's I-beam is the pointer; the dot steps aside. */
-.cursor-dot[data-state="text"],
-.cursor-dot[data-state="label"] {
-  scale: 0;
-}
-.cursor-ring,
-.cursor-caret,
-.cursor-label {
-  position: absolute;
-  border-radius: 999px;
-  transition:
-    scale 280ms cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 180ms ease,
-    background-color 180ms ease;
 }
 .cursor-ring {
+  position: absolute;
   top: -17px;
   left: -17px;
   width: 34px;
   height: 34px;
+  border-radius: 999px;
   border: 1.5px solid var(--ink);
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent),
     inset 0 0 0 1px color-mix(in oklab, var(--bg) 70%, transparent);
+  transition:
+    scale 280ms cubic-bezier(0.32, 0.72, 0, 1),
+    background-color 180ms ease;
 }
+/* The focus look. */
 .cursor[data-state="link"] .cursor-ring {
   scale: 1.5;
   background-color: color-mix(in oklab, var(--saffron) 24%, transparent);
 }
-.cursor[data-state="text"] .cursor-ring,
-.cursor[data-state="label"] .cursor-ring {
-  scale: 0.5;
-  opacity: 0;
-}
-.cursor[data-pressed] .cursor-ring {
-  scale: 0.8;
-}
-.cursor[data-state="link"][data-pressed] .cursor-ring {
-  scale: 1.25;
-}
-/* The text state: a slim saffron frame around the system's I-beam. */
-.cursor-caret {
-  top: -15px;
-  left: -6px;
-  width: 12px;
-  height: 30px;
-  border: 1.5px solid var(--saffron);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink) 55%, transparent);
-  opacity: 0;
-  scale: 0.6 0.4;
-}
-.cursor[data-state="text"] .cursor-caret {
-  opacity: 1;
-  scale: 1;
-}
-.cursor-label {
-  display: flex;
-  top: -2.75rem;
-  left: -2.75rem;
-  width: 5.5rem;
-  height: 5.5rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
-  background-color: var(--saffron);
-  box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.45);
-  color: var(--on-saffron);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.15;
-  text-align: center;
-  opacity: 0;
-  scale: 0.3;
-}
-.cursor[data-state="label"] .cursor-label {
-  opacity: 1;
-  scale: 1;
-}
-.cursor[data-state="label"][data-pressed] .cursor-label {
-  scale: 0.92;
-}
 
-/* The system cursor steps aside only while the custom one is on screen. */
+/* The system cursor steps aside only while the custom one is on screen —
+   over copy and text fields too, where the default look is the pointer. */
 :root.cursor-on,
 :root.cursor-on
-  :is(a[href], button, summary, label, select, [role="button"], [role="link"], [role="tab"], [role="radio"], [role="checkbox"], [role="switch"], [role="menuitem"], [role="option"], input),
+  :is(a[href], button, summary, label, select, [role="button"], [role="link"], [role="tab"], [role="radio"], [role="checkbox"], [role="switch"], [role="menuitem"], [role="option"], input, textarea, [contenteditable]),
 :root.cursor-on
   :is(a[href], button, summary, label, [role="button"], [role="link"], [role="tab"], [role="radio"], [role="menuitem"], [role="option"])
   * {
   cursor: none;
-}
-/* Copy and text fields keep the system's I-beam and caret. */
-:root.cursor-on
-  :is(p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, figcaption, td, th, pre, address) {
-  cursor: text;
-}
-:root.cursor-on
-  :is(textarea, [contenteditable]:not([contenteditable="false"]), input:not([type="button"], [type="submit"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="image"])) {
-  cursor: text;
 }
 
 @media print, (forced-colors: active) {
