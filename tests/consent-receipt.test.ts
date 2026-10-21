@@ -93,6 +93,14 @@ describe("consent receipts", () => {
     expect(existsSync(file())).toBe(false);
   });
 
+  it("refuses free text smuggled into the timestamp or the policy version", async () => {
+    // Date.parse accepts both of these `at` values.
+    expect((await send(receipt({ at: "2026-10-22 (Jane Doe +201012345678)" }))).status).toBe(400);
+    expect((await send(receipt({ at: "Thu, 22 Oct 2026 10:00:00 GMT" }))).status).toBe(400);
+    expect((await send(receipt({ policy: "call me on 0101234" }))).status).toBe(400);
+    expect(existsSync(file())).toBe(false);
+  });
+
   it("drops receipts past CONSENT_RECEIPT_RETENTION_DAYS and keeps the rest", async () => {
     vi.stubEnv("CONSENT_RECEIPT_RETENTION_DAYS", "30");
     const at = (ms: number) => new Date(Date.now() - ms).toISOString();

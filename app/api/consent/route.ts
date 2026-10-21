@@ -18,6 +18,14 @@ export const dynamic = "force-dynamic";
 
 const ACTIONS = new Set(["accept_all", "reject_all", "save"]);
 const CATEGORIES = ["preferences", "analytics", "marketing"] as const;
+/**
+ * The exact shapes the consent core sends: `at` from `toISOString()`, the
+ * policy a short version token. Anything looser would let a sender keep free
+ * text in a file that is kept for a year — `Date.parse` alone accepts a date
+ * followed by any text in parentheses.
+ */
+const ISO_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/;
+const POLICY_VERSION = /^[0-9a-z._-]{1,32}$/i;
 
 /**
  * A visitor sends one receipt per choice — a handful at most. The limit keeps
@@ -52,9 +60,10 @@ export async function POST(req: Request) {
       typeof body.id === "string" &&
       /^[0-9a-z-]{8,64}$/i.test(body.id) &&
       typeof body.at === "string" &&
+      ISO_INSTANT.test(body.at) &&
       !Number.isNaN(Date.parse(body.at)) &&
       typeof body.policy === "string" &&
-      body.policy.length <= 32 &&
+      POLICY_VERSION.test(body.policy) &&
       typeof body.action === "string" &&
       ACTIONS.has(body.action) &&
       CATEGORIES.every((k) => typeof choices[k] === "boolean")
