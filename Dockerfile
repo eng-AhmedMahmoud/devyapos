@@ -2,7 +2,7 @@
 # the Devya VPS behind nginx. Moved off Vercel 2026-09-25. Near-static; the
 # one server hop is the lead form (app/api/lead). The one value it carries is
 # the accounting trial's claim URL, baked at build (see the builder stage).
-FROM node:24-alpine AS deps
+FROM node:25-alpine AS deps
 WORKDIR /app
 # pnpm, as the lockfile says; pinned major so a corepack default bump cannot
 # re-resolve the lockfile under a different pnpm.
@@ -10,7 +10,7 @@ RUN corepack enable && corepack prepare pnpm@11 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -22,7 +22,7 @@ ARG NEXT_PUBLIC_TRIAL_CLAIM_URL=
 ENV NEXT_PUBLIC_TRIAL_CLAIM_URL=$NEXT_PUBLIC_TRIAL_CLAIM_URL
 RUN npx next build
 
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
