@@ -47,7 +47,7 @@ export const en: SiteContent = {
     foodicsAlternative: {
       title: "Foodics alternative in Egypt | Moving POS",
       description:
-        "The published Egyptian entry bundle is 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP with every module included. Compared honestly.",
+        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP with every module included. Compared honestly.",
     },
     hardware: {
       title: "POS hardware | Run Moving POS on what you own",
@@ -571,13 +571,14 @@ export const en: SiteContent = {
     ],
     marketAnchor: {
       title: "What the market charges",
-      sub: "Published Egyptian pricing, retrieved 4 September 2026. Compare per branch, per month.",
+      sub: "Foodics' Egyptian prices as we recorded them on {date}. Compare per branch, per month.",
       rows: [
         { name: "Foodics — Basic Bundle", price: "2,848.95 EGP", note: "Billed annually (3,019.89 quarterly). Loyalty, API, delivery aggregators and BI all cost extra" },
-        { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top published Egyptian tier" },
+        { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top Egyptian tier on our record" },
         { name: "Moving POS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
       ],
-      note: "Competitor figures are their own published Egyptian prices at the date above and may change — check them yourself before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
+      note: "Competitor figures are our own record from the date above, not a public price list you can look up, and may have changed — ask them for a current quote before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
+      retrievedAt: "2026-09-04",
     },
     note: "Prices are in EGP per branch, excluding VAT. The trial runs 14 days with every feature and no credit card. Change or cancel any time, and export all of your data before you go.",
     founding: "Founding offer: the first 50 restaurants lock this price for the life of their subscription.",
@@ -1222,7 +1223,7 @@ export const en: SiteContent = {
     title: "Looking for a Foodics alternative in Egypt?",
     sub: "Foodics is a serious product. It is also priced for a different restaurant than the one this page is written for. Here is the comparison with the numbers left in.",
     disclaimer:
-      "Foodics is a trademark of its owner and has no affiliation with Moving POS. Every figure below comes from Foodics' own published Egyptian pricing, retrieved September 2026. Their prices are theirs to change — check foodics.com yourself before you decide anything.",
+      "Foodics is a trademark of its owner and has no affiliation with Moving POS. Every Foodics figure below is our own record of its Egyptian bundle pricing, taken on {date}, not a public price list you can check. Their prices are theirs to change — ask Foodics for a current quote before you decide anything.",
     positioning: {
       title: "The honest version",
       body: "Foodics is a regional platform with its own hardware, its own payment rail and a marketplace of add-ons behind it. Moving POS is one system, built in Egypt for Egyptian restaurants, at a flat price per branch with every module already inside it. Neither sentence is an insult to the other product. They are two different bets, and which one is right depends on the size of your operation and how much of your budget you want going to software.",
@@ -1233,8 +1234,8 @@ export const en: SiteContent = {
       ],
     },
     facts: {
-      title: "What Foodics publishes for Egypt",
-      sub: "Per branch, per month. Retrieved September 2026.",
+      title: "What Foodics charges in Egypt, as we recorded it",
+      sub: "Per branch, per month. Recorded on {date}.",
       rows: [
         {
           label: "Entry bundle, Egypt",
@@ -1244,7 +1245,7 @@ export const en: SiteContent = {
         {
           label: "Advanced bundle, Egypt",
           value: "3,733.67 EGP",
-          note: "Per branch per month billed annually. The top published Egyptian bundle.",
+          note: "Per branch per month billed annually. The top Egyptian bundle on our record.",
         },
         {
           label: "Pay, Pay at Table, Kitchen Display, Customer Display, Foodics One",
@@ -1263,7 +1264,8 @@ export const en: SiteContent = {
           ours: true,
         },
       ],
-      source: "Foodics figures are their own published Egyptian pricing, retrieved September 2026, and may have changed since. Moving POS figures are our own published prices.",
+      source: "Foodics figures are our own record of its Egyptian bundle pricing, taken on {date}, not a public price list, and may have changed since. Moving POS figures are our own published prices.",
+      retrievedAt: "2026-09-04",
     },
     pickThem: {
       title: "Pick Foodics if this is you",
@@ -1297,7 +1299,7 @@ export const en: SiteContent = {
       items: [
         {
           title: "Software cost has to make sense at your volume",
-          body: "At the published Egyptian entry bundle, one branch costs more per month than fourteen branches on Growth. For an independent café or a small chain, that difference is a salary.",
+          body: "At the Egyptian entry bundle on our record, one branch costs more per month than fourteen branches on Growth. For an independent café or a small chain, that difference is a salary.",
         },
         {
           title: "You want the whole system, not a bundle plus add-ons",
@@ -1305,7 +1307,7 @@ export const en: SiteContent = {
         },
         {
           title: "You want the kitchen display included",
-          body: "A live kitchen display is part of Growth. It is not listed in any published Egyptian tier on the other side.",
+          body: "A live kitchen display is part of Growth. On our record, it is not in any Egyptian tier on the other side.",
         },
         {
           title: "You already own the hardware",
