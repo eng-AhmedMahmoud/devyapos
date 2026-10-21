@@ -200,6 +200,7 @@ export default async function FoodicsAlternativePage({
         primary={f.cta.primary}
         secondary={f.cta.secondary}
         note={f.cta.note}
+        source="foodics"
       />
 
       <CtaBand />

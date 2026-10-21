@@ -476,7 +476,7 @@ function OutcomeCard({ outcome, inline = false }: { outcome: Outcome; inline?: b
       <p className={`font-bold text-ink ${inline ? "text-sm" : "font-display text-xl"}`}>{title}</p>
       <p className="text-sm leading-relaxed text-ink-2">{body}</p>
       <a
-        href={whatsappLink(o.waTemplate)}
+        href={whatsappLink(o.waTemplate, "trial")}
         target="_blank"
         rel="noreferrer"
         onClick={() => track("whatsapp_click", { locale, place: "accounting_trial" })}

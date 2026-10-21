@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { whatsappLink } from "@/lib/brand";
+import { whatsappLink, type WhatsappSource } from "@/lib/brand";
 import { Arrow, Whatsapp } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/Section";
@@ -16,6 +16,10 @@ import { Container } from "@/components/Section";
  * `whatsappFirst` exists because the pages disagree about the warmer route:
  * /hardware asks for a photo of your counter, which is a WhatsApp message, not
  * a booked demo.
+ *
+ * `source` is required, and tags the WhatsApp message with the page's own code
+ * (lib/brand.ts): the card answers that page's argument, so which page it was
+ * is the useful thing to know when the chat arrives.
  */
 export default async function ClosingCta({
   title,
@@ -24,6 +28,7 @@ export default async function ClosingCta({
   secondary,
   note,
   whatsappFirst = false,
+  source,
 }: {
   title: string;
   body: string;
@@ -31,6 +36,7 @@ export default async function ClosingCta({
   secondary: string;
   note?: string;
   whatsappFirst?: boolean;
+  source: WhatsappSource;
 }) {
   const locale = await getLocale();
   const c = getContent(locale);
@@ -50,7 +56,7 @@ export default async function ClosingCta({
 
   const whatsapp = (
     <a
-      href={whatsappLink(c.contact.waTemplate)}
+      href={whatsappLink(c.contact.waTemplate, source)}
       target="_blank"
       rel="noreferrer"
       className={`btn ${whatsappFirst ? "btn-primary" : "btn-ghost bg-surface"}`}
