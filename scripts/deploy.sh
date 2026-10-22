@@ -22,10 +22,12 @@
 #   3. Smoke-tests it on the host: /ar and /en answer 200, /api/health
 #      answers 200 with this commit and `config: "ok"`, and POST /api/lead
 #      with malformed JSON answers 400 (the route is alive; no lead is made).
-#   With --setup, once the smoke test passes: installs deploy/nginx.conf
-#      (the previous site is kept as /root/devyapos-nginx-pre-<stamp>.conf)
-#      and has certbot issue or expand one certificate, named after the
-#      first of DOMAINS, for every name. DNS for each must point at the host.
+#   With --setup, once the smoke test passes: has certbot issue or expand
+#      one certificate, named after the first of DOMAINS, for every name
+#      (certonly: no site file is edited; DNS for each must point at the
+#      host), then installs deploy/nginx.conf, the whole site with TLS (the
+#      previous site is kept as /root/devyapos-nginx-pre-<stamp>.conf and
+#      put back if nginx -t rejects the new one).
 #   4. Prunes backups to the newest DEPLOY_KEEP_BACKUPS, writes
 #      .deployed-commit on the host and pushes an annotated tag
 #      release-<UTC yyyymmddHHMM>-<short sha> (a rollback pushes
@@ -142,8 +144,8 @@ ci_gate() {
 
 # --------------------------------------------------- run on the host (sent)
 # These functions are defined here so `bash -n` checks them, and sent ahead
-# of each remote script with `declare -f`. They read PORT, CONTAINER, BODY,
-# BACKUP_PREFIX and KEEP, which each remote script sets first.
+# of each remote script with `declare -f`. They read PORT, DOMAIN, CONTAINER,
+# BODY, BACKUP_PREFIX and KEEP, which each remote script sets first.
 
 # http <method> <path> [json]: prints the status code; the body lands in $BODY.
 http() {
@@ -204,6 +206,31 @@ smoke() {
   code=$(http POST /api/lead '{')
   echo "POST /api/lead (malformed JSON) → $code"
   [ "$code" = 400 ] || ok=1
+  smoke_seo || ok=1
+  return $ok
+}
+
+# What search engines are told about the host: robots.txt names this site's
+# sitemap, every sitemap URL and the /ar canonical sit on https://$DOMAIN. A
+# release built with another host (say, a stale NEXT_PUBLIC_ value) fails here.
+smoke_seo() {
+  local code ok=0 site="https://$DOMAIN"
+  code=$(http GET /robots.txt)
+  if [ "$code" != 200 ] || ! grep -qF "Sitemap: $site/sitemap.xml" "$BODY"; then
+    echo "✗ /robots.txt ($code) does not name $site/sitemap.xml" >&2
+    ok=1
+  fi
+  code=$(http GET /sitemap.xml)
+  if [ "$code" != 200 ] || ! grep -q '<loc>' "$BODY" || grep -o '<loc>[^<]*' "$BODY" | grep -vqF "<loc>$site/"; then
+    echo "✗ /sitemap.xml ($code) is empty or lists a URL off $site" >&2
+    ok=1
+  fi
+  http GET /ar >/dev/null
+  if ! grep -qF "rel=\"canonical\" href=\"$site/ar\"" "$BODY"; then
+    echo "✗ /ar does not carry the canonical $site/ar" >&2
+    ok=1
+  fi
+  [ "$ok" = 1 ] || echo "SEO: robots, sitemap and canonical all on $site"
   return $ok
 }
 
@@ -238,8 +265,8 @@ prune_backups() {
   echo "backups: $(ls -1d "$BACKUP_PREFIX"* 2>/dev/null | wc -l | tr -d ' ') under ${BACKUP_PREFIX}*"
 }
 
-REMOTE_LIB="$(declare -f http wait_healthy smoke_pages smoke outbox_report prune_backups)"
-REMOTE_VARS="PORT=$PORT CONTAINER=$CONTAINER KEEP=$KEEP BACKUP_PREFIX='$BACKUP_PREFIX'
+REMOTE_LIB="$(declare -f http wait_healthy smoke_pages smoke smoke_seo outbox_report prune_backups)"
+REMOTE_VARS="PORT=$PORT DOMAIN=$DOMAIN CONTAINER=$CONTAINER KEEP=$KEEP BACKUP_PREFIX='$BACKUP_PREFIX'
 BODY=\$(mktemp); trap 'rm -f \"\$BODY\"' EXIT"
 
 # ------------------------------------------------------------ release record
@@ -332,7 +359,7 @@ fi
 if [ "$DRY_RUN" = 1 ]; then
   echo "→ would deploy $REF ($SHA) to $HOST:$APP_DIR"
   echo "  RELEASE=$FULL_SHA ci=$CI_STATE; backups kept: $KEEP (0 = all) under ${BACKUP_PREFIX}*"
-  [ "$SETUP" = 0 ] || echo "  then install deploy/nginx.conf and certbot -d ${DOMAINS[*]} --cert-name $DOMAIN"
+  [ "$SETUP" = 0 ] || echo "  then certbot certonly -d ${DOMAINS[*]} --cert-name $DOMAIN and install deploy/nginx.conf"
   echo "  then tag release-$(date -u +%Y%m%d%H%M)-$(git rev-parse --short=7 "$FULL_SHA")"
   exit 0
 fi
@@ -389,17 +416,25 @@ wait_healthy || { echo "the container is not healthy; \$rollback_hint" >&2; exit
 smoke "$FULL_SHA" || { echo "the release failed its smoke test; \$rollback_hint" >&2; exit 1; }
 
 if [ "$SETUP" = 1 ]; then
-  # The installed site carries certbot's TLS lines; keep it for a rollback.
-  [ ! -f "$NGINX_SITE" ] || cp -p "$NGINX_SITE" "/root/devyapos-nginx-pre-\$STAMP.conf"
+  # deploy/nginx.conf is the whole site, TLS included, so the certificate has
+  # to exist before it is installed. certbot certonly answers HTTP-01 through
+  # the running nginx and edits no site file.
+  certbot certonly --nginx ${DOMAINS[*]/#/-d } --cert-name $DOMAIN \
+    --non-interactive --agree-tos --expand \
+    -m hello@devya.dev --keep-until-expiring
+  prev=""
+  if [ -f "$NGINX_SITE" ]; then
+    prev="/root/devyapos-nginx-pre-\$STAMP.conf"
+    cp -p "$NGINX_SITE" "\$prev"
+  fi
   mv "$UPLOAD_DIR/devyapos-nginx.conf" "$NGINX_SITE"
   ln -sf "$NGINX_SITE" /etc/nginx/sites-enabled/devya-devyapos
-  nginx -t
-  # HTTP-01 through nginx. certbot adds the TLS listeners to both server
-  # blocks and reloads nginx.
-  certbot --nginx ${DOMAINS[*]/#/-d } --cert-name $DOMAIN \
-    --non-interactive --agree-tos --redirect --expand \
-    -m hello@devya.dev --keep-until-expiring
-  nginx -t && systemctl reload nginx
+  if ! nginx -t; then
+    echo "✗ nginx rejected deploy/nginx.conf; the previous site is back in place" >&2
+    if [ -n "\$prev" ]; then cp -p "\$prev" "$NGINX_SITE"; else rm -f "$NGINX_SITE" /etc/nginx/sites-enabled/devya-devyapos; fi
+    exit 1
+  fi
+  systemctl reload nginx
 fi
 
 prune_backups
@@ -411,6 +446,16 @@ curl -fsS -o /dev/null -w "https://$DOMAIN/ar → %{http_code}\n" "https://$DOMA
 curl -fsS -o /dev/null -w "https://$DOMAIN/api/health → %{http_code}\n" "https://$DOMAIN/api/health"
 for old in "${DOMAINS[@]:1}"; do
   curl -sS -o /dev/null -w "https://$old/ar → %{http_code} %{redirect_url}\n" "https://$old/ar" || true
+done
+# What search engines see (reported, not enforced: the release is already
+# live). Expect HTTP/2, 200 for robots and sitemap, and one-hop 301s from the
+# old host and from plain HTTP straight to https://$DOMAIN.
+curl -sS -o /dev/null -w "https://$DOMAIN/ar → HTTP/%{http_version}\n" "https://$DOMAIN/ar" || true
+for path in /robots.txt /sitemap.xml; do
+  curl -sS -o /dev/null -w "https://$DOMAIN$path → %{http_code}\n" "https://$DOMAIN$path" || true
+done
+for old in "${DOMAINS[@]}"; do
+  curl -sS -o /dev/null -w "http://$old/ar?q=1 → %{http_code} %{redirect_url}\n" "http://$old/ar?q=1" || true
 done
 if [ "$CI_STATE" = skipped ]; then
   record_release release "$FULL_SHA" "CI check: SKIPPED (--skip-ci-check)."

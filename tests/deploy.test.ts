@@ -71,7 +71,11 @@ done
 echo "curl $method $url" >> "$FAKE_LOG"
 path="/\${url#*://*/}"
 case "$method $path" in
-  "GET /ar"|"GET /en") code=200; body="<html></html>" ;;
+  "GET /ar"|"GET /en") code=200; body="<html><head><link rel=\\"canonical\\" href=\\"https://\${FAKE_SITE_HOST:-pos.movingsystems.tech}$path\\"/></head></html>" ;;
+  "GET /robots.txt") code=200; body="User-Agent: *
+Allow: /
+Sitemap: https://\${FAKE_SITE_HOST:-pos.movingsystems.tech}/sitemap.xml" ;;
+  "GET /sitemap.xml") code=200; body="<urlset><url><loc>https://\${FAKE_SITE_HOST:-pos.movingsystems.tech}/ar</loc></url></urlset>" ;;
   "GET /api/health")
     code=200
     release=\${FAKE_HEALTH_RELEASE:-$(cat "$FAKE_STATE/release" 2>/dev/null)}
@@ -322,6 +326,7 @@ describe("deploy.sh release", SLOW, () => {
       expect(run.log).toContain(`curl ${probe.split(" ")[0]} http://127.0.0.1:3009${probe.split(" ")[1]}`);
     }
     expect(run.stdout).toContain("POST /api/lead (malformed JSON) → 400");
+    expect(run.stdout).toContain("SEO: robots, sitemap and canonical all on https://pos.movingsystems.tech");
     expect(run.stdout).toMatch(/2 lead\(s\) wait in the outbox/);
 
     // The new release is live, with the host's settings beside it.
@@ -366,6 +371,16 @@ describe("deploy.sh release", SLOW, () => {
     const run = deploy(["--skip-ci-check"], { FAKE_CONFIG: "degraded" });
     expect(run.status).toBe(1);
     expect(run.stderr).toContain('"event":"config_problem"');
+  });
+
+  it("fails, and does not tag, when the release tells search engines another host", () => {
+    const before = remoteTags().length;
+    const run = deploy(["--skip-ci-check"], { FAKE_SITE_HOST: "pos.devya.dev" });
+    expect(run.status).toBe(1);
+    expect(run.stderr).toContain("/robots.txt (200) does not name https://pos.movingsystems.tech/sitemap.xml");
+    expect(run.stderr).toContain("/sitemap.xml (200) is empty or lists a URL off https://pos.movingsystems.tech");
+    expect(run.stderr).toContain("/ar does not carry the canonical https://pos.movingsystems.tech/ar");
+    expect(remoteTags()).toHaveLength(before);
   });
 
   it("fails when the lead route does not refuse a malformed body", () => {
