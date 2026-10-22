@@ -55,11 +55,17 @@ describe("Docker image", () => {
   const dockerfile = read("Dockerfile");
   const runner = dockerfile.slice(dockerfile.indexOf("AS runner"));
 
-  it("pins every stage to one digest of node:24-alpine", () => {
+  it("pins every stage to one digest of the .nvmrc Node release on alpine", () => {
+    const node = read(".nvmrc").trim();
+    expect(node).toMatch(/^24\.\d+\.\d+$/);
     const froms = [...dockerfile.matchAll(/^FROM (\S+)/gm)].map((m) => m[1]);
     expect(froms).toHaveLength(3);
     expect(new Set(froms).size).toBe(1);
-    expect(froms[0]).toMatch(/^node:24-alpine@sha256:[0-9a-f]{64}$/);
+    expect(froms[0]).toMatch(new RegExp(`^node:${node.replaceAll(".", "\\.")}-alpine@sha256:[0-9a-f]{64}$`));
+  });
+
+  it("declares the same Node release in engines as in .nvmrc", () => {
+    expect(JSON.parse(read("package.json")).engines.node).toBe(read(".nvmrc").trim());
   });
 
   it("runs only the standalone output, as the unprivileged user", () => {
