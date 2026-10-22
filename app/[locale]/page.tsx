@@ -1,4 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
+import { pageJsonLd } from "@/lib/jsonld";
+import JsonLd from "@/components/JsonLd";
 import BrandPromise from "@/components/home/BrandPromise";
 import Features from "@/components/home/Features";
 import HomeContact from "@/components/home/HomeContact";
@@ -46,6 +48,9 @@ export default async function HomePage({
 
   return (
     <>
+      {/* The product and its prices (SoftwareApplication); the home page has
+          no breadcrumb of its own. */}
+      <JsonLd data={pageJsonLd(locale, "")} />
       <Hero />
       {/* Proof before pitch: 25 branches on the system reads as evidence only
           while the visitor is still holding the promise the hero just made. */}

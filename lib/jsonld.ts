@@ -1,6 +1,7 @@
 import { getContent, type SiteContent } from "@/content";
 import { brand, brandName, socialLinks } from "./brand";
 import { localeHref, ogImageUrl, routes } from "./meta";
+import { SHOTS } from "./screenshots";
 
 /**
  * Structured data, generated from the same content tree the page renders.
@@ -19,10 +20,27 @@ export interface JsonLdNode {
   [key: string]: unknown;
 }
 
-/** Stable node identities so the per-page graphs can point at them. */
+/**
+ * Stable node identities so the per-page graphs can point at them. APP_ID is
+ * also what the movingsystems.tech umbrella site links to: never rename it.
+ * PARENT_ID is Devya Solutions' own Organization node on devya.dev.
+ */
 export const ORG_ID = `${brand.url}/#organization`;
+export const WEBSITE_ID = `${brand.url}/#website`;
 export const APP_ID = `${brand.url}/#software`;
-const PARENT_ID = `${brand.parent.url}/#organization`;
+export const PARENT_ID = `${brand.parent.url}/#organization`;
+
+/**
+ * The logo as a raster on this host. Google reads `logo` for the knowledge
+ * panel and wants a bitmap of at least 112 px; the SVG mark it pointed at
+ * before is not one. The PNG is rendered from the mark by
+ * scripts/render-brand-assets.mjs.
+ */
+const LOGO = {
+  url: `${brand.url}/brand/devyapos-icon-512.png`,
+  width: 512,
+  height: 512,
+} as const;
 
 /** E.164 with the plus back on — `brand.whatsapp` stores it bare for wa.me. */
 const tel = `+${brand.whatsapp}`;
@@ -47,13 +65,21 @@ export function organizationJsonLd(locale: string): JsonLdNode {
     name: brandName(locale),
     alternateName: brandName(locale === "ar" ? "en" : "ar"),
     url: brand.url,
-    logo: `${brand.url}/icon.svg`,
+    logo: {
+      "@type": "ImageObject",
+      "@id": `${brand.url}/#logo`,
+      url: LOGO.url,
+      contentUrl: LOGO.url,
+      width: LOGO.width,
+      height: LOGO.height,
+      caption: brandName(locale),
+    },
     image: ogImageUrl(locale),
     description: c.meta.home.description,
     email: brand.email,
     telephone: tel,
     sameAs: socialLinks.map((s) => s.href),
-    areaServed: { "@type": "Country", name: "EG" },
+    areaServed: { "@type": "Country", name: "Egypt" },
     parentOrganization: {
       "@type": "Organization",
       "@id": PARENT_ID,
@@ -128,33 +154,57 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
     url: localeHref(locale),
     applicationCategory: "BusinessApplication",
     applicationSubCategory: "Point of Sale",
-    operatingSystem: "Web",
+    // It runs in a browser on whatever the branch owns (/hardware).
+    operatingSystem: "Web browser (Android, iPadOS, Windows, macOS)",
     description: c.meta.home.description,
     inLanguage: ["ar", "en"],
     image: ogImageUrl(locale),
+    screenshot: `${brand.url}${SHOTS.posOrder.src}`,
     publisher: { "@id": ORG_ID },
-    featureList: c.features.items.map((f) => f.title),
+    featureList: c.features.items.map((f) => f.listName ?? f.title),
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "EGP",
       lowPrice: Math.min(...priced.map((p) => p.price)),
       highPrice: Math.max(...priced.map((p) => p.price)),
       offerCount: c.pricing.plans.length,
-      unitText: unit,
+      // No `unitText` here: it is not an Offer property. The billing unit is
+      // on each plan's UnitPriceSpecification above.
       offers,
     },
   };
 }
 
-/** The two site-wide nodes, mounted once from the locale layout. */
-export function siteJsonLd(locale: string): JsonLdNode[] {
-  return [organizationJsonLd(locale), softwareApplicationJsonLd(locale)];
+/** The site itself: one WebSite in both languages, published by Moving POS. */
+export function webSiteJsonLd(locale: string): JsonLdNode {
+  return {
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    url: brand.url,
+    name: brandName(locale),
+    alternateName: brandName(locale === "ar" ? "en" : "ar"),
+    inLanguage: ["ar", "en"],
+    publisher: { "@id": ORG_ID },
+  };
 }
 
 /**
- * FAQ markup for the pages that actually render `components/Faq` — currently
- * /pricing and /contact. Generated from `c.faq.items`, so the answers in the
- * markup are the answers on the page, verbatim.
+ * The site-wide nodes, mounted once from the locale layout: who runs the site,
+ * and the site. The product and its prices are not here — they are emitted
+ * by `pageJsonLd` on the pages that show them (APP_PATHS), so a privacy policy
+ * does not carry price markup it does not display.
+ */
+export function siteJsonLd(locale: string): JsonLdNode[] {
+  return [organizationJsonLd(locale), webSiteJsonLd(locale)];
+}
+
+/** Routes that present the product and its prices, so carry SoftwareApplication. */
+export const APP_PATHS = ["", "/features", "/compare", "/pricing"] as const;
+
+/**
+ * FAQ markup for the shared `components/Faq` block. Generated from
+ * `c.faq.items`, so the answers in the markup are the answers on the page,
+ * verbatim.
  */
 export function faqPageJsonLd(locale: string, path: string): JsonLdNode {
   const c = getContent(locale);
@@ -171,8 +221,12 @@ export function faqPageJsonLd(locale: string, path: string): JsonLdNode {
   };
 }
 
-/** Routes whose page mounts `<Faq />`. Keep in step with those two pages. */
-export const FAQ_PATHS = ["/pricing", "/contact"] as const;
+/**
+ * Routes whose shared `<Faq />` is marked up. /contact renders the same block,
+ * but the same FAQPage on two URLs competes with itself, so only /pricing —
+ * where the questions are about the plans — carries it.
+ */
+export const FAQ_PATHS = ["/pricing"] as const;
 
 /**
  * Human name for a route: the label the site's own links give it (the header,
@@ -231,6 +285,9 @@ export function breadcrumbJsonLd(
  */
 export function pageJsonLd(locale: string, path: string): JsonLdNode[] {
   const nodes: JsonLdNode[] = [];
+  if ((APP_PATHS as readonly string[]).includes(path)) {
+    nodes.push(softwareApplicationJsonLd(locale));
+  }
   const crumbs = breadcrumbJsonLd(locale, path);
   if (crumbs) nodes.push(crumbs);
   if ((FAQ_PATHS as readonly string[]).includes(path)) {

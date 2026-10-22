@@ -110,10 +110,11 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body className="flex min-h-full flex-col">
-        {/* Site-wide structured data: who sells this and what it costs. The
-            per-page nodes (BreadcrumbList, FAQPage) are built by
-            `pageJsonLd(locale, path)` and mounted by the pages themselves —
-            a layout cannot know which route it is wrapping. */}
+        {/* Site-wide structured data: who runs the site, and the site. The
+            per-page nodes (SoftwareApplication where prices are shown,
+            BreadcrumbList, FAQPage) are built by `pageJsonLd(locale, path)`
+            and mounted by the pages themselves — a layout cannot know which
+            route it is wrapping. */}
         <JsonLd data={siteJsonLd(locale)} />
         <NextIntlClientProvider>
           <Header nav={c.nav} />

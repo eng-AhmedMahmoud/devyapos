@@ -211,6 +211,7 @@ export const en: SiteContent = {
       {
         icon: "loyalty",
         title: "Loyalty, points and tiers",
+        listName: "Loyalty points",
         body: "Bronze → Silver → Gold → Platinum. Customers earn, come back to spend, and bring friends — with notifications and campaigns that reach them directly.",
         badge: "+50% retention",
         hue: "rose",
