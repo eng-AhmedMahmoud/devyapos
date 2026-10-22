@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import IpadShell from "@/components/IpadShell";
 
@@ -27,6 +28,10 @@ import IpadShell from "@/components/IpadShell";
  * `prefers-reduced-motion` never starts on its own. The clip is decorative; the
  * argument is made in the text beside it. That path shows the poster and a real
  * control, and fetches nothing until it is pressed.
+ *
+ * The poster is a lazy image laid over the video until the first frame plays,
+ * not the element's `poster` attribute: a `poster` is fetched with the page,
+ * however far below the fold the device sits, and on home it is.
  */
 export default function IpadVideo({
   src,
@@ -55,6 +60,7 @@ export default function IpadVideo({
   // server markup and the common case agree and the button never flashes in.
   const [reduced, setReduced] = useState(false);
   const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   /**
    * Fetch if nothing has been fetched yet, then try to play.
@@ -122,14 +128,24 @@ export default function IpadVideo({
       <video
         ref={ref}
         src={src}
-        poster={poster}
         muted
         loop
         playsInline
         preload="none"
         aria-label={label}
+        onPlaying={() => setPlaying(true)}
         className="h-full w-full object-contain"
       />
+      {!playing && (
+        <Image
+          src={poster}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes={`(min-width: ${maxWidth}) ${maxWidth}, 100vw`}
+          className="pointer-events-none object-contain"
+        />
+      )}
       {reduced && !started && (
         <button
           type="button"
