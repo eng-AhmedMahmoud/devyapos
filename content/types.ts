@@ -550,6 +550,25 @@ export interface SiteContent {
   };
 
   /**
+   * Moving Stores, the sister product, on the POS site: the band on /pricing
+   * and the footer's family link. Every line must hold for the POS ↔ Stores
+   * link as built (devya-commerce `docs/specs/pos-integration.md`): it is for
+   * restaurants, it brings the menu, prices and branches over from the POS,
+   * puts web orders on the kitchen display and shares one sign-in. Customers
+   * and loyalty balances do not sync — do not say they do.
+   */
+  movingStores: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    points: string[];
+    note: string;
+    cta: string;
+    /** The footer's one-line link to the sister product. */
+    footerLink: string;
+  };
+
+  /**
    * Moving Systems, the company behind Moving POS, is a subsidiary of Devya
    * Solutions. Both sentences are word for word the same on every Moving
    * property (movingsystems.tech, Moving Stores): `text` is the sentence,

@@ -7,6 +7,7 @@ import CtaBand from "@/components/CtaBand";
 import Faq from "@/components/Faq";
 import JsonLd from "@/components/JsonLd";
 import MarketAnchor from "@/components/MarketAnchor";
+import MovingStoresBand from "@/components/MovingStoresBand";
 import PageHero from "@/components/PageHero";
 import Pricing from "@/components/Pricing";
 import PricingSegments from "@/components/PricingSegments";
@@ -47,6 +48,8 @@ export default async function PricingPage({
         <Pricing copy={c.pricing} compact />
       </div>
       <MarketAnchor />
+      {/* The sister product, as the add-on a restaurant takes next. */}
+      <MovingStoresBand />
 
       <Faq />
       <CtaBand source="pricing" />

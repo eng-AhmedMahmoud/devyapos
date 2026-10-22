@@ -135,7 +135,10 @@ The FAQ deliberately does **not** appear here — see FAQ placement note below.
 `PageHero` → `Pricing` (`components/Pricing.tsx`, `compact` mode — no
 duplicate section head, just the monthly/yearly toggle + 3-tier plan grid) →
 **`MarketAnchor`** (`components/MarketAnchor.tsx`, the market-anchor
-competitor table) → `Faq` → `CtaBand`.
+competitor table) → `MovingStoresBand` (`components/MovingStoresBand.tsx`,
+the sister product Moving Stores and what its POS link does; copy in
+`movingStores`, address in `lib/brand.ts`) → `Faq` → `CtaBand`. The footer
+also links Moving Stores, under the contacts.
 
 ### `/compare` (`app/[locale]/compare/page.tsx`)
 

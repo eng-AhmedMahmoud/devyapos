@@ -1088,6 +1088,21 @@ export const en: SiteContent = {
     withCr: "Moving POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
   },
 
+  movingStores: {
+    eyebrow: "Moving Stores",
+    title: "Your menu online, from the same till",
+    body: "Moving Stores is the online store from the same family. Connect it to Moving POS and your menu, prices and branches arrive by themselves, and online orders reach the kitchen like any other order.",
+    points: [
+      "Menu, prices and branches stay in sync with the POS",
+      "Online orders go straight to the kitchen display",
+      "One sign-in for the POS and the store",
+      "Cash on delivery, cards and wallets through Paymob, Bosta shipping",
+    ],
+    note: "The connection is for restaurants and cafés on Moving POS. Ask about both together when you take Moving POS.",
+    cta: "See Moving Stores",
+    footerLink: "Moving Stores — your online store",
+  },
+
   parentCompany: {
     credit: { text: "Moving Systems is a Devya Solutions company", link: "Devya Solutions" },
     notice: {
