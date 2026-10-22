@@ -28,17 +28,24 @@ export interface CarouselItem {
  * With `quickLook` labels, every screenshot is also a button that opens it
  * full size (QuickLook). Closing hands back the screen the visitor stepped
  * to, and the carousel moves there and takes the focus back.
+ *
+ * `priority` preloads the first slide. Off by default: both carousels sit
+ * well below the fold (home's Showcase, /features under its hero), and a
+ * preloaded image there only competes with the fonts and CSS the first
+ * paint is waiting on.
  */
 export default function ScreenshotCarousel({
   items,
   ariaLabel,
   intervalMs = 5200,
   quickLook,
+  priority = false,
 }: {
   items: CarouselItem[];
   ariaLabel: string;
   intervalMs?: number;
   quickLook?: QuickLookLabels;
+  priority?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
@@ -176,9 +183,9 @@ export default function ScreenshotCarousel({
                   src={item.src}
                   alt={item.alt}
                   orientation={item.orientation}
-                  /* Only the first is eager; the rest are below the fold of the
-                     track and would otherwise all decode on load. */
-                  priority={i === 0}
+                  /* At most the first is eager, and only on request; the rest
+                     are off to the side of the track. */
+                  priority={priority && i === 0}
                 />
                 {quickLook ? (
                   <button
