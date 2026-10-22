@@ -672,7 +672,7 @@ export const ar: SiteContent = {
           { label: "الأسعار", href: "/pricing" },
           { label: "الأجهزة", href: "/hardware" },
           { label: "تجربة المحاسبة المجانية", href: "/accounting-trial" },
-          { label: "كيف يعمل", href: "/#how" },
+          { label: "كيف يعمل", href: "/how-it-works" },
         ],
       },
       {
@@ -681,7 +681,7 @@ export const ar: SiteContent = {
           { label: "بديل فودكس", href: "/foodics-alternative" },
           { label: "منصّات نقاط البيع الكبرى", href: "/compare" },
           { label: "الضريبة والفاتورة الإلكترونية", href: "/eta-einvoicing" },
-          { label: "حاسبة العمولة", href: "/#roi" },
+          { label: "حاسبة العمولة", href: "/compare#roi" },
         ],
       },
       {

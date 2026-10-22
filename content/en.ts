@@ -668,7 +668,7 @@ export const en: SiteContent = {
           { label: "Pricing", href: "/pricing" },
           { label: "Hardware", href: "/hardware" },
           { label: "Accounting free trial", href: "/accounting-trial" },
-          { label: "How it works", href: "/#how" },
+          { label: "How it works", href: "/how-it-works" },
         ],
       },
       {
@@ -677,7 +677,7 @@ export const en: SiteContent = {
           { label: "Foodics alternative", href: "/foodics-alternative" },
           { label: "Enterprise POS platforms", href: "/compare" },
           { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
-          { label: "Commission calculator", href: "/#roi" },
+          { label: "Commission calculator", href: "/compare#roi" },
         ],
       },
       {
