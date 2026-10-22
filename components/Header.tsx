@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { SiteContent } from "@/content/types";
+import { brandName } from "@/lib/brand";
 import { Arrow, Close, Menu } from "./icons";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
@@ -57,7 +58,9 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
             320px the full bar ran 27–34px past the screen. The 20px gutter
             stays, so the logo lines up with the page under it. */}
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-5 sm:h-[4.5rem] sm:gap-4 sm:px-8">
-          <Link href="/" aria-label={t("home")} className="shrink-0">
+          {/* The accessible name starts with the words the logo shows, so a
+              voice user who says what they see hits it (WCAG 2.5.3). */}
+          <Link href="/" aria-label={`${brandName(locale)} — ${t("home")}`} className="shrink-0">
             <Logo locale={locale} />
           </Link>
 
