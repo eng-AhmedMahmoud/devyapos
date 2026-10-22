@@ -6,8 +6,9 @@ import { config, proxy } from "@/proxy";
 /*
  * Locale routing, run through the real proxy (next-intl's middleware with
  * i18n/routing.ts) and Next's own matcher evaluation — not read off the source.
- * Arabic is the front door for everyone, campaign links keep their query
- * string, and nothing writes a locale cookie.
+ * Arabic is the front door for everyone, permanently (308: the target never
+ * depends on the visitor), campaign links keep their query string, and
+ * nothing writes a locale cookie.
  */
 
 const SITE = "https://pos.devya.dev";
@@ -21,17 +22,17 @@ function location(res: Response): string | null {
 }
 
 describe("locale routing (proxy.ts)", () => {
-  it("sends bare / to /ar, whatever the browser's language", () => {
+  it("sends bare / to /ar permanently, whatever the browser's language", () => {
     for (const lang of [undefined, "en-US,en;q=0.9", "ar-EG", "fr-FR"]) {
       const res = visit("/", lang ? { "accept-language": lang } : {});
-      expect(res.status, String(lang)).toBe(307);
+      expect(res.status, String(lang)).toBe(308);
       expect(location(res), String(lang)).toBe(`${SITE}/ar`);
     }
   });
 
   it("keeps the campaign query string through the redirect", () => {
     const res = visit("/?utm_source=meta&utm_campaign=eg-launch");
-    expect(res.status).toBe(307);
+    expect(res.status).toBe(308);
     const to = new URL(location(res)!);
     expect(to.pathname).toBe("/ar");
     expect(to.searchParams.get("utm_source")).toBe("meta");
@@ -40,8 +41,16 @@ describe("locale routing (proxy.ts)", () => {
 
   it("gives an unprefixed page the Arabic prefix", () => {
     const res = visit("/accounting-trial");
-    expect(res.status).toBe(307);
+    expect(res.status).toBe(308);
     expect(location(res)).toBe(`${SITE}/ar/accounting-trial`);
+  });
+
+  it("never answers with a temporary redirect", () => {
+    for (const path of ["/", "/pricing", "/AR/pricing", "/nope?x=1"]) {
+      const res = visit(path, { "accept-language": "en-US" });
+      expect(res.status, path).not.toBe(307);
+      expect(res.status, path).not.toBe(302);
+    }
   });
 
   it("serves a page that already carries its locale, without redirecting", () => {
