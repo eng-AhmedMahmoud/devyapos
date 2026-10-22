@@ -21,25 +21,32 @@ export interface SiteRoute {
   changeFrequency: NonNullable<
     MetadataRoute.Sitemap[number]["changeFrequency"]
   >;
+  /**
+   * The day the page's own copy last changed, as `YYYY-MM-DD`. The sitemap's
+   * `lastmod`, typed by hand on purpose: the image is built from a git archive,
+   * so a build-time date would move on every deploy and teach search engines
+   * to ignore the field. Bump it in the commit that changes what the page says.
+   */
+  updated: string;
 }
 
 export const routes: readonly SiteRoute[] = [
-  { path: "", key: "home", priority: 1, changeFrequency: "weekly" },
-  { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly" },
+  { path: "", key: "home", priority: 1, changeFrequency: "weekly", updated: "2026-10-19" },
+  { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-10-22" },
+  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-22" },
+  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* Search-entry pages: each answers a query the home page cannot. */
-  { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-22" },
+  { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
-  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* The privacy policy describes what the site already does, so it is indexed
-     and linked. */
-  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly" },
+     and linked; its date is the "Last updated" line the page prints. */
+  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-10-13" },
 ];
 
 /**

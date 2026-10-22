@@ -32,6 +32,7 @@ export default function robots(): MetadataRoute.Robots {
       ...AI_CRAWLERS.map((userAgent) => ({ userAgent, allow: "/" })),
     ],
     sitemap: `${brand.url}/sitemap.xml`,
-    host: brand.url,
+    // No `Host:` line. It was Yandex's, is in no standard, and Google and Bing
+    // ignore it; the canonical host is already in every canonical tag.
   };
 }
