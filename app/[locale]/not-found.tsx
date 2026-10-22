@@ -1,8 +1,33 @@
+import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
+import { brandName } from "@/lib/brand";
 import { Arrow } from "@/components/icons";
 import { Container } from "@/components/Section";
+
+/**
+ * The 404 inside a locale: what a page under /ar or /en renders when it calls
+ * notFound(). Unknown URLs never get here — they match no page and get
+ * app/global-not-found.tsx.
+ *
+ * Its head would otherwise be the locale layout's, which is the home page's:
+ * a 404 declaring itself the canonical home page and its hreflang twins.
+ * Next adds `noindex` to any 404; it is stated here too so the intent
+ * survives a refactor.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const c = getContent(locale);
+  return {
+    title: `${c.notFound.title} | ${brandName(locale)}`,
+    description: c.notFound.body,
+    robots: { index: false, follow: true },
+    alternates: { canonical: null, languages: {} },
+    openGraph: null,
+    twitter: null,
+  };
+}
 
 export default async function NotFound() {
   const locale = await getLocale();

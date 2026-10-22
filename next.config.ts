@@ -44,6 +44,12 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    // app/global-not-found.tsx: the branded 404 for every URL that matches no
+    // page. The root layout is the dynamic [locale] segment, so without it an
+    // unknown URL got Next's unbranded default page.
+    globalNotFound: true,
+  },
   // The Docker image runs `.next/standalone/server.js` with only the files the
   // server traces, not the repo and its devDependencies (Dockerfile, runner
   // stage).

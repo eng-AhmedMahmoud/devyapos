@@ -73,6 +73,11 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+/* Only /ar and /en exist. Any other first segment (/nope.php, /wp-admin) is
+   an unmatched URL, so Next answers it with app/global-not-found.tsx, a
+   complete 404 document, instead of rendering this layout and throwing. */
+export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: {
