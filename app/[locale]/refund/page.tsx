@@ -14,12 +14,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    ...(await buildMetadata(locale, "refund", PATH)),
-    /* Unreviewed draft: reachable, but must not be indexed or presented as
-       published terms until it has had a legal review. */
-    robots: { index: false, follow: false },
-  };
+  /* Unreviewed draft: reachable, but kept out of search until it has had a
+     legal review. `buildMetadata` adds the noindex for every path in
+     NOINDEX_PATHS (lib/meta.ts). */
+  return buildMetadata(locale, "refund", PATH);
 }
 
 /** Refund and cancellation policy. Prose only — see `components/pages/LegalArticle`. */

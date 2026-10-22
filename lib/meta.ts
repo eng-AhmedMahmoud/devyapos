@@ -37,13 +37,21 @@ export const routes: readonly SiteRoute[] = [
   { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly" },
   /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
   { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly" },
-  /* Legal (/terms, /privacy, /refund) is deliberately absent. The pages are
-     built and reachable, but they are unreviewed drafts that commit the company
-     to refund windows, retention periods and a liability cap, so they are kept
-     out of the sitemap and marked noindex until they have been reviewed. Add
-     them back here, and restore the footer links in `content/*.ts`, in the same
-     commit that publishes them. */
+  /* The privacy policy describes what the site already does, so it is indexed
+     and linked. */
+  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly" },
 ];
+
+/**
+ * Pages that are reachable but kept out of search: /terms and /refund are
+ * unreviewed drafts that commit the company to refund windows and a liability
+ * cap. `buildMetadata` marks them `noindex, follow`, and they stay out of
+ * `routes` (so out of the sitemap and the breadcrumbs). /refund is still linked
+ * from the footer — it only restates the trial and cancellation terms the
+ * marketing pages already promise. When legal signs one off, move it into
+ * `routes` and out of this list in the same commit.
+ */
+export const NOINDEX_PATHS: readonly string[] = ["/terms", "/refund"];
 
 /** Absolute URL for a path in a given locale. `localePrefix` is "always". */
 export function localeHref(locale: string, path = "") {
@@ -72,7 +80,7 @@ export function alternateLanguages(path = "") {
  * by `scripts/render-brand-assets.mjs` with headless Chrome. Not `next/og` —
  * satori rejects the GSUB tables of the Arabic faces the site now sets (Reem
  * Kufi, IBM Plex Sans Arabic) and fails the build; Moving Stores and the
- * moving.devya.dev umbrella site render their cards the same way. Re-run the
+ * movingsystems.tech umbrella site render their cards the same way. Re-run the
  * script whenever the hero copy or the product name changes.
  */
 export function ogImageUrl(locale: string) {
@@ -114,6 +122,11 @@ export function buildMetadata(
     metadataBase: new URL(brand.url),
     title: meta.title,
     description: meta.description,
+    /* Out of the index, but the links on the page are still followed: the
+       footer and nav on a noindexed page lead to pages that are indexed. */
+    ...(NOINDEX_PATHS.includes(path)
+      ? { robots: { index: false, follow: true } }
+      : {}),
     alternates: { canonical: url, languages: alternateLanguages(path) },
     openGraph: {
       type: "website",
