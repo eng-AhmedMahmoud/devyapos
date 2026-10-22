@@ -10,7 +10,7 @@ import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 import { formatEgp, formatNumber } from "@/lib/format";
 
-/** Growth plan, EGP per branch per month — the figure the payback is costed at. */
+/** Counter package, EGP per branch per month — the figure the payback is costed at. */
 const PLAN_PRICE = 199;
 /** Deliberately conservative share of aggregator orders assumed to move over. */
 const SHIFT_RATE = 0.3;

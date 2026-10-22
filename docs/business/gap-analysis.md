@@ -53,7 +53,7 @@ sets **Built** and links itself; this repo's PRs wait for a human merge);
 
 | ID | Gap | Model | Impact | Effort | Priority | Status | Issue |
 |---|---|---|---|---|---|---|---|
-| P01 | The pricing page sells the retired Growth / Scale / Enterprise ladder; the product's Counter / Dining room / Group packages and its add-ons are not on sale | SaaS tiers, per-branch pricing, add-ons | 4 | S | P0 | This round | [#60](https://github.com/eng-AhmedMahmoud/devyapos/issues/60) |
+| P01 | The pricing page sells the retired Growth / Scale / Enterprise ladder; the product's Counter / Dining room / Group packages and its add-ons are not on sale | SaaS tiers, per-branch pricing, add-ons | 4 | S | P0 | Built (#70) | [#60](https://github.com/eng-AhmedMahmoud/devyapos/issues/60) |
 | P02 | Moving Stores is not on the POS site: no link, no add-on price, no bundle | POS ↔ store cross-sell | 3 | S | P0 | This round | [#61](https://github.com/eng-AhmedMahmoud/devyapos/issues/61) |
 | P03 | No partner, reseller or referral programme, and no way to apply | Reseller / partner / referral | 4 | S–M | P0 | This round | [#62](https://github.com/eng-AhmedMahmoud/devyapos/issues/62) |
 | P04 | Claims the product does not back: loyalty tiers and referrals, campaigns, delivery integrations, 58mm/USB/drawer kick, peak hours, ordering at the table, "payment providers on request", instalments, a self-serve POS trial, self-serve cancel and export | Trust (refunds, churn, comparative-advertising risk) | 3 | S | P1 | Ticketed (pricing claims fixed with P01) | [#63](https://github.com/eng-AhmedMahmoud/devyapos/issues/63) |
@@ -122,7 +122,7 @@ agent opens a PR and the developer merges and deploys).
 
 ## Gap details
 
-### P01 — The packages the product sells (this round)
+### P01 — The packages the product sells (built, #70)
 
 - **Today:** `content/*.ts` `pricing.plans` publishes Growth 199 / Scale 499
   / Enterprise custom with feature lists that differ from the product
@@ -135,8 +135,8 @@ agent opens a PR and the developer merges and deploys).
   coursing, split bill, QR pay at the table, waiter flow, gift cards), Group
   quoted (+ supply, HR, accounting, API, device management). Add-ons are
   quoted per tenant.
-- **Plan:** the grid shows those three packages with only shipped features,
-  and an add-ons block (Moving Stores, accounting, AI assistant, customer
+- **Built (#70):** the grid shows those three packages with only shipped
+  features, and an add-ons block (Moving Stores, accounting, AI assistant, customer
   display, handheld apps, Loyalty Garden app, CRM) priced or "quoted".
 
 ### P02 — Moving Stores on the POS site (this round)
