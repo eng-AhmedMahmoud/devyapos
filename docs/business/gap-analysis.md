@@ -55,7 +55,7 @@ sets **Built** and links itself; this repo's PRs wait for a human merge);
 |---|---|---|---|---|---|---|---|
 | P01 | The pricing page sells the retired Growth / Scale / Enterprise ladder; the product's Counter / Dining room / Group packages and its add-ons are not on sale | SaaS tiers, per-branch pricing, add-ons | 4 | S | P0 | Built (#70) | [#60](https://github.com/eng-AhmedMahmoud/devyapos/issues/60) |
 | P02 | Moving Stores is not on the POS site: no link, no add-on price, no bundle | POS ↔ store cross-sell | 3 | S | P0 | Built (#71) | [#61](https://github.com/eng-AhmedMahmoud/devyapos/issues/61) |
-| P03 | No partner, reseller or referral programme, and no way to apply | Reseller / partner / referral | 4 | S–M | P0 | This round | [#62](https://github.com/eng-AhmedMahmoud/devyapos/issues/62) |
+| P03 | No partner, reseller or referral programme, and no way to apply | Reseller / partner / referral | 4 | S–M | P0 | Built (#72) | [#62](https://github.com/eng-AhmedMahmoud/devyapos/issues/62) |
 | P04 | Claims the product does not back: loyalty tiers and referrals, campaigns, delivery integrations, 58mm/USB/drawer kick, peak hours, ordering at the table, "payment providers on request", instalments, a self-serve POS trial, self-serve cancel and export | Trust (refunds, churn, comparative-advertising risk) | 3 | S | P1 | Ticketed (pricing claims fixed with P01) | [#63](https://github.com/eng-AhmedMahmoud/devyapos/issues/63) |
 | P05 | Competitor facts out of date: Foodics Egypt prices **are** public (foodics.com/foodics-pricing-egypt), the `/compare` column denies Foodics a POS, inventory, zones and KDS, `docs/spec.md` figures are stale; the ETA page and the accounting page contradict each other | Trust / legal | 3 | S | P1 | Ticketed | [#64](https://github.com/eng-AhmedMahmoud/devyapos/issues/64) |
 | P06 | Leads have no home: no CRM forward configured, no new-lead alert, no backup of the outbox | Funnel | 4 | S–M (owner + ops) | P0 | Owner + Ticketed | [#65](https://github.com/eng-AhmedMahmoud/devyapos/issues/65) |
@@ -147,9 +147,9 @@ agent opens a PR and the developer merges and deploys).
   about both together (the bundle price is the owner's, #66); the footer links
   it on every page.
 
-### P03 — Partners and referrals (this round)
+### P03 — Partners and referrals (built, #72)
 
-- **Plan:** a `/partners` page: who it is for (accountants, hardware dealers,
+- **Built (#72):** a `/partners` page: who it is for (accountants, hardware dealers,
   agencies, restaurant consultants), the two models (referral and reseller)
   with proposed terms, a restaurant-refers-restaurant offer, and the way to
   apply (WhatsApp with its own placement code, and the contact form). Terms are

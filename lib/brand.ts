@@ -124,6 +124,7 @@ export const whatsappSources = {
   form: "Contact form, 'send on WhatsApp' route",
   foodics: "Closing card on /foodics-alternative",
   hardware: "Closing card on /hardware",
+  partners: "Closing card on /partners",
   eta: "Closing card on /eta-einvoicing",
   trial: "Accounting trial, fallback after a failed sign-up",
   quote: "Accounting pricing, Enterprise quote",
