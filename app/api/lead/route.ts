@@ -21,11 +21,10 @@ import { clientIp, createRateLimiter } from "@/lib/rate-limit";
  * nothing that identifies the person. `scripts/leads.sh` reads the outbox
  * from outside.
  *
- * Note on routing: `next.config.ts` rewrites `/api/:path*` to the platform API.
- * That rewrite is returned as a plain array, which Next treats as `afterFiles`
- * — filesystem routes are matched first, so this handler wins `/api/lead` and
- * every other `/api/*` path still proxies through. Do not move this rewrite to
- * `beforeFiles` without re-checking that.
+ * Note on routing: there is no `/api` rewrite any more (#53 removed the one to
+ * the platform API, which had nothing behind it). `/api/lead`, `/api/consent`
+ * and `/api/health` are this app's own routes and any other `/api/*` path is a
+ * 404.
  *
  * The route never renders anything and reads request headers, so it must not be
  * statically analysed into a cached response.
@@ -255,7 +254,7 @@ export async function POST(req: Request) {
   return json({ ok: false, error: "unavailable" }, 503);
 }
 
-/** Anything but POST. Explicit, so a stray GET does not 405 through the rewrite. */
+/** Anything but POST: an explicit JSON 405 rather than the framework default. */
 export function GET() {
   return json({ ok: false, error: "method_not_allowed" }, 405);
 }
