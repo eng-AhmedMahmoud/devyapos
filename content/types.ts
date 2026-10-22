@@ -135,8 +135,10 @@ export interface Fact {
 }
 
 /**
- * A buyer segment on the pricing page. The price is identical for every
- * segment — only the framing changes, so there is no `price` here on purpose.
+ * A buyer segment on the pricing page. A segment points the buyer at a
+ * package (quick service, cloud kitchens and chains at Counter; a dining room
+ * at Dining room) but carries no price itself: the plan grid below owns the
+ * numbers, so there is no `price` here on purpose.
  */
 export interface PricingSegment {
   id: string;
@@ -145,6 +147,21 @@ export interface PricingSegment {
   headline: string;
   body: string;
   points: string[];
+}
+
+/**
+ * A module sold on top of a package. The product marks these `addOn: true`
+ * (`devya-pos:ops-app/lib/plans.ts`) and prices them per tenant, so `price`
+ * is the label shown — a published figure, or "Quoted" until there is one.
+ */
+export interface AddOn {
+  id: string;
+  name: string;
+  body: string;
+  price: string;
+  /** An internal path (`/accounting-trial`) when the add-on has its own page. */
+  href?: string;
+  linkLabel?: string;
 }
 
 /** The two countries accounting is sold in — the trial form's choice too. */
@@ -356,6 +373,13 @@ export interface SiteContent {
     };
     note: string;
     founding: string;
+    /** Modules sold on top of any package, under the plan grid. */
+    addOns: {
+      title: string;
+      sub: string;
+      items: AddOn[];
+      note: string;
+    };
     compareLink: string;
   };
   faq: { eyebrow: string; title: string; sub: string; items: Faq[] };

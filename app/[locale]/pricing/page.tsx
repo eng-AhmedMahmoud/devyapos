@@ -10,6 +10,7 @@ import MarketAnchor from "@/components/MarketAnchor";
 import MovingStoresBand from "@/components/MovingStoresBand";
 import PageHero from "@/components/PageHero";
 import Pricing from "@/components/Pricing";
+import PricingAddOns from "@/components/PricingAddOns";
 import PricingSegments from "@/components/PricingSegments";
 
 export async function generateMetadata({
@@ -39,14 +40,15 @@ export default async function PricingPage({
         sub={c.pricing.sub}
       />
       {/* Qualify first, price second: the tabs let the buyer say what kind of
-          restaurant they run before a number is on screen. Same price in every
-          tab — the block says so itself. */}
+          restaurant they run before a number is on screen, and each one points
+          at the package built for it. */}
       <PricingSegments copy={c.pricing.segments} />
       {/* The plan grid carries its own billing toggle; the page hero already
           said everything a section head would have repeated. */}
       <div className="bg-bg pt-10 pb-20 sm:pb-24">
         <Pricing copy={c.pricing} compact />
       </div>
+      <PricingAddOns copy={c.pricing.addOns} />
       <MarketAnchor />
       {/* The sister product, as the add-on a restaurant takes next. */}
       <MovingStoresBand />
