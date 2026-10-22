@@ -3,7 +3,14 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./", import.meta.url)) },
+    alias: {
+      "@": fileURLToPath(new URL("./", import.meta.url)),
+      // content/index.ts imports "server-only", whose default export throws so
+      // that a client bundle cannot include it. These tests run the server's
+      // side (lib/jsonld, lib/meta), so they get the empty module a server
+      // component gets under Next's "react-server" condition.
+      "server-only": fileURLToPath(new URL("./node_modules/server-only/empty.js", import.meta.url)),
+    },
   },
   test: {
     include: ["tests/**/*.test.{ts,tsx}"],
