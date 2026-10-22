@@ -67,7 +67,9 @@ export default async function Footer() {
 
           {c.footer.cols.map((col) => (
             <div key={col.title} className="flex flex-col gap-3">
-              <h3 className="text-sm font-bold text-on-espresso">{col.title}</h3>
+              {/* A label, not a heading: four h3s on every page put the
+                  footer into each page's outline. */}
+              <p className="text-sm font-bold text-on-espresso">{col.title}</p>
               <ul className="flex flex-col gap-2.5">
                 {col.links.map((l) => (
                   <li key={`${col.title}-${l.label}`}>
