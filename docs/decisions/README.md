@@ -28,9 +28,9 @@ each, newest first; the link is where the reasoning lives.
 | 2026-10-22 | The site moves to `pos.movingsystems.tech`; `pos.devya.dev` answers with a 301; the lead payload's `site` tag stays `pos.devya.dev` | PR #15, `deploy/nginx.conf` |
 | 2026-10-22 | Every page names Moving Systems as a subsidiary of Devya Solutions, in copy shared across Moving properties | PR #44, `tests/parent.test.ts` |
 | 2026-10-22 | Competitor figures are "our own dated record", never "published", and expire after 90 days | PR #49, `tests/content.test.ts` |
+| 2026-10-22 | The rate limiter stays in memory: one container, one process, so its ceiling is exact and resets on restart; no Redis | PR #50, `lib/rate-limit.ts`, [0001](0001-vps-over-vercel.md) |
 | 2026-10-19 | One shared consent design across Devya and Moving sites; consent expires after 180 days | PR #11, `docs/compliance/consent-design.md` |
 | 2026-10-13 | Sell Moving POS Accounting in Egypt and Saudi Arabia through a self-serve trial, priced in EGP or SAR | `fe49584`, [0003](0003-trial-posts-direct-to-ops-api.md) |
-| 2026-10-22 | The rate limiter stays in memory: one container, one process, so its ceiling is exact and resets on restart; no Redis | PR #50, `lib/rate-limit.ts`, [0001](0001-vps-over-vercel.md) |
 | 2026-09-04 | Egypt-first rebuild: VAT/ETA, Foodics-alternative and hardware pages, real lead capture | `d7eeff1` |
 | 2026-08-29 | POS prices: Growth 199, Scale 499 EGP per branch per month; Enterprise quoted | `e4ae38e` |
 | 2026-08-28 | The reference client's name and link are withdrawn at their request; never reintroduce without written permission | `602eb1a`, `lib/brand.ts` |
