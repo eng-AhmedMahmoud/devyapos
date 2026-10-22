@@ -27,11 +27,21 @@ import "../globals.css";
    both scripts — a Kufic face, the family the mark's letter is cut from — and
    Plex Mono for indexes and labels. `globals.css` puts the right text face
    first on `html[lang]`. */
+/* Only the hero face is preloaded. next/font emits its preload hints per
+   ROUTE, from the font calls in the module graph — not from which className
+   is actually rendered — so every face left on preload is fetched at the
+   highest priority by every page in both locales. That was six files (about
+   190 KB: four Plex Arabic weights and two Reem Kufi subsets) racing the CSS
+   for a mobile first paint. Reem Kufi sets every hero h1, the likely LCP
+   element, so its two subsets keep the hint. Everything else is `preload:
+   false`: the @font-face still resolves the moment a page uses it, and
+   `display: "swap"` covers the beat. */
 const plexArabic = IBM_Plex_Sans_Arabic({
   weight: ["400", "500", "600", "700"],
   subsets: ["arabic"],
   variable: "--font-plex-arabic",
   display: "swap",
+  preload: false,
 });
 
 const reemKufi = Reem_Kufi({
@@ -40,12 +50,9 @@ const reemKufi = Reem_Kufi({
   display: "swap",
 });
 
-/* `preload: false` on the Latin text face and the mono because next/font
-   emits its preload hints per ROUTE, from the font calls in the module graph —
-   not from which className is actually rendered. With it on, every Arabic
-   page (the default locale, so most of the traffic) fetched both Latin files
-   for a handful of Latin words. Without the hint the @font-face still resolves
-   the moment a page uses it; `display: "swap"` covers the beat. */
+/* The Latin text face and the mono were the first to lose the hint: with it
+   on, every Arabic page (the default locale, so most of the traffic) fetched
+   both Latin files for a handful of Latin words. */
 const plexSans = IBM_Plex_Sans({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
