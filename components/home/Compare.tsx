@@ -20,7 +20,10 @@ export default async function Compare() {
   return (
     <section id="compare" className="band-cream py-20 sm:py-24">
       <Container>
+        {/* /compare has no PageHero, so this heading is the page's h1. */}
         <SectionHead
+          as="h1"
+          immediate
           kicker={c.compare.eyebrow}
           title={c.compare.title}
           sub={c.compare.sub}

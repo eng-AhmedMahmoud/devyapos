@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import IpadShell from "@/components/IpadShell";
 
@@ -27,6 +28,11 @@ import IpadShell from "@/components/IpadShell";
  * `prefers-reduced-motion` never starts on its own. The clip is decorative; the
  * argument is made in the text beside it. That path shows the poster and a real
  * control, and fetches nothing until it is pressed.
+ *
+ * The poster is an image laid over the video until the first frame plays,
+ * mounted once the player comes within 600px of the viewport, not the
+ * element's `poster` attribute: a `poster` is fetched with the page, however
+ * far below the fold the device sits, and on home it is.
  */
 export default function IpadVideo({
   src,
@@ -55,6 +61,12 @@ export default function IpadVideo({
   // server markup and the common case agree and the button never flashes in.
   const [reduced, setReduced] = useState(false);
   const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  // The poster mounts only once the player is within 600px of the viewport.
+  // A lazy <img> alone is not enough: the browser's own lazy-load distance
+  // depends on the connection and can reach 2,500px, which on home still
+  // fetches it with the page.
+  const [near, setNear] = useState(false);
 
   /**
    * Fetch if nothing has been fetched yet, then try to play.
@@ -102,6 +114,21 @@ export default function IpadVideo({
 
   useEffect(() => {
     const el = ref.current;
+    if (!el || near) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        setNear(true);
+        io.disconnect();
+      },
+      { rootMargin: "600px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+
+  useEffect(() => {
+    const el = ref.current;
     if (!el || (reduced && !started)) return;
 
     const io = new IntersectionObserver(
@@ -122,14 +149,24 @@ export default function IpadVideo({
       <video
         ref={ref}
         src={src}
-        poster={poster}
         muted
         loop
         playsInline
         preload="none"
         aria-label={label}
+        onPlaying={() => setPlaying(true)}
         className="h-full w-full object-contain"
       />
+      {near && !playing && (
+        <Image
+          src={poster}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes={`(min-width: ${maxWidth}) ${maxWidth}, 100vw`}
+          className="pointer-events-none object-contain"
+        />
+      )}
       {reduced && !started && (
         <button
           type="button"

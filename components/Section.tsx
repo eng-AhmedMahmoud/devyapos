@@ -21,6 +21,11 @@ export function Container({
  *
  * `align` defaults to `start` because this site sets its sections left/right
  * aligned rather than stacking everything down the centre line.
+ *
+ * `as="h1"` is for a section that opens its page with no PageHero above it
+ * (/compare): the page still needs exactly one h1. Pass `immediate` with it —
+ * a heading at the top of the page should paint with the server HTML, not
+ * wait for hydration to fade it in.
  */
 export function SectionHead({
   kicker,
@@ -28,6 +33,8 @@ export function SectionHead({
   sub,
   tone = "page",
   align = "start",
+  as: Heading = "h2",
+  immediate = false,
   className = "",
 }: {
   kicker?: string;
@@ -35,11 +42,14 @@ export function SectionHead({
   sub?: string;
   tone?: "page" | "espresso";
   align?: "center" | "start";
+  as?: "h1" | "h2";
+  immediate?: boolean;
   className?: string;
 }) {
   const espresso = tone === "espresso";
   return (
     <Reveal
+      immediate={immediate}
       className={`flex flex-col gap-4 ${
         align === "center" ? "items-center text-center" : "items-start text-start"
       } ${className}`}
@@ -50,13 +60,13 @@ export function SectionHead({
           {kicker}
         </span>
       ) : null}
-      <h2
+      <Heading
         className={`font-display max-w-3xl text-3xl text-balance sm:text-[2.6rem] ${
           espresso ? "text-on-espresso" : "text-ink"
         }`}
       >
         {title}
-      </h2>
+      </Heading>
       {sub ? (
         <p
           className={`max-w-2xl text-base leading-relaxed text-pretty sm:text-lg ${

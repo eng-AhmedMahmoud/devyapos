@@ -34,6 +34,14 @@ export interface Card {
 export interface Feature extends Card {
   badge: string;
   hue: Hue;
+  /**
+   * The feature's name in the structured data's `featureList` (lib/jsonld.ts),
+   * where it differs from the card `title`. Set only on the loyalty card: its
+   * title says tiers, the product ships points only, and markup must not
+   * repeat a claim the product does not back. Drop it once the visible title
+   * is corrected (docs/seo/audit-2026-10-22.md, follow-ups).
+   */
+  listName?: string;
 }
 
 /** A problem paired with the line that cancels it, for the before/after ledger. */

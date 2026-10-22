@@ -7,15 +7,15 @@ export const en: SiteContent = {
     home: {
       title: "Moving POS | The restaurant OS — register, kitchen, online, stock",
       description:
-        "One system runs the whole restaurant: POS, live kitchen display, your own online ordering, loyalty, and recipe-costed inventory. Bilingual AR/EN, EGP-native, multi-branch.",
+        "One system runs your restaurant: POS, live kitchen display, your own online ordering, loyalty and recipe-costed stock. Arabic and English, EGP, multi-branch.",
     },
     features: {
-      title: "Features | Moving POS",
+      title: "Restaurant POS features: KDS, online ordering, stock | Moving POS",
       description:
         "Everything Moving POS runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
     },
     pricing: {
-      title: "Pricing | Moving POS",
+      title: "POS pricing in Egypt — from 199 EGP a branch a month | Moving POS",
       description:
         "A 14-day free trial, and Growth at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
@@ -25,17 +25,17 @@ export const en: SiteContent = {
         "Moving POS was built inside a working restaurant — now 25 branches, a real menu, real rush hours. The story, the principles, and the plans.",
     },
     howItWorks: {
-      title: "How it works | Moving POS",
+      title: "How a restaurant POS works, register to kitchen | Moving POS",
       description:
-        "One order, four screens: register or phone to kitchen display in under a second, stock deducting itself, and the cost report ready at close. Plus what it takes to switch.",
+        "One order, four screens: register or phone to kitchen display in under a second, stock that deducts itself, the cost report ready at close. Plus how to switch.",
     },
     compare: {
       title: "Moving POS vs enterprise POS platforms | Pricing compared",
       description:
-        "Enterprise restaurant platforms bill per terminal and charge again per module. See the feature-by-feature comparison, and work out what aggregator commission is costing you a year.",
+        "Enterprise restaurant platforms bill per terminal, then again per module. See the feature-by-feature comparison, and what aggregator commission costs a year.",
     },
     contact: {
-      title: "Contact | Moving POS",
+      title: "Contact Moving POS — book a 15-minute demo",
       description:
         "Book a 15-minute demo or message us on WhatsApp. We load your menu and migrate your data for free.",
     },
@@ -47,7 +47,7 @@ export const en: SiteContent = {
     foodicsAlternative: {
       title: "Foodics alternative in Egypt | Moving POS",
       description:
-        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP with every module included. Compared honestly.",
+        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP, every module included. Compared honestly.",
     },
     hardware: {
       title: "POS hardware | Run Moving POS on what you own",
@@ -65,9 +65,9 @@ export const en: SiteContent = {
         "The terms behind a Moving POS subscription: the 14-day trial, billing per branch in EGP, support, cancellation, and who owns your data. Updated September 2026.",
     },
     privacy: {
-      title: "Privacy policy | Moving POS",
+      title: "Privacy policy: what this site collects | Moving POS",
       description:
-        "What this site collects, which is very little: a contact form you send yourself from your own WhatsApp or email, a server we run ourselves, and no cookies of our own.",
+        "What this site collects, which is very little: a contact form you send from your own WhatsApp or email, a server we run ourselves, and no cookies of our own.",
     },
     refund: {
       title: "Refund and cancellation | Moving POS",
@@ -211,6 +211,7 @@ export const en: SiteContent = {
       {
         icon: "loyalty",
         title: "Loyalty, points and tiers",
+        listName: "Loyalty points",
         body: "Bronze → Silver → Gold → Platinum. Customers earn, come back to spend, and bring friends — with notifications and campaigns that reach them directly.",
         badge: "+50% retention",
         hue: "rose",
@@ -667,7 +668,7 @@ export const en: SiteContent = {
           { label: "Pricing", href: "/pricing" },
           { label: "Hardware", href: "/hardware" },
           { label: "Accounting free trial", href: "/accounting-trial" },
-          { label: "How it works", href: "/#how" },
+          { label: "How it works", href: "/how-it-works" },
         ],
       },
       {
@@ -676,7 +677,7 @@ export const en: SiteContent = {
           { label: "Foodics alternative", href: "/foodics-alternative" },
           { label: "Enterprise POS platforms", href: "/compare" },
           { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
-          { label: "Commission calculator", href: "/#roi" },
+          { label: "Commission calculator", href: "/compare#roi" },
         ],
       },
       {

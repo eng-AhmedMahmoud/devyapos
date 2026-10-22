@@ -37,12 +37,14 @@ export default defineConfig({
       // conversion-path tests (#18) on top of the lead-durability work (#50):
       // statements 80.41, branches 81.22, functions 67.4, lines 81.1. Before
       // either: 28.44 / 19.28 / 34.78 / 30.22. Raised after the last X-Ray
-      // track (#21) and the leftovers: 83.85 / 83.43 / 72.72 / 84.73.
+      // track (#21) and the leftovers: 83.85 / 83.43 / 72.72 / 84.73. Raised
+      // with the SEO tests (tests/seo.test.ts, tests/jsonld.test.ts), which
+      // cover lib/meta, lib/jsonld and lib/llms: 92.72 / 87.86 / 88.59 / 94.03.
       thresholds: {
-        statements: 83,
-        branches: 83,
-        functions: 72,
-        lines: 84,
+        statements: 92,
+        branches: 87,
+        functions: 88,
+        lines: 94,
       },
     },
   },

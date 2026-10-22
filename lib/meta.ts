@@ -1,49 +1,12 @@
-import type { Metadata, MetadataRoute } from "next";
+import type { Metadata } from "next";
 import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
 import { brand, brandName } from "./brand";
+import { NOINDEX_PATHS } from "./routes";
 
-/**
- * One route manifest for the whole site.
- *
- * `app/sitemap.ts` used to keep its own hand-typed list of paths, which meant
- * every new page needed a second edit in a file nobody opens — and a forgotten
- * one is invisible until a page quietly never gets indexed. The sitemap now
- * reads this array, so adding a route is a single line here.
- */
-export interface SiteRoute {
-  /** Path below the locale prefix. `""` is the locale home page. */
-  path: string;
-  /** Key into the `meta` block of the content tree (see `content/types.ts`). */
-  key: string;
-  /** Sitemap priority, relative to the other routes on this site only. */
-  priority: number;
-  changeFrequency: NonNullable<
-    MetadataRoute.Sitemap[number]["changeFrequency"]
-  >;
-}
-
-export const routes: readonly SiteRoute[] = [
-  { path: "", key: "home", priority: 1, changeFrequency: "weekly" },
-  { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly" },
-  /* Search-entry pages: each answers a query the home page cannot. */
-  { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly" },
-  /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
-  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly" },
-  /* Legal (/terms, /privacy, /refund) is deliberately absent. The pages are
-     built and reachable, but they are unreviewed drafts that commit the company
-     to refund windows, retention periods and a liability cap, so they are kept
-     out of the sitemap and marked noindex until they have been reviewed. Add
-     them back here, and restore the footer links in `content/*.ts`, in the same
-     commit that publishes them. */
-];
+/* The route manifest lives in ./routes, apart from the copy; re-exported here
+   for the modules that already read it from lib/meta. */
+export { NOINDEX_PATHS, routes, type SiteRoute } from "./routes";
 
 /** Absolute URL for a path in a given locale. `localePrefix` is "always". */
 export function localeHref(locale: string, path = "") {
@@ -72,7 +35,7 @@ export function alternateLanguages(path = "") {
  * by `scripts/render-brand-assets.mjs` with headless Chrome. Not `next/og` —
  * satori rejects the GSUB tables of the Arabic faces the site now sets (Reem
  * Kufi, IBM Plex Sans Arabic) and fails the build; Moving Stores and the
- * moving.devya.dev umbrella site render their cards the same way. Re-run the
+ * movingsystems.tech umbrella site render their cards the same way. Re-run the
  * script whenever the hero copy or the product name changes.
  */
 export function ogImageUrl(locale: string) {
@@ -95,6 +58,11 @@ export function ogImage(locale: string, alt: string) {
   ];
 }
 
+/** Open Graph locale for a site locale: Egyptian Arabic, US English. */
+export function ogLocale(locale: string) {
+  return locale === "ar" ? "ar_EG" : "en_US";
+}
+
 /**
  * Page metadata + hreflang alternates. Every page passes its own key from the
  * `meta` block of the content tree so titles stay next to the copy they belong
@@ -114,6 +82,11 @@ export function buildMetadata(
     metadataBase: new URL(brand.url),
     title: meta.title,
     description: meta.description,
+    /* Out of the index, but the links on the page are still followed: the
+       footer and nav on a noindexed page lead to pages that are indexed. */
+    ...(NOINDEX_PATHS.includes(path)
+      ? { robots: { index: false, follow: true } }
+      : {}),
     alternates: { canonical: url, languages: alternateLanguages(path) },
     openGraph: {
       type: "website",
@@ -121,7 +94,11 @@ export function buildMetadata(
       title: meta.title,
       description: meta.description,
       siteName: brandName(locale),
-      locale: locale === "ar" ? "ar_EG" : "en_US",
+      locale: ogLocale(locale),
+      // The same page in the other language (og:locale:alternate).
+      alternateLocale: routing.locales
+        .filter((l) => l !== locale)
+        .map(ogLocale),
       images,
     },
     twitter: {

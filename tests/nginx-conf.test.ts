@@ -38,8 +38,10 @@ function serverBlocks(conf: string): string[] {
 describe("deploy/nginx.conf", () => {
   const blocks = serverBlocks(nginx);
 
-  it("has the two server blocks", () => {
-    expect(blocks).toHaveLength(2);
+  // Two TLS servers, plus one :80 server that sends both names to
+  // https://pos.movingsystems.tech in a single hop.
+  it("has the three server blocks", () => {
+    expect(blocks).toHaveLength(3);
   });
 
   it("every block that proxies to the app sets X-Real-IP from the connection", () => {
