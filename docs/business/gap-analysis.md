@@ -54,7 +54,7 @@ sets **Built** and links itself; this repo's PRs wait for a human merge);
 | ID | Gap | Model | Impact | Effort | Priority | Status | Issue |
 |---|---|---|---|---|---|---|---|
 | P01 | The pricing page sells the retired Growth / Scale / Enterprise ladder; the product's Counter / Dining room / Group packages and its add-ons are not on sale | SaaS tiers, per-branch pricing, add-ons | 4 | S | P0 | Built (#70) | [#60](https://github.com/eng-AhmedMahmoud/devyapos/issues/60) |
-| P02 | Moving Stores is not on the POS site: no link, no add-on price, no bundle | POS ↔ store cross-sell | 3 | S | P0 | This round | [#61](https://github.com/eng-AhmedMahmoud/devyapos/issues/61) |
+| P02 | Moving Stores is not on the POS site: no link, no add-on price, no bundle | POS ↔ store cross-sell | 3 | S | P0 | Built (#71) | [#61](https://github.com/eng-AhmedMahmoud/devyapos/issues/61) |
 | P03 | No partner, reseller or referral programme, and no way to apply | Reseller / partner / referral | 4 | S–M | P0 | This round | [#62](https://github.com/eng-AhmedMahmoud/devyapos/issues/62) |
 | P04 | Claims the product does not back: loyalty tiers and referrals, campaigns, delivery integrations, 58mm/USB/drawer kick, peak hours, ordering at the table, "payment providers on request", instalments, a self-serve POS trial, self-serve cancel and export | Trust (refunds, churn, comparative-advertising risk) | 3 | S | P1 | Ticketed (pricing claims fixed with P01) | [#63](https://github.com/eng-AhmedMahmoud/devyapos/issues/63) |
 | P05 | Competitor facts out of date: Foodics Egypt prices **are** public (foodics.com/foodics-pricing-egypt), the `/compare` column denies Foodics a POS, inventory, zones and KDS, `docs/spec.md` figures are stale; the ETA page and the accounting page contradict each other | Trust / legal | 3 | S | P1 | Ticketed | [#64](https://github.com/eng-AhmedMahmoud/devyapos/issues/64) |
@@ -139,12 +139,13 @@ agent opens a PR and the developer merges and deploys).
   features, and an add-ons block (Moving Stores, accounting, AI assistant, customer
   display, handheld apps, Loyalty Garden app, CRM) priced or "quoted".
 
-### P02 — Moving Stores on the POS site (this round)
+### P02 — Moving Stores on the POS site (built, #71)
 
-- **Plan:** the Moving Stores address joins `lib/brand.ts`; the pricing page's
-  add-ons list it with what the link does (menu, prices and branches from the
-  POS, web orders in the kitchen, one sign-in) and the bundle offer from
-  `go-to-market.md` §7; the footer links it.
+- **Built (#71):** the Moving Stores address joins `lib/brand.ts`; a band on
+  the pricing page says what the link does (menu, prices and branches from the
+  POS, web orders in the kitchen, one sign-in) and invites the buyer to ask
+  about both together (the bundle price is the owner's, #66); the footer links
+  it on every page.
 
 ### P03 — Partners and referrals (this round)
 

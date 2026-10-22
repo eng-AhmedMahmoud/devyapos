@@ -138,7 +138,10 @@ The FAQ deliberately does **not** appear here — see FAQ placement note below.
 head, just the monthly/yearly toggle + the three packages) →
 `PricingAddOns` (`components/PricingAddOns.tsx`, modules sold on top of any
 package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
-market-anchor competitor table) → `Faq` → `CtaBand`.
+market-anchor competitor table) → `MovingStoresBand`
+(`components/MovingStoresBand.tsx`, the sister product Moving Stores and what
+its POS link does; copy in `movingStores`, address in `lib/brand.ts`) → `Faq`
+→ `CtaBand`. The footer also links Moving Stores, under the contacts.
 
 The packages are the product's own since 2026-10-22: **Counter** (EGP 199 per
 branch per month), **Dining room** (EGP 499: Counter plus tables, courses,
