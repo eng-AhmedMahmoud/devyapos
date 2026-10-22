@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { track } from "@/lib/analytics";
 import { whatsappLink } from "@/lib/brand";
 import { formatNumber } from "@/lib/format";
@@ -33,10 +33,21 @@ const MONTHS_FREE = 2;
  * The prices are decided in bohub-pos
  * `docs/decisions/2026-10-13-accounting-pricing.md`. Change them there first.
  */
-export default function AccountingPricing({ formId }: { formId: string }) {
+export default function AccountingPricing({
+  formId,
+  copy: p,
+  countries,
+  whatsapp,
+}: {
+  formId: string;
+  /** `accountingTrial.pricing`, passed down by the server page. */
+  copy: SiteContent["accountingTrial"]["pricing"];
+  /** The country names the trial form uses: `accountingTrial.form.countries`. */
+  countries: SiteContent["accountingTrial"]["form"]["countries"];
+  /** The WhatsApp link's label: `accountingTrial.outcomes.whatsapp`. */
+  whatsapp: string;
+}) {
   const locale = useLocale();
-  const t = getContent(locale).accountingTrial;
-  const p = t.pricing;
   const [country, setCountry] = useState<TrialCountry>("EG");
   const [yearly, setYearly] = useState(false);
 
@@ -73,7 +84,7 @@ export default function AccountingPricing({ formId }: { formId: string }) {
                   aria-pressed={country === code}
                   className={toggle(country === code)}
                 >
-                  {t.form.countries[code]}
+                  {countries[code]}
                 </button>
               ))}
             </div>
@@ -210,7 +221,7 @@ export default function AccountingPricing({ formId }: { formId: string }) {
                     place="accounting_pricing"
                     className="font-bold text-brand underline-offset-4 hover:underline"
                   >
-                    {t.outcomes.whatsapp}
+                    {whatsapp}
                   </WhatsappLink>
                 </p>
               </div>

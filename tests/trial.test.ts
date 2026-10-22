@@ -1,9 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { normalisePhone } from "@/lib/phone";
 import {
   TRIAL_HONEYPOT,
   TRIAL_LIMITS,
-  foldDigits,
-  normalisePhone,
   readClaimAnswer,
   validateTrial,
   type TrialValues,
@@ -16,17 +15,6 @@ import {
  * page a person acts on — a setup link and token — so every way a 201 can be
  * not quite right must come out as an error, never as a success.
  */
-
-describe("foldDigits", () => {
-  it.each([
-    ["٠١٢٣٤٥٦٧٨٩", "0123456789"],
-    ["۰۱۲۳۴۵۶۷۸۹", "0123456789"],
-    ["+٩٦٦ ٥٠", "+966 50"],
-    ["0501234567", "0501234567"],
-  ])("folds %s", (input, expected) => {
-    expect(foldDigits(input)).toBe(expected);
-  });
-});
 
 describe("normalisePhone — Egypt", () => {
   it.each([

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/analytics";
 import { formatEgp } from "@/lib/format";
@@ -13,6 +13,9 @@ import { Container, SectionHead } from "./Section";
 /** Yearly billing discount applied to the monthly per-branch price. */
 const YEARLY_RATE = 0.7;
 const MONTHS = 12;
+
+/** What the plan grid reads; the segments and the market anchor render elsewhere. */
+export type PricingCopy = Omit<SiteContent["pricing"], "segments" | "marketAnchor" | "compareLink">;
 
 /**
  * Pricing.
@@ -29,9 +32,15 @@ const MONTHS = 12;
  * card now states the twelve-month total and the saving underneath it —
  * ambiguity about the number on the invoice is the cheapest trust to lose.
  */
-export default function Pricing({ compact = false }: { compact?: boolean }) {
+export default function Pricing({
+  copy,
+  compact = false,
+}: {
+  /** `pricing` from the page's content tree, passed down by the server page. */
+  copy: PricingCopy;
+  compact?: boolean;
+}) {
   const locale = useLocale();
-  const c = getContent(locale);
   const [yearly, setYearly] = useState(false);
 
   /** `{total}`/`{saved}` are the only tokens in `pricing.annual`. */
@@ -45,9 +54,9 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
       <Container>
         {!compact ? (
           <SectionHead
-            kicker={c.pricing.eyebrow}
-            title={c.pricing.title}
-            sub={c.pricing.sub}
+            kicker={copy.eyebrow}
+            title={copy.title}
+            sub={copy.sub}
           />
         ) : null}
 
@@ -64,7 +73,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                     : "text-ink-dim"
                 }`}
               >
-                {c.pricing.monthly}
+                {copy.monthly}
               </button>
               <button
                 type="button"
@@ -76,9 +85,9 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                     : "text-ink-dim"
                 }`}
               >
-                {c.pricing.yearly}
+                {copy.yearly}
                 <span className="rounded-full bg-brand-soft px-2 py-0.5 text-xs text-brand">
-                  {c.pricing.save}
+                  {copy.save}
                 </span>
               </button>
             </div>
@@ -86,7 +95,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
         </Reveal>
 
         <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {c.pricing.plans.map((plan, i) => {
+          {copy.plans.map((plan, i) => {
             const monthly =
               plan.price === null
                 ? null
@@ -133,8 +142,8 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                           {formatEgp(locale, monthly)}
                         </span>
                         <span className="pb-1 text-sm text-ink-dim">
-                          {c.pricing.currency}
-                          {c.pricing.per}
+                          {copy.currency}
+                          {copy.per}
                         </span>
                       </>
                     )}
@@ -146,7 +155,7 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                         : "text-transparent select-none"
                     }`}
                   >
-                    {c.pricing.perBranch}
+                    {copy.perBranch}
                   </p>
 
                   {/* The amount that leaves the bank account. Only on the
@@ -155,15 +164,15 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
                   {yearly && annualTotal !== null && annualSaved !== null ? (
                     <div className="mt-4 rounded-xl border border-line bg-surface-2 px-3.5 py-3">
                       <p className="text-xs font-bold text-ink-2">
-                        {c.pricing.annual.label}
+                        {copy.annual.label}
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-ink-2">
-                        {fill(c.pricing.annual.total, {
+                        {fill(copy.annual.total, {
                           total: formatEgp(locale, annualTotal),
                         })}
                       </p>
                       <p className="mt-1 text-xs leading-relaxed text-mint">
-                        {fill(c.pricing.annual.saving, {
+                        {fill(copy.annual.saving, {
                           saved: formatEgp(locale, annualSaved),
                         })}
                       </p>
@@ -213,15 +222,15 @@ export default function Pricing({ compact = false }: { compact?: boolean }) {
           <div className="mt-8 flex flex-col gap-3">
             <p className="inline-flex w-fit items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-sm font-bold text-brand">
               <span className="pearl" aria-hidden="true" />
-              {c.pricing.founding}
+              {copy.founding}
             </p>
             {yearly ? (
               <p className="max-w-2xl text-xs leading-relaxed text-ink-dim">
-                {c.pricing.annual.note}
+                {copy.annual.note}
               </p>
             ) : null}
             <p className="max-w-2xl text-xs leading-relaxed text-ink-dim">
-              {c.pricing.note}
+              {copy.note}
             </p>
           </div>
         </Reveal>

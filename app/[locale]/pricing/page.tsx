@@ -40,11 +40,11 @@ export default async function PricingPage({
       {/* Qualify first, price second: the tabs let the buyer say what kind of
           restaurant they run before a number is on screen. Same price in every
           tab — the block says so itself. */}
-      <PricingSegments />
+      <PricingSegments copy={c.pricing.segments} />
       {/* The plan grid carries its own billing toggle; the page hero already
           said everything a section head would have repeated. */}
       <div className="bg-bg pt-10 pb-20 sm:pb-24">
-        <Pricing compact />
+        <Pricing copy={c.pricing} compact />
       </div>
       <MarketAnchor />
 

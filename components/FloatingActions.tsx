@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { whatsappLink } from "@/lib/brand";
 import { Arrow, Whatsapp } from "./icons";
 import WhatsappLink from "./WhatsappLink";
@@ -18,9 +17,14 @@ import WhatsappLink from "./WhatsappLink";
  * height as `--consent-h` (see components/consent/ConsentManager) and `.fab-stack` decides when to
  * add it (globals.css).
  */
-export default function FloatingActions() {
-  const locale = useLocale();
-  const c = getContent(locale);
+export default function FloatingActions({
+  copy,
+  waTemplate,
+}: {
+  copy: SiteContent["floating"];
+  /** The WhatsApp message the chat button opens with: `contact.waTemplate`. */
+  waTemplate: string;
+}) {
   const [away, setAway] = useState(false);
 
   useEffect(() => {
@@ -41,8 +45,8 @@ export default function FloatingActions() {
       <button
         type="button"
         onClick={toTop}
-        aria-label={c.floating.top}
-        title={c.floating.top}
+        aria-label={copy.top}
+        title={copy.top}
         aria-hidden={!away}
         tabIndex={away ? 0 : -1}
         className={`fab fab-top ${away ? "is-shown" : ""}`}
@@ -50,10 +54,10 @@ export default function FloatingActions() {
         <Arrow width={20} height={20} className="-rotate-90" />
       </button>
       <WhatsappLink
-        href={whatsappLink(c.contact.waTemplate, "float")}
+        href={whatsappLink(waTemplate, "float")}
         place="floating"
         className="fab fab-whatsapp"
-        label={c.floating.whatsapp}
+        label={copy.whatsapp}
       >
         <Whatsapp width={26} height={26} />
       </WhatsappLink>

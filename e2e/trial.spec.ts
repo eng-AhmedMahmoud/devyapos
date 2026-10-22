@@ -1,4 +1,4 @@
-import { getContent } from "@/content";
+import { getContent } from "./content";
 import { expect, hydrated, LOCALES, test } from "./fixtures";
 
 /**

@@ -48,7 +48,7 @@ export default async function HowItWorksPage({
       <Flow />
       {/* Tour renders captures from a live client deployment — hidden while
           product media is withdrawn (see lib/screenshots.ts). */}
-      {PRODUCT_MEDIA_AVAILABLE && <Tour />}
+      {PRODUCT_MEDIA_AVAILABLE && <Tour copy={c.tour} />}
       <Steps />
       <CtaBand />
     </>

@@ -4,7 +4,6 @@ import {
   coarseTimestamp,
   normalizeEgyptMobile,
   sanitizeAttribution,
-  toAsciiDigits,
   validateLead,
   type LeadSubmission,
 } from "@/lib/leads";
@@ -17,19 +16,6 @@ import {
  */
 
 const E164 = "+201055930032";
-
-describe("toAsciiDigits", () => {
-  it.each([
-    ["Arabic-Indic", "٠١٢٣٤٥٦٧٨٩", "0123456789"],
-    ["Persian (Extended Arabic-Indic)", "۰۱۲۳۴۵۶۷۸۹", "0123456789"],
-    ["mixed with ASCII and separators", "+٢٠ 1۰٥-593", "+20 105-593"],
-    ["ASCII unchanged", "01055930032", "01055930032"],
-    ["Arabic letters untouched", "رقم ٣", "رقم 3"],
-    ["empty", "", ""],
-  ])("folds %s", (_label, input, expected) => {
-    expect(toAsciiDigits(input)).toBe(expected);
-  });
-});
 
 describe("normalizeEgyptMobile", () => {
   it.each([

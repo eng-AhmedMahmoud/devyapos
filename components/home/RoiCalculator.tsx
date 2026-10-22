@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { Arrow } from "@/components/icons";
 import InfoTip from "@/components/InfoTip";
@@ -46,9 +46,16 @@ const COMMISSION_RATES = [15, 20, 25] as const;
  *     values this market does not offer. Now three inputs, and the rate is a
  *     choice between real ones.
  */
-export default function RoiCalculator() {
+export default function RoiCalculator({
+  copy,
+  currency,
+}: {
+  /** `roi`, passed down by the server page. */
+  copy: SiteContent["roi"];
+  /** `pricing.currency`, the unit after every figure. */
+  currency: string;
+}) {
   const locale = useLocale();
-  const c = getContent(locale);
 
   const [ordersPerBranch, setOrdersPerBranch] = useState(400);
   const [aov, setAov] = useState(180);
@@ -71,16 +78,16 @@ export default function RoiCalculator() {
   return (
     <section id="roi" className="bg-bg py-20 sm:py-24">
       <Container>
-        <SectionHead kicker={c.roi.eyebrow} title={c.roi.title} sub={c.roi.sub} />
+        <SectionHead kicker={copy.eyebrow} title={copy.title} sub={copy.sub} />
 
         <Reveal delay={100}>
           <div className="mt-12 grid gap-5 lg:grid-cols-[1fr_1fr]">
             {/* Inputs */}
             <div className="card flex flex-col gap-7 p-6 sm:p-8">
-              <Field
-                label={c.roi.fields.orders}
-                tip={c.roi.tips.orders}
-                hint={c.roi.hints.orders}
+              <Slider
+                label={copy.fields.orders}
+                tip={copy.tips.orders}
+                hint={copy.hints.orders}
                 value={ordersPerBranch}
                 onChange={setOrdersPerBranch}
                 min={100}
@@ -88,10 +95,10 @@ export default function RoiCalculator() {
                 step={50}
                 locale={locale}
               />
-              <Field
-                label={c.roi.fields.aov}
-                tip={c.roi.tips.aov}
-                hint={c.roi.hints.aov}
+              <Slider
+                label={copy.fields.aov}
+                tip={copy.tips.aov}
+                hint={copy.hints.aov}
                 value={aov}
                 onChange={setAov}
                 min={80}
@@ -99,10 +106,10 @@ export default function RoiCalculator() {
                 step={10}
                 locale={locale}
               />
-              <Field
-                label={c.roi.fields.branches}
-                tip={c.roi.tips.branches}
-                hint={c.roi.hints.branches}
+              <Slider
+                label={copy.fields.branches}
+                tip={copy.tips.branches}
+                hint={copy.hints.branches}
                 value={branches}
                 onChange={setBranches}
                 min={1}
@@ -114,10 +121,10 @@ export default function RoiCalculator() {
               {/* Rate is a choice between real rates, not a free slider. */}
               <fieldset className="flex flex-col gap-2">
                 <legend className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-                  {c.roi.fields.commission}
+                  {copy.fields.commission}
                   <InfoTip
-                    label={c.roi.fields.commission}
-                    text={c.roi.tips.commission}
+                    label={copy.fields.commission}
+                    text={copy.tips.commission}
                   />
                 </legend>
                 <div className="mt-1 flex gap-2">
@@ -144,13 +151,13 @@ export default function RoiCalculator() {
                     );
                   })}
                 </div>
-                <p className="text-xs text-ink-dim">{c.roi.rateNote}</p>
+                <p className="text-xs text-ink-dim">{copy.rateNote}</p>
               </fieldset>
 
               {/* Restates the inputs as one sentence, so the visitor can see
                   what the tool actually believes about their restaurant. */}
               <p className="border-t border-line-soft pt-4 text-xs leading-relaxed text-ink-dim">
-                {c.roi.summary.replace(
+                {copy.summary.replace(
                   "{orders}",
                   formatNumber(locale, result.monthlyOrders),
                 )}
@@ -162,52 +169,52 @@ export default function RoiCalculator() {
             <div className="flex flex-col gap-4">
               <div className="band-espresso pearl-grid-dark rounded-3xl p-6 sm:p-8">
                 <p className="flex items-center gap-1.5 text-sm text-on-espresso-dim">
-                  {c.roi.results.paid}
-                  <InfoTip label={c.roi.results.paid} text={c.roi.tips.paid} />
+                  {copy.results.paid}
+                  <InfoTip label={copy.results.paid} text={copy.tips.paid} />
                 </p>
                 <p className="font-display mt-2 text-4xl text-gold sm:text-5xl">
                   {formatEgp(locale, result.paid)}{" "}
-                  <span className="text-xl">{c.pricing.currency}</span>
+                  <span className="text-xl">{currency}</span>
                 </p>
                 <dl className="mt-6 grid gap-4 border-t border-espresso-line pt-5 sm:grid-cols-2">
                   <Metric
-                    label={c.roi.results.recovered}
-                    tip={c.roi.tips.recovered}
-                    value={`${formatEgp(locale, result.recovered)} ${c.pricing.currency}`}
+                    label={copy.results.recovered}
+                    tip={copy.tips.recovered}
+                    value={`${formatEgp(locale, result.recovered)} ${currency}`}
                   />
                   <Metric
-                    label={c.roi.results.cost}
-                    tip={c.roi.tips.cost}
-                    value={`${formatEgp(locale, result.cost)} ${c.pricing.currency}`}
+                    label={copy.results.cost}
+                    tip={copy.tips.cost}
+                    value={`${formatEgp(locale, result.cost)} ${currency}`}
                   />
                   <Metric
-                    label={c.roi.results.net}
-                    tip={c.roi.tips.net}
-                    value={`${formatEgp(locale, result.net)} ${c.pricing.currency}`}
+                    label={copy.results.net}
+                    tip={copy.tips.net}
+                    value={`${formatEgp(locale, result.net)} ${currency}`}
                     tone={result.net >= 0 ? "good" : "bad"}
                   />
                   <Metric
-                    label={c.roi.results.payback}
-                    tip={c.roi.tips.payback}
+                    label={copy.results.payback}
+                    tip={copy.tips.payback}
                     /* No payback to quote when the recovery does not cover the
                        subscription — printing a day count there implied a
                        break-even that the same panel was denying. */
                     value={
                       result.paybackDays
-                        ? `${formatNumber(locale, result.paybackDays)} ${c.roi.results.paybackUnit}`
-                        : c.roi.results.paybackNone
+                        ? `${formatNumber(locale, result.paybackDays)} ${copy.results.paybackUnit}`
+                        : copy.results.paybackNone
                     }
                   />
                 </dl>
               </div>
 
               <p className="text-xs leading-relaxed text-ink-dim">
-                {c.roi.assumption}
+                {copy.assumption}
               </p>
-              <p className="text-xs text-ink-dim opacity-75">{c.roi.note}</p>
+              <p className="text-xs text-ink-dim opacity-75">{copy.note}</p>
 
               <Link href="/contact" className="btn btn-primary mt-auto self-start">
-                {c.roi.cta}
+                {copy.cta}
                 <Arrow width={16} height={16} className="flip-rtl" />
               </Link>
             </div>
@@ -218,7 +225,12 @@ export default function RoiCalculator() {
   );
 }
 
-function Field({
+/**
+ * One labelled range input with its value read out beside the label. Not the
+ * forms' text `Field` (components/form/Field.tsx): a slider has no error to
+ * wire and shows its value as it moves.
+ */
+function Slider({
   label,
   tip,
   hint,

@@ -90,6 +90,9 @@ export default async function LocaleLayout({
      ("POS", "ESC/POS"), and an English page can still hold an Arabic string,
      so each page keeps the other script's text face behind its own. */
   const fontVars = `${plexArabic.variable} ${plexSans.variable} ${reemKufi.variable} ${plexMono.variable}`;
+  // Client components below get only the strings they render, never the
+  // content module itself (content/index.ts is server-only).
+  const c = getContent(locale);
 
   return (
     <html
@@ -113,17 +116,17 @@ export default async function LocaleLayout({
             a layout cannot know which route it is wrapping. */}
         <JsonLd data={siteJsonLd(locale)} />
         <NextIntlClientProvider>
-          <Header />
+          <Header nav={c.nav} />
           {/* Focusable so "back to the top" can hand the keyboard to the
               page's start, not only scroll there. */}
           <main id="main" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </main>
           <Footer />
-          <FloatingActions />
+          <FloatingActions copy={c.floating} waTemplate={c.contact.waTemplate} />
           {/* The shared consent banner and panel
               (docs/compliance/consent-design.md); copy from content/. */}
-          <ConsentManager copy={getContent(locale).consent} />
+          <ConsentManager copy={c.consent} />
         </NextIntlClientProvider>
         {/* Records the campaign the visit started on, before the visitor
             navigates away from the tagged landing page — but only with the

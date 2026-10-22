@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Check } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
@@ -21,11 +20,14 @@ import { SHOTS } from "@/lib/screenshots";
  *
  * `Mock` stays as the fallback for any tab added later that has no capture yet.
  */
-export default function Tour() {
-  const locale = useLocale();
-  const c = getContent(locale);
-  const [active, setActive] = useState(c.tour.tabs[0].id);
-  const tab = c.tour.tabs.find((t) => t.id === active) ?? c.tour.tabs[0];
+export default function Tour({
+  copy,
+}: {
+  /** `tour`, passed down by the server page. */
+  copy: SiteContent["tour"];
+}) {
+  const [active, setActive] = useState(copy.tabs[0].id);
+  const tab = copy.tabs.find((t) => t.id === active) ?? copy.tabs[0];
   /* Bound once so the presence check narrows the type for the render below. */
   const shot = TAB_SHOTS[tab.id];
 
@@ -33,20 +35,20 @@ export default function Tour() {
     <section className="band-cream py-20 sm:py-24">
       <Container>
         <SectionHead
-          kicker={c.tour.eyebrow}
-          title={c.tour.title}
-          sub={c.tour.sub}
+          kicker={copy.eyebrow}
+          title={copy.title}
+          sub={copy.sub}
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,15rem)_1fr] lg:gap-12">
           <Reveal>
             <div
               role="tablist"
-              aria-label={c.tour.title}
+              aria-label={copy.title}
               aria-orientation="vertical"
               className="no-scrollbar flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible"
             >
-              {c.tour.tabs.map((t) => {
+              {copy.tabs.map((t) => {
                 const on = t.id === active;
                 return (
                   <button

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { getContent } from "@/content";
+import type { SiteContent } from "@/content/types";
 import { Link } from "@/i18n/navigation";
 import { captureFirstTouch, readAttribution, track } from "@/lib/analytics";
 import { brand, whatsappLink } from "@/lib/brand";
@@ -13,6 +13,7 @@ import {
   type LeadErrors,
   type LeadField,
 } from "@/lib/leads";
+import Field from "./form/Field";
 import { Whatsapp } from "./icons";
 
 /**
@@ -28,6 +29,12 @@ import { Whatsapp } from "./icons";
  * handler, which is the one that matters. Both call `validateLead`, so the two
  * cannot drift apart.
  */
+
+/**
+ * The copy this form reads, passed down by its page (a server component) so the
+ * browser receives one locale's strings, not both content trees.
+ */
+export type ContactFormCopy = Pick<SiteContent["contact"], "badge" | "form" | "waTemplate">;
 
 type Values = Record<"name" | "restaurant" | "branches" | "phone" | "message", string>;
 
@@ -50,10 +57,9 @@ const FIELD_ORDER: LeadField[] = [
   "message",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
   const locale = useLocale();
-  const c = getContent(locale);
-  const f = c.contact.form;
+  const f = copy.form;
   // Status and field-error copy used to be hardcoded here in both locales
   // because the form gained a backend before the copy existed. It lives in the
   // content tree now, keyed the same way, so a translator changes it in one
@@ -101,7 +107,7 @@ export default function ContactForm() {
   /** The filled form as plain text — the WhatsApp and email routes share it. */
   function compose() {
     return [
-      c.contact.waTemplate,
+      copy.waTemplate,
       "",
       `${f.name}: ${values.name}`,
       `${f.restaurant}: ${values.restaurant}`,
@@ -195,7 +201,7 @@ export default function ContactForm() {
     const form = e.currentTarget.form;
     if (form && !form.reportValidity()) return;
     track("email_click", { locale, place: "contact_form" });
-    const subject = `${c.contact.badge} — ${values.restaurant || values.name}`;
+    const subject = `${copy.badge} — ${values.restaurant || values.name}`;
     window.location.href = `mailto:${brand.email}?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(compose())}`;
@@ -416,54 +422,5 @@ export default function ContactForm() {
         </Link>
       </p>
     </form>
-  );
-}
-
-/**
- * One labelled input, with its error wired to the label through
- * `aria-describedby` so the message is announced with the field rather than
- * floating free.
- */
-function Field({
-  id,
-  errorId: describedBy,
-  label,
-  hint,
-  error,
-  value,
-  onValue,
-  ...props
-}: {
-  id: string;
-  errorId: string;
-  label: string;
-  hint?: string;
-  error?: string;
-  value: string;
-  onValue: (value: string) => void;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "id">) {
-  return (
-    <label className="flex flex-col gap-1.5" htmlFor={id}>
-      <span className="flex items-baseline gap-2">
-        <span className="text-sm font-medium text-ink-2">{label}</span>
-        {hint ? <span className="text-xs text-ink-dim">({hint})</span> : null}
-      </span>
-      <input
-        {...props}
-        id={id}
-        value={value}
-        onChange={(e) => onValue(e.target.value)}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? describedBy : undefined}
-        className={`rounded-xl border bg-surface-2 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-ink-dim/70 focus:border-caramel disabled:opacity-60 ${
-          error ? "border-danger" : "border-line"
-        }`}
-      />
-      {error ? (
-        <span id={describedBy} className="text-xs text-danger">
-          {error}
-        </span>
-      ) : null}
-    </label>
   );
 }
