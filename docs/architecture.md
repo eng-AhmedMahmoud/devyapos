@@ -51,7 +51,7 @@ flowchart LR
    the host. Access logs: daily × 14 (`/etc/logrotate.d/nginx`).
 3. **The container** (`docker-compose.prod.yml`) is published on loopback
    only. It runs Next's standalone server as an unprivileged user from an image
-   pinned to one `node:24-alpine` digest (`Dockerfile`). One process, one
+   pinned to one `node:24.22.1-alpine` digest (`Dockerfile`). One process, one
    container: in-memory state such as the rate limiter is exact and resets on
    every restart and deploy.
 4. **Next.** `proxy.ts` sends `/` to `/ar` whatever `Accept-Language` says and

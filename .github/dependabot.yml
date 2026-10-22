@@ -35,6 +35,8 @@ updates:
       day: sunday
     ignore:
       # Stay on the Node 24 LTS line; a major (25 is not LTS) is a deliberate
-      # change made together with CI's node-version and @types/node.
+      # change made together with .nvmrc (CI reads it), engines and @types/node.
+      # A patch or minor bump of the pinned release must move .nvmrc and
+      # engines in the same PR — tests/ops.test.ts fails until they match.
       - dependency-name: node
         update-types: ["version-update:semver-major"]
