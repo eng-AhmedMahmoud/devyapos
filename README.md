@@ -2,7 +2,8 @@
 
 The public marketing site for **Moving POS** — موفينج POS on Arabic pages —
 (Drinki POS until 2026-10-19, DevyaPOS until 2026-10-18),
-Devya's restaurant operating system for the Egyptian market. Live at **https://pos.devya.dev** (Arabic by
+Devya's restaurant operating system for the Egyptian market. Live at **https://pos.movingsystems.tech**
+(`https://pos.devya.dev` answers with a 301 to the same path and query there; Arabic by
 default, `/en` for English; light theme by default, the toggle remembers a choice).
 
 Next.js App Router + next-intl (RTL-first) + Tailwind. Fully static content —
@@ -41,10 +42,18 @@ pnpm build
 Germany — `72.61.81.59`): a `git archive` over SSH, a backup of the running
 release under `/root/devyapos-pre-*`, then `docker compose -f
 docker-compose.prod.yml up -d --build`, container `devya-devyapos` on
-`127.0.0.1:3009` behind nginx and a Let's Encrypt certificate for
-`pos.devya.dev` (an `A → 72.61.81.59` record). `--rollback` puts the newest
+`127.0.0.1:3009` behind nginx. `--rollback` puts the newest
 backup back. The site left Vercel on 2026-09-25; the old Vercel project
 should be disconnected from this repo so it cannot serve a second copy.
+
+The nginx site is `deploy/nginx.conf`: `pos.movingsystems.tech` serves the
+container, and `pos.devya.dev` (the address until 2026-10-22) answers every
+path with a 301 to the same path and query on the new host. One Let's Encrypt
+certificate, named `pos.movingsystems.tech`, covers both names. Both are
+DNS-only (grey) `A → 72.61.81.59` records on Cloudflare, in the
+`movingsystems.tech` and `devya.dev` zones. `bash scripts/deploy.sh --setup`
+installs the site and issues or expands the certificate; DNS for both names
+must already point at the VPS.
 
 ### Leads that are not forwarded
 

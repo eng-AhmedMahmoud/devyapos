@@ -19,7 +19,7 @@ import FloatingActions from "@/components/FloatingActions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
-import { themeBootScript } from "@/components/ThemeToggle";
+import { themeBootScript } from "@/lib/theme";
 import "../globals.css";
 
 /* Moving Stores' type (devya-commerce apps/admin/app/[locale]/layout.tsx):
@@ -106,7 +106,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Applies the stored theme before first paint — see ThemeToggle. */}
+        {/* Applies the stored theme before first paint — see lib/theme.ts. */}
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body className="flex min-h-full flex-col">

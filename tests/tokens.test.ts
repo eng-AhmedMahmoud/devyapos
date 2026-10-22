@@ -72,9 +72,9 @@ describe("palette contrast (WCAG AA, 4.5:1 for text)", () => {
 });
 
 describe("brand", () => {
-  it("lives on devya.dev, never devya.solutions", () => {
+  it("lives on movingsystems.tech; the parent is devya.dev, never devya.solutions", () => {
     expect(brand.url).toBe(`https://${brand.domain}`);
-    expect(brand.domain.endsWith(".devya.dev")).toBe(true);
+    expect(brand.domain).toBe("pos.movingsystems.tech");
     expect(brand.parent.url).toBe("https://devya.dev");
   });
 
