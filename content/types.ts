@@ -147,6 +147,17 @@ export interface PricingSegment {
   points: string[];
 }
 
+/** One partner programme on /partners: who it suits and what it pays. */
+export interface Programme {
+  id: "referral" | "reseller" | "restaurant";
+  name: string;
+  /** The headline figure ("20%"), set large; `figureLabel` says what it is of. */
+  figure: string;
+  figureLabel: string;
+  body: string;
+  points: string[];
+}
+
 /** The two countries accounting is sold in — the trial form's choice too. */
 export interface PerCountry<T> {
   EG: T;
@@ -633,6 +644,22 @@ export interface SiteContent {
     need: { title: string; sub: string; items: Point[] };
     /** Generic buying guidance. No vendor names and no prices, ever. */
     buying: { title: string; sub: string; items: Point[]; note: string };
+    faq: { title: string; items: Faq[] };
+    cta: { title: string; body: string; primary: string; secondary: string };
+  };
+
+  /**
+   * `/partners` — the referral, reseller and restaurant-refers-restaurant
+   * programmes. The terms are commercial commitments: change a figure only
+   * with the owner's say-so, and in both trees in the same change.
+   */
+  partners: {
+    badge: string;
+    title: string;
+    sub: string;
+    who: { title: string; sub: string; items: Point[] };
+    programmes: { title: string; sub: string; items: Programme[]; note: string };
+    steps: { title: string; items: Point[] };
     faq: { title: string; items: Faq[] };
     cta: { title: string; body: string; primary: string; secondary: string };
   };

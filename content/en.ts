@@ -49,6 +49,11 @@ export const en: SiteContent = {
       description:
         "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP, every module included. Compared honestly.",
     },
+    partners: {
+      title: "Partner programme for restaurant suppliers | Moving POS",
+      description:
+        "Accountants, hardware dealers and agencies: refer restaurants to Moving POS for 20% of their first year, or resell it at 30% off the list price.",
+    },
     hardware: {
       title: "POS hardware | Run Moving POS on what you own",
       description:
@@ -685,6 +690,7 @@ export const en: SiteContent = {
         links: [
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
+          { label: "Partners", href: "/partners" },
           /* Terms of service is deliberately absent rather than pointed at
              /contact. It is the one page with liability caps, IP assignment
              and a jurisdiction clause, it still carries the unreviewed-draft
@@ -1473,6 +1479,108 @@ export const en: SiteContent = {
       body: "Send us a photo of your counter. We will tell you what works as it is, what needs replacing, and what you can safely ignore.",
       primary: "Message us on WhatsApp",
       secondary: "Book a 15-min demo",
+    },
+  },
+
+  partners: {
+    badge: "Partners",
+    title: "Sell Moving POS to the restaurants you already serve",
+    sub: "Accountants, hardware dealers, agencies and consultants already stand in every new restaurant. Refer them to us, or resell and support them yourself, and earn on every branch.",
+    who: {
+      title: "Who it is for",
+      sub: "If restaurant owners already ask you which system to use, this is for you.",
+      items: [
+        {
+          title: "Accountants and tax advisers",
+          body: "Your clients need clean daily numbers. Moving POS closes each day into the books, and its accounting add-on keeps the ledger.",
+        },
+        {
+          title: "Hardware dealers and installers",
+          body: "You already sell the tablet, the printer and the network. Add the software, install it, and keep the client.",
+        },
+        {
+          title: "Agencies and designers",
+          body: "You build the brand and the menu. Add the till, the kitchen screen and the ordering site behind them.",
+        },
+        {
+          title: "Restaurant consultants",
+          body: "You open restaurants for a living. Open them on a system with recipe costing from the first day.",
+        },
+      ],
+    },
+    programmes: {
+      title: "Three ways to work with us",
+      sub: "Pick the one that matches how you already work. Each is written into a short agreement before the first restaurant.",
+      items: [
+        {
+          id: "referral",
+          name: "Referral partner",
+          figure: "20%",
+          figureLabel: "of the first 12 months",
+          body: "Introduce a restaurant. We demo it, load its menu, and support it.",
+          points: [
+            "20% of the subscription the restaurant pays in its first 12 months, on every branch",
+            "Paid every quarter, once the restaurant has paid",
+            "No targets and no fee to join",
+          ],
+        },
+        {
+          id: "reseller",
+          name: "Reseller",
+          figure: "30%",
+          figureLabel: "off the list price",
+          body: "Sell, install and give first-line support yourself.",
+          points: [
+            "Buy at 30% off the list price and sell at list",
+            "You install the devices and answer first questions; we run the platform",
+            "The restaurant's data stays the restaurant's, as for every customer",
+          ],
+        },
+        {
+          id: "restaurant",
+          name: "Restaurant refers restaurant",
+          figure: "One month",
+          figureLabel: "free, for both",
+          body: "Already on Moving POS? Bring a restaurant you know.",
+          points: [
+            "One month free on one branch for you, and one for them",
+            "Once the restaurant you referred has paid its first month",
+          ],
+        },
+      ],
+      note: "Prices are those on the pricing page. A partner never charges a restaurant more than list, and a referral never raises what the restaurant pays.",
+    },
+    steps: {
+      title: "How it works",
+      items: [
+        { title: "Tell us who you are", body: "Message us with your company, your city and how you work with restaurants." },
+        { title: "Sign the agreement", body: "One page, in Arabic and English, with the terms above." },
+        { title: "Introduce or sell", body: "Send a restaurant our way, or sell and install it yourself as a reseller." },
+        { title: "Get paid", body: "Commission is paid every quarter for restaurants that have paid." },
+      ],
+    },
+    faq: {
+      title: "Partner questions",
+      items: [
+        {
+          q: "Do I need to be a company?",
+          a: "Not to refer. Freelancers can be referral partners. A reseller invoices restaurants, so it needs a commercial registration.",
+        },
+        {
+          q: "Who supports the restaurant?",
+          a: "For a referral, we do: onboarding, loading the menu and WhatsApp support. A reseller gives first-line support, and we stand behind it.",
+        },
+        {
+          q: "What does the restaurant pay?",
+          a: "The price on the pricing page. Partners never charge more than list.",
+        },
+      ],
+    },
+    cta: {
+      title: "Become a partner",
+      body: "Tell us how you work with restaurants, and we reply with the agreement.",
+      primary: "Message us on WhatsApp",
+      secondary: "Use the contact form",
     },
   },
 

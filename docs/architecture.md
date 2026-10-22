@@ -14,7 +14,7 @@ flowchart LR
   subgraph VPS["Devya VPS 72.61.81.59 (Hostinger, Germany) — shared with other Devya sites"]
     N["nginx<br/>TLS (Let's Encrypt)<br/>X-Real-IP = $remote_addr"]
     subgraph C["container devya-devyapos (node server.js, Next 16 standalone)"]
-      P["pages: 14 routes × ar/en<br/>prerendered"]
+      P["pages: 15 routes × ar/en<br/>prerendered"]
       L["POST /api/lead"]
       K["POST /api/consent"]
       H["GET /api/health"]

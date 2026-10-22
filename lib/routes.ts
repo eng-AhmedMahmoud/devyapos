@@ -43,6 +43,8 @@ export const routes: readonly SiteRoute[] = [
   { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-22" },
   { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
+  /* The partner programmes: a channel page, indexed so a dealer or an accountant searching for one finds it. */
+  { path: "/partners", key: "partners", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-22" },
   /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
   { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* The privacy policy describes what the site already does, so it is indexed

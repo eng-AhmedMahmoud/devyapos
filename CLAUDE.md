@@ -35,7 +35,7 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
 
 | Path | What |
 | --- | --- |
-| `app/[locale]/*` | The pages (14 routes × `ar`/`en`), prerendered |
+| `app/[locale]/*` | The pages (15 routes × `ar`/`en`), prerendered |
 | `app/api/lead`, `app/api/consent`, `app/api/health` | The only server code paths |
 | `lib/` | Brand, leads and validators, sinks, rate limit, env check, consent core, trial client |
 | `content/ar.ts`, `content/en.ts`, `content/types.ts` | All copy, typed |

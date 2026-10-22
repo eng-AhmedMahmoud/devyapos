@@ -196,6 +196,15 @@ its own WhatsApp source code, then the `CtaBand`.
   what works, what you need, and a buying guide on the espresso band whose
   footnote (no hardware sold, no commission) is the point. `PageFaq`,
   `ClosingCta` (`hardware`).
+- **`/partners`** (`app/[locale]/partners/page.tsx`, since 2026-10-22) — the
+  partner programmes: who they are for, the three programmes with their terms
+  (referral partner 20% of the first 12 months, reseller 30% off list,
+  restaurant refers restaurant one month free each), how it works, `PageFaq`,
+  `ClosingCta` (`partners`). The terms are commercial commitments in
+  `partners` (both trees, `tests/partners.test.ts` keeps their figures equal);
+  applications are a WhatsApp message or the contact form — nothing is
+  automated (`docs/business/gap-analysis.md` P03, P22). Linked from the
+  footer's Company column.
 
 ### `/accounting-trial` (`app/[locale]/accounting-trial/page.tsx`)
 
