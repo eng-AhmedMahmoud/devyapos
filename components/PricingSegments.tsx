@@ -14,10 +14,11 @@ import { Container, SectionHead } from "./Section";
  * let the visitor self-select before a number appears, so the number lands on a
  * reader who has already decided which half of the product they care about.
  *
- * The price is identical in every tab — there is deliberately no `price` on
- * `PricingSegment`. A tabbed pricing page normally implies tiered billing, so
- * `segments.note` says out loud that it does not, and it renders on every tab
- * rather than only the first.
+ * A tab carries no price — there is deliberately no `price` on
+ * `PricingSegment`; the plan grid owns the numbers. Since 2026-10-22 the
+ * packages follow the service model (Counter for quick service, cloud kitchens
+ * and chains; Dining room for table service), so `segments.note` says which
+ * package each kind of restaurant runs on, on every tab.
  *
  * Kept out of `Pricing` because `Pricing` is also embedded on /about, where a
  * reader who has just finished the company story does not need to re-qualify

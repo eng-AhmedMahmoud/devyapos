@@ -132,10 +132,23 @@ The FAQ deliberately does **not** appear here — see FAQ placement note below.
 
 ### `/pricing` (`app/[locale]/pricing/page.tsx`)
 
-`PageHero` → `Pricing` (`components/Pricing.tsx`, `compact` mode — no
-duplicate section head, just the monthly/yearly toggle + 3-tier plan grid) →
-**`MarketAnchor`** (`components/MarketAnchor.tsx`, the market-anchor
-competitor table) → `Faq` → `CtaBand`.
+`PageHero` → `PricingSegments` (`components/PricingSegments.tsx`, the
+"what kind of restaurant are you?" tabs, each pointing at a package) →
+`Pricing` (`components/Pricing.tsx`, `compact` mode — no duplicate section
+head, just the monthly/yearly toggle + the three packages) →
+`PricingAddOns` (`components/PricingAddOns.tsx`, modules sold on top of any
+package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
+market-anchor competitor table) → `Faq` → `CtaBand`.
+
+The packages are the product's own since 2026-10-22: **Counter** (EGP 199 per
+branch per month), **Dining room** (EGP 499: Counter plus tables, courses,
+split bills, pay at the table, the waiter flow and gift cards) and **Group**
+(quoted: plus stock transfers, HR, accounting, the API and device
+management), as `devya-pos:ops-app/lib/plans.ts` defines and prices them
+(owner decision of 2026-09-19). They replaced the retired Growth / Scale /
+Enterprise ladder. A plan card lists only what the product ships; add-ons are
+"Quoted" until the owner publishes their prices
+(`docs/business/gap-analysis.md` P01, P07).
 
 ### `/compare` (`app/[locale]/compare/page.tsx`)
 
@@ -293,8 +306,8 @@ against `SHOTS` from `lib/screenshots.ts`. Same pattern for `promo` (copy in
 content, `src`/`poster` from `PROMO_CLIP` in `lib/screenshots.ts`).
 
 The trees carry real, specific figures, and each lives in exactly one block,
-so look there rather than here: the hero numbers (`hero.stats`), the POS plans
-and prices (`pricing.plans`), the dated competitor rows (`pricing.marketAnchor`
+so look there rather than here: the hero numbers (`hero.stats`), the POS
+packages and prices (`pricing.plans`) and add-ons (`pricing.addOns`), the dated competitor rows (`pricing.marketAnchor`
 and `foodicsAlternative.facts`, each with a `retrievedAt` the page renders and
 a test keeps under 90 days old), the accounting price lists
 (`accountingTrial.pricing`) and the payment providers, with only the live ones
