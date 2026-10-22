@@ -4,6 +4,14 @@
 - **Audited:** `origin/main` @ `123ff02f32fd50416a4b95eb6c1216f64f6d4375` (worktree `feat/gdpr-eprivacy`). While the audit ran, `origin/main` moved on to `8f207c3` (`feat(theme): the site opens light`). That commit changes only the default theme and its docs/tests and has no privacy impact.
 - **Method:** read-only code review, plus read-only GETs of production (`https://pos.devya.dev`, `/ar`, `/en`, `/{ar,en}/{privacy,terms,refund}`, `/en/contact`, `/en/accounting-trial`, the JS chunks those pages load, `/robots.txt`, `/sitemap.xml`, `GET /api/lead`). Nothing was posted.
 - **Evidence format:** `path:line` relative to the repo root, or "prod:" for a production observation.
+- **Status updated 2026-10-22** (X-Ray fix track T8). §1–§12 are the audit as
+  found on 2026-10-19 and are not rewritten; their line numbers point at that
+  commit. §14 holds the current status of every gap. Open actions are tracked
+  as GitHub issues in the milestone
+  [Compliance & lead hygiene](https://github.com/eng-AhmedMahmoud/devyapos/milestone/1),
+  listed in §13 — this document is the record, the issues are the tracker.
+  Since 2026-10-22 the site is `https://pos.movingsystems.tech`;
+  `pos.devya.dev` answers with a 301 to it (PR #15).
 
 ---
 
@@ -15,7 +23,7 @@
 | `POST /api/lead` | Lead intake route handler (Node runtime) | Same container. prod: `GET /api/lead` returns `405 {"ok":false,"error":"method_not_allowed"}`. |
 | `POST https://ops-api.devya.dev/api/trial/claim` | Accounting-trial sign-up. The browser posts there directly (`lib/trial.ts:184-216`). The receiving service lives in the separate `bohub-pos` monorepo (`ops-store`) and is **out of scope** except where this site sends data to it. | The URL is baked in at build time by `docker-compose.prod.yml:10`. prod: the host appears in the shipped JS bundle. |
 
-**Stale deploy docs:** `README.md:40-41`, `docs/spec.md:21-23`, `.github/workflows/ci.yml:1-3` and the comments in `app/api/lead/route.ts:61-67,105,220,239-242` all still say Vercel and rely on "Vercel runtime logs". Production is not on Vercel.
+**Stale deploy docs:** `README.md:40-41`, `docs/spec.md:21-23`, `.github/workflows/ci.yml:1-3` and the comments in `app/api/lead/route.ts:61-67,105,220,239-242` all still say Vercel and rely on "Vercel runtime logs". Production is not on Vercel. *(Resolved by 2026-10-22: see G16 in §14.)*
 
 Hosting region: the VPS provider and region are not stated in the repo. The policy says only "outside Egypt" (`content/en.ts:1824`). It is a developer to-do.
 
@@ -87,7 +95,7 @@ Future risk: `docs/social-launch-plan.md:738-742,909-910` plans a **Meta Pixel +
 - **Consent record (Art. 7(1)):** client-only bare string; nothing server-side. Leads that carry attribution do not record which consent version or time authorised it.
 - **Re-prompt:** only by changing the key. `lib/consent.ts:12-13` claims "`denied` keeps them unmounted for a year", but there is no expiry logic.
 - **Pre-ticked boxes:** none. **Google Consent Mode:** not applicable (no Google tags).
-- **Side note (non-privacy follow-up):** during hydration `useConsent()` returns `"unset"`, so `Attribution` calls `clearAttribution()` on every hard page load, even for consenting visitors, and then re-captures the current page. In practice "first touch" becomes "last hard load".
+- **Side note (non-privacy follow-up):** during hydration `useConsent()` returns `"unset"`, so `Attribution` calls `clearAttribution()` on every hard page load, even for consenting visitors, and then re-captures the current page. In practice "first touch" becomes "last hard load". *(Fixed with the shared consent design, PR #11: `components/Attribution.tsx` does nothing while the consent snapshot is `pending`, which it is on the server and the hydrating render, so a hard load no longer clears a consenting visitor's record.)*
 
 ## 6. Privacy policy / cookie policy pages
 
@@ -209,28 +217,38 @@ No fonts, CDN, analytics, maps or AI vendors.
 
 ## 13. Needs the developer / legal
 
-- **Developer**
-  - Confirm whether `LEAD_FORWARD_URL` is set on the VPS container and where leads go today. Recover any leads from container logs, then purge them.
-  - Name the VPS provider and region; accept its DPA. Do the same for Google (mail) and Meta (WhatsApp Business).
-  - Commit or document the nginx config: security headers, `X-Real-IP`, `server_tokens off`, access-log retention. Commit or document the deploy steps.
-  - Disconnect or delete the legacy Vercel project `devyapos`.
-- **Legal**
-  - Review the privacy text in both languages after the G8 rewrite. Decide the Art. 27 EU representative question (likely not needed; state why).
-  - Write the legitimate-interest balancing note for the lead context data.
-  - Review the terms + DPA + sub-processor list for the product (G12).
-  - **KSA PDPL:** trial sign-ups from Saudi businesses are sent "outside Egypt and Saudi Arabia". Check the PDPL transfer rules and SDAIA registration needs.
-  - **Egypt PDPL (Law 151/2020):** a licence or registration with the PDPC may be required for processing/transfers.
-  - Confirm the controller's legal name, registered address and commercial registration number (the `{cr}` placeholder at `content/en.ts:1076`).
+Every open action is a GitHub issue in the milestone
+[Compliance & lead hygiene](https://github.com/eng-AhmedMahmoud/devyapos/milestone/1);
+owners and dates live there, not here. What the audit asked for on
+2026-10-19, and where it stands:
+
+| Action (2026-10-19) | Owner | Where it is now |
+| --- | --- | --- |
+| Confirm whether `LEAD_FORWARD_URL` is set on the VPS and where leads go | Developer | Answered: unset; every lead goes to the outbox on the data volume (G2). Choosing the CRM and setting it: [#36](https://github.com/eng-AhmedMahmoud/devyapos/issues/36) |
+| Import the leads recovered from container logs on 2026-10-19 into the CRM, then delete the root-only file on the VPS | Developer | [#35](https://github.com/eng-AhmedMahmoud/devyapos/issues/35) |
+| Name the VPS provider and region | Developer | Done: Hostinger, Germany (`processors.md`) |
+| Accept the DPAs of the VPS host, Google (mail) and Meta (WhatsApp Business) | Developer + legal | [#41](https://github.com/eng-AhmedMahmoud/devyapos/issues/41) |
+| Commit or document the nginx config: security headers, `X-Real-IP`, `server_tokens off`, access-log retention | Developer | Done for the site and `X-Real-IP`: `deploy/nginx.conf` (PR #15). Security headers are set by the app (G10). Access logs: daily × 14 (`processors.md`). `server_tokens off` is not set yet (no issue filed) |
+| Commit or document the deploy steps | Developer | Done: `scripts/deploy.sh`, README "Deploy", `docs/architecture.md` |
+| Disconnect or delete the legacy Vercel project `devyapos` | Developer | Done 2026-10-22: kept only as a 308 redirect (G16, #24) |
+| Error tracking, uptime monitoring, an alert channel on the `[lead] NOT FORWARDED` / `LOST` lines, an off-box backup schedule | Developer | [#37](https://github.com/eng-AhmedMahmoud/devyapos/issues/37) |
+| A dedicated non-root deploy user on the VPS | Developer | [#38](https://github.com/eng-AhmedMahmoud/devyapos/issues/38) |
+| Review the privacy text in both languages after the G8 rewrite; the Art. 27 representative question; the legitimate-interest balancing note; dated policy versions | Legal | [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39) (`feat/gdpr-policy-texts`) |
+| Terms, DPA and sub-processor list for the product (G12); review of `/terms` and `/refund` | Legal | [#40](https://github.com/eng-AhmedMahmoud/devyapos/issues/40) |
+| KSA PDPL transfer rules and SDAIA registration; Egypt PDPL (Law 151/2020) PDPC licence or registration | Legal | [#42](https://github.com/eng-AhmedMahmoud/devyapos/issues/42) |
+| The controller's legal name, registered address and commercial registration number (the `{cr}` placeholder) | Founder | [#43](https://github.com/eng-AhmedMahmoud/devyapos/issues/43) |
+| A contact mailbox on a brand domain instead of Gmail (G17) | Developer | [#45](https://github.com/eng-AhmedMahmoud/devyapos/issues/45) |
+| A second reviewer with repo access | Founder | [#46](https://github.com/eng-AhmedMahmoud/devyapos/issues/46) |
 
 - **Leads before 2026-10-19 (checked on the VPS that day).** The running
   container had no `LEAD_FORWARD_URL`, so since the move to the VPS
   (2026-09-25) every lead went only to an error-level log line — and
   `docker compose up --build` deletes the old container's logs on every
   deploy. Leads sent before the last redeploy are not recoverable from the
-  host. Before this PR's deploy, any `[lead] NOT FORWARDED` lines still in the
-  running container's log were copied to a root-only file on the VPS (see the
-  PR) so nothing more is lost; the developer should import them into the CRM
-  and then delete that file.
+  host. Before PR #11's deploy, any `[lead] NOT FORWARDED` lines still in the
+  running container's log were copied to a root-only file on the VPS so
+  nothing more was lost; importing them into the CRM and deleting that file is
+  [#35](https://github.com/eng-AhmedMahmoud/devyapos/issues/35).
 
 ## Appendix: unmerged privacy work
 
@@ -248,32 +266,33 @@ No fonts, CDN, analytics, maps or AI vendors.
 
 ## 14. Fix status
 
-Two PRs, so that policy wording is published only after the developer's
-legal review:
-
-- **PR 1 — `feat/gdpr-eprivacy` (mechanics; this PR).**
-- **PR 2 — `feat/gdpr-policy-texts`** (privacy policy rewrite, `/[locale]/cookies`). Held until the developer approves the texts.
+The audit planned two PRs: **PR 1** — `feat/gdpr-eprivacy`, merged as
+[#11](https://github.com/eng-AhmedMahmoud/devyapos/pull/11) on 2026-10-19 —
+and **PR 2**, `feat/gdpr-policy-texts` (the privacy policy rewrite and
+`/[locale]/cookies`), held for legal review ([#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39)). The X-Ray of
+2026-10-22 and its fix tracks (PRs #26, #49, #50, #52, #53, #54) closed more.
+Status as of 2026-10-22:
 
 | ID | Status |
 | --- | --- |
-| G1 | **Fixed (PR 1).** The campaign record is gated inside `lib/analytics.ts` (`captureFirstTouch` / `readAttribution` return null without the "marketing" category), so no caller can skip it; `tests/attribution.test.ts`. Headless: `/en/contact?utm_source=meta` writes nothing before consent, writes after Accept, is removed on withdrawal. |
-| G2 | **Fixed (PR 1).** A lead that is not forwarded goes to an owner-only outbox file on the `devyapos-leads` volume (`lib/lead-outbox.ts`, 365-day retention); every log line carries only the lead id (`tests/privacy.test.ts` greps the route). If there is no durable place the route answers 503 and the form offers WhatsApp/email. Container log capped. **Developer:** leads posted before this deploy existed only in container logs, which each redeploy deletes — see §13; set `LEAD_FORWARD_URL` in `.env.production.local` on the VPS when a CRM is chosen. |
-| G3 | **Fixed (PR 1).** "Cookie settings" in the footer opens the shared panel; withdrawal clears the campaign record and reloads. |
-| G4 | **Fixed (PR 1).** Record `{v, id, at, policy, choices, action}` under `devyapos.consent.v2`; receipt `POST /api/consent` → one `{"event":"consent"}` log line, no personal data. |
-| G5 | **Fixed (PR 1).** Categories (necessary + marketing — the only optional thing used), nothing pre-ticked. |
-| G6 | **Fixed (PR 1).** `localeCookie: false`. |
-| G7 | PR 2. |
-| G8 | PR 2 — **draft for legal review**. |
-| G9 | Outbox retention built (365 days). nginx logs: daily × 14 on the VPS (checked 2026-10-19). Retention at the forward target: developer. |
-| G10 | **Fixed (PR 1).** CSP (same-origin + the trial claim origin), HSTS, nosniff, Referrer-Policy, X-Frame-Options, Permissions-Policy, `poweredByHeader: false`. |
-| G11 | **Fixed (PR 1).** `docs/compliance/processors.md`; DPAs are the developer's. |
-| G12 | Developer + legal (product DPA, sub-processor page). |
-| G13 | **Fixed (PR 1).** Rate limiter keys on nginx's `X-Real-IP`, else the last `X-Forwarded-For` hop. |
-| G14 | **Fixed (PR 1).** Reject / Customize / Accept share one class. |
-| G15 | **Fixed (PR 1).** 180-day expiry and policy-version re-ask. |
-| G16 | **Fixed (PR 1).** README "Deploy" describes the VPS; `scripts/deploy.sh` commits the process. Disconnecting the old Vercel project: developer. |
-| G17 | Developer (mailbox). |
-| G18 | PR 2. |
+| G1 | **Fixed (#11).** The campaign record is gated inside `lib/analytics.ts` (`captureFirstTouch` / `readAttribution` return null without the "marketing" category), so no caller can skip it; `tests/attribution.test.ts`, and `e2e/consent.spec.ts` in CI. |
+| G2 | **Fixed (#11, made durable by #50).** A lead that is not forwarded is appended to `/data/leads-outbox.jsonl` on the `devyapos-leads` volume through the append-only sink `lib/jsonl-sink.ts` (owner-only, 365-day retention, size cap; a read error can no longer erase it). Each logs one line with its id, the reason and the pending count, never the lead (`tests/privacy.test.ts`, `tests/lead-route.test.ts`). With nowhere durable to put it, the route answers 503 and the form offers WhatsApp and email. A forward 4xx is final, not retried. `scripts/leads.sh status` / `pull` read it from outside. Container logs: 10 MB × 3. **Open:** a CRM sink [#36](https://github.com/eng-AhmedMahmoud/devyapos/issues/36); the recovered leads [#35](https://github.com/eng-AhmedMahmoud/devyapos/issues/35); alerts and an off-box copy [#37](https://github.com/eng-AhmedMahmoud/devyapos/issues/37). |
+| G3 | **Fixed (#11).** "Cookie settings" in the footer opens the shared panel; withdrawal clears the campaign record and reloads. |
+| G4 | **Fixed (#11; durable since #50).** Record `{v, id, at, policy, choices, action}` under `devyapos.consent.v2`. Each answer's receipt (`POST /api/consent`) is appended to `/data/consent-receipts.jsonl` on the volume, kept 365 days (`CONSENT_RECEIPT_RETENTION_DAYS`): id, time, policy version, choices, locale — no IP, user agent or visitor id. The `{"event":"consent"}` log line is a breadcrumb only. **Open:** the privacy policy should say receipts are kept and for how long [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39). |
+| G5 | **Fixed (#11).** Categories (necessary + marketing — the only optional thing used), nothing pre-ticked. |
+| G6 | **Fixed (#11).** `localeCookie: false`; `tests/proxy.test.ts` checks no cookie is set. |
+| G7 | **Open** — PR 2, [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39). |
+| G8 | **Open** — PR 2, draft for legal review, [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39). The `country` field is now documented as client-supplied (README lead contract). |
+| G9 | **Partly fixed.** Outbox and receipt retention built (365 days each, `lib/jsonl-sink.ts`). Container logs capped and deleted on every deploy. nginx logs: daily × 14 on the VPS (checked 2026-10-19). **Open:** retention at the forward target once chosen [#36](https://github.com/eng-AhmedMahmoud/devyapos/issues/36); retention of off-box copies made with `leads.sh pull` [#37](https://github.com/eng-AhmedMahmoud/devyapos/issues/37); the policy's "aggregated" claim [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39). |
+| G10 | **Fixed (#11).** CSP (same-origin + the trial claim origin), HSTS, nosniff, Referrer-Policy, X-Frame-Options, Permissions-Policy, `poweredByHeader: false`; `tests/headers.test.ts` checks them through Next's own matching. |
+| G11 | **Fixed (#11).** `docs/compliance/processors.md`. **Open:** accepting the DPAs [#41](https://github.com/eng-AhmedMahmoud/devyapos/issues/41). |
+| G12 | **Open** — [#40](https://github.com/eng-AhmedMahmoud/devyapos/issues/40). |
+| G13 | **Fixed (#11), verified.** The limiter keys on `X-Real-IP`, else the last `X-Forwarded-For` hop (`lib/rate-limit.ts`). Verified 2026-10-22 against production nginx in the X-Ray's /sec phase: the site's server block sets `X-Real-IP $remote_addr`, overwriting any client value, and the container is published on `127.0.0.1:3009` only. That server block is now in the repo, `deploy/nginx.conf` (#15). `tests/lead-route.test.ts` proves `X-Real-IP` beats a rotating `X-Forwarded-For`. |
+| G14 | **Fixed (#11).** Reject / Customize / Accept share one class. |
+| G15 | **Fixed (#11).** 180-day expiry and policy-version re-ask. |
+| G16 | **Fixed.** The README describes the VPS (#11); the CI header (#26); the dead `/api` rewrite and `API_URL` removed (#53); `docs/spec.md`, `.env.example` and the new `docs/architecture.md` (X-Ray T8). The legacy Vercel project no longer serves a copy: since 2026-10-22 `devyapos.vercel.app` answers with a 308 to the site, `POST /api/lead` there 308s too, and per-deployment URLs are behind Vercel's login (#24). The project is kept only for that redirect; Vercel is no longer a processor for the live site (`processors.md`). |
+| G17 | **Open** — [#45](https://github.com/eng-AhmedMahmoud/devyapos/issues/45). |
+| G18 | **Partly fixed.** The duplicate EN paragraph is gone (#49; `tests/content.test.ts` enforces list parity everywhere again). **Open:** dated policy versions [#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39). |
 
 ### Verification
 
@@ -286,3 +305,9 @@ Reject all reloads with nothing optional left; Customize starts with nothing
 ticked and saves exactly the chosen category. A test lead with
 `LEAD_FORWARD_URL` unset landed in the outbox (mode 0600) and the log showed
 only its id.
+
+Since 2026-10-22 the same journeys run on every pull request, in CI's
+required `e2e` job: `e2e/consent.spec.ts` checks, in both locales, that
+nothing is in local storage, session storage or cookies before an answer,
+that Reject sends its receipt and survives a reload without writing the
+campaign record, and that Accept survives a reload and writes it.

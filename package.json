@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
-    "check:bundle": "node scripts/check-bundle.mjs"
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "prepare": "[ ! -f scripts/install-hooks.sh ] || sh scripts/install-hooks.sh"
   },
   "dependencies": {
     "next": "16.4.2",

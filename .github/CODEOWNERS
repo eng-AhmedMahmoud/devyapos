@@ -1,0 +1,4 @@
+# Every path is owned by the maintainer, so GitHub requests their review on
+# every pull request. The ruleset on main requires 0 approvals today (one
+# maintainer); add a second owner here once there is a second reviewer (#46).
+* @eng-AhmedMahmoud

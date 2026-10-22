@@ -1,5 +1,11 @@
 # DevyaPOS — Facebook & Instagram launch plan
 
+> **Out of date on names (2026-10-22).** The product is now Moving POS
+> (موفينج POS on Arabic pages) at `pos.movingsystems.tech`
+> ([ADR 0005](decisions/0005-product-renames.md)). This plan predates both
+> changes and still says DevyaPOS and `pos.devya.dev`; update the names,
+> handles and links before any paid or organic launch.
+
 **Status:** draft for the owner to execute. Nothing in here has been acted on — no
 account created, no handle claimed, no post published.
 **Written:** 2026-09-19. All competitor observations carry that date; social accounts
