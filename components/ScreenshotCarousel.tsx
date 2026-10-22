@@ -216,7 +216,9 @@ export default function ScreenshotCarousel({
           ))}
         </div>
 
-        <div className="flex items-center justify-center gap-2">
+        {/* Each dot is drawn 8 px tall but is a 24 px target: the button is
+            the hit area, the span inside is the dot. */}
+        <div className="flex items-center justify-center">
           {items.map((item, i) => (
             <button
               key={item.src}
@@ -224,12 +226,17 @@ export default function ScreenshotCarousel({
               onClick={() => { stop(); setIndex(i); goTo(i); }}
               aria-label={item.caption}
               aria-current={i === index}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === index
-                  ? "w-7 bg-[var(--espresso)] dark:bg-[var(--on-espresso)]"
-                  : "w-2 bg-ink-dim/30 hover:bg-ink-dim/60"
-              }`}
-            />
+              className="group flex h-6 min-w-6 items-center justify-center px-1"
+            >
+              <span
+                aria-hidden="true"
+                className={`block h-2 rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-7 bg-[var(--espresso)] dark:bg-[var(--on-espresso)]"
+                    : "w-2 bg-ink-dim/30 group-hover:bg-ink-dim/60"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>
