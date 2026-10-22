@@ -10,6 +10,8 @@
  * (lib/jsonl-sink.ts) is the backstop against many addresses.
  */
 
+import { isIP } from "node:net";
+
 export interface RateLimiter {
   check(ip: string): { allowed: boolean; retryAfter: number };
 }
@@ -54,11 +56,17 @@ export function createRateLimiter(options: {
  * `X-Real-IP` first: nginx on the VPS sets it from the connection, so a
  * client cannot choose it. The first `X-Forwarded-For` hop is whatever the
  * client sent, which let a script rotate it to dodge the limiter.
+ *
+ * That trust rests on deploy/nginx.conf setting the header and on the
+ * container being reachable only through nginx (tests/nginx-conf.test.ts pins
+ * both). As a backstop for a proxy that one day passes a client's header
+ * through, anything that is not an IP address shares one "unknown" bucket, so
+ * free-form values cannot mint a fresh bucket per request.
  */
 export function clientIp(req: Request): string {
   const real = req.headers.get("x-real-ip")?.trim();
-  if (real) return real;
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",").at(-1)!.trim();
+  if (real) return isIP(real) ? real : "unknown";
+  const forwarded = req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim();
+  if (forwarded) return isIP(forwarded) ? forwarded : "unknown";
   return "unknown";
 }
