@@ -17,8 +17,8 @@
 // budget is the measured maximum after that fix plus about 10% headroom, so an
 // ordinary feature fits and a second copy of the site does not.
 //
-//   2026-10-22, before #21: max 225.5 KB (/ar, /en), min 216.7 KB
-//   2026-10-22, after #21:  max 168.0 KB (/ar, /en), min 159.2 KB
+//   2026-10-22, main before #21: max 225.6 KB (/ar, /en), min 216.8 KB
+//   2026-10-22, with #21:        max 167.9 KB (/ar, /en), min 159.1 KB
 //
 // Raise BUDGET_KB deliberately, in its own commit that says what grew and why.
 
@@ -27,7 +27,7 @@ import { join, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { gzipSync } from "node:zlib";
 
-/** Per page, KB of gzip (1 KB = 1024 bytes). 168.0 KB measured + ~10%. */
+/** Per page, KB of gzip (1 KB = 1024 bytes). 167.9 KB measured + ~10%. */
 export const BUDGET_KB = 185;
 
 /**

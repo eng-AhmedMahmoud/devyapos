@@ -70,7 +70,7 @@ describe("overBudget", () => {
     expect(overBudget(rows, rows[0].gzip / 1024)).toEqual([]);
   });
 
-  it("is set, in KB, near the measured maximum (168.0 KB) plus headroom", () => {
+  it("is set, in KB, near the measured maximum (167.9 KB) plus headroom", () => {
     expect(BUDGET_KB).toBeGreaterThanOrEqual(168);
     expect(BUDGET_KB).toBeLessThanOrEqual(190);
   });
