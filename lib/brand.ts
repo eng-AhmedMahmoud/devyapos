@@ -44,6 +44,17 @@ export const brand = {
    * — the company is Devya Solutions, but the domain is NOT devya.solutions.
    */
   parent: { name: "Devya Solutions", url: "https://devya.dev" },
+  /**
+   * The sister product. Moving Stores (devya-commerce) is the family's online
+   * store builder; for restaurants it connects to Moving POS (menu, prices
+   * and branches from the till, web orders into the kitchen, one sign-in).
+   * The POS site sells it as the add-on a counter or dining room takes next
+   * (docs/business/go-to-market.md §7), so its name and address live here.
+   */
+  stores: {
+    name: { ar: "موفينج ستورز", en: "Moving Stores" },
+    url: "https://stores.movingsystems.tech",
+  },
   /*
    * `flagship` (a named, linked reference deployment) was removed on
    * 2026-08-28 at that client's request: they do not want their brand used in
@@ -78,6 +89,11 @@ export const brand = {
 /** The product name as a page in `locale` prints it. */
 export function brandName(locale: string) {
   return locale === "ar" ? brand.name.ar : brand.name.en;
+}
+
+/** The sister store builder's name as a page in `locale` prints it. */
+export function storesName(locale: string) {
+  return locale === "ar" ? brand.stores.name.ar : brand.stores.name.en;
 }
 
 /** The social profiles as a flat list, in the order the footer renders them. */

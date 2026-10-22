@@ -32,6 +32,8 @@ const sources = SOURCE_DIRS.flatMap((d) => files(join(root, d))).map((path) => (
 /** Hosts the source may name: this site, its family, and plain navigation targets. */
 const ALLOWED_HOSTS = new Set([
   "pos.movingsystems.tech",
+  // The sister product, Moving Stores: a plain link, never loaded by the page.
+  "stores.movingsystems.tech",
   "devya.dev",
   "wa.me",
   "schema.org",

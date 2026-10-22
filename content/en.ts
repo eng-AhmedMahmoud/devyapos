@@ -17,7 +17,7 @@ export const en: SiteContent = {
     pricing: {
       title: "POS pricing in Egypt — from 199 EGP a branch a month | Moving POS",
       description:
-        "A 14-day free trial, and Growth at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
+        "A 14-day free trial, and Counter at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
     },
     about: {
       title: "About Moving POS | Why we built this",
@@ -47,7 +47,7 @@ export const en: SiteContent = {
     foodicsAlternative: {
       title: "Foodics alternative in Egypt | Moving POS",
       description:
-        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Growth is 199 EGP, every module included. Compared honestly.",
+        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Counter is 199 EGP with the kitchen display. Compared honestly.",
     },
     partners: {
       title: "Partner programme for restaurant suppliers | Moving POS",
@@ -381,7 +381,7 @@ export const en: SiteContent = {
       paid: "Orders per branch x branches x average order value x commission, over twelve months.",
       recovered:
         "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
-      cost: "199 EGP per branch per month on the Growth plan, for twelve months.",
+      cost: "199 EGP per branch per month on the Counter package, for twelve months.",
       net: "Recovered commission minus what Moving POS costs you. This is the number that matters.",
       payback:
         "How long the recovered commission takes to cover a full year of Moving POS. Shorter is better.",
@@ -458,8 +458,8 @@ export const en: SiteContent = {
     segments: {
       eyebrow: "Start here",
       title: "What kind of restaurant are you?",
-      sub: "The price is the same whichever one you pick. What changes is the part of the system you will live in.",
-      note: "One platform, one price per branch. These are listed separately because a cloud kitchen and a dining room are shopping for different things, not because they are billed differently.",
+      sub: "Pick the one closest to how you serve. Each points to the package built for it.",
+      note: "Quick service, cloud kitchens and chains run on Counter. A dining room adds the room — tables, courses, split bills and paying at the table — on Dining room. Both are one flat price per branch, with no per-terminal fee.",
       items: [
         {
           id: "qsr",
@@ -519,22 +519,24 @@ export const en: SiteContent = {
     },
     plans: [
       {
-        id: "growth",
-        name: "Growth",
-        tagline: "The whole restaurant runs from here",
+        id: "counter",
+        name: "Counter",
+        tagline: "Quick service and cloud kitchens, whole",
         price: 199,
         badge: "Most chosen",
         featured: true,
         features: [
-          "Branded digital QR menu",
-          "Online ordering site — zero commission",
-          "Unlimited items and sizes",
-          "Full POS + shifts and drawer",
+          "Full POS with shifts and drawer counts",
           "Live kitchen display (KDS)",
-          "Zoned delivery with fees",
+          "Unlimited items, sizes and add-ons",
+          "Branded QR menu",
+          "Your own ordering site — zero commission",
+          "Pickup and zoned delivery with fees",
           "Online payments + cash + coupons",
-          "Loyalty, points and tiers",
-          "Customer notifications and campaigns",
+          "Loyalty points and promotions",
+          "Recipe-costed inventory and food-cost reports",
+          "Custom role permissions",
+          "Every branch in one console",
           "Sales and staff reporting",
           "Full Arabic/English",
           "WhatsApp support on business days",
@@ -542,33 +544,35 @@ export const en: SiteContent = {
         cta: "Try 14 days free",
       },
       {
-        id: "scale",
-        name: "Scale",
-        tagline: "When margin becomes the game",
+        id: "dining",
+        name: "Dining room",
+        tagline: "Counter, plus the room",
         price: 499,
         features: [
-          "Everything in Growth",
-          "Recipe-costed inventory",
-          "Automatic ingredient deduction",
-          "Food-cost and waste reporting",
-          "Custom role permissions",
-          "Unified multi-branch console",
-          "API and webhooks",
-          "Priority support + account manager",
+          "Everything in Counter",
+          "Table plan and table service",
+          "Courses sent to the kitchen in stages",
+          "Split bills",
+          "Guests pay at the table by QR",
+          "Waiter flow on phones and tablets",
+          "Gift cards, with what is still owed on them",
         ],
         cta: "Talk to us",
       },
       {
-        id: "enterprise",
-        name: "Enterprise",
-        tagline: "Chains and franchises",
+        id: "group",
+        name: "Group",
+        tagline: "When the head office is the customer",
         price: null,
         priceLabel: "Custom",
         features: [
-          "Everything in Scale",
-          "Private or on-premise hosting",
-          "Service level agreement (SLA)",
-          "ERP and existing-system integration",
+          "Everything in Dining room",
+          "Stock transfers and warehouses",
+          "HR, attendance and Egyptian payroll",
+          "Accounting fed from each day's close",
+          "API and webhooks",
+          "Device management for every till",
+          "Private hosting and a written SLA",
           "On-site team training",
           "Custom contractual terms",
         ],
@@ -581,13 +585,52 @@ export const en: SiteContent = {
       rows: [
         { name: "Foodics — Basic Bundle", price: "2,848.95 EGP", note: "Billed annually (3,019.89 quarterly). Loyalty, API, delivery aggregators and BI all cost extra" },
         { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top Egyptian tier on our record" },
-        { name: "Moving POS — Growth", price: "199 EGP", note: "The whole system, every module included", ours: true },
+        { name: "Moving POS — Counter", price: "199 EGP", note: "Register, kitchen display, ordering site, loyalty points, inventory and reports", ours: true },
       ],
-      note: "Competitor figures are our own record from the date above, not a public price list you can look up, and may have changed — ask them for a current quote before deciding. Ours is the full platform: register, kitchen display, your own ordering site, loyalty and reporting, with no per-terminal fee and no per-module upsell.",
+      note: "Competitor figures are our own record from the date above, not a public price list you can look up, and may have changed — ask them for a current quote before deciding. Ours is the Counter package: register, kitchen display, your own ordering site, loyalty points, inventory and reporting, with no per-terminal fee.",
       retrievedAt: "2026-09-04",
     },
     note: "Prices are in EGP per branch, excluding VAT. The trial runs 14 days with every feature and no credit card. Change or cancel any time, and export all of your data before you go.",
     founding: "Founding offer: the first 50 restaurants lock this price for the life of their subscription.",
+    addOns: {
+      title: "Add-ons",
+      sub: "Sold on top of any package. Each is priced per restaurant until we publish a list; ask and we quote it.",
+      items: [
+        {
+          id: "accounting",
+          name: "Accounting",
+          body: "Double-entry books fed from each day's close, for Egypt and Saudi Arabia.",
+          price: "From 499 EGP a month",
+          href: "/accounting-trial",
+          linkLabel: "Start the accounting trial",
+        },
+        {
+          id: "assistant",
+          name: "AI assistant",
+          body: "Ask about sales in a voice note, get a briefing each morning, and approve the changes it drafts.",
+          price: "Quoted",
+        },
+        {
+          id: "display",
+          name: "Customer display",
+          body: "A second screen that shows the guest their order and total as it is rung up.",
+          price: "Quoted",
+        },
+        {
+          id: "handheld",
+          name: "Waiter apps",
+          body: "Signed iPhone and Android apps for taking orders at the table.",
+          price: "Quoted",
+        },
+        {
+          id: "brands",
+          name: "Several brands",
+          body: "Run more than one brand from one kitchen, with food cost per brand.",
+          price: "Quoted",
+        },
+      ],
+      note: "Every add-on is switched on per restaurant, with no change to your package price.",
+    },
   },
 
   faq: {
@@ -597,7 +640,7 @@ export const en: SiteContent = {
     items: [
       {
         q: "Is there a free trial?",
-        a: "Yes — 14 days with every feature of the Growth plan and no credit card. We load your menu before the trial starts, so you are testing on your own data rather than on a demo.",
+        a: "Yes — 14 days with every feature of the package you choose and no credit card. We load your menu before the trial starts, so you are testing on your own data rather than on a demo.",
       },
       {
         q: "Do I have to buy new hardware?",
@@ -609,7 +652,7 @@ export const en: SiteContent = {
       },
       {
         q: "What if the branch has weak internet?",
-        a: "Screens run on the branch network with live updates over Socket.IO. On Scale and Enterprise we can host the system inside the restaurant itself or on your own server.",
+        a: "Screens run on the branch network with live updates over Socket.IO. On the Group package we can host the system inside the restaurant itself or on your own server.",
       },
       {
         q: "How are prices and VAT handled?",
@@ -786,7 +829,7 @@ export const en: SiteContent = {
     ],
     plansTitle: "The plans, briefly",
     plansSub:
-      "Growth for a working restaurant, Scale for when margin becomes the game, Enterprise for chains — all of them starting with a 14-day trial.",
+      "Counter for quick service and cloud kitchens, Dining room for table service, Group for chains — all of them starting with a 14-day trial.",
     builtByTitle: "Who builds it",
     builtByBody:
       "Moving POS is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
@@ -1094,6 +1137,21 @@ export const en: SiteContent = {
     withCr: "Moving POS is a product of Devya Solutions, the Egyptian software studio that built the platform and runs it — commercial registration {cr}.",
   },
 
+  movingStores: {
+    eyebrow: "Moving Stores",
+    title: "Your menu online, from the same till",
+    body: "Moving Stores is the online store from the same family. Connect it to Moving POS and your menu, prices and branches arrive by themselves, and online orders reach the kitchen like any other order.",
+    points: [
+      "Menu, prices and branches stay in sync with the POS",
+      "Online orders go straight to the kitchen display",
+      "One sign-in for the POS and the store",
+      "Cash on delivery, cards and wallets through Paymob, Bosta shipping",
+    ],
+    note: "The connection is for restaurants and cafés on Moving POS. Ask about both together when you take Moving POS.",
+    cta: "See Moving Stores",
+    footerLink: "Moving Stores — your online store",
+  },
+
   parentCompany: {
     credit: { text: "Moving Systems is a Devya Solutions company", link: "Devya Solutions" },
     notice: {
@@ -1272,7 +1330,7 @@ export const en: SiteContent = {
           note: "On the Egyptian Basic bundle each of these is charged on top of the bundle price.",
         },
         {
-          label: "Moving POS — Growth",
+          label: "Moving POS — Counter",
           value: "199 EGP",
           note: "Per branch per month. Register, kitchen display, ordering site, loyalty and reporting included, with no per-terminal fee.",
           ours: true,
@@ -1313,7 +1371,7 @@ export const en: SiteContent = {
       items: [
         {
           title: "Software cost has to make sense at your volume",
-          body: "At the Egyptian entry bundle on our record, one branch costs more per month than fourteen branches on Growth. For an independent café or a small chain, that difference is a salary.",
+          body: "At the Egyptian entry bundle on our record, one branch costs more per month than fourteen branches on Counter. For an independent café or a small chain, that difference is a salary.",
         },
         {
           title: "You want the whole system, not a bundle plus add-ons",
@@ -1321,7 +1379,7 @@ export const en: SiteContent = {
         },
         {
           title: "You want the kitchen display included",
-          body: "A live kitchen display is part of Growth. On our record, it is not in any Egyptian tier on the other side.",
+          body: "A live kitchen display is part of Counter. On our record, it is not in any Egyptian tier on the other side.",
         },
         {
           title: "You already own the hardware",
@@ -1462,7 +1520,7 @@ export const en: SiteContent = {
         },
         {
           q: "Does it work when the internet drops?",
-          a: "Screens run on the branch network with live updates between them. For branches with unreliable internet, the Scale and Enterprise plans can host the system inside the restaurant or on your own server.",
+          a: "Screens run on the branch network with live updates between them. For branches with unreliable internet, the Group package can host the system inside the restaurant or on your own server.",
         },
         {
           q: "Can I use the touchscreen from my old POS?",
@@ -1808,7 +1866,7 @@ export const en: SiteContent = {
         {
           title: "2. The free trial",
           body: [
-            "Every account starts with a 14-day free trial carrying the features of the Growth plan. No card is required to start it, and nothing is charged automatically when it ends.",
+            "Every account starts with a 14-day free trial carrying the features of the package chosen. No card is required to start it, and nothing is charged automatically when it ends.",
             "We load your menu before the trial starts so you are testing on your own data. If you decide not to subscribe, the account stops at the end of the trial. Your data stays available for export for thirty days after that, and is then deleted.",
           ],
         },
@@ -1830,7 +1888,7 @@ export const en: SiteContent = {
         {
           title: "5. What we do not promise",
           body: [
-            "We do not offer a contractual uptime guarantee except on Enterprise, where it is written into the agreement. We aim for continuous availability and we will tell you honestly when we fall short.",
+            "We do not offer a contractual uptime guarantee except on Group, where it is written into the agreement. We aim for continuous availability and we will tell you honestly when we fall short.",
             "Your internet connection, your branch network, your devices, your payment gateway and the delivery platforms you use are outside our control, and interruptions caused by them are not our responsibility.",
             "Figures on this site — including the commission calculator — are estimates for guidance. They are not a forecast of your results and nothing here is a promise of revenue or savings.",
           ],
@@ -2006,7 +2064,7 @@ export const en: SiteContent = {
         {
           title: "The offer, restated",
           body: [
-            "Fourteen days free with every Growth feature and no credit card. Billing monthly or once a year after that, per branch, in Egyptian pounds. Cancel any time, and take a full export of your data with you.",
+            "Fourteen days free with every feature of your package and no credit card. Billing monthly or once a year after that, per branch, in Egyptian pounds. Cancel any time, and take a full export of your data with you.",
           ],
         },
         {

@@ -63,6 +63,16 @@ export default async function Footer() {
                 </li>
               ))}
             </ul>
+            {/* The sister product, one line under the contacts: the family's
+                online store, which connects to the POS for restaurants. */}
+            <a
+              href={brand.stores.url}
+              target="_blank"
+              rel="noopener"
+              className="w-fit text-sm font-bold text-on-espresso-dim underline-offset-2 transition-colors hover:text-gold hover:underline"
+            >
+              {c.movingStores.footerLink}
+            </a>
           </div>
 
           {c.footer.cols.map((col) => (
