@@ -175,12 +175,17 @@ export function faqPageJsonLd(locale: string, path: string): JsonLdNode {
 export const FAQ_PATHS = ["/pricing", "/contact"] as const;
 
 /**
- * Human name for a route: the nav label when the route is in the nav,
- * otherwise the first half of its `<title>` (every page title is
- * "Something | Moving POS" or "Moving POS | something").
+ * Human name for a route: the label the site's own links give it (the header,
+ * then the footer), otherwise the first half of its `<title>` ("Something |
+ * Moving POS" or "Moving POS | something"). Links first, because titles carry
+ * search keywords and are too long to read as a breadcrumb.
  */
 function routeName(c: SiteContent, locale: string, path: string, key: string) {
-  const link = c.nav.links.find((l) => l.href === path);
+  const link = [
+    ...c.nav.links,
+    ...c.nav.extra,
+    ...c.footer.cols.flatMap((col) => col.links),
+  ].find((l) => l.href === path);
   if (link) return link.label;
 
   const title = (c.meta[key] ?? c.meta.home).title;
