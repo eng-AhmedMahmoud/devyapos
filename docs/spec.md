@@ -1,24 +1,37 @@
-> Copy of `docs/specs/devyapos-site.md` from the [bohub-pos monorepo](https://github.com/eng-AhmedMahmoud/bohub-pos), which is the canonical home. Update there first.
+> **This copy is canonical** (since 2026-10-22). Every change to the site since
+> August has been made in this repo, so the spec lives beside it; the older
+> copy in bohub-pos (`docs/specs/devyapos-site.md`) should become a pointer
+> here. How the site runs — hosting, routes, sinks, deploy, CI — is in
+> [`architecture.md`](architecture.md); why, in [`decisions/`](decisions/README.md).
+> Counts, prices and lists below name the file that holds them rather than
+> repeating them, so they cannot drift.
 
 # Moving POS marketing site — reference spec
 
-Source repo: `github.com/eng-AhmedMahmoud/devyapos` (local checkout
-`~/Projects/devyapos`), extracted via `git subtree split` from this monorepo's
-`saas-app/` on 2026-08-26 — see `docs/DEVYAPOS-MOVED.md`. It shares no code
-with `bohub-pos` (no workspace deps, no `packages/` imports); the product it
-markets (POS, KDS, shop, admin) still lives here, and its screenshots/demo
-clip are captures of this codebase. All paths below are relative to the
-`devyapos` repo root, not to `bohub-pos`.
+Repo: `github.com/eng-AhmedMahmoud/devyapos`, extracted via `git subtree
+split` from the bohub-pos monorepo's `saas-app/` on 2026-08-26. It shares no
+code with bohub-pos (no workspace deps, no `packages/` imports); the product it
+markets (POS, KDS, shop, admin, and the control plane the accounting trial
+signs up with) still lives there, and its screenshots and demo clip are
+captures of that codebase. All paths below are relative to this repo's root.
 
-Stack: Next.js 16.2.12 (App Router), React 19.2, next-intl 4.13, Tailwind CSS
-4. No database, no auth, no backend beyond a single `/api` rewrite for a
-future lead-form POST (`next.config.ts`). Fully static marketing content.
+Stack: Next.js 16 (App Router, `output: "standalone"`), React 19.2, next-intl
+4, Tailwind CSS 4 — exact versions in `package.json`. Prerendered marketing
+pages plus three route handlers: `POST /api/lead` (the contact form: forwarded
+to a CRM, or kept in the outbox file on the data volume), `POST /api/consent`
+(consent receipts, same volume) and `GET /api/health`. No database, no
+accounts, no auth. One Docker container on the Devya VPS behind nginx
+([`architecture.md`](architecture.md)).
 
 ## 1. Purpose
 
-Public marketing site for **Moving POS** (named DevyaPOS until 2026-10-18 and Drinki POS until 2026-10-19; visible name only, identifiers keep `devyapos`), the productised, sellable version of
-the BóHub POS platform — "Devya's restaurant operating system for the
-Egyptian market." Live at **https://pos.movingsystems.tech** (Devya VPS
+Public marketing site for **Moving POS** (named DevyaPOS until 2026-10-18 and
+Drinki POS until 2026-10-19; visible name only, identifiers keep `devyapos` —
+[ADR 0005](decisions/0005-product-renames.md)), the productised, sellable
+version of the platform Devya built for a 25-branch Egyptian chain — "Devya's
+restaurant operating system for the Egyptian market." Since 2026-10-13 it also
+sells **Moving POS Accounting** through a self-serve trial for Egypt and Saudi
+Arabia (`/accounting-trial`). Live at **https://pos.movingsystems.tech** (Devya VPS
 behind nginx, `scripts/deploy.sh`; DNS-only `A → 72.61.81.59` on Cloudflare's
 `movingsystems.tech` zone). The address until 2026-10-22, `pos.devya.dev`,
 answers with a 301 to the same path and query there (`deploy/nginx.conf`).
@@ -29,17 +42,28 @@ answers with a 301 to the same path and query there (`deploy/nginx.conf`).
   deliberate override of next-intl's default negotiation (see §5).
 - **Light default, everyone**: `app/[locale]/layout.tsx` hardcodes
   `data-theme="light"` on `<html>` rather than reading `prefers-color-scheme`.
-  A boot script (`components/ThemeToggle.tsx` → `themeBootScript`) inlined in
-  `<head>` applies any stored `localStorage` choice before first paint so
-  there's no flash; the toggle itself lives in the header.
+  A boot script (`lib/theme.ts` → `themeBootScript`) inlined in `<head>`
+  applies any stored `localStorage` choice before first paint so there's no
+  flash; the toggle itself lives in the header. The script lives in a plain
+  module, not in the `"use client"` toggle: imported from a client module, the
+  server layout received a client reference instead of the text, and cold loads
+  intermittently failed hydration with React #418
+  (`tests/client-boundary.test.ts` keeps it that way).
 - The product lives on a subdomain of the Moving family's domain
   (`pos.movingsystems.tech`), beside the umbrella site (`movingsystems.tech`)
   — see `lib/brand.ts` header comment.
-- The whole site is proven against one real reference deployment: BóHub, a
-  25-branch Egyptian bubble-tea chain (`brand.flagship` in `lib/brand.ts`,
-  linked from `/about`). All screenshots, the promo clip, and the concrete
-  numbers quoted in copy (25 branches, 249 items, 430 sizes/variants) are
-  real captures/figures from that deployment, not mockups.
+- The whole site is proven against one real reference deployment, which the
+  copy names only as "a 25-branch Egyptian chain". The client's name and link
+  were withdrawn at their request on 2026-08-28 (`602eb1a`; the `flagship`
+  comment in `lib/brand.ts`) — never reintroduce them without the client's
+  written permission. All screenshots, the promo clip and the figures quoted
+  in copy (`hero.stats` in `content/*.ts`) are real captures and figures from
+  that deployment, not mockups.
+- No tracker of any kind runs on the site ([ADR 0004](decisions/0004-no-third-party-trackers.md)).
+  The one optional thing it stores is the first-touch campaign record, behind
+  the shared consent banner (`docs/compliance/consent-design.md`); every
+  WhatsApp button tags its message with a placement code instead
+  (`whatsappSources` in `lib/brand.ts`).
 
 ## 2. Page inventory
 
@@ -134,13 +158,14 @@ cost) → `CtaBand`.
 
 ### `/about` (`app/[locale]/about/page.tsx`)
 
-`PageHero` → long-form story (single column prose, link to the BóHub
-flagship) → engineering principles as cards (6 principles: money in
+`PageHero` → long-form story (single column prose; the reference chain is
+unnamed) → engineering principles as cards (6 principles: money in
 piastres, Arabic as a first-class language, real-time not a luxury, etc.) →
 espresso "numbers today" stat band → 3-item timeline → `Pricing compact`
 restated (a warm reader shouldn't have to navigate away for price) → "built
-by Devya Solutions" espresso section with phone/email → closing CTA card →
-`CtaBand`.
+by Devya Solutions" espresso section with phone/email and the parent-company
+notice (`components/ParentCompany.tsx`: Moving Systems is a subsidiary of
+Devya Solutions, linked to https://devya.dev) → closing CTA card → `CtaBand`.
 
 ### `/contact` (`app/[locale]/contact/page.tsx`)
 
@@ -149,25 +174,91 @@ channel list (WhatsApp / phone / email / 15-min live demo, each an `<a>` to
 `whatsappLink()`/`telLink`/`mailtoLink()`) → `Faq`. No `CtaBand` — the page
 already ends on the same ask.
 
+### Search-entry pages
+
+Each answers a query the home page cannot, and ends on a `ClosingCta` card with
+its own WhatsApp source code, then the `CtaBand`.
+
+- **`/eta-einvoicing`** (`app/[locale]/eta-einvoicing/page.tsx`) — Egyptian
+  VAT and ETA e-invoicing: what is required, what the product does, and — on
+  the espresso band, the loudest surface — what it does **not** do. Nothing may
+  imply certification: no badge or seal, and the `does` list is marked with the
+  saffron cell, not a tick (the file's comment). `PageFaq`, `ClosingCta`
+  (`eta`).
+- **`/foodics-alternative`** (`app/[locale]/foodics-alternative/page.tsx`) —
+  the named comparison. A disclaimer under the hero and a source line under
+  the table travel with the figures: they are our own dated record of Foodics'
+  Egyptian bundle prices, not a published list, and the date is rendered from
+  `foodicsAlternative.facts.retrievedAt`, which a test keeps under 90 days old.
+  "Pick them" and "pick us" are rendered identically. `ClosingCta`
+  (`foodics`).
+- **`/hardware`** (`app/[locale]/hardware/page.tsx`) — bring your own hardware:
+  what works, what you need, and a buying guide on the espresso band whose
+  footnote (no hardware sold, no commission) is the point. `PageFaq`,
+  `ClosingCta` (`hardware`).
+
+### `/accounting-trial` (`app/[locale]/accounting-trial/page.tsx`)
+
+`PageHero` → the sign-up section (`#start`): `TrialForm`
+(`components/TrialForm.tsx`) beside what the trial includes and its steps →
+`AccountingPricing` (`components/AccountingPricing.tsx`: an Egypt / Saudi
+Arabia switch, the price list in EGP or SAR with each country's VAT rate and
+e-invoicing system; every plan's button scrolls back to the form) →
+`PageFaq`.
+
+The form validates in the browser with `lib/trial.ts` (a copy of the store's
+rules, for the inline hints) and posts JSON **straight from the browser** to
+`NEXT_PUBLIC_TRIAL_CLAIM_URL` — Devya's control plane, bohub-pos `ops-store`
+— with `credentials: "omit"`, never through this site's server
+([ADR 0003](decisions/0003-trial-posts-direct-to-ops-api.md)). A success shows
+the new trial stack's link and one-time setup token, after `readClaimAnswer`
+has checked that the answer has exactly the documented shape; 409, 400, 429
+and 503 each get their own message. A build without the URL shows "sign-ups
+are paused" with WhatsApp (`[P-trial]`) instead of a form that posts.
+
+### Legal pages (`/privacy`, `/terms`, `/refund`)
+
+`LegalArticle` (`components/pages/LegalArticle.tsx`) renders
+`legal.privacy` / `legal.terms` / `legal.refund` from the content trees, with
+the "Moving Systems is a subsidiary of Devya Solutions" notice beside the trust
+line. `/privacy` is indexed; `/terms` and `/refund` are `noindex, nofollow`
+drafts awaiting legal review ([#39](https://github.com/eng-AhmedMahmoud/devyapos/issues/39),
+[#40](https://github.com/eng-AhmedMahmoud/devyapos/issues/40)). All three are
+kept out of the sitemap until they are reviewed (`lib/meta.ts`).
+
 ### FAQ placement
 
 `Faq` (`components/Faq.tsx`, `<details>`/`<summary>` accordion, 2-column on
-desktop) renders on exactly **two** routes: `/pricing` and `/contact`. It
-used to also render on `/features`; the removal comment in
+desktop) — the general FAQ — renders on exactly **two** routes: `/pricing` and
+`/contact`. It used to also render on `/features`; the removal comment in
 `app/[locale]/features/page.tsx` states the reasoning directly: "objections
 belong next to the price, and two copies of the same answers only split the
-search signal."
+search signal." The search-entry pages and the trial carry their own
+page-specific questions through `PageFaq` (`components/pages/PageFaq.tsx`),
+which also emits `FAQPage` JSON-LD for exactly the items it renders.
 
-### Not-found (`app/[locale]/not-found.tsx`)
+### Not-found and errors
 
-Locale-aware 404 using `hero-wash` styling, links to `/` and `/pricing`.
+`app/[locale]/not-found.tsx`: locale-aware 404 using `hero-wash` styling,
+links to `/` and `/pricing`. `app/[locale]/error.tsx` (inside the locale
+layout, in the page's language) and `app/global-error.tsx` (its own document,
+Arabic then English) offer a retry and show only the error's digest — the same
+id the server's `request_error` log line carries — never a message or stack.
+
+### Route handlers
+
+`POST /api/lead`, `POST /api/consent` and `GET /api/health` are described in
+[`architecture.md`](architecture.md#the-routes-that-do-something); the lead
+forward contract (v1) is in the README.
 
 ### Metadata plumbing
 
 `app/robots.ts` (allow all, points at `/sitemap.xml`) and `app/sitemap.ts`
-(7 paths × 2 locales, each with `alternates.languages` hreflang) both derive
-every URL from `brand.url` (`lib/brand.ts`) and `routing.locales`
+(every path in `routes` in `lib/meta.ts` × both locales, each with
+`alternates.languages` hreflang and `x-default` → Arabic) both derive every
+URL from `brand.url` (`lib/brand.ts`) and `routing.locales`
 (`i18n/routing.ts`) — no hardcoded domain strings outside `lib/brand.ts`.
+Adding a page means one line in `routes`.
 Per-page `<title>`/`<meta description>` come from `lib/meta.ts`'s
 `buildMetadata(locale, key, path)`, which reads `content.meta[key]` and
 builds canonical + hreflang `alternates` from the same two sources.
@@ -176,8 +267,8 @@ builds canonical + hreflang `alternates` from the same two sources.
 
 ### Typed content trees, not next-intl messages
 
-`content/ar.ts` and `content/en.ts` (889 and 885 lines) are hand-written,
-fully mirrored TypeScript objects, both typed as `SiteContent`
+`content/ar.ts` and `content/en.ts` are hand-written, fully mirrored
+TypeScript objects, both typed as `SiteContent`
 (`content/types.ts`). `content/index.ts` exports `getContent(locale)`,
 falling back to `ar` for unknown locales.
 
@@ -188,12 +279,11 @@ namespace: menu open/close, skip-link, language-switch label, theme toggle
 labels) — but landing-page copy is deeply structured (feature grids,
 comparison-matrix rows, pricing plans with feature arrays, ROI-calculator
 tooltip sets), and reading that back through next-intl's `t.raw("...")` loses
-every type guarantee. `SiteContent` is one large interface (nav, hero,
-marquee, pain/ledger, bridge, features, tour, steps, compare, roi, caseStudy,
-testimonials, pricing incl. `marketAnchor`, faq, cta, notFound, footer,
-about, contact, gallery, promo, payments, promise, featuresPage) that forces
-`ar.ts` and `en.ts` to stay provably identical in shape — a missing key in
-one locale is a TypeScript error, not a silent runtime fallback.
+every type guarantee. `SiteContent` is one large interface — its top-level
+keys are the list of content blocks — that forces `ar.ts` and `en.ts` to stay
+provably identical in shape: a missing key in one locale is a TypeScript
+error, not a silent runtime fallback, and `tests/content.test.ts` also checks
+that every list has the same length in both.
 
 Two fields are deliberately **not** translated content: `gallery.items[i]`
 carries only `{alt, caption}` — the screenshot `src` paths live in the
@@ -202,14 +292,13 @@ array, `components/home/Showcase.tsx`'s `ORDER` array), keyed by array index
 against `SHOTS` from `lib/screenshots.ts`. Same pattern for `promo` (copy in
 content, `src`/`poster` from `PROMO_CLIP` in `lib/screenshots.ts`).
 
-Some concrete figures baked into the Arabic tree (`content/ar.ts`), to
-illustrate the level of specificity: hero stats "25 branches, 679
-items/sizes, <1s POS→kitchen"; pricing plans Growth (199 EGP/branch/mo,
-featured), Scale (499 EGP/branch/mo), Enterprise (custom); market-anchor
-rows dated "as of August 2026" citing Foodics Starter/Basic/Advanced
-(1,506 / 2,582 / 3,442 EGP) against Moving POS Growth (199 EGP); payments
-providers `[Paymob(live), Fawry, Kashier, Geidea, OPay, PayTabs]` with only
-Paymob marked `live: true`. `testimonials.items` is an empty array in both
+The trees carry real, specific figures, and each lives in exactly one block,
+so look there rather than here: the hero numbers (`hero.stats`), the POS plans
+and prices (`pricing.plans`), the dated competitor rows (`pricing.marketAnchor`
+and `foodicsAlternative.facts`, each with a `retrievedAt` the page renders and
+a test keeps under 90 days old), the accounting price lists
+(`accountingTrial.pricing`) and the payment providers, with only the live ones
+marked `live: true` (`payments`). `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty
 "until real signed testimonials exist," and `components/home/Testimonials.tsx`
 returns `null` when empty rather than rendering placeholder quotes (inventing
@@ -218,44 +307,40 @@ could legitimately attack).
 
 ### `lib/brand.ts` — single source of truth for brand facts
 
-```ts
-export const brand = {
-  name: { ar: "موفينج POS", en: "Moving POS" },
-  wordmark: { ar: ["موفينج", "POS"], en: ["Moving", "POS"] },
-  domain: "pos.movingsystems.tech",
-  url: "https://pos.movingsystems.tech",
-  email: "devya.solutions@gmail.com",
-  whatsapp: "201055930032",           // E.164, no plus
-  phoneDisplay: "+20 105 593 0032",
-  parent: { name: "Devya Solutions", url: "https://devya.dev" },
-  flagship: { name: { ar: "بوهَب", en: "BóHub" }, url: "https://bohubegy.com" },
-} as const;
-```
+`brand` holds the product name per locale and the lockup's split
+(`wordmark`), the domain and URL, the contact email, the WhatsApp number and
+its display form, the parent company (Devya Solutions, `https://devya.dev`)
+and the live social profiles — read the file for the values rather than
+copying them anywhere, this page included. `whatsappSources` beside it is the
+legend of the placement codes every WhatsApp message ends with.
 
 Everything that needs the domain, brand name, WhatsApp/phone/email, or the
 parent-company link reads from here — `lib/meta.ts` (canonical URLs,
 hreflang, OG/Twitter card), `app/sitemap.ts`, `app/robots.ts`,
 `components/Footer.tsx`, `components/CtaBand.tsx`, `components/Logo.tsx`,
 `app/[locale]/about/page.tsx`, `app/[locale]/contact/page.tsx`. Helper
-functions colocated: `whatsappLink(message)` (wa.me deep link, URL-encoded,
-locale-aware message text passed in by the caller), `telLink` (constant
-`tel:` href), `mailtoLink(subject?)`.
+functions colocated: `whatsappLink(message, source)` (wa.me deep link with the
+placement code `[P-<source>]` on its own last line, URL-encoded; the message
+text is passed in by the caller in the page's language, and the type checker
+refuses a call without a source), `telLink` (constant `tel:` href),
+`mailtoLink(subject?)`. `tests/whatsapp.test.ts` keeps every wa.me link
+inside `lib/brand.ts`.
 
-The file's own comment records a naming decision worth preserving: the
-company is **Devya Solutions**, the domain is **devya.dev**, never
-`devya.solutions` — and Moving POS is deliberately *not* a sister brand with
-its own `.dev` registration, it's a product living on a `pos.` subdomain.
-Since 2026-10-19 it is a member of the **Moving** family (Moving Stores in
-devya-commerce, the umbrella site at moving.devya.dev), which writes its name
-in Arabic on Arabic pages — موفينج POS, as موفينج ستورز — so `name` differs
-per locale and `brandName(locale)` is what titles, JSON-LD and the footer
-read. `wordmark` is the lockup's split: the family name bold, the product
-regular at 70%. A
-trailing comment also documents fields that were *removed* (`social`,
-`signupUrl`, `loginUrl`, `demoUrl`) because they had no live consumer once
-the hero's "see it running" CTA moved to the on-page `#promo` recording — the
-old demo URL pointed at a C4 architecture diagram
-(`https://bohub-c4.vercel.app`, still live if ever needed elsewhere).
+The file's own comment records the naming decisions worth preserving. The
+studio is **Devya Solutions**, whose domain is **devya.dev**, never
+`devya.solutions`. Since 2026-10-19 Moving POS is a member of the **Moving**
+family (Moving Stores in devya-commerce, the umbrella site at
+movingsystems.tech), and since 2026-10-22 it lives on that family's domain,
+`pos.movingsystems.tech`; Moving Systems is a subsidiary of Devya Solutions.
+The family writes its name in Arabic on Arabic pages — موفينج POS, as موفينج
+ستورز — so `name` differs per locale and `brandName(locale)` is what titles,
+JSON-LD and the footer read. `wordmark` is the lockup's split: the family name
+bold, the product regular at 70%. Comments also document fields that were
+*removed* — `flagship` (the client's withdrawal, above), and `signupUrl`,
+`loginUrl` and `demoUrl`, which had no live consumer once the hero's "see it
+running" CTA moved to the on-page `#promo` recording (the old demo URL pointed
+at a C4 architecture diagram, `https://bohub-c4.vercel.app`) — and why
+`social` came back on 2026-09-20 with the real profiles.
 
 ### `lib/screenshots.ts` — screenshot manifest
 
@@ -276,8 +361,8 @@ tablet frame sizes its glass from an aspect number, and a wrong aspect
 letterboxes the clip the same way the hardcoded 4:3 used to letterbox stills.
 Shot at 1450×840.
 
-`-v2` filename suffix (`admin-dashboard-v2.webp`, `pos-order-v2.webp`, etc. —
-7 of the 13 files under `public/screenshots/`) is explained as deliberate,
+`-v2` filename suffix (`admin-dashboard-v2.webp`, `pos-order-v2.webp`, etc.)
+is explained as deliberate,
 not accidental: a previous deploy shipped different bytes at the *same*
 path, and Next serves optimized images from an immutable-cached URL keyed on
 the source path — a returning visitor would keep the old, cropped copy
@@ -290,7 +375,7 @@ just that the rename is what shipped.
 Since 2026-10-19 the look is **Moving Stores'** — the palette, type and mark of
 its landing (devya-commerce `apps/admin/features/landing/landing.css`,
 `apps/admin/app/tokens.css`, decision 0004), the same values the
-moving.devya.dev umbrella site carries: bone paper, warm ink, one saffron
+movingsystems.tech umbrella site carries: bone paper, warm ink, one saffron
 accent used as a fill and never as text on paper, square corners, hairline
 rules, a construction grid, and a square-Kufic "م" for a mark. (Until then it
 was the BóHub house palette: maroon, caramel, espresso, boba pearls.) Change a
@@ -480,6 +565,10 @@ square-capped zero-length dash moved by `stroke-dashoffset` on a
 
 ## 5. Notable engineering decisions
 
+The decisions about the system — hosting, lead storage, the trial post, no
+trackers, the renames, the protected `main` — are ADRs in
+[`decisions/`](decisions/README.md). The ones below are the UI's.
+
 - **`localeDetection: false`, Arabic for everyone at `/`**
   (`i18n/routing.ts`). next-intl's default `Accept-Language` negotiation was
   sending every `en-US` browser — "including most of the team's" — to `/en`,
@@ -550,8 +639,8 @@ To fork this scaffold for a different product (same house design system,
 different brand/content/screenshots), the swap set is:
 
 1. **`lib/brand.ts`** — rewrite `name`, `wordmark`, `domain`, `url`, `email`,
-   `whatsapp`, `phoneDisplay`, `parent`, `flagship` (or drop `flagship` if
-   the new product has no single reference deployment worth naming).
+   `whatsapp`, `phoneDisplay`, `parent`, `social` and `whatsappSources`. Name
+   a reference client only with their written permission.
    Everything downstream (canonical URLs, sitemap, robots, footer, CTA
    bands, About page) re-derives automatically — there should be no need to
    touch a domain/email/phone string anywhere else in the codebase. Grep for
@@ -593,10 +682,10 @@ different brand/content/screenshots), the swap set is:
    whatever the new product's core loop is); the loading strategy
    (`IpadVideo.tsx`) and the tablet chrome (`IpadShell.tsx`) are both
    product-agnostic and need no changes.
-6. **Design tokens stay** — the palette in `app/globals.css`, the pearl
-   motif, the espresso-band rhythm, and the two font pairs are the *house*
-   system inherited from the BóHub brand site, not this product's own
-   identity. Reuse them as-is unless the new product needs distinct
+6. **Design tokens stay** — the palette in `app/globals.css`, the saffron
+   cell (`.pearl`), the dark-band rhythm and the Plex / Reem Kufi type are the
+   Moving family's system (Moving Stores' landing in devya-commerce), not
+   this product's own identity. Reuse them as-is unless the new product needs distinct
    branding; if it does, the token indirection (`@theme inline` mapping
    `--color-*` → the raw `--*` custom properties, defined once per theme)
    means a rebrand is a token-value edit, not a component rewrite.
