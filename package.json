@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "prepare": "[ ! -f scripts/install-hooks.sh ] || sh scripts/install-hooks.sh"
   },
   "dependencies": {
     "next": "16.4.2",

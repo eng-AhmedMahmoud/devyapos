@@ -2,7 +2,7 @@
 
 One bilingual (Arabic-first, English) consent banner and preferences panel, the
 same behaviour, markup and copy on: movingsystems.tech (moving-landing),
-pos.devya.dev (devyapos), www.devya.dev (devya-solutions), commerce.devya.dev
+pos.movingsystems.tech (devyapos), www.devya.dev (devya-solutions), commerce.devya.dev
 and the Moving Stores storefronts (devya-commerce), and the Moving POS front
 ends (bohub-pos). Each site maps the `--consent-*` tokens onto its own palette;
 nothing else differs except the vendor lines, which must name what that site
@@ -60,6 +60,10 @@ and say where in their `docs/compliance/gdpr-audit.md`.)
   per answer. Marketing sites write it as one structured log line
   (`{"event":"consent", …}`); apps with a database store it in a
   `ConsentRecord` row (with the signed-in user's id where there is one).
+  A site whose logs do not outlive a deploy must also keep the receipt
+  somewhere that does: devyapos appends it to `consent-receipts.jsonl` on its
+  data volume for 365 days (`lib/consent-receipts.ts`), and the log line is a
+  breadcrumb only.
 - **Accessible and bilingual.** The panel is a native modal `<dialog>` (focus
   trap, Esc, inert page). Labels, switches with `role="switch"`, 44 px
   targets, logical CSS properties so RTL needs no override, Arabic copy first.
@@ -81,4 +85,7 @@ own i18n system when they have one, word for word, and may only change the
 moving-landing (`~/Projects/moving-landing`) holds the reference copy of the
 shared files; the other repos copy from it. The headless ar/en check that
 every PR runs before merge is described in each repo's
-`docs/compliance/gdpr-audit.md` (§ Verification).
+`docs/compliance/gdpr-audit.md` (§ Verification). In devyapos it is
+automated: `e2e/consent.spec.ts` drives the `data-consent` hooks above in
+both locales on every pull request, in CI's required `e2e` job, against a
+production build.
