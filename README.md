@@ -46,7 +46,9 @@ portless devyapos -- pnpm dev   # → https://devyapos.localhost
 `pnpm install` runs the `prepare` script, which sets `core.hooksPath` to
 `.githooks` in this checkout so `.githooks/pre-commit` scans every commit for
 secrets. It does nothing outside a git checkout (the Docker build, a tarball),
-and leaves a `core.hooksPath` you set to something else alone.
+and leaves a `core.hooksPath` you set to something else alone. Hooks then run
+from whatever branch is checked out, so read a contributor's changes to
+`.githooks/` before checking their branch out.
 
 Checks (CI's required `check` job runs all of these, plus `pnpm audit --prod
 --audit-level high`; the required `e2e` job runs the browser journeys):

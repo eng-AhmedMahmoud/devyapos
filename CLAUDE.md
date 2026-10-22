@@ -152,6 +152,9 @@ go in `tests/*.test.ts` with the `@/` alias; browser tests import from
 - `.githooks/pre-commit` scans every commit for secrets (`pnpm install`
   installs it). If it blocks, fix the commit. `SKIP_SECRET_SCAN=1` only for a
   verified false positive, said in the PR.
+- Git runs hooks from `.githooks/` in whatever branch is checked out. Before
+  checking out someone else's branch, read any change it makes to
+  `.githooks/` (and to `package.json` scripts, which `pnpm install` runs).
 
 ## Style
 
