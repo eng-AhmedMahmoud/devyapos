@@ -79,7 +79,10 @@ function generated(count: number, seed: number): string[] {
   const rand = prng(seed);
   const pick = <T,>(list: readonly T[]) => list[Math.floor(rand() * list.length)];
   const digits = (n: number) => Array.from({ length: n }, () => String(Math.floor(rand() * 10))).join("");
-  const prefixes = ["", "", "+", "00", "0", "20", "966", "+20", "+966", "0020", "00966", "+0", "+00", "++", "00+", "tel:", "tel:+20", "20+", "+20 0"];
+  const prefixes = [
+    "", "", "+", "00", "0", "20", "966", "+20", "+966", "0020", "00966", "+0", "+00", "++", "00+", "tel:", "tel:+20",
+    "20+", "+20 0", "0000", "000020", "+0020", "+000020", "00 0020", "0000966", "+00966", "0 0", "000",
+  ];
   const leads = ["1", "10", "11", "12", "15", "13", "19", "2", "3", "5", "50", "9", "0", ""];
   const seps = ["", "", "", " ", "-", ".", "(", ")", "‎", "‏", "/", "x"];
   const arabic = (text: string) =>
@@ -107,6 +110,10 @@ const NAMED = [
   "0001055930032", "+001055930032", "+00201055930032", "00+201055930032", "++201055930032",
   "20+1055930032", "201234567", "20223456789", "+‎20 10 5593 0032‏", "‏010 5593 0032",
   "011 234 5678", "966501234", "05012345678", "0601234567", "00966501234567",
+  // A doubled international prefix: the lead rule takes one 00 off, then a
+  // trunk 0, and refuses what is left. Found by the security review of #21.
+  "000020 1012345678", "+000020 1012345678", "00 0020 1012345678", "tel:000020-101-234-5678",
+  "0000201012345678", "+0020 1012345678", "000201012345678",
 ];
 
 describe("foldDigits (lib/format.ts) — the one digit folder", () => {

@@ -42,7 +42,8 @@ export interface PhoneRule {
    * stray character, and a `+` or `00` typed in front of a national number
    * ("+010…" means 010…). Without it, only digits, one leading `+`, and the
    * separators people type (spaces, dashes, dots, brackets, bidi marks) are
-   * read; anything else is not a phone number.
+   * read, the prefix must be a real one, and anything else is not a phone
+   * number.
    */
   lenient?: boolean;
 }
@@ -83,19 +84,23 @@ const COUNTRIES: Record<PhoneCountry, CountryRule> = {
 
 // Digits, one leading plus, and the separators people actually type, including
 // the LRM/RLM marks an RTL keyboard leaves around a pasted number.
-const TYPED = /^\+?[\d\s().\-‎‏]+$/;
+const TYPED = /^\+?[\d\s().\-\u200e\u200f]+$/;
 
 /**
- * The `lenient` clean-up: keep digits and plus signs only, then drop a `+` or
- * `00` that is not followed by the calling code, so what is left reads as a
- * national number. A `+` anywhere but in front is left in place, and refused
- * below.
+ * The `lenient` reading, the lead form's since it shipped: keep digits and plus
+ * signs only, then take a `+`, a `00`, and the calling code or else a trunk `0`
+ * off the front, once each and in that order. What is left is the national
+ * number, handed on in international form so the shape check below is the
+ * same one the strict reading ends in. A `+` anywhere but in front stays, and
+ * is refused there.
  */
 function forgive(folded: string, cc: string): string {
-  let text = folded.replace(/[^\d+]/g, "");
-  if (/^\+\d/.test(text) && !text.startsWith(`+${cc}`)) text = text.slice(1);
-  if (/^00\d/.test(text) && !text.startsWith(`00${cc}`)) text = text.slice(2);
-  return text;
+  let digits = folded.replace(/[^\d+]/g, "");
+  if (digits.startsWith("+")) digits = digits.slice(1);
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  if (digits.startsWith(cc)) digits = digits.slice(cc.length);
+  else if (digits.startsWith("0")) digits = digits.slice(1);
+  return `+${cc}${digits}`;
 }
 
 /**
