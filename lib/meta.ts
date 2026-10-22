@@ -110,6 +110,11 @@ export function ogImage(locale: string, alt: string) {
   ];
 }
 
+/** Open Graph locale for a site locale: Egyptian Arabic, US English. */
+export function ogLocale(locale: string) {
+  return locale === "ar" ? "ar_EG" : "en_US";
+}
+
 /**
  * Page metadata + hreflang alternates. Every page passes its own key from the
  * `meta` block of the content tree so titles stay next to the copy they belong
@@ -141,7 +146,11 @@ export function buildMetadata(
       title: meta.title,
       description: meta.description,
       siteName: brandName(locale),
-      locale: locale === "ar" ? "ar_EG" : "en_US",
+      locale: ogLocale(locale),
+      // The same page in the other language (og:locale:alternate).
+      alternateLocale: routing.locales
+        .filter((l) => l !== locale)
+        .map(ogLocale),
       images,
     },
     twitter: {
