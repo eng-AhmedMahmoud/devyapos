@@ -48,6 +48,9 @@ boot-time config check and health route, and the deploy and leads scripts.
 | Boot check and health | `env`, `ops` |
 | Deploy and operator tools | `deploy` (CI gate, smoke, backups, tags, rollback), `leads-script`, `hooks` (the `prepare` hook) |
 | Content and brand | `content` (ar/en parity, the product name, retired names, competitor figures' dates), `whatsapp` (placement codes), `tokens` (contrast, brand), `parent`, `theme`, `client-boundary` |
+| Search and sharing | `seo` (route manifest, canonical and ar/en/x-default hreflang, noindex list, title and description bounds, one share card per page on disk at 1200×630, sitemap, robots, llms.txt), `jsonld`, `headers` (`X-Robots-Tag` on `/api/*` only), `e2e/seo.spec.ts` (one h1 per page, font and image preloads, each page's card served, the branded 404) |
+| Accessibility | `e2e/a11y.spec.ts`: axe-core against WCAG 2.2 A/AA on every page in both locales, with reduced motion so no text is measured mid-fade |
+| Core Web Vitals | `e2e/vitals.spec.ts` (phone viewport, both locales): the hero entrance never animates opacity, and no scroll reveal hides content that is already on screen at hydration, the two ways LCP text was being kept transparent |
 | Docs | `docs` (no stale hosting claims, every relative link resolves, ADR index complete) |
 | Cosmetic | `cursor` (a source contract for the custom cursor) |
 
@@ -111,7 +114,10 @@ would hide exactly the intermittent hydration error it exists to catch.
 
 - **Visual layout and motion.** No screenshot diffing. A UI change gets a
   look at both locales, at phone and desktop widths, before merge.
-- **Accessibility automation** (axe). Not wired up.
+- **Accessibility beyond axe.** `e2e/a11y.spec.ts` runs axe-core on every
+  page in both locales, light theme only. Dark-theme contrast is held by
+  `tests/tokens.test.ts`; screen-reader flow and keyboard order need a
+  person.
 - **The trial's success path in a browser.** It needs a build with
   `NEXT_PUBLIC_TRIAL_CLAIM_URL`; the claim answer is covered at unit level.
 - **The real control-plane contract.** `lib/trial.ts` copies ops-store's rules;

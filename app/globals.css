@@ -61,6 +61,10 @@
   --espresso-line: #3c3833;
   --on-espresso: #f2ede3;
   --on-espresso-dim: #b9b0a2;
+  /* Status type on the band: --mint and --danger are dark enough for paper
+     and vanish on espresso, so .band-espresso re-points them to these. */
+  --on-espresso-mint: #4fbf86;
+  --on-espresso-danger: #e2695c;
 
   /* The construction grid the Kufic letter is drawn on. */
   --grid-line: rgb(26 22 18 / 0.08);
@@ -115,6 +119,8 @@
   --espresso-line: #2e2822;
   --on-espresso: #efe8da;
   --on-espresso-dim: #aba294;
+  --on-espresso-mint: #4fbf86;
+  --on-espresso-danger: #e2695c;
 
   --grid-line: rgb(239 232 218 / 0.07);
 
@@ -169,6 +175,8 @@
     --espresso-line: #2e2822;
     --on-espresso: #efe8da;
     --on-espresso-dim: #aba294;
+    --on-espresso-mint: #4fbf86;
+    --on-espresso-danger: #e2695c;
 
     --grid-line: rgb(239 232 218 / 0.07);
 
@@ -483,10 +491,13 @@ html[lang="ar"] .kicker {
 /* The dark band. Inside it the tokens that would vanish against ink are
    re-pointed, the way Moving Stores' bands re-point theirs, so a component
    needs no band-specific classes: muted type takes the band's dim, the amber
-   accent becomes saffron, and the mark flips to a bone tile. */
+   accent becomes saffron, the status colours take their on-dark shades, and
+   the mark flips to a bone tile. */
 .band-espresso {
   --ink-dim: var(--on-espresso-dim);
   --caramel: var(--saffron);
+  --mint: var(--on-espresso-mint);
+  --danger: var(--on-espresso-danger);
   --line: var(--espresso-line);
   --mark-tile: var(--on-espresso);
   --mark-glyph: var(--espresso);
