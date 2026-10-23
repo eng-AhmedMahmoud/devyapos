@@ -43,6 +43,25 @@ for (const locale of LOCALES) {
     expect(preloads.filter((l) => /as="font"/.test(l)).length).toBeLessThanOrEqual(2);
   });
 
+  test(`${locale}: every page unfurls with its own share card, and the card is served`, async ({ request }) => {
+    const cards = new Set<string>();
+    for (const path of PATHS) {
+      const html = await (await request.get(`/${locale}${path}`)).text();
+      const og = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+      const tw = html.match(/<meta name="twitter:image" content="([^"]+)"/)?.[1];
+      expect(og, `${locale}${path}`).toBeTruthy();
+      expect(tw, `${locale}${path}`).toBe(og);
+      expect(html, `${locale}${path}`).toMatch(/<meta name="twitter:card" content="summary_large_image"/);
+      cards.add(og!);
+
+      // Absolute on the production host; fetched here from the server under test.
+      const card = await request.get(new URL(og!).pathname);
+      expect(card.status(), og).toBe(200);
+      expect(card.headers()["content-type"], og).toBe("image/png");
+    }
+    expect(cards.size).toBe(PATHS.length);
+  });
+
   test(`${locale}: the header logo is named by what it shows`, async ({ request }) => {
     const html = await (await request.get(`/${locale}`)).text();
     const header = section(html, "header");

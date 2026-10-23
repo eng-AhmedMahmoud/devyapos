@@ -212,9 +212,10 @@ receiving endpoint against it. `POST application/json`:
   Change a colour in devya-commerce first, then here; `pnpm test` recomputes
   the contrast of every text pair.
 - The baked brand rasters — `app/apple-icon.png`, the 192/512 PNGs in
-  `public/brand/` and the OG cards in `public/og/` — come from
+  `public/brand/` and the per-page OG cards in `public/og/` — come from
   `node scripts/render-brand-assets.mjs` (needs Google Chrome). Re-run it after
-  changing the hero copy, the product name or the mark, and commit the PNGs.
+  changing a page title, the hero copy, the product name or the mark, and
+  commit the PNGs.
 - Competitor prices on `/pricing` and `/foodics-alternative` are dated claims:
   `retrievedAt` in both content files, which a test keeps under 90 days old
   (CI fails from 2026-12-03 until the figures are re-checked,

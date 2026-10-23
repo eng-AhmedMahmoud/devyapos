@@ -40,9 +40,11 @@ export default defineConfig({
       // track (#21) and the leftovers: 83.85 / 83.43 / 72.72 / 84.73. Raised
       // with the SEO tests (tests/seo.test.ts, tests/jsonld.test.ts), which
       // cover lib/meta, lib/jsonld and lib/llms: 92.72 / 87.86 / 88.59 / 94.03.
+      // Branches raised with the per-page share cards (ogImagePath): 92.75 /
+      // 88.03 / 88.74 / 94.06.
       thresholds: {
         statements: 92,
-        branches: 87,
+        branches: 88,
         functions: 88,
         lines: 94,
       },

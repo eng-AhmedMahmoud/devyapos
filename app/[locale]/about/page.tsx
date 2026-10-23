@@ -95,19 +95,23 @@ export default async function AboutPage({
         <Container>
           <SectionHead title={a.numbersTitle} tone="espresso" />
           <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {/* The Reveal is the card itself: a <dl> may hold dt/dd groups
+                wrapped in one <div> each, never a div inside a div. */}
             {a.numbers.map((n, i) => (
-              <Reveal key={n.label} delay={(i % 3) * 60}>
-                <div className="card-espresso px-5 py-6 text-center">
-                  <dt className="sr-only">{n.label}</dt>
-                  <dd>
-                    <span className="font-display block text-3xl text-gold">
-                      {n.value}
-                    </span>
-                    <span className="mt-1.5 block text-xs text-on-espresso-dim">
-                      {n.label}
-                    </span>
-                  </dd>
-                </div>
+              <Reveal
+                key={n.label}
+                delay={(i % 3) * 60}
+                className="card-espresso px-5 py-6 text-center"
+              >
+                <dt className="sr-only">{n.label}</dt>
+                <dd>
+                  <span className="font-display block text-3xl text-gold">
+                    {n.value}
+                  </span>
+                  <span className="mt-1.5 block text-xs text-on-espresso-dim">
+                    {n.label}
+                  </span>
+                </dd>
               </Reveal>
             ))}
           </dl>

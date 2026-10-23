@@ -211,7 +211,7 @@ export default function RoiCalculator({
               <p className="text-xs leading-relaxed text-ink-dim">
                 {copy.assumption}
               </p>
-              <p className="text-xs text-ink-dim opacity-75">{copy.note}</p>
+              <p className="text-xs text-ink-dim">{copy.note}</p>
 
               <Link href="/contact" className="btn btn-primary mt-auto self-start">
                 {copy.cta}

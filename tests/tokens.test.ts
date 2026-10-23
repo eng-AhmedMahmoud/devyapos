@@ -39,6 +39,14 @@ const themes = {
 };
 
 describe("palette contrast (WCAG AA, 4.5:1 for text)", () => {
+  // The paper shades of --mint and --danger read 2.8:1 on espresso; the band
+  // must swap in its own, or the ROI result's net figure vanishes.
+  it("the dark band re-points the status colours it shows", () => {
+    expect(css.slice(css.indexOf(".band-espresso {"))).toMatch(
+      /^\.band-espresso \{[^}]*--mint:\s*var\(--on-espresso-mint\);[^}]*--danger:\s*var\(--on-espresso-danger\);/,
+    );
+  });
+
   for (const [name, t] of Object.entries(themes)) {
     it(`${name}: body, muted and accent text on the page, the bands and the cards`, () => {
       for (const ground of [t.bg, t.surface, t["surface-2"]]) {
@@ -60,6 +68,9 @@ describe("palette contrast (WCAG AA, 4.5:1 for text)", () => {
       expect(contrast(t["on-espresso-dim"], t.espresso)).toBeGreaterThanOrEqual(4.5);
       expect(contrast(t.saffron, t.espresso)).toBeGreaterThanOrEqual(4.5);
       expect(contrast(t.gold, t.espresso)).toBeGreaterThanOrEqual(4.5);
+      // The ROI result's net figure: --mint/--danger re-pointed on the band.
+      expect(contrast(t["on-espresso-mint"], t.espresso)).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(t["on-espresso-danger"], t.espresso)).toBeGreaterThanOrEqual(4.5);
     });
 
     // The mark is a logo (exempt from 1.4.11), but its tile still has to stand
