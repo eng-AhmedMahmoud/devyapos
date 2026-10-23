@@ -77,6 +77,15 @@ const nextConfig: NextConfig = {
             : []),
         ],
       },
+      /* The API is the only part of this host that is not a page: /api/health
+         answers a GET with JSON, and a crawler that finds the URL would
+         otherwise index it as a document. robots.txt keeps "allow everything"
+         (app/robots.ts), so the header, not a Disallow, keeps it out — a
+         disallowed URL can still be indexed from links, unread. */
+      {
+        source: "/api/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
     ];
   },
 };

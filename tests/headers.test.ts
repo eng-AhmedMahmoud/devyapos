@@ -105,6 +105,18 @@ describe("security headers (next.config.ts)", { timeout: 20_000 }, () => {
     }
   });
 
+  it("keeps the API out of search indexes, and never a page", async () => {
+    const config = await configFor({ NODE_ENV: "production" });
+    for (const path of ["/api/health", "/api/lead", "/api/consent", "/api/nope"]) {
+      const res = await responseFor(config, path);
+      expect(res.headers.get("x-robots-tag"), path).toBe("noindex, nofollow");
+    }
+    for (const path of ["/ar", "/en/pricing", "/sitemap.xml", "/robots.txt", "/llms.txt", "/apiary"]) {
+      const res = await responseFor(config, path);
+      expect(res.headers.get("x-robots-tag"), path).toBeNull();
+    }
+  });
+
   it("does not advertise the framework", async () => {
     const config = await configFor({ NODE_ENV: "production" });
     expect(config.poweredByHeader).toBe(false);
