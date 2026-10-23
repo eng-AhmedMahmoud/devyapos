@@ -800,14 +800,19 @@ html[lang="ar"] .kicker {
 /* Above-the-fold entrance. The scroll-reveal path hides its element until an
    observer fires, which would make the hero depend on hydration to become
    visible. This runs off a CSS animation present in the server HTML, so it
-   starts at first paint whether or not the JS ever arrives. */
+   starts at first paint whether or not the JS ever arrives.
+
+   A rise without a fade: the hero's h1 and lead paragraph are the page's
+   Largest Contentful Paint, and Chrome does not count an element while it is
+   at opacity 0. Fading them in from 0 put LCP at the end of the animation,
+   about 1.2 s after first paint on a throttled phone. Moving only the
+   transform keeps the entrance and lets the text count from its first frame
+   (a transform is not a layout shift either). */
 @keyframes reveal-rise {
   from {
-    opacity: 0;
     transform: translateY(24px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }

@@ -533,9 +533,14 @@ render and both fully neutered under `prefers-reduced-motion: reduce`:
 - **`components/Reveal.tsx`** — one-shot entrance. `immediate` mode (used
   for every above-the-fold element: Hero, PageHero) fires a plain CSS
   keyframe (`.reveal-now` / `@keyframes reveal-rise`) that's already present
-  in server HTML, so the hero paints without waiting on hydration. Default
-  mode renders visible-by-default (`.reveal-armed` only gets added by a
-  `useEffect`, so crawlers/no-JS visitors see the finished page), then an
+  in server HTML, so the hero paints without waiting on hydration. It moves
+  the transform only, never the opacity: the hero's text is the page's
+  Largest Contentful Paint, and Chrome does not count it while it is
+  transparent (`e2e/vitals.spec.ts`). Default
+  mode renders visible-by-default (`.reveal-armed` only gets added by the
+  observer's first report, and only to an element still below the fold, so
+  crawlers/no-JS visitors see the finished page and nothing on screen
+  blinks out at hydration), then the
   `IntersectionObserver` swaps `.reveal-armed` → `.reveal-in` on approach —
   a direct DOM class write, not React state, "it is a one-shot visual
   effect, and routing it through state would re-render the subtree for it."
