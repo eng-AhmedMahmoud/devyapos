@@ -7,7 +7,7 @@ import sitemap from "@/app/sitemap";
 import { getContent } from "@/content";
 import { brand } from "@/lib/brand";
 import { llmsTxt } from "@/lib/llms";
-import { NOINDEX_PATHS, buildMetadata, localeHref, routes } from "@/lib/meta";
+import { NOINDEX_PATHS, buildMetadata, localeHref, ogImagePath, routes } from "@/lib/meta";
 import { proxy } from "@/proxy";
 
 /**
@@ -140,6 +140,32 @@ describe("page metadata (buildMetadata)", () => {
       expect(new Set(indexed.map((m) => m.title)).size, locale).toBe(indexed.length);
       expect(new Set(indexed.map((m) => m.description)).size, locale).toBe(indexed.length);
     }
+  });
+
+  it("gives every page its own 1200×630 share card, baked into public/og, on Open Graph and X alike", () => {
+    const cards = new Set<string>();
+    for (const { locale, path, label, meta } of pages) {
+      const og = (meta.openGraph as { images: { url: string; width: number; height: number; alt: string }[] }).images;
+      const tw = (meta.twitter as { images: { url: string }[] }).images;
+      expect(og, label).toHaveLength(1);
+      expect(tw.map((i) => i.url), label).toEqual([og[0].url]);
+      expect(og[0].url, label).toBe(`${brand.url}${ogImagePath(locale, path)}`);
+      expect(og[0].alt, label).toBe(meta.title);
+      expect([og[0].width, og[0].height], label).toEqual([1200, 630]);
+
+      // The PNG on disk is the size the tags declare (IHDR: width, height).
+      const png = readFileSync(join(root, "public", ogImagePath(locale, path)));
+      expect(png.subarray(1, 4).toString(), label).toBe("PNG");
+      expect([png.readUInt32BE(16), png.readUInt32BE(20)], label).toEqual([1200, 630]);
+      cards.add(og[0].url);
+    }
+    expect(cards.size).toBe(pages.length);
+  });
+
+  it("keeps the home card where the Organization markup and older shares point", () => {
+    expect(ogImagePath("ar")).toBe("/og/og-ar.png");
+    expect(ogImagePath("en", "")).toBe("/og/og-en.png");
+    expect(ogImagePath("en", "/pricing")).toBe("/og/og-pricing-en.png");
   });
 
   it("claims no loyalty tiers or referrals, and points at no other Devya host", () => {

@@ -62,3 +62,15 @@ export const routes: readonly SiteRoute[] = [
  * `routes` and out of this list in the same commit.
  */
 export const NOINDEX_PATHS: readonly string[] = ["/terms", "/refund"];
+
+/**
+ * Where a page's Open Graph card lives under public/: one 1200×630 PNG per
+ * page and locale, so a shared /pricing link unfurls with the pricing headline
+ * rather than the home page's. Home keeps its original name (og-ar.png), which
+ * the Organization markup and older shares already point at. The cards are
+ * baked by scripts/render-brand-assets.mjs, which reads this same function.
+ */
+export function ogImagePath(locale: string, path = ""): string {
+  const lang = locale === "en" ? "en" : "ar";
+  return path ? `/og/og-${path.slice(1)}-${lang}.png` : `/og/og-${lang}.png`;
+}

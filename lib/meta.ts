@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
 import { brand, brandName } from "./brand";
-import { NOINDEX_PATHS } from "./routes";
+import { NOINDEX_PATHS, ogImagePath } from "./routes";
 
 /* The route manifest lives in ./routes, apart from the copy; re-exported here
    for the modules that already read it from lib/meta. */
-export { NOINDEX_PATHS, routes, type SiteRoute } from "./routes";
+export { NOINDEX_PATHS, ogImagePath, routes, type SiteRoute } from "./routes";
 
 /** Absolute URL for a path in a given locale. `localePrefix` is "always". */
 export function localeHref(locale: string, path = "") {
@@ -31,25 +31,26 @@ export function alternateLanguages(path = "") {
 }
 
 /**
- * The OG card for a locale: a static PNG in `public/og/`, rendered from HTML
- * by `scripts/render-brand-assets.mjs` with headless Chrome. Not `next/og` —
- * satori rejects the GSUB tables of the Arabic faces the site now sets (Reem
- * Kufi, IBM Plex Sans Arabic) and fails the build; Moving Stores and the
- * movingsystems.tech umbrella site render their cards the same way. Re-run the
- * script whenever the hero copy or the product name changes.
+ * The OG card for a page in a locale (home when `path` is ""): a static PNG in
+ * `public/og/`, rendered from HTML by `scripts/render-brand-assets.mjs` with
+ * headless Chrome. Not `next/og` — satori rejects the GSUB tables of the
+ * Arabic faces the site now sets (Reem Kufi, IBM Plex Sans Arabic) and fails
+ * the build; Moving Stores and the movingsystems.tech umbrella site render
+ * their cards the same way. Re-run the script whenever a page's title, the
+ * hero copy or the product name changes.
  */
-export function ogImageUrl(locale: string) {
-  return `${brand.url}/og/og-${locale === "en" ? "en" : "ar"}.png`;
+export function ogImageUrl(locale: string, path = "") {
+  return `${brand.url}${ogImagePath(locale, path)}`;
 }
 
 /**
  * Wired explicitly on every page because `buildMetadata` sets `openGraph`
  * per page, and a level that declares `openGraph` replaces the parent's.
  */
-export function ogImage(locale: string, alt: string) {
+export function ogImage(locale: string, alt: string, path = "") {
   return [
     {
-      url: ogImageUrl(locale),
+      url: ogImageUrl(locale, path),
       width: 1200,
       height: 630,
       alt,
@@ -76,7 +77,7 @@ export function buildMetadata(
   const c = getContent(locale);
   const meta = c.meta[key] ?? c.meta.home;
   const url = localeHref(locale, path);
-  const images = ogImage(locale, meta.title);
+  const images = ogImage(locale, meta.title, path);
 
   return {
     metadataBase: new URL(brand.url),

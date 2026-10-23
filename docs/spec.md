@@ -494,12 +494,16 @@ is Moving Stores': Reem Kufi at 0.68 of the mark, gap 0.4, the family name
 bold and "POS" regular at 70%, Arabic name on Arabic pages. `app/icon.svg`
 follows `prefers-color-scheme` the way Moving Stores' favicon does. The baked
 rasters — `app/apple-icon.png`, `public/brand/devyapos-icon-{192,512}.png`
-and the OG cards `public/og/og-{ar,en}.png` — are rendered from HTML by
-`node scripts/render-brand-assets.mjs` (system Chrome, headless). Not
-`next/og`: satori rejects the GSUB tables of Reem Kufi / Plex Sans Arabic
-and fails the build. Re-run the script after changing the hero copy, the
-product name or the mark, and commit the PNGs; `lib/meta.ts` `ogImageUrl()`
-points every page's Open Graph and Twitter card at them.
+and the OG cards, one per page and locale (`public/og/og-{ar,en}.png` for
+home, `public/og/og-<page>-{ar,en}.png` for the rest, named by
+`ogImagePath()` in `lib/routes.ts`) — are rendered from HTML by
+`node scripts/render-brand-assets.mjs` (system Chrome, headless). A page's
+card is its `<title>` without the brand, under the label the nav gives it.
+Not `next/og`: satori rejects the GSUB tables of Reem Kufi / Plex Sans
+Arabic and fails the build. Re-run the script after changing a page title,
+the hero copy, the product name or the mark, and commit the PNGs;
+`lib/meta.ts` `ogImageUrl()` points each page's Open Graph and Twitter card
+at its own.
 
 ### Device mockups: `IpadShell` / `IpadFrame` / `IpadVideo`
 
