@@ -44,8 +44,8 @@ of Devya Solutions (PR #44).
 - Each rename resets search snippets, social profiles and ad creative, and
   the baked OG cards and icons have to be re-rendered
   (`scripts/render-brand-assets.mjs`).
-- `docs/social-launch-plan.md` (2026-09-19) still says DevyaPOS throughout and
-  links `pos.devya.dev`; it must be updated before any launch spend.
+- `docs/social-launch-plan.md` (2026-09-19) was written as DevyaPOS; its names and
+  links were updated on 2026-10-25. Handles must still be claimed before any launch spend.
 - The Arabic name needs the owner's confirmation; if it changes, it changes in
   `lib/brand.ts` and the two content trees only.
 - A fifth rename gets a new ADR that supersedes this one, naming who decided

@@ -18,7 +18,7 @@
  * deployment and carried that client's logo, name and menu; they were
  * withdrawn at the client's request and are gone from the repo.
  *
- * Everything here is now captured from the neutral DevyaPOS Demo tenant,
+ * Everything here is now captured from the neutral Moving POS Demo tenant,
  * which runs this same build against fictional data. That is the standing
  * rule: marketing media comes from the demo tenant, never from a client's
  * deployment. See docs/guides/white-label.md in the platform monorepo.
