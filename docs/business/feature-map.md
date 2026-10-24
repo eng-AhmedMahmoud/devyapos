@@ -1,6 +1,6 @@
 <!-- Snapshot of origin/main of devya-pos and devyapos, 2026-10-22. This repository is public: the reference client is never named, and contract terms stay in the private product repo. -->
 
-# Moving POS / DevyaPOS — shipped capability vs proven POS business models
+# Moving POS (formerly DevyaPOS) — shipped capability vs proven POS business models
 
 Snapshot: origin/main exports, read 2026-10-22. Read-only analysis.
 

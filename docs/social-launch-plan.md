@@ -1,10 +1,10 @@
-# DevyaPOS — Facebook & Instagram launch plan
+# Moving POS — Facebook & Instagram launch plan
 
-> **Out of date on names (2026-10-22).** The product is now Moving POS
+> **Names updated 2026-10-25.** The product is Moving POS
 > (موفينج POS on Arabic pages) at `pos.movingsystems.tech`
-> ([ADR 0005](decisions/0005-product-renames.md)). This plan predates both
-> changes and still says DevyaPOS and `pos.devya.dev`; update the names,
-> handles and links before any paid or organic launch.
+> ([ADR 0005](decisions/0005-product-renames.md)). This plan was written as
+> DevyaPOS on 2026-09-19; its names and links were brought up to date on
+> 2026-10-25. Handles still have to be claimed before any paid or organic launch.
 
 **Status:** draft for the owner to execute. Nothing in here has been acted on — no
 account created, no handle claimed, no post published.
@@ -15,7 +15,7 @@ research touched them, but they are out of scope here.
 
 ---
 
-## 0. What this plan assumes DevyaPOS actually is
+## 0. What this plan assumes Moving POS actually is
 
 Everything written below — every caption, every ad angle — is constrained to this
 list. If a claim is not on it, it does not go in a post.
@@ -53,7 +53,7 @@ Not because they are bad ideas — because they do not exist:
 - aggregator integrations (Talabat, elmenus, Uber Eats, Breadfast…)
 
 > **Open conflict — resolve before launch.** The live marketing site at
-> `pos.devya.dev` currently sells loyalty. The Arabic hero literally reads
+> `pos.movingsystems.tech` currently sells loyalty. The Arabic hero literally reads
 > `كاشير + شاشة مطبخ لحظية + طلبات أونلاين بعلامتك + ولاء + مخزون بوصفات مُسعّرة`,
 > and `content/ar.ts` / `content/en.ts` carry "loyalty and gift cards", "نقاط ولاء
 > تُكتسب وتُنفق" and "loyalty points" in the feature grid, the comparison table and
@@ -66,7 +66,7 @@ Not because they are bad ideas — because they do not exist:
 > entirely.
 >
 > Same question, smaller: the site has a `/ar/eta-einvoicing` page. Nothing in the
-> capability list above says DevyaPOS submits to the ETA. Pillar 5 below is written
+> capability list above says Moving POS submits to the ETA. Pillar 5 below is written
 > as *education about* Egyptian e-invoicing, not as a claim that we do it. If we do
 > do it, that is a much stronger pillar and should be rewritten.
 
@@ -320,7 +320,7 @@ anyone in ten seconds, rather than the *number*, which isn't.
 
 That lands the same blow, is completely true, and nobody can send a letter about it.
 
-**How to unlock the number.** Ask one of the 25 branches already running DevyaPOS —
+**How to unlock the number.** Ask one of the 25 branches already running Moving POS —
 or any owner who has been quoted — for **a redacted copy of their Foodics quote or
 invoice** (branch name and account number blacked out), with **written permission to
 cite the figure**. The moment that document exists, the 199-vs-2,848.95 post becomes
@@ -372,7 +372,7 @@ because the incumbent never does it.
 > مفيش ورقة بتتعلّق، ومفيش حد بينادي على الشيف.
 >
 > الفيديو مسجّل من حساب تجريبي — مش بيانات عميل حقيقي.
-> جرّب بنفسك: pos.devya.dev
+> جرّب بنفسك: pos.movingsystems.tech
 
 **Post 1.2 — pay at the table** *(the strongest single asset we have)*
 
@@ -409,7 +409,7 @@ on the list)*
 
 > مش هتشتري جهاز.
 >
-> DevyaPOS بيشتغل في المتصفح — على التابلت اللي معاك، أو اللابتوب، أو أي شاشة لمس في
+> موفينج POS بيشتغل في المتصفح — على التابلت اللي معاك، أو اللابتوب، أو أي شاشة لمس في
 > الفرع — وبيطبع على أي طابعة ESC/POS عندك.
 >
 > لو الجهاز ده بيفتح فيسبوك، يبقى بيفتح الكاشير.
@@ -480,7 +480,7 @@ them. **Format:** static with large legible numerals, or a 3-slide carousel.
 > إشعارات موقّعة.
 >
 > بدون عمولة على طلبات موقعك. وبدون رسوم لكل جهاز.
-> الأسعار كاملة: pos.devya.dev/ar/pricing
+> الأسعار كاملة: pos.movingsystems.tech/ar/pricing
 
 **Post 3.2 — the "call us" post** (the §2.4 attack — no competitor named)
 
@@ -521,7 +521,7 @@ from §2.4)*
 > إحنا مش بنقولك سيبها. إحنا بنقولك إن فيه مطاعم كتير في مصر — تلات فروع، تسع عمال،
 > مطبخ واحد — مش هما دول اللي الأنظمة الكبيرة دي اتبنت عشانهم، ولا اتسعّرت عشانهم.
 >
-> DevyaPOS اتبنى جوّه مطعم شغّال، مش في اجتماع. كل حاجة فيه موجودة لأن وردية احتاجتها،
+> موفينج POS اتبنى جوّه مطعم شغّال، مش في اجتماع. كل حاجة فيه موجودة لأن وردية احتاجتها،
 > مش لأنها شكلها حلو في عرض تقديمي.
 >
 > السعر مكتوب على الموقع. والتجربة ١٤ يوم بدون بطاقة ائتمان.
@@ -535,7 +535,7 @@ from §2.4)*
 > could say what a dish actually cost. Pay-at-table exists because the card machine
 > was always at the other end of the room.
 >
-> Every feature in DevyaPOS is there because a shift needed it — which is also why
+> Every feature in Moving POS is there because a shift needed it — which is also why
 > there are features it does not have, and we would rather say so than sell you a
 > slide.
 
@@ -545,7 +545,7 @@ from §2.4)*
 
 **What it is:** plain explanation of Egyptian VAT and ETA e-invoicing obligations —
 what the law asks of a restaurant, what a receipt has to carry, what happens at
-audit. **Educational, from us, about the rules — not a claim that DevyaPOS files to
+audit. **Educational, from us, about the rules — not a claim that Moving POS files to
 the ETA.** (See the flag in §0. If we *do* integrate, rewrite this pillar; it becomes
 much stronger.)
 
@@ -561,7 +561,7 @@ saveable — this is the pillar people screenshot and send to their accountant, 
 > المراجعة؟
 >
 > هذه سلسلة تشرح الالتزامات، لا تبيع حلاً.
-> اقرأ المزيد: pos.devya.dev/ar/eta-einvoicing
+> اقرأ المزيد: pos.movingsystems.tech/ar/eta-einvoicing
 
 ---
 
@@ -577,7 +577,7 @@ good question in the comments or the DMs becomes next week's post.
 
 > **"طب النت لو قطع؟"**
 >
-> إجابة صريحة: DevyaPOS بيشتغل في المتصفح، يعني محتاج نت. مفيش وضع أوفلاين دلوقتي.
+> إجابة صريحة: موفينج POS بيشتغل في المتصفح، يعني محتاج نت. مفيش وضع أوفلاين دلوقتي.
 >
 > قلناها كده عشان تعرفها مننا، مش من أول يوم شغل.
 
@@ -627,14 +627,14 @@ places, in this order of value:
 1. **The owner's own network, by hand.** The single highest-value action in month
    one: the owner personally sends the pricing post to restaurant owners he already
    knows, in WhatsApp, one at a time. This will out-perform the entire feed.
-2. **The 25 branches already running DevyaPOS.** Their staff and their owner already
+2. **The 25 branches already running Moving POS.** Their staff and their owner already
    know the product works. Ask them to follow and share day 1. Costs nothing.
 3. **Facebook groups where Egyptian restaurant owners actually are.** In this market
    B2B SMB conversation lives in groups, not on pages — groups for restaurant and
    café owners, restaurant supplies and equipment, and F&B jobs. *Find and verify
    the specific groups yourself; I am not going to guess names.* **Rules: join as a
    person, not as the page; read for a week before posting; answer three operational
-   questions with no link before ever mentioning DevyaPOS; obey each group's promo
+   questions with no link before ever mentioning Moving POS; obey each group's promo
    rules.** Getting the page banned from the two big groups on day 3 costs more than
    the first month of ads could buy.
 4. **A small paid boost** purely to escape zero (see §5.2).
@@ -817,7 +817,7 @@ retype a handle from memory.
 brand):
 
 ```
-DevyaPOS | نظام مطاعم مصري
+موفينج POS | نظام مطاعم مصري
 ```
 
 **Bio — Arabic (recommended default):**
@@ -848,7 +848,7 @@ address is worth real trust to a buyer deciding whether we are a real company.
 
 ### 6.3 Profile copy — Facebook
 
-**Page name:** `DevyaPOS`
+**Page name:** `Moving POS`
 **Username:** `facebook.com/devyapos`
 **Category:** `Software Company` (secondary: `Information Technology Company` — what
 the incumbent uses)
@@ -881,7 +881,7 @@ to a third party, and hands your attribution to someone else's analytics.
 Instead:
 
 - **Instagram bio link:**
-  `https://pos.devya.dev/ar/pricing?utm_source=instagram&utm_medium=bio&utm_campaign=launch`
+  `https://pos.movingsystems.tech/ar/pricing?utm_source=instagram&utm_medium=bio&utm_campaign=launch`
   Point it at **pricing**, not the homepage. Price is the differentiator; make it
   the destination, not something they have to navigate to.
 - **Facebook Page website field:** the same URL with `utm_source=facebook`.
@@ -891,7 +891,7 @@ Instead:
   `/ar/foodics-alternative`, `/ar/hardware`, `/ar/eta-einvoicing` all exist already
   and all are better story destinations than the homepage.
 - **WhatsApp:** a `wa.me` click-to-chat link with a pre-filled Arabic message
-  (`عايز أعرف تفاصيل أكتر عن DevyaPOS`) so the prospect does not have to compose the
+  (`عايز أعرف تفاصيل أكتر عن موفينج POS`) so the prospect does not have to compose the
   awkward first sentence. Put it in the IG bio's contact button and the FB CTA.
 
 ### 6.5 Meta structure, and what needs documents
@@ -902,18 +902,18 @@ and pixel history attached.
 1. **Business Portfolio** in Meta Business Suite, owning everything.
    ⚠️ **A "Devya Solutions" Page/business identity already exists on the owner's Meta
    account** — it surfaced during this research as the active commenting identity.
-   Decide deliberately: DevyaPOS should be its **own Page** inside a shared Devya
+   Decide deliberately: Moving POS should be its **own Page** inside a shared Devya
    business portfolio, not a rename of the existing one. The parent brand and the
    product need separate audiences, separate pixels and separate ad accounts, and a
    rename destroys whatever history the existing page has.
-2. **Facebook Page** `DevyaPOS`, owned by the portfolio — never by the owner's
+2. **Facebook Page** `Moving POS`, owned by the portfolio — never by the owner's
    personal profile alone.
 3. **Instagram professional account**, set to **Business** (not Creator — Creator
    loses shop features, some scheduling, and some ad placements), linked to the Page
    *through the Business Portfolio*, not through the Instagram app.
 4. **Ad account** (EGP as the currency — do not set it to USD, it complicates
    invoicing and the beneficiary disclosure), plus a **payment method**.
-5. **Meta Pixel / Conversions API** on `pos.devya.dev`. **Week 0** — the retargeting
+5. **Meta Pixel / Conversions API** on `pos.movingsystems.tech`. **Week 0** — the retargeting
    audience in §5.2(2) does not exist until the pixel has been collecting for weeks.
 6. **WhatsApp Business.** Start on the free **WhatsApp Business app** with a
    dedicated SIM. Only move to the **WhatsApp Business Platform (API)** when volume
@@ -1103,5 +1103,5 @@ All fetched or read on **2026-09-19**:
   `foodics`
 - `foodics.com`, `foodics.com/pricing/`, `foodics.com/eg/pricing/` (the last
   redirects to the homepage; no price literals found on any of them)
-- `pos.devya.dev`, and `content/ar.ts` / `content/en.ts` in this repo
+- `pos.movingsystems.tech`, and `content/ar.ts` / `content/en.ts` in this repo
 - Instagram and Facebook handle-availability probes as described in §6.1
