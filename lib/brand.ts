@@ -135,6 +135,7 @@ export const whatsappSources = {
   eta: "Closing card on /eta-einvoicing",
   trial: "Accounting trial, fallback after a failed sign-up",
   quote: "Accounting pricing, Enterprise quote",
+  docs: "Help centre, 'still need a hand?' card on every help page",
   chat: "The support assistant's 'Talk to our team' button, every page; the message starts with the visitor's last question",
 } as const;
 

@@ -13,6 +13,13 @@ export const ar: SiteContent = {
       description:
         "نظام واحد يشغّل مطعمك بالكامل: نقطة بيع، شاشة مطبخ لحظية، طلبات أونلاين بعلامتك، ولاء، ومخزون بوصفات مُسعّرة. عربي/إنجليزي، بالجنيه، ومتعدد الفروع.",
     },
+    /* The help centre's front page (app/[locale]/docs); its categories and
+       articles title themselves from content/docs (lib/docs/meta.ts). */
+    docs: {
+      title: "مركز المساعدة: شروحات خطوة بخطوة بالصور | موفينج POS",
+      description:
+        "شروحات موفينج POS بالصور خطوة بخطوة: إعداد حساب المطعم، وفتح الوردية وإغلاقها، والقائمة والأصناف، وطرق الدفع، والطابعات، والموظفين، والتقارير، والمساعد الذكي.",
+    },
     features: {
       title: "مميزات كاشير المطاعم: شاشة مطبخ، طلب أونلاين، مخزون | موفينج POS",
       description:
@@ -98,6 +105,7 @@ export const ar: SiteContent = {
       { label: "الأجهزة", href: "/hardware" },
       { label: "الضريبة والفاتورة الإلكترونية", href: "/eta-einvoicing" },
     ],
+    docs: "مركز المساعدة",
     cta: "جرّب مجاناً",
   },
 
@@ -719,6 +727,7 @@ export const ar: SiteContent = {
           { label: "المميزات", href: "/features" },
           { label: "الأسعار", href: "/pricing" },
           { label: "الأجهزة", href: "/hardware" },
+          { label: "مركز المساعدة", href: "/docs" },
           { label: "تجربة المحاسبة المجانية", href: "/accounting-trial" },
           { label: "كيف يعمل", href: "/how-it-works" },
         ],

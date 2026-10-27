@@ -1,0 +1,1204 @@
+{
+  "pos-assistant-briefings": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/assistant",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-assistant-chat": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/assistant",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-assistant-live-panel": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/dashboard",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-branches-list": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/branches",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-business-days": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/business-days",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-integrations-api-keys": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/integrations",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-integrations-delivery-apps": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/delivery-apps",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-integrations-zatca": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/zatca",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-inventory-analytics": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/inventory/analytics",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-inventory-ingredients": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=ingredients",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-inventory-stock": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/inventory",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-inventory-transfers": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/inventory/transfers",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-loyalty-pay-screen": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/pos",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-menu-products": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=products",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-online-kds": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/kds",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-online-today-orders": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/orders",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-ordering-home": {
+    "capturedAt": "2026-10-27",
+    "source": "shop-app/",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-payments-by-method": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/reports",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-close-shift": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/shift",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-gift-cards": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/gift-cards",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-kds": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/kds",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-login": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/login",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-order-drawer": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/orders",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-orders": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/orders",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-pay": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/pos",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-register-pay-discounts": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/pos",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-register-sale": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/pos",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-register-shift": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/shift",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-activity": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/activity",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-daily": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/reports",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-dashboard": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/dashboard",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-orders": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/orders",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-profit-loss": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/reports?tab=profitLoss",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-reports-shifts": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/shifts",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-settings-order-numbering": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/settings",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-setup-branches": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/branches",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-menu-categories": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=categories",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-menu-option-groups": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=modifiers",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-setup-menu-products": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=products",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-menu-sizes": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/menu?tab=modifiers",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-setup-permissions": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/permissions",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        }
+      }
+    }
+  },
+  "pos-setup-settings": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/settings",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-shift-printer": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/shift",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-staff": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/staff",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-tour-dashboard": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/dashboard",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-setup-tour-more": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/more",
+    "images": {
+      "ar": {
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-shift-business-day": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/shift",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-table-cards": {
+    "capturedAt": "2026-10-27",
+    "source": "pos-app/floor/codes",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  },
+  "pos-zones-list": {
+    "capturedAt": "2026-10-27",
+    "source": "admin-app/zones",
+    "images": {
+      "ar": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      },
+      "en": {
+        "desktop": {
+          "w": 1440,
+          "h": 900
+        },
+        "phone": {
+          "w": 780,
+          "h": 1688
+        }
+      }
+    }
+  }
+}
