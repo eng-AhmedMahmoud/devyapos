@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { brand } from "./lib/brand";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -54,11 +55,23 @@ const nextConfig: NextConfig = {
   // server traces, not the repo and its devDependencies (Dockerfile, runner
   // stage).
   output: "standalone",
-  // No rewrites. The /api/:path* rewrite to the platform API (API_URL) outlived
-  // the platform era: nothing listened behind it in production, so every
-  // unknown /api path answered 500. Both /api routes are handlers in this app
-  // and the trial posts cross-origin by design, so an unknown /api path now
-  // answers 404 (tests/ops.test.ts keeps it that way).
+  // No /api rewrite. The /api/:path* rewrite to the platform API (API_URL)
+  // outlived the platform era: nothing listened behind it in production, so
+  // every unknown /api path answered 500. Both /api routes are handlers in
+  // this app and the trial posts cross-origin by design, so an unknown /api
+  // path now answers 404 (tests/ops.test.ts keeps it that way).
+  //
+  // One rewrite: the Moving support assistant (components/SupportChat.tsx).
+  // Its widget and its API live on the umbrella site; proxied here, they are
+  // this origin to the browser. MOVING_SUPPORT_ORIGIN points a staging build
+  // elsewhere; production leaves it unset.
+  async rewrites() {
+    const origin = process.env.MOVING_SUPPORT_ORIGIN?.trim() || brand.support.origin;
+    const { path } = brand.support;
+    // Only the widget's own surface (v1): Next applies none of this site's
+    // headers to an external rewrite, so nothing else should be served here.
+    return [{ source: `${path}/v1/:rest*`, destination: `${origin}${path}/v1/:rest*` }];
+  },
   async headers() {
     return [
       {

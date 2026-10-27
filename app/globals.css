@@ -1089,6 +1089,49 @@ html[lang="ar"] .kicker {
   pointer-events: auto;
   translate: 0 0;
 }
+/* The support assistant's button: ink on paper, the brand's primary. Shown
+   only once the widget's loader has run (it marks <html>), so it is never a
+   button with nothing behind it. */
+.fab-chat {
+  display: none;
+  background: var(--brand);
+  color: var(--on-brand);
+}
+html[data-moving-support="ready"] .fab-chat {
+  display: inline-flex;
+}
+.fab-chat[aria-expanded="true"] {
+  background: var(--saffron);
+  color: var(--on-saffron);
+}
+
+/* The support assistant's panel (moving-landing support-widget/src/styles.ts)
+   on this palette, beside the floating stack rather than over it: its
+   inline-end edge clears the stack, its bottom lines up with the stack's. On
+   a phone the panel covers the screen, so the offsets don't matter there.
+   z 45: over the stack (40) and the header's, under the banner (50). */
+:root {
+  --msw-bg: var(--surface);
+  --msw-fg: var(--ink);
+  --msw-muted: var(--ink-dim);
+  --msw-line: var(--line);
+  --msw-bot-bg: var(--surface-2);
+  --msw-user-bg: var(--brand);
+  --msw-user-fg: var(--on-brand);
+  --msw-accent: var(--brand);
+  --msw-on-accent: var(--on-brand);
+  --msw-focus: var(--caramel);
+  --msw-radius: 12px;
+  --msw-font: var(--font-body);
+  --msw-z: 45;
+  --msw-inline: calc(1.5rem + 3.25rem + 0.75rem);
+  --msw-panel-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px) + var(--consent-h, 0px));
+}
+@media (min-width: 71rem) {
+  :root {
+    --msw-panel-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
 
 /* ── Quick look (components/QuickLook.tsx) ─────────────────────────────────
    A full-viewport, transparent <dialog>: the blur is its ::backdrop, the

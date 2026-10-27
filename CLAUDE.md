@@ -38,6 +38,7 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
 | `app/[locale]/*` | The pages (16 routes × `ar`/`en`), prerendered |
 | `app/[locale]/docs`, `content/docs/`, `components/docs/`, `lib/docs/` | The help centre: its pages, the ar/en article trees and screenshot slots, its components, search and metadata |
 | `app/api/lead`, `app/api/consent`, `app/api/health` | The only server code paths |
+| `components/SupportChat.tsx`, the `/moving-support` rewrite | The Moving support assistant, served by movingsystems.tech ([ADR 0007](docs/decisions/0007-moving-support-assistant.md)) |
 | `lib/` | Brand, leads and validators, sinks, rate limit, env check, consent core, trial client |
 | `content/ar.ts`, `content/en.ts`, `content/types.ts` | All copy, typed |
 | `scripts/deploy.sh`, `scripts/leads.sh`, `deploy/nginx.conf` | Production tooling |

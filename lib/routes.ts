@@ -53,7 +53,7 @@ export const routes: readonly SiteRoute[] = [
   { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* The privacy policy describes what the site already does, so it is indexed
      and linked; its date is the "Last updated" line the page prints. */
-  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-10-13" },
+  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-10-27" },
 ];
 
 /**

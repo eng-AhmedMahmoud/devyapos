@@ -150,6 +150,7 @@ on `/api/health` as `config: "degraded"`.
 | `LEAD_OUTBOX_RETENTION_DAYS` | `365` | Outbox entries older than this are dropped (the privacy policy's twelve months). |
 | `CONSENT_RECEIPT_RETENTION_DAYS` | `365` | Consent receipts older than this are dropped. The policy names no period; a year outlives the 180-day consent. |
 | `NEXT_PUBLIC_TRIAL_CLAIM_URL` | — | Build-time. Where `/accounting-trial` posts a sign-up: Devya's control-plane claim route (`https://ops-api.devya.dev/api/trial/claim` in production, set by `docker-compose.prod.yml`). Its origin is the one host the CSP's `connect-src` allows besides this site. Unset, the page offers WhatsApp instead of posting, so a dev build never claims a real trial stack. |
+| `MOVING_SUPPORT_ORIGIN` | `https://movingsystems.tech` (`brand.support`) | Build-time. Where the `/moving-support/*` rewrite sends the support assistant's widget and API ([ADR 0007](docs/decisions/0007-moving-support-assistant.md)); set only for a staging build. |
 | `RELEASE` | `unknown` | Build-time, set by `scripts/deploy.sh` to the commit being shipped. `/api/health` reports it. |
 
 ### Lead forward contract
