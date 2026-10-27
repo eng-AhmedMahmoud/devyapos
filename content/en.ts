@@ -9,6 +9,13 @@ export const en: SiteContent = {
       description:
         "One system runs your restaurant: POS, live kitchen display, your own online ordering, loyalty and recipe-costed stock. Arabic and English, EGP, multi-branch.",
     },
+    /* The help centre's front page (app/[locale]/docs); its categories and
+       articles title themselves from content/docs (lib/docs/meta.ts). */
+    docs: {
+      title: "Help centre: step-by-step guides with screenshots | Moving POS",
+      description:
+        "Step-by-step Moving POS guides with screenshots: restaurant setup, opening and closing a shift, the menu, payments, printers, staff, reports, the AI assistant.",
+    },
     features: {
       title: "Restaurant POS features: KDS, online ordering, stock | Moving POS",
       description:
@@ -94,6 +101,7 @@ export const en: SiteContent = {
       { label: "Hardware", href: "/hardware" },
       { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
     ],
+    docs: "Help centre",
     cta: "Try it free",
   },
 
@@ -715,6 +723,7 @@ export const en: SiteContent = {
           { label: "Features", href: "/features" },
           { label: "Pricing", href: "/pricing" },
           { label: "Hardware", href: "/hardware" },
+          { label: "Help centre", href: "/docs" },
           { label: "Accounting free trial", href: "/accounting-trial" },
           { label: "How it works", href: "/how-it-works" },
         ],

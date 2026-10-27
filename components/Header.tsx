@@ -6,6 +6,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import type { SiteContent } from "@/content/types";
 import { brandName } from "@/lib/brand";
 import { Arrow, Close, Menu } from "./icons";
+import DocIcon from "./docs/DocIcon";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 
@@ -28,7 +29,7 @@ function isScrolled() {
  * reading the content module here put both locales' whole copy in the shared
  * client chunk.
  */
-export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" | "cta"> }) {
+export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" | "docs" | "cta"> }) {
   const locale = useLocale();
   const t = useTranslations("a11y");
   const pathname = usePathname();
@@ -48,6 +49,7 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
   }, [open]);
 
   const other = locale === "ar" ? "en" : "ar";
+  const onDocs = pathname === "/docs" || pathname.startsWith("/docs/");
 
   return (
     <>
@@ -65,8 +67,11 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
           </Link>
 
           {/* Numbered, as Moving Stores' bar is: the index is decoration, the
-              label is the link's name. */}
-          <nav className="hidden items-center gap-6 md:flex">
+              label is the link's name. From 1024 px, as on the umbrella site:
+              five links, the help centre, the theme, the language and the CTA
+              ran 92–205 px past a 768 px tablet, so below that the drawer
+              carries them. */}
+          <nav className="hidden items-center gap-6 lg:flex">
             {nav.links.map((l, i) => (
               <Link
                 key={l.href}
@@ -80,6 +85,19 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
                 {l.label}
               </Link>
             ))}
+            {/* The help centre, set apart behind a rule with its book, as on
+                the umbrella site's bar: it is a place, not a page of the pitch. */}
+            <span className="flex items-center border-s border-line ps-5">
+              <Link
+                href="/docs"
+                aria-current={onDocs ? "page" : undefined}
+                className="nav-link"
+                data-active={onDocs}
+              >
+                <DocIcon name="book" size={17} className="self-center" />
+                {nav.docs}
+              </Link>
+            </span>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-2.5">
@@ -114,7 +132,7 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
               type="button"
               onClick={() => setOpen(true)}
               aria-label={t("openMenu")}
-              className="grid h-10 w-10 place-items-center rounded-xl text-ink-2 transition-colors hover:bg-line md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-xl text-ink-2 transition-colors hover:bg-line lg:hidden"
             >
               <Menu />
             </button>
@@ -124,12 +142,12 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
 
       {/* Mobile drawer */}
       <div
-        className={`nav-scrim md:hidden ${open ? "is-open" : ""}`}
+        className={`nav-scrim lg:hidden ${open ? "is-open" : ""}`}
         onClick={() => setOpen(false)}
         aria-hidden="true"
       />
       <aside
-        className={`nav-drawer bg-surface shadow-2xl md:hidden ${open ? "is-open" : ""}`}
+        className={`nav-drawer bg-surface shadow-2xl lg:hidden ${open ? "is-open" : ""}`}
         aria-hidden={!open}
       >
         <div className="flex h-16 items-center justify-between gap-2 border-b border-line px-5">
@@ -162,6 +180,16 @@ export default function Header({ nav }: { nav: Pick<SiteContent["nav"], "links" 
               {l.label}
             </Link>
           ))}
+          <Link
+            href="/docs"
+            onClick={() => setOpen(false)}
+            tabIndex={open ? 0 : -1}
+            aria-current={onDocs ? "page" : undefined}
+            className="flex items-center gap-3 rounded-xl border-b border-line px-3 py-3 text-base font-semibold text-ink-2 transition-colors hover:bg-brand-soft hover:text-brand"
+          >
+            <DocIcon name="book" size={16} className="text-ink-dim" />
+            {nav.docs}
+          </Link>
           <Link
             href={pathname}
             locale={other}

@@ -223,6 +223,12 @@ export interface SiteContent {
      * stays at five items.
      */
     extra: NavLink[];
+    /**
+     * The help centre's label. The header sets it apart from the numbered
+     * links, behind a rule and with a book icon, as the Moving family's
+     * umbrella site does; it always points at /docs.
+     */
+    docs: string;
     cta: string;
   };
   hero: {

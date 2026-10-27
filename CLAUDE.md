@@ -35,7 +35,8 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
 
 | Path | What |
 | --- | --- |
-| `app/[locale]/*` | The pages (15 routes × `ar`/`en`), prerendered |
+| `app/[locale]/*` | The pages (16 routes × `ar`/`en`), prerendered |
+| `app/[locale]/docs`, `content/docs/`, `components/docs/`, `lib/docs/` | The help centre: its pages, the ar/en article trees and screenshot slots, its components, search and metadata |
 | `app/api/lead`, `app/api/consent`, `app/api/health` | The only server code paths |
 | `lib/` | Brand, leads and validators, sinks, rate limit, env check, consent core, trial client |
 | `content/ar.ts`, `content/en.ts`, `content/types.ts` | All copy, typed |
@@ -44,6 +45,10 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
 
 ## Content and brand
 
+- The help centre's articles describe only what the product ships: check each
+  against `~/Projects/bohub-pos` and record the paths and commit in the
+  comment above it, with `reviewed` set to that day. Screenshots come only
+  from a demo-seeded instance (`pnpm capture:docs`), never from a client.
 - All copy lives in `content/ar.ts` and `content/en.ts`, two trees with the
   same keys and list lengths (`content/types.ts`, `tests/content.test.ts`).
   **Write Arabic first**, then English, in the same change. Never change copy
