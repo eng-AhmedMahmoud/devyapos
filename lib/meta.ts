@@ -65,19 +65,37 @@ export function ogLocale(locale: string) {
 }
 
 /**
+ * What a help-centre page says about itself (lib/docs/meta.ts): its categories
+ * and articles title themselves from content/docs rather than from `meta`.
+ */
+export interface PageMeta {
+  title: string;
+  description: string;
+  /** "article" for help-centre articles; everything else is a website page. */
+  type?: "website" | "article";
+  /** ISO date, for articles: the day the article was checked against the product. */
+  modified?: string;
+  /** Out of the index, links still followed (the search results page). */
+  noindex?: boolean;
+  /** The path whose share card the page uses (a help page uses the help centre's). */
+  card?: string;
+}
+
+/**
  * Page metadata + hreflang alternates. Every page passes its own key from the
  * `meta` block of the content tree so titles stay next to the copy they belong
- * to.
+ * to; a help-centre page passes its own `page` instead.
  */
 export function buildMetadata(
   locale: string,
   key: string,
   path = "",
+  page?: PageMeta,
 ): Metadata {
   const c = getContent(locale);
-  const meta = c.meta[key] ?? c.meta.home;
+  const meta = page ?? c.meta[key] ?? c.meta.home;
   const url = localeHref(locale, path);
-  const images = ogImage(locale, meta.title, path);
+  const images = ogImage(locale, meta.title, page?.card ?? path);
 
   return {
     metadataBase: new URL(brand.url),
@@ -85,12 +103,12 @@ export function buildMetadata(
     description: meta.description,
     /* Out of the index, but the links on the page are still followed: the
        footer and nav on a noindexed page lead to pages that are indexed. */
-    ...(NOINDEX_PATHS.includes(path)
+    ...(NOINDEX_PATHS.includes(path) || page?.noindex
       ? { robots: { index: false, follow: true } }
       : {}),
     alternates: { canonical: url, languages: alternateLanguages(path) },
     openGraph: {
-      type: "website",
+      type: page?.type ?? "website",
       url,
       title: meta.title,
       description: meta.description,
@@ -101,6 +119,7 @@ export function buildMetadata(
         .filter((l) => l !== locale)
         .map(ogLocale),
       images,
+      ...(page?.modified ? { modifiedTime: page.modified } : {}),
     },
     twitter: {
       card: "summary_large_image",

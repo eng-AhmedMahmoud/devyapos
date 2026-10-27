@@ -6,6 +6,7 @@ import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { getContent } from "@/content";
 import { brand } from "@/lib/brand";
+import { allArticles, articleHref, DOCS_BASE, docsPaths, getDocs } from "@/lib/docs";
 import { llmsTxt } from "@/lib/llms";
 import { NOINDEX_PATHS, buildMetadata, localeHref, ogImagePath, routes } from "@/lib/meta";
 import { proxy } from "@/proxy";
@@ -179,9 +180,14 @@ describe("page metadata (buildMetadata)", () => {
 
 describe("sitemap.xml", () => {
   const entries = sitemap();
+  /** The help centre's categories and articles, beside its front page in `routes`. */
+  const helpPages = (locale: string) => docsPaths(locale).filter((p) => p.path !== DOCS_BASE);
 
-  it("lists every indexed route in both locales, and nothing else", () => {
-    const expected = LOCALES.flatMap((l) => routes.map((r) => localeHref(l, r.path)));
+  it("lists every indexed route and help page in both locales, and nothing else", () => {
+    const expected = LOCALES.flatMap((l) => [
+      ...routes.map((r) => localeHref(l, r.path)),
+      ...helpPages(l).map((p) => localeHref(l, p.path)),
+    ]);
     expect(entries.map((e) => e.url).sort()).toEqual(expected.sort());
     for (const locale of LOCALES) {
       expect(entries.map((e) => e.url)).toContain(`${brand.url}/${locale}/privacy`);
@@ -191,10 +197,10 @@ describe("sitemap.xml", () => {
     }
   });
 
-  it("dates each entry by its route's copy, never by the build", () => {
+  it("dates each entry by its route's copy (a help page by its last review), never by the build", () => {
     for (const entry of entries) {
       const path = entry.url.replace(/^https:\/\/[^/]+\/(ar|en)/, "");
-      const route = routes.find((r) => r.path === path)!;
+      const route = routes.find((r) => r.path === path) ?? helpPages("ar").find((p) => p.path === path)!;
       expect(entry.lastModified, entry.url).toBe(route.updated);
       expect(String(entry.lastModified) <= today, entry.url).toBe(true);
     }
@@ -295,6 +301,14 @@ describe("llms.txt", () => {
     }
     expect(text).toContain(`${brand.url}/sitemap.xml`);
     expect(text.endsWith("\n")).toBe(true);
+  });
+
+  it("lists every help-centre article in both languages", () => {
+    for (const locale of LOCALES) {
+      for (const { category, article } of allArticles(getDocs(locale))) {
+        expect(text).toContain(`](${localeHref(locale, articleHref(category.id, article.slug))}): `);
+      }
+    }
   });
 
   it("never lists a noindexed page or another Devya host", () => {

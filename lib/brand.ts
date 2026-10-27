@@ -128,6 +128,7 @@ export const whatsappSources = {
   eta: "Closing card on /eta-einvoicing",
   trial: "Accounting trial, fallback after a failed sign-up",
   quote: "Accounting pricing, Enterprise quote",
+  docs: "Help centre, 'still need a hand?' card on every help page",
 } as const;
 
 export type WhatsappSource = keyof typeof whatsappSources;
