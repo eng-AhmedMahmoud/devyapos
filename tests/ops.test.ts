@@ -38,12 +38,20 @@ describe("next.config", { timeout: 20_000 }, () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("API_URL", "http://localhost:3001");
     const c = await config();
-    expect(c.rewrites).toBeUndefined();
     for (const path of ["/api/health", "/api/does-not-exist", "/api/lead", "/api/v1/anything"]) {
       const res = await unstable_getResponseFromNextConfig({ url: `https://pos.devya.dev${path}`, nextConfig: c });
       expect(getRewrittenUrl(res), path).toBeNull();
     }
     expect(read(".env.example")).not.toMatch(/API_URL/);
+  });
+
+  it("proxies only the support assistant, to the umbrella site, path and query kept", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const c = await config();
+    const rewrites = await c.rewrites!();
+    expect(rewrites).toEqual([{ source: "/moving-support/:rest*", destination: "https://movingsystems.tech/moving-support/:rest*" }]);
+    const res = await unstable_getResponseFromNextConfig({ url: "https://pos.movingsystems.tech/moving-support/v1/chat", nextConfig: c });
+    expect(getRewrittenUrl(res)).toBe("https://movingsystems.tech/moving-support/v1/chat");
   });
 
   it("builds the standalone server the Docker image runs", async () => {
@@ -134,6 +142,7 @@ describe("security.txt", () => {
     const matcher = new RegExp(`^${JSON.parse(source![1])}$`);
     expect(matcher.test("/.well-known/security.txt")).toBe(false);
     expect(matcher.test("/api/health")).toBe(false);
+    expect(matcher.test("/moving-support/v1/chat")).toBe(false);
     // …while pages still are.
     expect(matcher.test("/pricing")).toBe(true);
   });

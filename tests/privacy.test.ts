@@ -34,6 +34,9 @@ const ALLOWED_HOSTS = new Set([
   "pos.movingsystems.tech",
   // The sister product, Moving Stores: a plain link, never loaded by the page.
   "stores.movingsystems.tech",
+  // The umbrella site, where the support assistant answers: reached only
+  // through this site's own /moving-support rewrite, never by the browser.
+  "movingsystems.tech",
   "devya.dev",
   "wa.me",
   "schema.org",
@@ -43,6 +46,9 @@ const ALLOWED_HOSTS = new Set([
   "www.facebook.com",
   "bohub-c4.vercel.app",
 ]);
+
+/** The one `<script src>` in the source: the support widget's loader, on this origin. */
+const SUPPORT_EMBED = join("components", "SupportChat.tsx");
 
 describe("privacy", () => {
   it("sets no locale cookie", () => {
@@ -80,6 +86,11 @@ describe("privacy", () => {
     ];
     for (const { path, text } of sources) {
       for (const pattern of banned) {
+        const own =
+          path === SUPPORT_EMBED &&
+          pattern.source.startsWith("<script") &&
+          text.includes("src={`${brand.support.path}/v1/loader.js`}");
+        if (own) continue;
         expect(pattern.test(text), `${path} matches ${pattern}`).toBe(false);
       }
     }

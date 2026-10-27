@@ -528,6 +528,8 @@ export interface SiteContent {
   floating: {
     top: string;
     whatsapp: string;
+    /** The button that opens the Moving support assistant (components/SupportChat.tsx). */
+    chat: string;
   };
 
   /** Copy for the four-second register recording on the home page. As with

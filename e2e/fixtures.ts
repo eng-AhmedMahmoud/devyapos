@@ -10,6 +10,10 @@ import { test as base, expect, type Page } from "@playwright/test";
  *    unless the test intercepts it itself (a page route wins over this context
  *    route), so a test that forgets to mock the endpoint fails loudly instead
  *    of writing a lead.
+ * 3. No test reaches the Moving support assistant. `/moving-support/*` is
+ *    rewritten to the umbrella site (next.config.ts); here the loader is a
+ *    stand-in (SUPPORT_LOADER_STUB) and the API answers 503, so the suite
+ *    needs no network and no other site's release.
  *
  * The fixture's callback is named `provide` rather than Playwright's usual
  * `use`, because the React hooks lint rule reads any call to `use` as a hook.
@@ -27,6 +31,11 @@ export const test = base.extend<{ problems: string[] }>({
       context.pages().forEach(watch);
       context.on("page", watch);
       await context.route("**/api/lead", (route) => route.abort("blockedbyclient"));
+      await context.route("**/moving-support/**", (route) =>
+        route.request().url().endsWith("/loader.js")
+          ? route.fulfill({ contentType: "text/javascript", body: SUPPORT_LOADER_STUB })
+          : route.fulfill({ status: 503, contentType: "application/json", body: "{}" }),
+      );
 
       await provide(problems);
 
@@ -37,6 +46,27 @@ export const test = base.extend<{ problems: string[] }>({
 });
 
 export { expect };
+
+/**
+ * The support widget's loader, reduced to its contract with this site: it
+ * reads its own data attributes, and any `[data-moving-support-toggle]`
+ * click toggles it and sets `aria-expanded` (moving-landing
+ * support-widget/src/loader.ts). The real widget is tested where it lives.
+ */
+export const SUPPORT_LOADER_STUB = `(() => {
+  const s = document.currentScript;
+  window.__supportStub = { config: { ...s.dataset }, opened: 0 };
+  document.documentElement.setAttribute("data-moving-support", "ready");
+  let open = false;
+  document.addEventListener("click", (e) => {
+    const t = e.target.closest && e.target.closest("[data-moving-support-toggle]");
+    if (!t) return;
+    e.preventDefault();
+    open = !open;
+    if (open) window.__supportStub.opened++;
+    document.querySelectorAll("[data-moving-support-toggle]").forEach((n) => n.setAttribute("aria-expanded", String(open)));
+  });
+})();`;
 
 export const LOCALES = ["ar", "en"] as const;
 

@@ -55,11 +55,14 @@ flowchart LR
    container: in-memory state such as the rate limiter is exact and resets on
    every restart and deploy.
 4. **Next.** `proxy.ts` sends `/` to `/ar` whatever `Accept-Language` says and
-   adds the locale prefix to bare paths; it skips `/api`, `/_next` and files.
+   adds the locale prefix to bare paths; it skips `/api`, `/moving-support`, `/_next` and files.
    Pages are prerendered for both locales at build time. `next.config.ts` adds
    the security headers: in production a same-origin CSP (plus the trial claim
-   origin in `connect-src`) and HSTS. No rewrites: an unknown `/api` path is a
-   404.
+   origin in `connect-src`) and HSTS. No `/api` rewrite: an unknown `/api`
+   path is a 404. One rewrite: `/moving-support/*` → the Moving support
+   assistant on `movingsystems.tech` ([ADR 0007](decisions/0007-moving-support-assistant.md)),
+   which the layout's loader (`components/SupportChat.tsx`) and the floating
+   stack's chat button use; to the browser it is this origin.
 
 ## The routes that do something
 
