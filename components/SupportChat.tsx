@@ -7,7 +7,8 @@ import { brand, whatsappLink } from "@/lib/brand";
  * chat button sits in the floating stack (components/FloatingActions.tsx), so
  * the widget draws no button of its own. The hand-off channels are this
  * site's own — the contact page and WhatsApp with a `[P-chat]` code. Only the
- * small loader loads with the page; nothing is sent until a visitor asks.
+ * small loader loads with the page (that request, like any, carries the usual
+ * browser headers); no conversation data is sent until a visitor asks.
  */
 export default function SupportChat({ locale, waTemplate }: { locale: string; waTemplate: string }) {
   return (

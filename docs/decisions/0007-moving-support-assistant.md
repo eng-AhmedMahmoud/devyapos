@@ -16,7 +16,7 @@ a same-origin CSP, `tests/privacy.test.ts`, no embed.
 
 ## Decision
 
-- `/moving-support/:rest*` is rewritten to `https://movingsystems.tech/moving-support/:rest*`
+- `/moving-support/v1/:rest*` is rewritten to `https://movingsystems.tech/moving-support/v1/:rest*`
   (`next.config.ts`; the origin is `brand.support` in `lib/brand.ts`, or
   `MOVING_SUPPORT_ORIGIN` for a staging build). The widget's loader, its
   panel and its API are this origin to the browser: the CSP stays

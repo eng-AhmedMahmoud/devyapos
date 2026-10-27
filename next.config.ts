@@ -68,7 +68,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const origin = process.env.MOVING_SUPPORT_ORIGIN?.trim() || brand.support.origin;
     const { path } = brand.support;
-    return [{ source: `${path}/:rest*`, destination: `${origin}${path}/:rest*` }];
+    // Only the widget's own surface (v1): Next applies none of this site's
+    // headers to an external rewrite, so nothing else should be served here.
+    return [{ source: `${path}/v1/:rest*`, destination: `${origin}${path}/v1/:rest*` }];
   },
   async headers() {
     return [

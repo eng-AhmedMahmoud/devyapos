@@ -49,7 +49,7 @@ describe("next.config", { timeout: 20_000 }, () => {
     vi.stubEnv("NODE_ENV", "production");
     const c = await config();
     const rewrites = await c.rewrites!();
-    expect(rewrites).toEqual([{ source: "/moving-support/:rest*", destination: "https://movingsystems.tech/moving-support/:rest*" }]);
+    expect(rewrites).toEqual([{ source: "/moving-support/v1/:rest*", destination: "https://movingsystems.tech/moving-support/v1/:rest*" }]);
     const res = await unstable_getResponseFromNextConfig({ url: "https://pos.movingsystems.tech/moving-support/v1/chat", nextConfig: c });
     expect(getRewrittenUrl(res)).toBe("https://movingsystems.tech/moving-support/v1/chat");
   });
