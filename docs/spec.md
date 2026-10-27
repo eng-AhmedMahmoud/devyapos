@@ -250,6 +250,41 @@ has checked that the answer has exactly the documented shape; 409, 400, 429
 and 503 each get their own message. A build without the URL shows "sign-ups
 are paused" with WhatsApp (`[P-trial]`) instead of a form that posts.
 
+### `/docs` — the help centre (`app/[locale]/docs/`, since 2026-10-27)
+
+Step-by-step guides to the product for the people who use it: the owner
+setting a restaurant up, the cashier and the branch team on a working day,
+and the owner reading the numbers. It is the Moving family's umbrella help
+centre (movingsystems.tech/docs, the moving-landing repo) — same content
+model, components and search — keeping only its Moving POS guides, grouped
+by reader (`setup`, `daily`, `grow`) instead of by product, on this site's
+tokens and fonts.
+
+- **`/docs`** — the eyebrow (`00 · Help centre`), the question as the h1,
+  the search box with its `/` shortcut, a "most read" row of chips, the
+  numbered "Start here" track (01–05, `startHere` in the tree), then every
+  category in its reader group, each card listing its first articles, and
+  the WhatsApp card (`[P-docs]`).
+- **`/docs/<category>`** and **`/docs/<category>/<slug>`** — prerendered
+  from the trees (`dynamicParams = false`): sidebar, breadcrumbs, the
+  article's one-paragraph answer, "before you start", numbered steps with
+  their screenshots, related reading, previous/next in reading order.
+- **`/docs/search?q=`** — where the box submits without JavaScript; ranked
+  in the browser, noindexed. **`/docs/search.json`** — the per-locale index
+  the box fetches on first focus, gzipped, `X-Robots-Tag: noindex`.
+
+Content: `content/docs/{ar,en}/` (one file per category, typed by
+`content/docs/types.ts`, Arabic first; `tests/help-centre.test.ts` holds the
+two trees to one shape and every link to a real target). Each article names,
+in a comment, the bohub-pos paths and commit it was checked against, and
+`reviewed` is that day — printed on the page, the article's `dateModified`
+and its sitemap `lastmod`. Screenshots: `content/docs/shots/` lists every
+slot (app, path, devices); `pnpm capture:docs` shoots them from a local
+instance seeded with the demo tenant into `public/docs/shots/` and records
+them in `content/docs/shots.captured.json` (`scripts/capture-docs.mjs` says
+how). Metadata comes from `lib/docs/meta.ts` on the site's `buildMetadata`;
+every help page shares the `/docs` share card.
+
 ### Legal pages (`/privacy`, `/terms`, `/refund`)
 
 `LegalArticle` (`components/pages/LegalArticle.tsx`) renders

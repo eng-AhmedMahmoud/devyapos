@@ -24,6 +24,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except the API proxy, Next internals and static files.
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  // Everything except the API proxy, Next internals, static files and the
+  // support assistant's rewrite (next.config.ts), which has no locale.
+  matcher: ["/((?!api|_next|_vercel|moving-support/|.*\\..*).*)"],
 };

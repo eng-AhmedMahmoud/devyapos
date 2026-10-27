@@ -222,6 +222,14 @@ const Menu = (p: IconProps) => (
   </Base>
 );
 
+/** A speech bubble with two lines: the support assistant's button. */
+const Chat = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 5h16v11H9l-5 4z" />
+    <path d="M8 10h8M8 13h5" />
+  </Base>
+);
+
 const Whatsapp = (p: IconProps) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width={22} height={22} {...p}>
     <path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.74.46 3.44 1.32 4.94L2 22l5.36-1.4a9.8 9.8 0 0 0 4.68 1.2h.01c5.43 0 9.83-4.4 9.83-9.84C21.88 6.4 17.47 2 12.04 2Zm0 17.96h-.01a8.2 8.2 0 0 1-4.16-1.14l-.3-.18-3.18.83.85-3.1-.2-.32a8.13 8.13 0 0 1-1.25-4.34c0-4.51 3.68-8.18 8.2-8.18a8.18 8.18 0 0 1 8.18 8.19c0 4.51-3.67 8.18-8.13 8.24Zm4.5-6.13c-.25-.13-1.46-.72-1.68-.8-.23-.08-.39-.12-.55.13-.17.24-.64.79-.78.95-.14.17-.29.19-.53.07-.25-.13-1.04-.39-1.98-1.23-.73-.65-1.22-1.46-1.37-1.7-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.14.17-.24.25-.41.09-.16.04-.31-.02-.43-.06-.13-.55-1.34-.76-1.83-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.25-.84.83-.84 2.02s.86 2.34.98 2.5c.12.17 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.47-.07 1.46-.6 1.66-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.29Z" />
@@ -288,4 +296,4 @@ export function Icon({ name, ...props }: { name: string } & IconProps) {
   return <Cmp {...props} />;
 }
 
-export { Check, Close, Minus, Arrow, Chevron, Menu, Whatsapp, Bolt, Phone, Mail, Expand };
+export { Check, Close, Minus, Arrow, Chevron, Menu, Whatsapp, Bolt, Phone, Mail, Expand, Chat };

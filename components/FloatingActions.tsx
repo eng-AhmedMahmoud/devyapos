@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import type { SiteContent } from "@/content/types";
 import { whatsappLink } from "@/lib/brand";
-import { Arrow, Whatsapp } from "./icons";
+import { Arrow, Chat, Whatsapp } from "./icons";
 import WhatsappLink from "./WhatsappLink";
 
 /**
- * The two floating buttons at the inline end of every page: back to the top
- * (once the first screen is out of view) and a WhatsApp chat.
+ * The floating buttons at the inline end of every page: back to the top
+ * (once the first screen is out of view), the Moving support assistant and a
+ * WhatsApp chat. The assistant's button is only a toggle: the widget the
+ * layout loads (components/SupportChat.tsx) opens its panel from any element
+ * marked `data-moving-support-toggle`, and keeps `aria-expanded` in step.
  *
  * Back to the top moves focus to the start of `<main>` as well as scrolling,
  * so a keyboard user lands where the eye does. The stack is pinned to the
@@ -52,6 +55,17 @@ export default function FloatingActions({
         className={`fab fab-top ${away ? "is-shown" : ""}`}
       >
         <Arrow width={20} height={20} className="-rotate-90" />
+      </button>
+      <button
+        type="button"
+        data-moving-support-toggle=""
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-label={copy.chat}
+        title={copy.chat}
+        className="fab fab-chat"
+      >
+        <Chat width={22} height={22} />
       </button>
       <WhatsappLink
         href={whatsappLink(waTemplate, "float")}

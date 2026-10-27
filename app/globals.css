@@ -1089,6 +1089,49 @@ html[lang="ar"] .kicker {
   pointer-events: auto;
   translate: 0 0;
 }
+/* The support assistant's button: ink on paper, the brand's primary. Shown
+   only once the widget's loader has run (it marks <html>), so it is never a
+   button with nothing behind it. */
+.fab-chat {
+  display: none;
+  background: var(--brand);
+  color: var(--on-brand);
+}
+html[data-moving-support="ready"] .fab-chat {
+  display: inline-flex;
+}
+.fab-chat[aria-expanded="true"] {
+  background: var(--saffron);
+  color: var(--on-saffron);
+}
+
+/* The support assistant's panel (moving-landing support-widget/src/styles.ts)
+   on this palette, beside the floating stack rather than over it: its
+   inline-end edge clears the stack, its bottom lines up with the stack's. On
+   a phone the panel covers the screen, so the offsets don't matter there.
+   z 45: over the stack (40) and the header's, under the banner (50). */
+:root {
+  --msw-bg: var(--surface);
+  --msw-fg: var(--ink);
+  --msw-muted: var(--ink-dim);
+  --msw-line: var(--line);
+  --msw-bot-bg: var(--surface-2);
+  --msw-user-bg: var(--brand);
+  --msw-user-fg: var(--on-brand);
+  --msw-accent: var(--brand);
+  --msw-on-accent: var(--on-brand);
+  --msw-focus: var(--caramel);
+  --msw-radius: 12px;
+  --msw-font: var(--font-body);
+  --msw-z: 45;
+  --msw-inline: calc(1.5rem + 3.25rem + 0.75rem);
+  --msw-panel-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px) + var(--consent-h, 0px));
+}
+@media (min-width: 71rem) {
+  :root {
+    --msw-panel-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
 
 /* ── Quick look (components/QuickLook.tsx) ─────────────────────────────────
    A full-viewport, transparent <dialog>: the blur is its ::backdrop, the
@@ -1747,5 +1790,130 @@ html:has(.ql-dialog[open]) {
   .cursor,
   .cursor-dot {
     display: none;
+  }
+}
+
+/* ------------------------------------------------------------ help centre */
+
+/*
+ * The help centre (app/[locale]/docs, components/docs) is the Moving family's
+ * umbrella help centre (movingsystems.tech/docs, the moving-landing repo) set
+ * on this site's tokens: the same furniture — eyebrow, display title, lede,
+ * ruled cards, numbered steps — under a `doc-` prefix so none of it can leak
+ * into the marketing pages. The column is the header's (max-w-6xl, the same
+ * gutter as Container), so the logo and the page line up.
+ */
+.doc-wrap {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 40rem) {
+  .doc-wrap {
+    padding-inline: 2rem;
+  }
+}
+.doc-section {
+  padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+}
+.doc-label {
+  font-family: var(--font-num);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+html[lang="ar"] .doc-label {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.doc-display {
+  font-family: var(--font-head), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+html[lang="ar"] .doc-display {
+  line-height: 1.32;
+  letter-spacing: normal;
+}
+.doc-h2 {
+  font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4.25rem);
+}
+.doc-lede {
+  font-size: clamp(1.0625rem, 0.98rem + 0.42vw, 1.3125rem);
+  line-height: 1.65;
+  color: var(--ink-dim);
+  text-wrap: pretty;
+}
+.doc-prose {
+  max-width: 70ch;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+html[lang="ar"] .doc-prose {
+  line-height: 1.95;
+}
+/* A text link that underlines in saffron on hover; saffron is a rule, never type. */
+.doc-more {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.35em;
+  transition: text-decoration-color 160ms ease;
+}
+.doc-more:hover {
+  text-decoration-color: var(--saffron);
+  text-decoration-thickness: 3px;
+}
+.doc-arrow {
+  transition: translate 200ms ease-out;
+}
+[dir="rtl"] .doc-arrow {
+  scale: -1 1;
+}
+.doc-card {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+.doc-card:hover {
+  background-color: var(--surface);
+  border-color: var(--line-strong);
+}
+.doc-card:hover .doc-arrow {
+  translate: 0.25rem 0;
+}
+[dir="rtl"] .doc-card:hover .doc-arrow {
+  translate: -0.25rem 0;
+}
+.doc-card .doc-tile {
+  transition: translate 260ms ease-out;
+}
+.doc-card:hover .doc-tile {
+  translate: 0 -3px;
+}
+.doc-plus {
+  transition: rotate 240ms ease-out;
+}
+details[open] .doc-plus {
+  rotate: 45deg;
+}
+@media (prefers-reduced-motion: reduce) {
+  .doc-arrow,
+  .doc-card,
+  .doc-card .doc-tile,
+  .doc-plus {
+    transition: none;
+  }
+}
+@media print {
+  .no-print {
+    display: none !important;
   }
 }

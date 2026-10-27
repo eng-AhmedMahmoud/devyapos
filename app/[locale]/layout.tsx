@@ -18,6 +18,7 @@ import Cursor from "@/components/Cursor";
 import FloatingActions from "@/components/FloatingActions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import SupportChat from "@/components/SupportChat";
 import JsonLd from "@/components/JsonLd";
 import { themeBootScript } from "@/lib/theme";
 import "../globals.css";
@@ -152,6 +153,7 @@ export default async function LocaleLayout({
             only this one thing left to gate. */}
         <Attribution />
         <Cursor />
+        <SupportChat locale={locale} waTemplate={c.contact.waTemplate} />
       </body>
     </html>
   );

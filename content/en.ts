@@ -9,6 +9,13 @@ export const en: SiteContent = {
       description:
         "One system runs your restaurant: POS, live kitchen display, your own online ordering, loyalty and recipe-costed stock. Arabic and English, EGP, multi-branch.",
     },
+    /* The help centre's front page (app/[locale]/docs); its categories and
+       articles title themselves from content/docs (lib/docs/meta.ts). */
+    docs: {
+      title: "Help centre: step-by-step guides with screenshots | Moving POS",
+      description:
+        "Step-by-step Moving POS guides with screenshots: restaurant setup, opening and closing a shift, the menu, payments, printers, staff, reports, the AI assistant.",
+    },
     features: {
       title: "Restaurant POS features: KDS, online ordering, stock | Moving POS",
       description:
@@ -94,6 +101,7 @@ export const en: SiteContent = {
       { label: "Hardware", href: "/hardware" },
       { label: "VAT and e-invoicing", href: "/eta-einvoicing" },
     ],
+    docs: "Help centre",
     cta: "Try it free",
   },
 
@@ -821,6 +829,7 @@ export const en: SiteContent = {
           { label: "Features", href: "/features" },
           { label: "Pricing", href: "/pricing" },
           { label: "Hardware", href: "/hardware" },
+          { label: "Help centre", href: "/docs" },
           { label: "Accounting free trial", href: "/accounting-trial" },
           { label: "How it works", href: "/how-it-works" },
         ],
@@ -1047,6 +1056,7 @@ export const en: SiteContent = {
   floating: {
     top: "Back to top",
     whatsapp: "Message us on WhatsApp",
+    chat: "Ask our assistant",
   },
 
   promo: {
@@ -2057,7 +2067,7 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy",
       sub: "What this website collects, which is very little, and what happens to it.",
-      updated: "Last updated 13 October 2026",
+      updated: "Last updated 27 October 2026",
       sections: [
         {
           title: "The short version",
@@ -2087,6 +2097,13 @@ export const en: SiteContent = {
             "The free accounting trial asks for your name, your company's name, your email, your mobile number and whether the business is in Egypt or Saudi Arabia, and notes the language you signed up in. All of them are required: they are what sets the trial up and what we contact you about.",
             "When you press start, your browser sends them straight to a server Devya runs, outside Egypt and Saudi Arabia. It gives you an accounting system of your own and records your sign-up so that we can follow up — including when every trial system is busy, which is when we call you instead. Your IP address is used for a moment to limit repeated sign-ups and is not stored with them.",
             "What you type into the trial itself — your company, accounts and documents — stays in that trial's own database, which nobody else's trial can reach. It is deleted after the trial ends and a short grace period, and leaves our nightly backups within fourteen days after that.",
+          ],
+        },
+        {
+          title: "What the support chat collects",
+          body: [
+            "The chat button at the bottom of the page opens Moving's AI assistant, which answers from our public pages and help centre. Nothing is sent until you type a question. When you ask, your question, the last turns of the conversation and the page's language go through this site to the main Moving site's server, and from there to the AI model provider that writes the answer: Anthropic, or Google, or Groq if the one before is unavailable — each under its own terms, which may be in the United States.",
+            "We don't ask for your name, number or email, so don't put personal or payment details in a question. We keep no transcript on our servers; the conversation stays in your browser until you close the tab. Your IP address is held only in the server's memory to cap the number of questions, and is forgotten within a day. If you'd rather talk to a person, the chat's buttons open WhatsApp or the contact page — the assistant sends nothing on your behalf.",
           ],
         },
         {
@@ -2132,6 +2149,7 @@ export const en: SiteContent = {
             "This site sets no cookies of its own — no advertising cookies, no tracking pixels, no third-party trackers.",
             "Your light or dark theme choice, and your answer to the consent banner, are the two things kept without asking. Both are a direct response to something you did, both stay on your device, and neither is sent to us.",
             "The campaign details that brought you here are kept in your browser's session storage until you close the tab, so they can travel with the contact form if you decide to send it. That is not a cookie and it does not follow you to other websites — and like the analytics, it is not recorded at all unless you accepted.",
+            "If you ask the support chat, your conversation is kept in session storage (moving-support:pos) until you close the tab, so it stays with you from page to page. Nothing is kept until you ask.",
           ],
         },
         {

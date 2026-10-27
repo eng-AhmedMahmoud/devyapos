@@ -285,6 +285,12 @@ export interface SiteContent {
      * stays at five items.
      */
     extra: NavLink[];
+    /**
+     * The help centre's label. The header sets it apart from the numbered
+     * links, behind a rule and with a book icon, as the Moving family's
+     * umbrella site does; it always points at /docs.
+     */
+    docs: string;
     cta: string;
   };
   hero: {
@@ -625,6 +631,8 @@ export interface SiteContent {
   floating: {
     top: string;
     whatsapp: string;
+    /** The button that opens the Moving support assistant (components/SupportChat.tsx). */
+    chat: string;
   };
 
   /** Copy for the four-second register recording on the home page. As with

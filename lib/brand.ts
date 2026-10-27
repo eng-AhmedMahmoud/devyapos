@@ -55,6 +55,13 @@ export const brand = {
     name: { ar: "موفينج ستورز", en: "Moving Stores" },
     url: "https://stores.movingsystems.tech",
   },
+  /**
+   * The Moving support assistant answers on the umbrella site
+   * (moving-landing, app/moving-support). This site reaches it through its
+   * own `/moving-support/*` rewrite (next.config.ts), so the browser never
+   * calls that host and the CSP stays `connect-src 'self'`.
+   */
+  support: { origin: "https://movingsystems.tech", path: "/moving-support" },
   /*
    * `flagship` (a named, linked reference deployment) was removed on
    * 2026-08-28 at that client's request: they do not want their brand used in
@@ -128,6 +135,8 @@ export const whatsappSources = {
   eta: "Closing card on /eta-einvoicing",
   trial: "Accounting trial, fallback after a failed sign-up",
   quote: "Accounting pricing, Enterprise quote",
+  docs: "Help centre, 'still need a hand?' card on every help page",
+  chat: "The support assistant's 'Talk to our team' button, every page; the message starts with the visitor's last question",
 } as const;
 
 export type WhatsappSource = keyof typeof whatsappSources;
