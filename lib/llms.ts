@@ -23,7 +23,8 @@ export function llmsTxt(): string {
     "",
     `> ${en.meta.home.description}`,
     "",
-    `${brand.name.en} (${brand.name.ar}) is a restaurant point-of-sale system for Egypt, priced in EGP. ` +
+    `${brand.name.en} (${brand.name.ar}) is a restaurant point-of-sale system for Egypt, priced per branch in EGP ` +
+      `(with SAR, AED and USD price lists), with a free plan to try it on. ` +
       `Arabic is the default language and every page is also published in English. ` +
       `It is run by Moving Systems, a ${brand.parent.name} company (${brand.parent.url}). ` +
       `Contact: ${brand.email}, WhatsApp +${brand.whatsapp}.`,

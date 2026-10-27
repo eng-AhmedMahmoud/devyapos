@@ -9,9 +9,13 @@ import InfoTip from "@/components/InfoTip";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 import { formatEgp, formatNumber } from "@/lib/format";
+import { planPrice } from "@/lib/plans";
 
-/** Counter package, EGP per branch per month — the figure the payback is costed at. */
-const PLAN_PRICE = 199;
+/**
+ * Counter, EGP per branch per month — the figure the payback is costed at,
+ * read from the plan catalogue so the calculator cannot keep an old price.
+ */
+const PLAN_PRICE = planPrice("counter", "EGP", "monthly") ?? 0;
 /** Deliberately conservative share of aggregator orders assumed to move over. */
 const SHIFT_RATE = 0.3;
 
@@ -52,7 +56,7 @@ export default function RoiCalculator({
 }: {
   /** `roi`, passed down by the server page. */
   copy: SiteContent["roi"];
-  /** `pricing.currency`, the unit after every figure. */
+  /** `pricing.currencies.EGP`, the unit after every figure: the calculator is in pounds. */
   currency: string;
 }) {
   const locale = useLocale();

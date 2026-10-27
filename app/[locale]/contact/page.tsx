@@ -57,6 +57,7 @@ export default async function ContactPage({
             <Reveal>
               <ContactForm
                 copy={{ badge: c.contact.badge, form: c.contact.form, waTemplate: c.contact.waTemplate }}
+                planNames={Object.fromEntries(c.pricing.plans.map((p) => [p.id, p.name]))}
               />
             </Reveal>
 

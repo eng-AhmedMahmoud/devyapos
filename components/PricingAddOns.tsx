@@ -10,8 +10,9 @@ import { Container, SectionHead } from "./Section";
  * `addOn: true` in `devya-pos:ops-app/lib/plans.ts`, switched on per tenant.
  * Until 2026-10-22 none of them was on this site, so a buyer could not ask for
  * what they could not see. Most are priced per restaurant, so a card shows
- * "Quoted" rather than an invented number; the one with a published price
- * (accounting) links to its own page.
+ * "Quoted" rather than an invented number; the two with published prices
+ * link to where those prices are — accounting to its own page, the AI
+ * assistant to the credits block on this one (`/pricing#ai-credits`).
  */
 export default function PricingAddOns({
   copy: a,

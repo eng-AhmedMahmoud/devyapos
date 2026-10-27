@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/format";
 /**
  * What the rest of the Egyptian market charges, next to what we charge.
  *
- * "Affordable" is a claim; 199 against 2,848.95 is a number. The comparison is
+ * "Affordable" is a claim; 799 against 2,848.95 is a number. The comparison is
  * per branch per month, because that is the only unit where the two are
  * actually comparable — the enterprise tiers also bill per terminal and sell
  * loyalty and delivery as add-ons, which the row notes say rather than quietly
