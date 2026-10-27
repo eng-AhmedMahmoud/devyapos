@@ -14,6 +14,9 @@ import Pricing from "@/components/Pricing";
 import Reveal from "@/components/Reveal";
 import { Container, SectionHead } from "@/components/Section";
 
+/** When this page was rendered (at build): the plan grid's clock until hydration, as on /pricing. */
+const BUILT_AT = Date.now();
+
 export async function generateMetadata({
   params,
 }: {
@@ -158,7 +161,7 @@ export default async function AboutPage({
           />
         </Container>
         <div className="mt-8">
-          <Pricing copy={c.pricing} compact />
+          <Pricing copy={c.pricing} compact builtAt={BUILT_AT} />
         </div>
         <Container>
           <Reveal delay={120}>

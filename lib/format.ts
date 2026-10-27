@@ -57,3 +57,17 @@ export function formatDate(locale: string, iso: string) {
     timeZone: "UTC",
   }).format(new Date(iso));
 }
+
+/**
+ * The Cairo calendar day of an instant (`2026-11-19T22:00:00Z` is "20 November
+ * 2026"): the offers start and end on Cairo days, and in UTC White Friday's
+ * first minute would print as the day before.
+ */
+export function formatCairoDate(locale: string, instant: string) {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Africa/Cairo",
+  }).format(new Date(instant));
+}

@@ -57,7 +57,14 @@ const FIELD_ORDER: LeadField[] = [
   "message",
 ];
 
-export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
+export default function ContactForm({
+  copy,
+  planNames = {},
+}: {
+  copy: ContactFormCopy;
+  /** Plan id → name, for `/contact?plan=<id>` from a pricing card. */
+  planNames?: Record<string, string>;
+}) {
   const locale = useLocale();
   const f = copy.form;
   // Status and field-error copy used to be hardcoded here in both locales
@@ -97,6 +104,22 @@ export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
     track("lead_form_view", { locale });
   }, [locale]);
 
+  /**
+   * A pricing card links here as `/contact?plan=<id>`: the plan travels as the
+   * first line of what is sent. Read from the URL at send time, never into the
+   * rendered form, so the prerendered page and the browser's first render agree.
+   */
+  function planLine(): string {
+    const id = new URLSearchParams(window.location.search).get("plan");
+    const name = id ? planNames[id] : undefined;
+    return name ? f.planInterest.replace("{plan}", name) : "";
+  }
+
+  /** The visitor's message with the plan line in front of it, when there is one. */
+  function messageWithPlan(): string {
+    return [planLine(), values.message].filter(Boolean).join("\n");
+  }
+
   const set = (key: keyof Values) => (value: string) => {
     setValues((v) => ({ ...v, [key]: value }));
     // Clear a field's error as soon as it is touched — re-validating on every
@@ -113,7 +136,7 @@ export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
       `${f.restaurant}: ${values.restaurant}`,
       values.branches ? `${f.branches}: ${values.branches}` : "",
       `${f.phone}: ${values.phone}`,
-      values.message ? `${f.message}: ${values.message}` : "",
+      messageWithPlan() ? `${f.message}: ${messageWithPlan()}` : "",
     ]
       .filter(Boolean)
       .join("\n");
@@ -124,7 +147,8 @@ export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
     if (status === "submitting") return;
 
     setFormError(null);
-    const check = validateLead({ ...values, locale });
+    // Validated as sent, plan line included, so the server never refuses what passed here.
+    const check = validateLead({ ...values, message: messageWithPlan(), locale });
     if (!check.ok) {
       setErrors(check.errors);
       setStatus("error");
@@ -145,6 +169,7 @@ export default function ContactForm({ copy }: { copy: ContactFormCopy }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ...values,
+          message: messageWithPlan(),
           locale,
           company,
           attribution: readAttribution(),

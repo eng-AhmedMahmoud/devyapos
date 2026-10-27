@@ -41,7 +41,7 @@ export default async function ComparePage({
     <>
       <JsonLd data={pageJsonLd(locale, "/compare")} />
       <Compare />
-      <RoiCalculator copy={c.roi} currency={c.pricing.currency} />
+      <RoiCalculator copy={c.roi} currency={c.pricing.currencies.EGP} />
       <CtaBand />
     </>
   );

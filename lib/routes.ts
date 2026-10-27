@@ -32,16 +32,16 @@ export interface SiteRoute {
 }
 
 export const routes: readonly SiteRoute[] = [
-  { path: "", key: "home", priority: 1, changeFrequency: "weekly", updated: "2026-10-22" },
+  { path: "", key: "home", priority: 1, changeFrequency: "weekly", updated: "2026-10-27" },
   { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
   { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
-  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
-  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-10-22" },
-  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-22" },
-  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-10-27" },
+  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
   /* Search-entry pages: each answers a query the home page cannot. */
   { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
-  { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-22" },
+  { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
   { path: "/hardware", key: "hardware", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   /* The partner programmes: a channel page, indexed so a dealer or an accountant searching for one finds it. */
   { path: "/partners", key: "partners", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-22" },

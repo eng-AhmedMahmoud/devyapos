@@ -135,23 +135,32 @@ The FAQ deliberately does **not** appear here — see FAQ placement note below.
 `PageHero` → `PricingSegments` (`components/PricingSegments.tsx`, the
 "what kind of restaurant are you?" tabs, each pointing at a package) →
 `Pricing` (`components/Pricing.tsx`, `compact` mode — no duplicate section
-head, just the monthly/yearly toggle + the three packages) →
-`PricingAddOns` (`components/PricingAddOns.tsx`, modules sold on top of any
+head: the billing and currency switches (`components/PricingToggle.tsx`),
+the open offers band, the four plans, and the AI credits block
+`components/PricingAi.tsx` at `#ai-credits`) → `PricingAddOns` (`components/PricingAddOns.tsx`, modules sold on top of any
 package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
 market-anchor competitor table) → `MovingStoresBand`
 (`components/MovingStoresBand.tsx`, the sister product Moving Stores and what
 its POS link does; copy in `movingStores`, address in `lib/brand.ts`) → `Faq`
 → `CtaBand`. The footer also links Moving Stores, under the contacts.
 
-The packages are the product's own since 2026-10-22: **Counter** (EGP 199 per
-branch per month), **Dining room** (EGP 499: Counter plus tables, courses,
-split bills, pay at the table, the waiter flow and gift cards) and **Group**
-(quoted: plus stock transfers, HR, accounting, the API and device
-management), as `devya-pos:ops-app/lib/plans.ts` defines and prices them
-(owner decision of 2026-09-19). They replaced the retired Growth / Scale /
-Enterprise ladder. A plan card lists only what the product ships; add-ons are
-"Quoted" until the owner publishes their prices
-(`docs/business/gap-analysis.md` P01, P07).
+The plans are the product's own, priced on 2026-10-27 (bohub-pos
+`packages/shared/src/plans.ts`, decision
+`docs/decisions/2026-10-27-pos-plans-prices-and-limits.md`), and their
+numbers live once on this site, in `lib/plans.ts`: **Free** (a taster — one
+branch, two staff, 30 items, 300 sales a month, 100 MB, 10 AI credits once),
+**Counter** (EGP 799 / SAR 149 / AED 149 / USD 29 per branch per month),
+**Dining room** (EGP 1,499 / SAR 299 / AED 299 / USD 59: Counter plus tables,
+courses, split bills, pay at the table, the waiter flow and gift cards) and
+**Group** (quoted: every module, AI Plus included). Prices exclude VAT; a
+year is ten months; every paid plan has a 14-day trial. The switch starts on
+EGP in both languages and never looks up the visitor's location. The
+LAUNCH26 and WHITEFRIDAY26 offers show only while open, judged in the browser
+from their dates (the server renders with the build's clock, so hydration
+matches). A plan card lists only what the product ships; the AI assistant
+and accounting add-ons have published prices, the rest are "Quoted"
+(`docs/business/gap-analysis.md` P01, P07). `tests/pricing.test.ts` pins
+every figure against the product's file.
 
 ### `/compare` (`app/[locale]/compare/page.tsx`)
 

@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 import type { ConsentCopy } from "@/lib/consent/copy";
+import type { AiTierId, OfferCode, PlanCurrency, PlanId } from "@/lib/plans";
 
 /**
  * Marketing copy lives in typed modules rather than next-intl message JSON.
@@ -62,17 +63,27 @@ export interface CompareRow {
   them: boolean | "partial" | string;
 }
 
+/**
+ * One plan's words. Its numbers — prices per currency, caps, AI credits — are
+ * in `lib/plans.ts` under the same `id`, so a price is typed once, not once
+ * per language.
+ */
 export interface Plan {
-  id: string;
+  id: PlanId;
   name: string;
   tagline: string;
-  /** EGP per branch per month, billed monthly. `null` = custom pricing. */
-  price: number | null;
-  /** Rendered instead of a number when `price` is null. */
+  /** Printed instead of a figure on a quoted plan (Group). */
   priceLabel?: string;
   badge?: string;
   featured?: boolean;
+  /**
+   * The caps and allowances, set above the features. The figures in them must
+   * match `lib/plans.ts` (`tests/pricing.test.ts` checks).
+   */
+  limits: string[];
   features: string[];
+  /** What the plan leaves out, under its features: Free's line. */
+  excludes?: string;
   cta: string;
 }
 
@@ -170,9 +181,60 @@ export interface AddOn {
   name: string;
   body: string;
   price: string;
-  /** An internal path (`/accounting-trial`) when the add-on has its own page. */
+  /**
+   * An internal path when the add-on has a page or a section of its own:
+   * `/accounting-trial`, or `/pricing#ai-credits`.
+   */
   href?: string;
   linkLabel?: string;
+}
+
+/** One plan-fee offer's words; its percents and dates are in `lib/plans.ts`. */
+export interface OfferCopy {
+  code: OfferCode;
+  name: string;
+  /** The terms in one sentence. The percents must match `lib/plans.ts`. */
+  body: string;
+}
+
+/**
+ * The AI credits block on /pricing: what a credit is, what each plan
+ * includes, and the add-on tiers and packs, priced in the currency the
+ * switch shows. The numbers are in `lib/plans.ts`; only the words are here.
+ */
+export interface AiCreditsCopy {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  /** What one credit buys, in a sentence. */
+  credit: string;
+  included: {
+    title: string;
+    /** Column heads: the plan, and its credits. */
+    plan: string;
+    credits: string;
+    /** After a monthly allowance ("a month") and after Free's one-time grant ("once"). */
+    monthly: string;
+    once: string;
+  };
+  tiers: {
+    title: string;
+    sub: string;
+    /** Column heads: the tier, its credits a month, its price a month. */
+    tier: string;
+    credits: string;
+    price: string;
+    names: { id: AiTierId; name: string }[];
+  };
+  packs: {
+    title: string;
+    sub: string;
+    /** Column heads: the credits, the price. */
+    credits: string;
+    price: string;
+  };
+  /** Prepaid, never overage; insight notes free; VAT. */
+  note: string;
 }
 
 /** The two countries accounting is sold in — the trial form's choice too. */
@@ -333,12 +395,52 @@ export interface SiteContent {
     eyebrow: string;
     title: string;
     sub: string;
+    /** The billing switch: its label and its two options. */
+    billing: string;
     monthly: string;
     yearly: string;
+    /** Beside "Yearly": a year costs ten months. */
     save: string;
-    currency: string;
+    /** The currency switch's label, and each option's name on it. */
+    currencyLabel: string;
+    currencyNames: Record<PlanCurrency, string>;
+    /** The unit printed after a figure ("799 EGP", "٧٩٩ ج.م"). */
+    currencies: Record<PlanCurrency, string>;
+    /** After a monthly figure; also the billing unit in the JSON-LD. */
     per: string;
+    /** After a yearly figure. */
+    perYear: string;
     perBranch: string;
+    /** Under Free's figure. */
+    freeNote: string;
+    /** Under Group's "Quoted". */
+    quotedNote: string;
+    /** On a paid card with a trial. */
+    trial: string;
+    /** Under a monthly figure: interpolates {amount}, the yearly price with its unit. */
+    orYearly: string;
+    /** Under a yearly figure: interpolates {saved}, two months' price with its unit. */
+    billedYearly: string;
+    /**
+     * The plan-fee offers. The band and each card's offer line show only
+     * while an offer is open, decided in the browser from the dates in
+     * `lib/plans.ts`, so the static page never sells an offer that ended.
+     */
+    offers: {
+      /** The band's accessible name. */
+      label: string;
+      items: OfferCopy[];
+      /** Interpolates {date}, the offer's last Cairo day. */
+      ends: string;
+      /** How an offer is applied. */
+      how: string;
+      /**
+       * Under a card's price. Interpolate {name}, {percent}, {amount} (with
+       * its unit) and, for the monthly line, {months}.
+       */
+      firstMonths: string;
+      firstYear: string;
+    };
     /**
      * Segment tabs shown above the plans so the buyer self-selects before a
      * number appears. Every segment pays the same price — `note` says so out
@@ -351,18 +453,9 @@ export interface SiteContent {
       items: PricingSegment[];
       note: string;
     };
-    /**
-     * The yearly toggle shows a discounted monthly figure; this states the
-     * amount actually charged. `total` interpolates {total} and `saving`
-     * interpolates {saved} — both already formatted with `formatEgp`.
-     */
-    annual: {
-      label: string;
-      total: string;
-      saving: string;
-      note: string;
-    };
     plans: Plan[];
+    /** The AI credits block under the plan grid (`/pricing#ai-credits`). */
+    ai: AiCreditsCopy;
     /**
      * Competitor pricing as we recorded it, so "affordable" is a number rather
      * than a claim. Foodics does not publish these prices (social-launch-plan
@@ -383,7 +476,6 @@ export interface SiteContent {
       retrievedAt: IsoDate;
     };
     note: string;
-    founding: string;
     /** Modules sold on top of any package, under the plan grid. */
     addOns: {
       title: string;
@@ -466,6 +558,11 @@ export interface SiteContent {
       /** Link text to the full policy, rendered inline after `privacy`. */
       privacyLink: string;
       messagePlaceholder: string;
+      /**
+       * Pre-fills the message when the visitor came from a plan card
+       * (`/contact?plan=<id>`); `{plan}` is the plan's name.
+       */
+      planInterest: string;
       /** Submission lifecycle. */
       status: {
         sending: string;

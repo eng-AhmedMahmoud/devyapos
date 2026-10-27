@@ -15,9 +15,9 @@ export const en: SiteContent = {
         "Everything Moving POS runs: point of sale, kitchen display, online ordering, loyalty, recipe-costed inventory, Egyptian payments and reporting.",
     },
     pricing: {
-      title: "POS pricing in Egypt — from 199 EGP a branch a month | Moving POS",
+      title: "POS pricing in Egypt — free, or 799 EGP a branch | Moving POS",
       description:
-        "A 14-day free trial, and Counter at 199 EGP per branch per month. Clear prices in EGP, and zero commission on your orders.",
+        "A free plan to try the till, and Counter at 799 EGP per branch per month after a 14-day trial. Prices in EGP, SAR, AED and USD, and zero commission on orders.",
     },
     about: {
       title: "About Moving POS | Why we built this",
@@ -47,7 +47,7 @@ export const en: SiteContent = {
     foodicsAlternative: {
       title: "Foodics alternative in Egypt | Moving POS",
       description:
-        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Counter is 199 EGP with the kitchen display. Compared honestly.",
+        "Foodics' Egyptian entry bundle, as we recorded it: 2,848.95 EGP per branch per month. Moving POS Counter is 799 EGP with the kitchen display. Compared honestly.",
     },
     partners: {
       title: "Partner programme for restaurant suppliers | Moving POS",
@@ -67,7 +67,7 @@ export const en: SiteContent = {
     terms: {
       title: "Terms of service | Moving POS",
       description:
-        "The terms behind a Moving POS subscription: the 14-day trial, billing per branch in EGP, support, cancellation, and who owns your data. Updated September 2026.",
+        "The terms behind a Moving POS subscription: the 14-day trial, the Free plan, billing per branch, cancellation, and who owns your data. Updated October 2026.",
     },
     privacy: {
       title: "Privacy policy: what this site collects | Moving POS",
@@ -101,7 +101,7 @@ export const en: SiteContent = {
     badge: "The restaurant OS — built in Egypt, for Egypt",
     line1: "Run the whole restaurant",
     line2: "from one system",
-    sub: "Register + live kitchen display + your own online ordering + loyalty + recipe-costed inventory. Arabic and English, priced in EGP, unlimited branches — from under 13 EGP a day per branch.",
+    sub: "Register + live kitchen display + your own online ordering + loyalty + recipe-costed inventory. Arabic and English, priced in EGP, unlimited branches — start free, then from under 22 EGP a day per branch, billed yearly.",
     ctaPrimary: "Start your free trial",
     ctaSecondary: "See it running",
     trust: "14-day free trial • No credit card • Live the same day",
@@ -350,7 +350,7 @@ export const en: SiteContent = {
       { label: "Custom features built for your chain", us: true, them: false },
       { label: "Workflow changed to match how you work", us: true, them: false },
       { label: "Billing model", us: "Flat, per branch", them: "Per terminal + modules" },
-      { label: "Price per branch per month", us: "199 EGP", them: "Quote only" },
+      { label: "Price per branch per month", us: "From 799 EGP", them: "Quote only" },
     ],
     note: "Moving POS's figures are our own published prices. The right-hand column describes how enterprise restaurant platforms are typically licensed in this market — per terminal, with paid modules and quoted pricing — not any single vendor's rates. Ask any vendor for a written quote and compare it against ours.",
   },
@@ -381,7 +381,7 @@ export const en: SiteContent = {
       paid: "Orders per branch x branches x average order value x commission, over twelve months.",
       recovered:
         "What you keep if only 30% of those orders come to your own site instead. The other 70% stay on the aggregator.",
-      cost: "199 EGP per branch per month on the Counter package, for twelve months.",
+      cost: "799 EGP per branch per month on the Counter package, for twelve months.",
       net: "Recovered commission minus what Moving POS costs you. This is the number that matters.",
       payback:
         "How long the recovered commission takes to cover a full year of Moving POS. Shorter is better.",
@@ -446,14 +446,42 @@ export const en: SiteContent = {
 
   pricing: {
     eyebrow: "Pricing",
-    title: "Clear prices — and zero commission on your orders",
-    sub: "Try every feature for 14 days. Pay when the system is already making you money.",
+    title: "Start free, pay per branch as you grow — and zero commission on your orders",
+    sub: "A free plan to try the till on, and a 14-day trial with no card on every paid plan. One flat price per branch, with no per-terminal fee.",
+    billing: "Billing",
     monthly: "Monthly",
     yearly: "Yearly",
-    save: "Save 30%",
-    currency: "EGP",
+    save: "2 months free",
+    currencyLabel: "Currency",
+    currencyNames: { EGP: "EGP", SAR: "SAR", AED: "AED", USD: "USD" },
+    currencies: { EGP: "EGP", SAR: "SAR", AED: "AED", USD: "USD" },
     per: "/mo",
+    perYear: "/yr",
     perBranch: "per branch",
+    freeNote: "No card, and no end date",
+    quotedNote: "A price agreed for your branches",
+    trial: "14-day free trial, no card",
+    orYearly: "or {amount} a year — 2 months free",
+    billedYearly: "Billed once a year: you keep {saved} against paying monthly.",
+    offers: {
+      label: "Offers",
+      items: [
+        {
+          code: "LAUNCH26",
+          name: "Launch offer",
+          body: "40% off your first 3 months, or 20% off your first year, for the first 500 accounts.",
+        },
+        {
+          code: "WHITEFRIDAY26",
+          name: "White Friday",
+          body: "30% off your first year on any yearly plan.",
+        },
+      ],
+      ends: "Until {date}.",
+      how: "One offer per account, applied by our team when your plan starts — no code needed.",
+      firstMonths: "{name}, {percent}% off: {amount} a month for your first {months} months",
+      firstYear: "{name}, {percent}% off: {amount} for your first year",
+    },
     compareLink: "See the full comparison",
     segments: {
       eyebrow: "Start here",
@@ -511,20 +539,39 @@ export const en: SiteContent = {
         },
       ],
     },
-    annual: {
-      label: "Billed once a year",
-      total: "{total} EGP per branch for twelve months",
-      saving: "You keep {saved} EGP per branch a year against paying monthly.",
-      note: "The yearly price is the monthly price less 30%, charged once for twelve months. Cancel and you keep access until the year you paid for ends, with a full export of your data before you go.",
-    },
     plans: [
+      {
+        id: "free",
+        name: "Free",
+        tagline: "Try the till on one counter",
+        limits: [
+          "1 branch and 2 staff accounts",
+          "Up to 30 items",
+          "Up to 300 sales a month",
+          "100 MB for photos",
+          "10 AI credits to try, once",
+        ],
+        features: [
+          "A till for orders and payments",
+          "A printed or digital receipt for every sale",
+          "A taste of the AI assistant",
+          "Full Arabic/English",
+        ],
+        excludes: "Not on Free: kitchen display, online shop, delivery, loyalty, promotions, inventory, more branches, API and e-invoicing.",
+        cta: "Start free",
+      },
       {
         id: "counter",
         name: "Counter",
         tagline: "Quick service and cloud kitchens, whole",
-        price: 199,
         badge: "Most chosen",
         featured: true,
+        limits: [
+          "Unlimited sales, on every till",
+          "10 staff accounts per branch",
+          "2 GB for photos",
+          "10 AI credits a month",
+        ],
         features: [
           "Full POS with shifts and drawer counts",
           "Live kitchen display (KDS)",
@@ -547,7 +594,12 @@ export const en: SiteContent = {
         id: "dining",
         name: "Dining room",
         tagline: "Counter, plus the room",
-        price: 499,
+        limits: [
+          "Unlimited sales, on every till",
+          "25 staff accounts per branch",
+          "5 GB for photos",
+          "30 AI credits a month",
+        ],
         features: [
           "Everything in Counter",
           "Table plan and table service",
@@ -563,8 +615,12 @@ export const en: SiteContent = {
         id: "group",
         name: "Group",
         tagline: "When the head office is the customer",
-        price: null,
-        priceLabel: "Custom",
+        priceLabel: "Quoted",
+        limits: [
+          "Every feature and add-on switched on",
+          "Branches, staff and storage as your contract sets them",
+          "AI Plus included: 300 AI credits a month",
+        ],
         features: [
           "Everything in Dining room",
           "Stock transfers and warehouses",
@@ -579,22 +635,54 @@ export const en: SiteContent = {
         cta: "Book a call",
       },
     ],
+    ai: {
+      eyebrow: "AI assistant",
+      title: "AI credits: prepaid, so never a surprise bill",
+      sub: "Every paid plan comes with a monthly allowance for the AI assistant. Need more? Add a monthly tier, or buy a pack once.",
+      credit: "One credit is about one assistant answer.",
+      included: {
+        title: "Included with each plan",
+        plan: "Plan",
+        credits: "Credits",
+        monthly: "a month",
+        once: "once",
+      },
+      tiers: {
+        title: "Monthly add-on tiers",
+        sub: "On top of any plan, billed monthly.",
+        tier: "Tier",
+        credits: "Credits a month",
+        price: "Price a month",
+        names: [
+          { id: "lite", name: "Lite" },
+          { id: "basic", name: "Basic" },
+          { id: "plus", name: "Plus" },
+          { id: "pro", name: "Pro" },
+        ],
+      },
+      packs: {
+        title: "One-off packs",
+        sub: "A pack lasts 12 months.",
+        credits: "Credits",
+        price: "Price",
+      },
+      note: "Credits are prepaid: when they run out, the assistant pauses until next month or a top-up, and there is never an overage charge. The insight notes on your dashboard stay free on every plan. Prices exclude VAT.",
+    },
     marketAnchor: {
       title: "What the market charges",
       sub: "Foodics' Egyptian prices as we recorded them on {date}. Compare per branch, per month.",
       rows: [
         { name: "Foodics — Basic Bundle", price: "2,848.95 EGP", note: "Billed annually (3,019.89 quarterly). Loyalty, API, delivery aggregators and BI all cost extra" },
         { name: "Foodics — Advanced Bundle", price: "3,733.67 EGP", note: "Billed annually (3,957.69 quarterly). Top Egyptian tier on our record" },
-        { name: "Moving POS — Counter", price: "199 EGP", note: "Register, kitchen display, ordering site, loyalty points, inventory and reports", ours: true },
+        { name: "Moving POS — Counter", price: "799 EGP", note: "Register, kitchen display, ordering site, loyalty points, inventory and reports", ours: true },
       ],
       note: "Competitor figures are our own record from the date above, not a public price list you can look up, and may have changed — ask them for a current quote before deciding. Ours is the Counter package: register, kitchen display, your own ordering site, loyalty points, inventory and reporting, with no per-terminal fee.",
-      retrievedAt: "2026-09-04",
+      retrievedAt: "2026-10-27",
     },
-    note: "Prices are in EGP per branch, excluding VAT. The trial runs 14 days with every feature and no credit card. Change or cancel any time, and export all of your data before you go.",
-    founding: "Founding offer: the first 50 restaurants lock this price for the life of their subscription.",
+    note: "Prices are per branch and exclude VAT: in EGP for Egypt, SAR for Saudi Arabia, AED for the UAE and USD everywhere else. A year costs ten months, and every paid plan starts with a 14-day trial with all of its features and no credit card. Change or cancel your plan any time, and export all of your data before you go.",
     addOns: {
       title: "Add-ons",
-      sub: "Sold on top of any package. Each is priced per restaurant until we publish a list; ask and we quote it.",
+      sub: "Sold on top of any package. Accounting and the AI assistant have published prices; the rest we price per restaurant — ask and we quote it.",
       items: [
         {
           id: "accounting",
@@ -608,7 +696,9 @@ export const en: SiteContent = {
           id: "assistant",
           name: "AI assistant",
           body: "Ask about sales in a voice note, get a briefing each morning, and approve the changes it drafts.",
-          price: "Quoted",
+          price: "From 369 EGP or 25 SAR a month",
+          href: "/pricing#ai-credits",
+          linkLabel: "See AI credits",
         },
         {
           id: "display",
@@ -640,7 +730,23 @@ export const en: SiteContent = {
     items: [
       {
         q: "Is there a free trial?",
-        a: "Yes — 14 days with every feature of the package you choose and no credit card. We load your menu before the trial starts, so you are testing on your own data rather than on a demo.",
+        a: "Yes, two ways. Every paid plan starts with a 14-day trial with all of its features and no credit card, and the Free plan has no end date. We load your menu before the trial starts, so you are testing on your own data rather than on a demo.",
+      },
+      {
+        q: "What happens when I reach the Free plan's limits?",
+        a: "The till stops taking new sales after 300 in a month, until the next month starts or you upgrade. Nothing is deleted: your items, orders and reports stay as they are; you just cannot add more past a cap. We tell you when you reach 80% of any cap.",
+      },
+      {
+        q: "Can I change my plan later?",
+        a: "Yes, any time. Ask us and we move your account to the new plan; your data stays as it is. If you move to a plan with lower caps, nothing you already have is deleted — you just cannot add more past the new cap.",
+      },
+      {
+        q: "What if a payment is late?",
+        a: "Your plan keeps running for 7 days after an unpaid period ends. After that the account falls to the Free plan's caps, your data stays whole, and your plan comes back as soon as the payment is recorded. The same happens when a trial ends without a subscription.",
+      },
+      {
+        q: "Do your plan prices include VAT?",
+        a: "No. Plan prices and AI credits exclude VAT, which is added to your invoice where it applies.",
       },
       {
         q: "Do I have to buy new hardware?",
@@ -829,7 +935,7 @@ export const en: SiteContent = {
     ],
     plansTitle: "The plans, briefly",
     plansSub:
-      "Counter for quick service and cloud kitchens, Dining room for table service, Group for chains — all of them starting with a 14-day trial.",
+      "Free to try the till, Counter for quick service and cloud kitchens, Dining room for table service, Group for chains — and every paid plan starts with a 14-day trial.",
     builtByTitle: "Who builds it",
     builtByBody:
       "Moving POS is a product of Devya Solutions — an Egyptian software engineering studio that builds complete operating systems: backends, web apps, payments and infrastructure. This platform was built and is maintained entirely in-house, so support and new work come from the same team that wrote the code.",
@@ -858,6 +964,7 @@ export const en: SiteContent = {
       privacyLink: "Read the privacy policy",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
+      planInterest: "I'm interested in the {plan} plan.",
       status: {
         sending: "Sending…",
         successTitle: "We've got your details",
@@ -1331,7 +1438,7 @@ export const en: SiteContent = {
         },
         {
           label: "Moving POS — Counter",
-          value: "199 EGP",
+          value: "799 EGP",
           note: "Per branch per month. Register, kitchen display, ordering site, loyalty and reporting included, with no per-terminal fee.",
           ours: true,
         },
@@ -1854,7 +1961,7 @@ export const en: SiteContent = {
     terms: {
       title: "Terms of service",
       sub: "The agreement behind a Moving POS subscription, in the plainest language we can write it in.",
-      updated: "Last updated 4 September 2026",
+      updated: "Last updated 27 October 2026",
       sections: [
         {
           title: "1. Who you are contracting with",
@@ -1866,16 +1973,16 @@ export const en: SiteContent = {
         {
           title: "2. The free trial",
           body: [
-            "Every account starts with a 14-day free trial carrying the features of the package chosen. No card is required to start it, and nothing is charged automatically when it ends.",
-            "We load your menu before the trial starts so you are testing on your own data. If you decide not to subscribe, the account stops at the end of the trial. Your data stays available for export for thirty days after that, and is then deleted.",
+            "Every paid plan starts with a 14-day free trial carrying the features of the plan chosen. No card is required to start it, and nothing is charged automatically when it ends. The Free plan has no end date, within the limits shown on the pricing page.",
+            "We load your menu before the trial starts so you are testing on your own data. If you decide not to subscribe, your plan keeps running for 7 days after the trial ends, and the account then falls to the Free plan's limits with your data still in it. If you ask us to close the account, your data stays available for export for thirty days after that, and is then deleted.",
           ],
         },
         {
           title: "3. Subscription and billing",
           body: [
-            "Subscriptions are priced per branch per month in Egyptian pounds, on the plan you choose, and are billed either monthly or once a year in advance. Published prices exclude VAT, which is added where it applies.",
-            "Yearly billing is charged once for twelve months at the discounted rate shown on the pricing page.",
-            "We may change published prices. An existing subscriber's price does not change during a period already paid for, and we will give at least thirty days' notice before a change takes effect at the next renewal. Restaurants on the founding offer keep the price they signed at for as long as their subscription runs without a break.",
+            "Paid plans are priced per branch, in Egyptian pounds, Saudi riyals, UAE dirhams or US dollars according to your price list and the plan you choose, and are billed either monthly or once a year in advance. Published prices exclude VAT, which is added where it applies.",
+            "Yearly billing is charged once for twelve months at the price of ten, as shown on the pricing page. An unpaid period keeps its plan for 7 days; after that the account falls to the Free plan's limits until the payment is recorded, and nothing in it is deleted.",
+            "We may change published prices. An existing subscriber's price does not change during a period already paid for, and we will give at least thirty days' notice before a change takes effect at the next renewal. An offer shown on the pricing page applies once per account, to the periods it names, from when the plan starts; the list price applies after them. Restaurants that signed on the founding offer, which closed on 27 October 2026, keep the price they signed at for as long as their subscription runs without a break.",
           ],
         },
         {
@@ -2059,12 +2166,12 @@ export const en: SiteContent = {
     refund: {
       title: "Refund and cancellation policy",
       sub: "The 14-day trial is meant to make this page almost unnecessary. Here it is anyway.",
-      updated: "Last updated 4 September 2026",
+      updated: "Last updated 27 October 2026",
       sections: [
         {
           title: "The offer, restated",
           body: [
-            "Fourteen days free with every feature of your package and no credit card. Billing monthly or once a year after that, per branch, in Egyptian pounds. Cancel any time, and take a full export of your data with you.",
+            "Fourteen days free with every feature of your package and no credit card. Billing monthly or once a year after that, per branch, in the currency of your price list. Cancel any time, and take a full export of your data with you.",
           ],
         },
         {

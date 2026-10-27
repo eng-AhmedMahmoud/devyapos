@@ -1,6 +1,7 @@
 import { getContent, type SiteContent } from "@/content";
 import { brand, brandName, socialLinks } from "./brand";
 import { localeHref, ogImageUrl, routes } from "./meta";
+import { planPrice } from "./plans";
 import { SHOTS } from "./screenshots";
 
 /**
@@ -103,18 +104,20 @@ export function organizationJsonLd(locale: string): JsonLdNode {
 /**
  * The product itself, priced from the real plans.
  *
- * `AggregateOffer` spans the three published packages; Group carries no
- * `price` because it is quoted, so it contributes to `offerCount` but not to
- * the low/high band.
+ * `AggregateOffer` spans the four plans at their EGP monthly list prices
+ * (`lib/plans.ts`), Free's 0 included; Group carries no `price` because it is
+ * quoted, so it contributes to `offerCount` but not to the low/high band. EGP
+ * only: it is the home price, and the page's other price lists are a switch
+ * away rather than separate offers.
  */
 export function softwareApplicationJsonLd(locale: string): JsonLdNode {
   const c = getContent(locale);
-  const priced = c.pricing.plans.filter(
-    (p): p is typeof p & { price: number } => typeof p.price === "number",
-  );
   const unit = unitText(c);
+  const prices = c.pricing.plans.map((plan) => planPrice(plan.id, "EGP", "monthly"));
+  const priced = prices.filter((p): p is number => p !== null);
 
-  const offers = c.pricing.plans.map((plan) => {
+  const offers = c.pricing.plans.map((plan, i) => {
+    const price = prices[i];
     const offer: JsonLdNode = {
       "@type": "Offer",
       name: plan.name,
@@ -125,11 +128,11 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
       seller: { "@id": ORG_ID },
     };
 
-    if (typeof plan.price === "number") {
-      offer.price = plan.price;
+    if (price !== null) {
+      offer.price = price;
       offer.priceSpecification = {
         "@type": "UnitPriceSpecification",
-        price: plan.price,
+        price,
         priceCurrency: "EGP",
         unitText: unit,
         referenceQuantity: {
@@ -165,8 +168,8 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "EGP",
-      lowPrice: Math.min(...priced.map((p) => p.price)),
-      highPrice: Math.max(...priced.map((p) => p.price)),
+      lowPrice: Math.min(...priced),
+      highPrice: Math.max(...priced),
       offerCount: c.pricing.plans.length,
       // No `unitText` here: it is not an Offer property. The billing unit is
       // on each plan's UnitPriceSpecification above.
