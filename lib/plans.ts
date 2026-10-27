@@ -233,6 +233,15 @@ export function bestOffer(
   now: number,
 ): PlanOffer | null {
   if (id === "free" || id === "group") return null;
+  return bestOpenOffer(interval, now);
+}
+
+/**
+ * The open offer worth more on `interval`, for any paid plan. Moving POS
+ * Accounting runs the same two offers (`lib/accounting-plans.ts`), so both
+ * price lists pick with this one rule.
+ */
+export function bestOpenOffer(interval: BillingInterval, now: number): PlanOffer | null {
   let best: PlanOffer | null = null;
   let bestWorth = 0;
   for (const offer of openOffers(now)) {

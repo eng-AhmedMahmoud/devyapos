@@ -15,6 +15,12 @@ import PageFaq, { pageFaqJsonLd } from "@/components/pages/PageFaq";
 const PATH = "/accounting-trial";
 /** The form's section, which every plan card's CTA scrolls back to. */
 const FORM_ID = "start";
+/**
+ * When this page was rendered — at build, since it is prerendered. The plans
+ * judge the offers by it on the server and during hydration, then by the
+ * browser's clock (components/AccountingPricing.tsx), as /pricing does.
+ */
+const BUILT_AT = Date.now();
 
 export async function generateMetadata({
   params,
@@ -32,9 +38,10 @@ export async function generateMetadata({
  * system of their own and the token that opens it (`components/TrialForm`).
  * Beside it, what they are getting and what happens next — the two questions
  * a person asks before typing their phone number into anything. Under it, what
- * the system costs once the trial ends (`components/AccountingPricing`), whose
- * buttons lead back up to the form. No CtaBand underneath: that band sells the
- * POS, and this page's one action is the form.
+ * the system costs once the trial ends (`components/AccountingPricing`: Free,
+ * the three paid plans, Enterprise and the AI credits), whose buttons lead back
+ * up to the form. No CtaBand underneath: that band sells the POS, and this
+ * page's one action is the form.
  */
 export default async function AccountingTrialPage({
   params,
@@ -43,7 +50,8 @@ export default async function AccountingTrialPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = getContent(locale).accountingTrial;
+  const c = getContent(locale);
+  const t = c.accountingTrial;
 
   const jsonLd = [
     ...pageJsonLd(locale, PATH).filter((node) => node["@type"] !== "FAQPage"),
@@ -106,10 +114,24 @@ export default async function AccountingTrialPage({
         </Container>
       </section>
 
+      {/* The switch and offer words are the POS price list's: one family,
+          the same two offers, worded once. */}
       <AccountingPricing
         formId={FORM_ID}
         copy={t.pricing}
-        countries={t.form.countries}
+        shared={{
+          billing: c.pricing.billing,
+          monthly: c.pricing.monthly,
+          yearly: c.pricing.yearly,
+          save: c.pricing.save,
+          currencyLabel: c.pricing.currencyLabel,
+          currencyNames: c.pricing.currencyNames,
+          currencies: c.pricing.currencies,
+          per: c.pricing.per,
+          perYear: c.pricing.perYear,
+          offers: c.pricing.offers,
+        }}
+        builtAt={BUILT_AT}
         whatsapp={t.outcomes.whatsapp}
       />
 

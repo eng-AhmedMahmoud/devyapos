@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 import type { ConsentCopy } from "@/lib/consent/copy";
+import type { AccountingCardId } from "@/lib/accounting-plans";
 import type { AiTierId, OfferCode, PlanCurrency, PlanId } from "@/lib/plans";
 
 /**
@@ -237,31 +238,67 @@ export interface AiCreditsCopy {
   note: string;
 }
 
-/** The two countries accounting is sold in — the trial form's choice too. */
-export interface PerCountry<T> {
-  EG: T;
-  SA: T;
+/** The e-invoicing systems a card can name (`EINVOICING_SYSTEM` in `lib/accounting-plans.ts`). */
+export interface PerEinvoicingSystem<T> {
+  /** Egypt: the ETA e-invoice and e-receipt. */
+  eta: T;
+  /** Saudi Arabia: ZATCA Phase 2. */
+  zatca: T;
+  /** A company billed in AED or USD: its units file with either. */
+  either: T;
 }
 
 /**
- * One accounting plan on /accounting-trial. Every plan has every feature; the
- * plans differ only by size, so a plan is a price and its limits, not a
- * feature list. Prices exclude VAT and are per company per month, billed
- * monthly; yearly is ten months (`docs/decisions/2026-10-13-accounting-pricing.md`
- * in bohub-pos is where these numbers are decided).
+ * One accounting plan's card on /accounting-trial. Every paid plan has every
+ * feature; the plans differ only by size, so a card is a price and its caps,
+ * not a feature list. The figures live in `lib/accounting-plans.ts`, keyed by
+ * `id`; the lines here must say the same numbers
+ * (`tests/accounting-pricing.test.ts`).
  */
 export interface AccountingPlan {
-  id: "starter" | "business" | "professional";
+  id: AccountingCardId;
   name: string;
   tagline: string;
   badge?: string;
   featured?: boolean;
-  /** Per month, billed monthly, VAT excluded — EGP in Egypt, SAR in Saudi Arabia. */
-  price: PerCountry<number>;
-  /** Users, branches, AI captures — the same in both countries. */
+  /** Users, branches, bill captures, storage, AI credits — the same in every currency. */
   limits: string[];
-  /** The e-invoicing line, which is a different system in each country. */
-  einvoicing: PerCountry<string>;
+  /** Paid plans: the e-invoicing line, which names a different system per price list. */
+  einvoicing?: PerEinvoicingSystem<string>;
+  /** Free only: what it leaves out, in a sentence. */
+  excludes?: string;
+}
+
+/**
+ * The AI credits block under the accounting plans: what a credit pays for
+ * here, what each plan includes, and the one-off packs (the same packs and
+ * prices as Moving POS, `AI_PACKS`).
+ */
+export interface AccountingAiCopy {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  /** What one credit buys in the books, in a sentence. */
+  credit: string;
+  included: {
+    title: string;
+    /** Column heads: the plan, its credits, its bill captures a month. */
+    plan: string;
+    credits: string;
+    captures: string;
+    /** After a monthly allowance ("a month") and after Free's one-time grant ("once, 30 days"). */
+    monthly: string;
+    once: string;
+  };
+  packs: {
+    title: string;
+    sub: string;
+    /** Column heads: the credits, the price. */
+    credits: string;
+    price: string;
+  };
+  /** Prepaid, never overage; VAT. */
+  note: string;
 }
 
 /** A standalone legal page. `updated` is rendered, not a comment. */
@@ -891,38 +928,43 @@ export interface SiteContent {
       /** Prefilled WhatsApp message for every fallback above. */
       waTemplate: string;
     };
-    /** What it costs after the trial, per country. */
+    /**
+     * What it costs after the trial. The switch words, the currencies and the
+     * offers' words are the POS price list's (`pricing`), passed down beside
+     * this block; only what is the books' own is here.
+     */
     pricing: {
       eyebrow: string;
       title: string;
       sub: string;
-      /** Accessible name of the country switch; the options are `form.countries`. */
-      countryLabel: string;
-      monthly: string;
-      yearly: string;
-      /** Badge on the yearly option. */
-      save: string;
-      /** The unit after a figure, per country ("EGP", "SAR"). */
-      currency: PerCountry<string>;
-      perMonth: string;
-      perYear: string;
-      /** Under every price. */
-      vat: PerCountry<string>;
-      /** Yearly only. Interpolates {saved} — the two months not charged. */
-      yearlySaving: string;
+      /** Under a paid price: the plan is per company, not per branch. */
+      perCompany: string;
+      /** Under Free's price. */
+      freeNote: string;
+      /** Under every price, per currency. */
+      vat: Record<PlanCurrency, string>;
+      /** Monthly, under a paid price. Interpolates {amount}: the yearly price. */
+      orYearly: string;
+      /** Yearly, under a paid price. Interpolates {saved}: twelve months less the year. */
+      billedYearly: string;
+      /** On every paid card. */
+      trial: string;
+      /** The line every paid card shares: what has no cap. */
+      unlimited: string;
       plans: AccountingPlan[];
+      /** Every card's button: back up to the form. */
       cta: string;
-      /** The banner under the cards. */
-      einvoicingIncluded: PerCountry<string>;
-      /** With Moving POS: a per-branch price. Interpolates {price}. */
-      withPos: { title: string; body: string; price: PerCountry<number> };
+      /** The banner under the cards, per e-invoicing system. */
+      einvoicingIncluded: PerEinvoicingSystem<string>;
+      /** For a Moving POS restaurant: the plan, with the POS link included. No price of its own. */
+      withPos: { title: string; body: string };
       /** Interpolates {user} and {branch}, each a formatted price with its unit. */
       extras: string;
-      extrasPrice: { user: PerCountry<number>; branch: PerCountry<number> };
       noSetupFee: string;
       enterprise: string;
       /** Prefilled WhatsApp message behind the Enterprise line. */
       enterpriseWa: string;
+      ai: AccountingAiCopy;
     };
     faq: { title: string; items: Faq[] };
   };
