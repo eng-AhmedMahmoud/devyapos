@@ -159,8 +159,11 @@ LAUNCH26 and WHITEFRIDAY26 offers show only while open, judged in the browser
 from their dates (the server renders with the build's clock, so hydration
 matches). A plan card lists only what the product ships; the AI assistant
 and accounting add-ons have published prices, the rest are "Quoted"
-(`docs/business/gap-analysis.md` P01, P07). `tests/pricing.test.ts` pins
-every figure against the product's file.
+(`docs/business/gap-analysis.md` P01, P07). Accounting is not priced per POS
+branch any more: its add-on card quotes the cheapest accounting plan
+(EGP 699 / SAR 119 a company) and links to `/accounting-trial`, where the POS
+link is included in every paid plan. `tests/pricing.test.ts` pins every figure
+against the product's file.
 
 ### `/compare` (`app/[locale]/compare/page.tsx`)
 
@@ -235,10 +238,36 @@ its own WhatsApp source code, then the `CtaBand`.
 
 `PageHero` → the sign-up section (`#start`): `TrialForm`
 (`components/TrialForm.tsx`) beside what the trial includes and its steps →
-`AccountingPricing` (`components/AccountingPricing.tsx`: an Egypt / Saudi
-Arabia switch, the price list in EGP or SAR with each country's VAT rate and
-e-invoicing system; every plan's button scrolls back to the form) →
-`PageFaq`.
+`AccountingPricing` (`components/AccountingPricing.tsx`, `#plans`: the
+monthly/yearly and EGP/SAR/AED/USD switches and the offers band of
+`/pricing`, worded once in `pricing`; cards for Free, Starter, Business and
+Professional, each naming the e-invoicing system of the chosen price list —
+the ETA for EGP, ZATCA for SAR, either for AED and USD; the e-invoicing
+banner, the Moving POS line, the extras and the quoted Enterprise line; every
+card's button scrolls back to the form) → `AccountingAi`
+(`components/AccountingAi.tsx`, `#ai-credits`: each plan's monthly credits and
+included bill captures, and the shared credit packs) → `PageFaq`.
+
+The plans are the accounting app's own, priced on 2026-10-27 (bohub-pos
+`accounting-app/lib/plans.ts`, decision
+`docs/decisions/2026-10-27-accounting-plans-prices-and-limits.md`), and their
+numbers live once on this site, in `lib/accounting-plans.ts`: **Free** (a
+taster a trial drops to when it ends — one user, one branch, 20 invoices and
+bills and 50 manual entries a month, 25 customers and suppliers, 100 MB, no
+e-invoicing, bank import, POS link or API, 10 AI credits once for 30 days),
+**Starter** (EGP 699 / SAR 119 / AED 119 / USD 29 a company a month: 3 users,
+1 branch, 1 e-invoicing unit, 50 bill captures, 1 GB, 5 AI credits),
+**Business** (EGP 1,199 / SAR 229 / AED 229 / USD 59: 8, 3, 3, 200, 5 GB, 10),
+**Professional** (EGP 2,199 / SAR 349 / AED 349 / USD 89: 15, 10, 10, 500,
+10 GB, 25) and **Enterprise** (quoted). Every paid plan has every feature,
+e-invoicing and onboarding included, invoices, entries and contacts
+unlimited, a 14-day trial with no card; a year is ten months; prices exclude
+VAT. Extras: a user EGP 99 / SAR 25, a branch with its unit EGP 249 / SAR 49
+a month. The LAUNCH26 and WHITEFRIDAY26 offers show only while open, judged
+as on `/pricing`. The "Accounting with Moving POS" add-on (EGP 299 a POS
+branch) is retired: a POS restaurant takes the plan that fits, the POS link
+included. `tests/accounting-pricing.test.ts` pins every figure against the
+product's file.
 
 The form validates in the browser with `lib/trial.ts` (a copy of the store's
 rules, for the inline hints) and posts JSON **straight from the browser** to
@@ -365,8 +394,8 @@ The trees carry real, specific figures, and each lives in exactly one block,
 so look there rather than here: the hero numbers (`hero.stats`), the POS
 packages and prices (`pricing.plans`) and add-ons (`pricing.addOns`), the dated competitor rows (`pricing.marketAnchor`
 and `foodicsAlternative.facts`, each with a `retrievedAt` the page renders and
-a test keeps under 90 days old), the accounting price lists
-(`accountingTrial.pricing`) and the payment providers, with only the live ones
+a test keeps under 90 days old), the accounting plans' words
+(`accountingTrial.pricing`, their numbers in `lib/accounting-plans.ts`) and the payment providers, with only the live ones
 marked `live: true` (`payments`). `testimonials.items` is an empty array in both
 locales on purpose — the comment in `content/ar.ts` says to leave it empty
 "until real signed testimonials exist," and `components/home/Testimonials.tsx`
