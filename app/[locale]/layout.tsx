@@ -20,6 +20,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SupportChat from "@/components/SupportChat";
 import JsonLd from "@/components/JsonLd";
+import PageTransition from "@/components/PageTransition";
 import { themeBootScript } from "@/lib/theme";
 import "../globals.css";
 
@@ -115,6 +116,9 @@ export default async function LocaleLayout({
          overwrites this attribute at runtime. */
       data-theme="light"
       dir={locale === "ar" ? "rtl" : "ltr"}
+      /* Smooth scrolling is for anchors on the page. This tells Next to jump,
+         not glide, to the top of the next page, under its page transition. */
+      data-scroll-behavior="smooth"
       className={`${fontVars} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -134,7 +138,7 @@ export default async function LocaleLayout({
           {/* Focusable so "back to the top" can hand the keyboard to the
               page's start, not only scroll there. */}
           <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
           <FloatingActions copy={c.floating} waTemplate={c.contact.waTemplate} />
