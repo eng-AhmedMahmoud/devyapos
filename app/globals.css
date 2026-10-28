@@ -1716,6 +1716,61 @@ html:has(.ql-dialog[open]) {
   }
 }
 
+/* ── Page transitions (components/PageTransition.tsx) ───────────────────────
+ *
+ * The page being left fades out as a view transition; the frame around it
+ * (header, footer, the floating buttons) swaps without the browser's default
+ * cross-fade, so the fade is all a navigation waits on. The next page fades
+ * in and slides 8 px from the inline end — from the right in English, from
+ * the left in Arabic. Opacity and translate only: no layout shift, and
+ * `backwards` leaves no transform behind once it ends (a lasting one would
+ * re-anchor `position: fixed` descendants). Reduced motion gets neither, and
+ * a back swipe the browser already animated gets no second one. */
+::view-transition-old(.page-out) {
+  animation: page-out 150ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+/* Sideways only, and no scroll container: sticky children still stick. */
+.page-frame {
+  overflow-x: clip;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page-enter {
+    animation: page-enter 200ms cubic-bezier(0.2, 0.8, 0.2, 1) 50ms backwards;
+  }
+}
+:root {
+  --page-enter-x: 8px;
+}
+:root[dir="rtl"] {
+  --page-enter-x: -8px;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    translate: var(--page-enter-x) 0;
+  }
+}
+:root[data-ua-transition]::view-transition-old(.page-out),
+:root[data-ua-transition] .page-enter {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* ── Cursor (components/Cursor.tsx) ──────────────────────────────────────
  *
  * Moving Stores' cursor, in two looks only. The default: a saffron dot on the
