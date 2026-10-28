@@ -48,9 +48,9 @@ export const routes: readonly SiteRoute[] = [
      day it was checked against the product. */
   { path: "/docs", key: "docs", priority: 0.7, changeFrequency: "weekly", updated: "2026-10-27" },
   /* The partner programmes: a channel page, indexed so a dealer or an accountant searching for one finds it. */
-  { path: "/partners", key: "partners", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-22" },
+  { path: "/partners", key: "partners", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-27" },
   /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
-  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
   /* The privacy policy describes what the site already does, so it is indexed
      and linked; its date is the "Last updated" line the page prints. */
   { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-10-27" },

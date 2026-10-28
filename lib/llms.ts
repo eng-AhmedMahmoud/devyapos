@@ -1,5 +1,6 @@
 import { getContent } from "@/content";
 import { routing } from "@/i18n/routing";
+import { accountingFromPrice } from "./accounting-plans";
 import { brand, brandName } from "./brand";
 import { allArticles, articleHref, getDocs } from "./docs";
 import { plainText } from "./docs/inline";
@@ -25,6 +26,9 @@ export function llmsTxt(): string {
     "",
     `${brand.name.en} (${brand.name.ar}) is a restaurant point-of-sale system for Egypt, priced per branch in EGP ` +
       `(with SAR, AED and USD price lists), with a free plan to try it on. ` +
+      `Its accounting product, ${brand.name.en} Accounting, is priced per company, not per branch: a free plan, ` +
+      `then from EGP ${accountingFromPrice("EGP")} or SAR ${accountingFromPrice("SAR")} a month, with the point-of-sale ` +
+      `link included and a 14-day trial at ${localeHref("en", "/accounting-trial")}. ` +
       `Arabic is the default language and every page is also published in English. ` +
       `It is run by Moving Systems, a ${brand.parent.name} company (${brand.parent.url}). ` +
       `Contact: ${brand.email}, WhatsApp +${brand.whatsapp}.`,
