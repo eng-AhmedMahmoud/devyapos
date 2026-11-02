@@ -87,9 +87,9 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
   `core.ts`, `react.ts`, `copy.ts`, `components/consent/*` are byte-identical
   across Devya and Moving repos; `config.ts` is per site
   (`docs/compliance/consent-design.md`).
-- **No personal data in logs.** Never log a lead's name, restaurant, phone,
-  message, user agent, referer or IP, a request body, or a whole payload. Log
-  ids, reasons, counts and errno codes.
+- **No personal data in logs.** Never log a lead's name, restaurant, email,
+  phone, message, user agent, referer or IP, a request body, or a whole
+  payload. Log ids, reasons, counts and errno codes.
 - The client address comes only from nginx's `X-Real-IP`
   (`lib/rate-limit.ts`), is used for rate limiting, and is never stored.
 - `/api/health` and the boot check report states, never values.

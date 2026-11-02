@@ -21,7 +21,7 @@ flowchart LR
     end
     D[("volume devyapos-leads → /data<br/>leads-outbox.jsonl<br/>consent-receipts.jsonl")]
   end
-  F["LEAD_FORWARD_URL<br/>(no CRM chosen yet, issue 36)"]
+  F["LEAD_FORWARD_URL<br/>ops-api.devya.dev/api/leads/intake<br/>(bohub-pos ops-store: first reply + follow-ups)"]
   O["ops-api.devya.dev<br/>/api/trial/claim<br/>(bohub-pos ops-store)"]
   W["wa.me · mailto: · tel:<br/>(links only)"]
   R["pos.devya.dev → 301<br/>devyapos.vercel.app → 308"]
@@ -68,7 +68,7 @@ flowchart LR
 
 | Route | Accepts | Writes to | When it cannot write |
 | --- | --- | --- | --- |
-| `POST /api/lead` (`app/api/lead/route.ts`) | JSON only (415 otherwise), validated by `lib/leads.ts`; honeypot field `company`; 12 per 10 min per address (`lib/rate-limit.ts`) | 1. `LEAD_FORWARD_URL` (contract v1 in the README; a 4xx is final, a 5xx/timeout/network error retried once). 2. Otherwise `/data/leads-outbox.jsonl` | 503 — the form offers WhatsApp and email. One `[lead] LOST` line, no personal data |
+| `POST /api/lead` (`app/api/lead/route.ts`) | JSON only (415 otherwise), validated by `lib/leads.ts`; honeypot field `company`; 12 per 10 min per address (`lib/rate-limit.ts`) | 1. `LEAD_FORWARD_URL`, in production the ops console's lead intake (contract v2 in the README; a 4xx is final, a 5xx/timeout/network error retried once; its `firstReply: "queued"` becomes `emailed: true` for the form). 2. Otherwise `/data/leads-outbox.jsonl` | 503 — the form offers WhatsApp and email. One `[lead] LOST` line, no personal data |
 | `POST /api/consent` (`app/api/consent/route.ts`) | One receipt per banner answer (`sendBeacon`), exact shapes only, ≤ 2,000 chars; 20 per 10 min per address | `/data/consent-receipts.jsonl`: id, time, policy version, choices, locale — no IP, user agent or visitor id | 503 and one `[consent] receipt NOT STORED` line |
 | `GET /api/health` (`app/api/health/route.ts`) | — | nothing | Always 200 while the process answers: `{status, release, config, lead: {forward, outbox}}`, states only |
 

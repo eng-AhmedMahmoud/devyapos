@@ -18,7 +18,8 @@ captures of that codebase. All paths below are relative to this repo's root.
 Stack: Next.js 16 (App Router, `output: "standalone"`), React 19.2, next-intl
 4, Tailwind CSS 4 — exact versions in `package.json`. Prerendered marketing
 pages plus three route handlers: `POST /api/lead` (the contact form: forwarded
-to a CRM, or kept in the outbox file on the data volume), `POST /api/consent`
+to the ops console's lead intake, which emails the first reply, or kept in
+the outbox file on the data volume), `POST /api/consent`
 (consent receipts, same volume) and `GET /api/health`. No database, no
 accounts, no auth. One Docker container on the Devya VPS behind nginx
 ([`architecture.md`](architecture.md)).
