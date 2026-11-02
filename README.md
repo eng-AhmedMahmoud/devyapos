@@ -173,7 +173,7 @@ Version 2 is the intake contract of Devya's ops console (bohub-pos
   "receivedAt": "<ISO 8601, rounded down to the minute>",
   "lead": {
     "name": "<2..80 chars>",
-    "email": "<lowercased, <=254 chars — where the first reply goes>",
+    "email": "<lowercased, <=254 chars, a bare addr-spec — where the first reply goes>",
     "phone": "<E.164, always +201[0125]XXXXXXXX>",
     "company": "<2..120 chars — the restaurant's name>",
     "branches": 3,            // integer 1..500, or null

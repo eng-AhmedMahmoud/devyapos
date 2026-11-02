@@ -171,11 +171,36 @@ describe("validateLead", () => {
       expect(errorsFor({ email: value })).toEqual({ email: code });
     });
 
+    // Each of these has one @ and passes the store's shape, and a mailer reads
+    // each as a display name, a comment or a list around test@devya.dev: the
+    // reply would reach that mailbox under a string the store's unsubscribe
+    // and one-sequence-per-address checks have never seen.
+    it.each([
+      ["a display name", "name<test@devya.dev>"],
+      ["angle brackets", "<test@devya.dev>"],
+      ["a trailing bracket", "test@devya.dev>"],
+      ["a trailing comment", "test@devya.dev(1)"],
+      ["a leading comment", "(2)test@devya.dev"],
+      ["a comma list", "a,test@devya.dev"],
+      ["a semicolon list", "a;test@devya.dev"],
+      ["a group", "team:test@devya.dev"],
+      ["a quoted part", '"q"test@devya.dev'],
+      ["a domain literal", "test@[devya.dev]"],
+      ["a backslash", "te\\st@devya.dev"],
+      ["a leading dot", ".test@devya.dev"],
+      ["a double dot in the local part", "te..st@devya.dev"],
+    ])("refuses %s, which a mailer would rewrite", (_label, value) => {
+      expect(errorsFor({ email: value })).toEqual({ email: "invalid_email" });
+    });
+
     it.each([
       ["lowercased", "Test@Devya.DEV", "test@devya.dev"],
       ["trimmed", "  test@devya.dev \n", "test@devya.dev"],
       ["with a plus tag", "test+lead@devya.dev", "test+lead@devya.dev"],
       ["on a subdomain", "test@mail.devya.dev", "test@mail.devya.dev"],
+      ["with RFC 5322 symbols", "o'brien_&-x@devya.dev", "o'brien_&-x@devya.dev"],
+      ["with a hyphenated label", "test@mail-1.devya.dev", "test@mail-1.devya.dev"],
+      ["with an Arabic local part", "أحمد@devya.dev", "أحمد@devya.dev"],
       ["exactly the cap", AT_CAP, AT_CAP],
     ])("takes an address %s", (_label, value, expected) => {
       expect(leadFor({ email: value }).email).toBe(expected);

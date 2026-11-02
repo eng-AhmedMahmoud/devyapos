@@ -112,31 +112,44 @@ export function normalizeEgyptMobile(raw: string): string | null {
 }
 
 /*
- * The email rule is a copy of the store's (bohub-pos
+ * The email rule starts from a copy of the store's (bohub-pos
  * `ops-store/src/trial/validate.ts`, `normaliseEmail`), which is the same rule
- * the lead intake applies — keep them in step. An address this form accepts
- * and the store refuses would be a 400 on the forward: a lead in the outbox
- * and no first reply, with the visitor told nothing went wrong.
+ * the lead intake applies — keep that part in step. An address this form
+ * accepts and the store refuses would be a 400 on the forward: a lead in the
+ * outbox and no first reply, with the visitor told nothing went wrong.
  */
 const EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[^\s@.]{2,}$/;
 
+/*
+ * Stricter than the store, on purpose, and only ever narrower: an address
+ * must also be a bare addr-spec — letters, digits and RFC 5322's atext symbols
+ * in the local part, letters, digits and hyphens in the domain. The store's
+ * shape alone lets through `name<someone@x.com>`, `someone@x.com(1)` and
+ * `a,someone@x.com`, which the mailer reads as display names, comments and
+ * lists: the reply lands in someone@x.com's inbox while the store's
+ * unsubscribe and one-sequence-per-address checks compare the whole string
+ * and miss. Letters are any script's, so an Arabic local part still passes.
+ */
+const ADDR_SPEC =
+  /^[\p{L}\p{M}\p{N}!#$%&'*+/=?^_`{|}~-]+(\.[\p{L}\p{M}\p{N}!#$%&'*+/=?^_`{|}~-]+)*@[\p{L}\p{M}\p{N}-]+(\.[\p{L}\p{M}\p{N}-]+)+$/u;
+
 // Control characters (C0, DEL, C1) and the bidi overrides and isolates: an
 // address is printed into the ops console and into the reply's own headers.
-const UNPRINTABLE = /[\u0000-\u001F\u007F-\u009F‪-‮⁦-⁩]/;
+const UNPRINTABLE = /[\u0000-\u001F\u007F-\u009F\u202A-\u202E\u2066-\u2069]/;
 
 /**
  * An email address trimmed and lowercased, or null when it cannot be one.
  *
  * Only the shape is checked — one `@`, a dot in the domain, a top-level label
- * of two or more — never whether the mailbox exists: the first reply finds
- * that out.
+ * of two or more, nothing a mailer would read as more than one mailbox —
+ * never whether the mailbox exists: the first reply finds that out.
  */
 export function normaliseEmail(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   const value = raw.trim().toLowerCase();
   if (value.length === 0 || value.length > LEAD_LIMITS.email) return null;
   if (UNPRINTABLE.test(value)) return null;
-  return EMAIL.test(value) ? value : null;
+  return EMAIL.test(value) && ADDR_SPEC.test(value) ? value : null;
 }
 
 function asText(value: unknown): string {
