@@ -368,11 +368,74 @@ describe("POST /api/lead — the receiver's answer about the first reply", () =>
   });
 });
 
+describe("POST /api/lead — only this site's own pages may post", () => {
+  const SITE = "https://pos.movingsystems.tech";
+
+  it("takes the JSON type in any case, with parameters", async () => {
+    const { res } = await send(LEAD, { headers: { "content-type": "Application/JSON ; charset=utf-8" } });
+    expect(res.status).toBe(200);
+  });
+
+  it.each([
+    ["this site's origin", { origin: SITE }],
+    ["this site's origin, same-origin fetch metadata", { origin: SITE, "sec-fetch-site": "same-origin" }],
+    ["no origin at all (not a page on another site)", {}],
+    ["a loopback port outside production", { origin: "http://localhost:3100" }],
+    ["127.0.0.1 outside production", { origin: "http://127.0.0.1:3197" }],
+    ["a portless route outside production", { origin: "https://devyapos.localhost:1358" }],
+  ])("accepts %s", async (_label, headers) => {
+    const { res, json } = await send(LEAD, { headers });
+    expect(res.status).toBe(200);
+    expect(json.delivered).toEqual(["forward"]);
+  });
+
+  it.each([
+    ["another site", { origin: "https://attacker.example" }],
+    ["a sibling Moving site", { origin: "https://stores.movingsystems.tech" }],
+    ["a look-alike host", { origin: "https://pos.movingsystems.tech.attacker.example" }],
+    ["this host over http", { origin: "http://pos.movingsystems.tech" }],
+    ["this host on another port", { origin: "https://pos.movingsystems.tech:8443" }],
+    ["an opaque origin", { origin: "null" }],
+    ["cross-site fetch metadata without an origin", { "sec-fetch-site": "cross-site" }],
+    ["cross-site fetch metadata with this site's origin", { origin: SITE, "sec-fetch-site": "Cross-Site" }],
+    ["the old text/plain trick from another site", { origin: "https://attacker.example", "content-type": "text/plain" }],
+  ])("answers 403 forbidden_origin to %s, and keeps nothing", async (_label, headers) => {
+    const dir = outboxDir();
+    const { res, json } = await send(LEAD, { headers });
+    expect(res.status).toBe(403);
+    expect(json).toEqual({ ok: false, error: "forbidden_origin" });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(outboxLines(dir)).toEqual([]);
+  });
+
+  it("refuses loopback origins in production, and still takes this site's", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    for (const origin of ["http://localhost:3100", "http://127.0.0.1:3197", "https://devyapos.localhost"]) {
+      const { res } = await send(LEAD, { headers: { origin } });
+      expect(res.status, origin).toBe(403);
+    }
+    const { res } = await send(LEAD, { headers: { origin: SITE } });
+    expect(res.status).toBe(200);
+  });
+
+  it("does not spend the visitor's rate limit on a post forged from another site", async () => {
+    const { POST } = await route();
+    const forged = { origin: "https://attacker.example", "x-real-ip": "198.51.100.80" };
+    for (let i = 0; i < 13; i++) expect((await POST(request(LEAD, { headers: forged }))).status).toBe(403);
+    const own = await POST(request(LEAD, { headers: { origin: SITE, "x-real-ip": "198.51.100.80" } }));
+    expect(own.status).toBe(200);
+  });
+});
+
 describe("POST /api/lead — refused before anything leaves the box", () => {
   it.each([
     ["text/plain", "text/plain;charset=UTF-8"],
     ["a form post", "application/x-www-form-urlencoded"],
     ["multipart", "multipart/form-data; boundary=x"],
+    // A substring test passed this one, and text/plain needs no preflight.
+    ["JSON named in a text/plain parameter", "text/plain; x=application/json"],
+    ["a JSON-suffixed type", "application/json-patch+json"],
+    ["no content type", ""],
   ])("answers 415 to %s", async (_label, type) => {
     const { res, json } = await send(LEAD, { headers: { "content-type": type } });
     expect(res.status).toBe(415);
@@ -582,6 +645,20 @@ describe("POST /api/lead — when the forward fails", () => {
     const second = await send(LEAD);
     expect(loudLine().fields).toMatchObject({ id: second.json.id, reason: "not_configured", pending: "2" });
     expect(outboxLines(dir)).toHaveLength(2);
+  });
+
+  it.each([
+    ["an http URL", "http://crm.example.test/hooks/lead", "not_https"],
+    ["something that is not a URL", "crm.example.test/hooks/lead", "not_a_url"],
+  ])("never posts to %s: the lead goes to the outbox instead", async (_label, url, reason) => {
+    const dir = outboxDir();
+    vi.stubEnv("LEAD_FORWARD_URL", url);
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"], emailed: false });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ id: json.id, reason, pending: "1" });
   });
 
   it("answers 503 when the lead can be neither forwarded nor kept", async () => {

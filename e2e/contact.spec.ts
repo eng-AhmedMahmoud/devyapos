@@ -11,6 +11,24 @@ import { expect, hydrated, LOCALES, test } from "./fixtures";
  */
 const COLD_LOADS = 6;
 
+/**
+ * The real route, on the production build, asked by a page on another site.
+ * Sent with the API client rather than the browser (whose posts the fixture
+ * blocks), and refused before validation, so nothing is stored either way.
+ */
+test("the lead route refuses a post from another site's page", async ({ request }) => {
+  const forged: Record<string, string>[] = [
+    { origin: "https://attacker.example", "content-type": "application/json" },
+    { origin: "https://attacker.example", "content-type": "text/plain; x=application/json" },
+    { "sec-fetch-site": "cross-site", "content-type": "application/json" },
+  ];
+  for (const headers of forged) {
+    const res = await request.post("/api/lead", { headers, data: JSON.stringify({ name: "E2E Smoke" }) });
+    expect(res.status(), JSON.stringify(headers)).toBe(403);
+    expect(await res.json()).toEqual({ ok: false, error: "forbidden_origin" });
+  }
+});
+
 for (const locale of LOCALES) {
   test.describe(`${locale}: cold /contact loads`, () => {
     for (let run = 1; run <= COLD_LOADS; run += 1) {

@@ -138,6 +138,9 @@ type Attempt =
 /** Why a lead was not forwarded, for the log line. */
 type NotForwarded =
   | { reason: "not_configured" }
+  /** Set, but not an https URL: a lead never leaves this server unencrypted. */
+  | { reason: "not_a_url" }
+  | { reason: "not_https" }
   | { reason: "rejected"; status: number }
   | { reason: "failed" };
 
@@ -202,6 +205,16 @@ async function forward(
 ): Promise<{ forwarded: true; emailed: boolean } | { forwarded: false; missed: NotForwarded }> {
   const url = process.env.LEAD_FORWARD_URL;
   if (!url) return { forwarded: false, missed: { reason: "not_configured" } };
+  // The boot check (lib/env.ts) already reports these, but a report does not
+  // stop a post: checked again here, so a mistyped http:// sends the lead to
+  // the outbox rather than across the network in clear text with the token.
+  let protocol: string;
+  try {
+    protocol = new URL(url).protocol;
+  } catch {
+    return { forwarded: false, missed: { reason: "not_a_url" } };
+  }
+  if (protocol !== "https:") return { forwarded: false, missed: { reason: "not_https" } };
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const result = await postOnce(url, payload);
     if (result.outcome === "ok") return { forwarded: true, emailed: result.emailed };
@@ -210,6 +223,47 @@ async function forward(
     }
   }
   return { forwarded: false, missed: { reason: "failed" } };
+}
+
+/* ---------------------------------------------------------- request guard */
+
+/**
+ * The media type without its parameters, the way a browser compares it:
+ * `text/plain; x=application/json` is text/plain. A substring test let that
+ * through, and text/plain is a type a page on any site may POST here without
+ * a CORS preflight.
+ */
+function mediaType(req: Request): string {
+  return (req.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+}
+
+/** This site's own origin, from lib/brand.ts. */
+const SITE_ORIGIN = new URL(brand.url).origin;
+
+/**
+ * Origins a development or test build may also post from: a laptop or the
+ * browser suite on a loopback port, and the portless `*.localhost` routes the
+ * README's dev commands use. Never in production.
+ */
+const LOCAL_ORIGIN = /^(http:\/\/(localhost|127\.0\.0\.1)|https:\/\/([a-z0-9-]+\.)*localhost)(:\d{1,5})?$/;
+
+/**
+ * Whether the request came from a page on another site.
+ *
+ * Every lead now makes the receiver email the address it carries, so a page
+ * elsewhere that made its visitors' browsers post here would turn each of
+ * them into a sender, each with its own rate-limit bucket. A browser names the
+ * page's origin on every POST and says `Sec-Fetch-Site: cross-site` when it is
+ * another site's; either one from elsewhere is refused. A request with
+ * neither header is not a browser on another page — a script can post
+ * directly anyway, and meets the rate limit by its own address.
+ */
+function crossSite(req: Request): boolean {
+  if (req.headers.get("sec-fetch-site")?.trim().toLowerCase() === "cross-site") return true;
+  const origin = req.headers.get("origin");
+  if (origin === null) return false;
+  if (origin === SITE_ORIGIN) return false;
+  return !(process.env.NODE_ENV !== "production" && LOCAL_ORIGIN.test(origin));
 }
 
 /* ------------------------------------------------------------------ route */
@@ -230,7 +284,12 @@ function json(body: unknown, status: number, headers?: HeadersInit) {
 }
 
 export async function POST(req: Request) {
-  if (!req.headers.get("content-type")?.includes("application/json")) {
+  // Before the rate limit, so a forged post from another site costs the
+  // visitor whose browser carried it nothing.
+  if (crossSite(req)) {
+    return json({ ok: false, error: "forbidden_origin" }, 403);
+  }
+  if (mediaType(req) !== "application/json") {
     return json({ ok: false, error: "unsupported_media_type" }, 415);
   }
 
