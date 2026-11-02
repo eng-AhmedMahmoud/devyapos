@@ -36,11 +36,12 @@ import { Whatsapp } from "./icons";
  */
 export type ContactFormCopy = Pick<SiteContent["contact"], "badge" | "form" | "waTemplate">;
 
-type Values = Record<"name" | "restaurant" | "branches" | "phone" | "message", string>;
+type Values = Record<"name" | "restaurant" | "email" | "branches" | "phone" | "message", string>;
 
 const EMPTY: Values = {
   name: "",
   restaurant: "",
+  email: "",
   branches: "",
   phone: "",
   message: "",
@@ -52,8 +53,9 @@ type Status = "idle" | "submitting" | "success" | "error";
 const FIELD_ORDER: LeadField[] = [
   "name",
   "restaurant",
-  "branches",
+  "email",
   "phone",
+  "branches",
   "message",
 ];
 
@@ -78,6 +80,12 @@ export default function ContactForm({
   const [errors, setErrors] = useState<LeadErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [formError, setFormError] = useState<string | null>(null);
+  /**
+   * The address the first reply went to, when the receiver said it queued
+   * one; null shows the plain thank-you. Kept apart from `values`, which a
+   * success clears.
+   */
+  const [emailedTo, setEmailedTo] = useState<string | null>(null);
   /** Honeypot. Never shown, never filled by a person. */
   const [company, setCompany] = useState("");
 
@@ -91,6 +99,7 @@ export default function ContactForm({
   const labels: Record<LeadField, string> = {
     name: f.name,
     restaurant: f.restaurant,
+    email: f.email,
     branches: f.branches,
     phone: f.phone,
     message: f.message,
@@ -134,6 +143,7 @@ export default function ContactForm({
       "",
       `${f.name}: ${values.name}`,
       `${f.restaurant}: ${values.restaurant}`,
+      values.email ? `${f.email}: ${values.email}` : "",
       values.branches ? `${f.branches}: ${values.branches}` : "",
       `${f.phone}: ${values.phone}`,
       messageWithPlan() ? `${f.message}: ${messageWithPlan()}` : "",
@@ -177,11 +187,15 @@ export default function ContactForm({
       });
       const data: {
         ok?: boolean;
+        /** True only when the receiver queued the first reply email. */
+        emailed?: boolean;
         error?: string;
         fields?: LeadErrors;
       } = await res.json().catch(() => ({}));
 
       if (res.ok && data.ok) {
+        // The normalised address, as the reply was sent to it.
+        setEmailedTo(data.emailed === true ? check.lead.email : null);
         setStatus("success");
         setValues(EMPTY);
         track("lead_form_success", {
@@ -246,7 +260,9 @@ export default function ContactForm({
           <Whatsapp width={18} height={18} />
         </span>
         <h3 className="font-display text-lg text-ink">{t.successTitle}</h3>
-        <p className="text-sm leading-relaxed text-ink-dim">{t.successBody}</p>
+        <p className="text-sm leading-relaxed text-ink-dim">
+          {emailedTo ? <EmailedBody template={t.successEmailed} email={emailedTo} /> : t.successBody}
+        </p>
         <button type="button" onClick={onWhatsapp} className="btn btn-ghost mt-2">
           <Whatsapp width={18} height={18} />
           {f.submit}
@@ -323,6 +339,30 @@ export default function ContactForm({
           required
           autoComplete="organization"
           maxLength={LEAD_LIMITS.restaurant}
+        />
+        {/*
+          Required because the reply goes here first, by email, within
+          seconds. Latin and left-to-right on either page, like the phone:
+          an address is never typed in Arabic.
+        */}
+        <Field
+          id={fieldId("email")}
+          errorId={errorId("email")}
+          label={f.email}
+          hint={f.emailHint}
+          value={values.email}
+          onValue={set("email")}
+          error={errors.email ? fieldError[errors.email] : undefined}
+          disabled={submitting}
+          required
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          dir="ltr"
+          placeholder={f.emailPlaceholder}
+          maxLength={LEAD_LIMITS.email}
         />
         <Field
           id={fieldId("phone")}
@@ -447,5 +487,23 @@ export default function ContactForm({
         </Link>
       </p>
     </form>
+  );
+}
+
+/**
+ * The success line that names the address the reply went to. The copy carries
+ * `{email}`; the address is its own left-to-right run, so it reads the same
+ * inside an Arabic sentence, and may wrap anywhere on a phone-width card.
+ */
+function EmailedBody({ template, email }: { template: string; email: string }) {
+  const [before, after = ""] = template.split("{email}");
+  return (
+    <>
+      {before}
+      <bdi dir="ltr" className="font-medium text-ink [overflow-wrap:anywhere]">
+        {email}
+      </bdi>
+      {after}
+    </>
   );
 }

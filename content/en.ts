@@ -961,6 +961,9 @@ export const en: SiteContent = {
     form: {
       name: "Your name",
       restaurant: "Restaurant name",
+      email: "Email address",
+      emailHint: "our reply goes here",
+      emailPlaceholder: "name@example.com",
       branches: "Number of branches",
       phone: "Mobile number",
       message: "Anything we should know",
@@ -969,7 +972,7 @@ export const en: SiteContent = {
       submitEmail: "Send by email",
       hint: "Your details come straight to the Moving POS team so we can call you back — or send them on WhatsApp instead, if that suits you better.",
       privacy:
-        "We use what you send here to answer you about Moving POS and nothing else. We don't sell it, share it with advertisers, or add you to a marketing list. Ask us to delete it any time.",
+        "We use what you send here to answer you about Moving POS and nothing else. We don't sell it, share it with advertisers, or add you to a marketing list. Ask us to delete it any time. We also email you an automatic reply straight away and up to two follow-ups about your enquiry, each with a link to unsubscribe.",
       privacyLink: "Read the privacy policy",
       messagePlaceholder:
         "e.g. Two branches, an old register, and I want to start selling online…",
@@ -978,6 +981,8 @@ export const en: SiteContent = {
         sending: "Sending…",
         successTitle: "We've got your details",
         successBody: "We'll reach out on the number you gave us, the same business day.",
+        successEmailed:
+          "Our reply is on its way to {email} and should arrive within a few minutes. If it isn't in your inbox, check your spam folder. Someone from the team will follow up with you after that.",
         errorTitle: "Couldn't send that",
         errorBody: "Something went wrong at our end. Try again, or send it on WhatsApp instead.",
         errorSummary: "Please check the following fields:",
@@ -988,6 +993,7 @@ export const en: SiteContent = {
         required: "This field is required",
         too_short: "That looks a little short",
         too_long: "That's longer than we can accept",
+        invalid_email: "Enter a valid email address, e.g. name@example.com",
         invalid_phone: "Enter a valid Egyptian mobile, e.g. 01012345678",
         invalid_branches: "Enter a whole number of branches (1 or more)",
       },
@@ -2130,7 +2136,7 @@ export const en: SiteContent = {
     privacy: {
       title: "Privacy policy",
       sub: "What this website collects, which is very little, and what happens to it.",
-      updated: "Last updated 27 October 2026",
+      updated: "Last updated 2 November 2026",
       sections: [
         {
           title: "The short version",
@@ -2148,8 +2154,9 @@ export const en: SiteContent = {
         {
           title: "What the contact form collects",
           body: [
-            "The form asks for your name, your restaurant's name, your mobile number, how many branches you run, and anything you type into the message box. The first three are required; the rest is optional.",
+            "The form asks for your name, your restaurant's name, your email address, your mobile number, how many branches you run, and anything you type into the message box. The first four are required; the rest is optional.",
             "When you press send, those details are posted to this site and passed on to the Moving POS team so somebody can call you back. Along with them we record how you reached us — the campaign link, the referring website and the page you landed on — plus your browser type, your country and the time.",
+            "We send an automatic reply to your email address straight away, then up to two follow-ups about your enquiry in the days after, each with a link to unsubscribe.",
             "Your IP address is used for a moment to stop the form being hammered by a script. It is not stored with your enquiry.",
             "WhatsApp and email are offered as alternative routes for the same form. If you use one of those, the details go to us through WhatsApp or through your own email client, and no submission is recorded on this site.",
           ],
