@@ -578,6 +578,11 @@ export interface SiteContent {
     form: {
       name: string;
       restaurant: string;
+      email: string;
+      /** Bracketed after the email label: why the address is asked for. */
+      emailHint: string;
+      /** An example address on a reserved domain (example.com), never a real one. */
+      emailPlaceholder: string;
       branches: string;
       phone: string;
       message: string;
@@ -594,8 +599,9 @@ export interface SiteContent {
       hint: string;
       /**
        * The collection notice, shown at the point the details are typed rather
-       * than only in the policy — a form that takes a name and a mobile number
-       * has to say what happens to them where the person can see it.
+       * than only in the policy — a form that takes a name, an email address
+       * and a mobile number has to say what happens to them where the person
+       * can see it, including the automatic emails the address receives.
        */
       privacy: string;
       /** Link text to the full policy, rendered inline after `privacy`. */
@@ -610,7 +616,13 @@ export interface SiteContent {
       status: {
         sending: string;
         successTitle: string;
+        /** The plain thank-you, when no automatic reply was sent. */
         successBody: string;
+        /**
+         * Replaces `successBody` when the receiver queued the first reply
+         * email; `{email}` is the address it went to.
+         */
+        successEmailed: string;
         errorTitle: string;
         errorBody: string;
         /** Introduces the list of failed fields in the error summary. */
@@ -624,6 +636,7 @@ export interface SiteContent {
         required: string;
         too_short: string;
         too_long: string;
+        invalid_email: string;
         invalid_phone: string;
         invalid_branches: string;
       };

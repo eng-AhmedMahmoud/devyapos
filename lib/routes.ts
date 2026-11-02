@@ -38,7 +38,7 @@ export const routes: readonly SiteRoute[] = [
   { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-27" },
   { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-10-27" },
   { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-27" },
-  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-11-02" },
   /* Search-entry pages: each answers a query the home page cannot. */
   { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
   { path: "/foodics-alternative", key: "foodicsAlternative", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
@@ -53,7 +53,7 @@ export const routes: readonly SiteRoute[] = [
   { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
   /* The privacy policy describes what the site already does, so it is indexed
      and linked; its date is the "Last updated" line the page prints. */
-  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-10-27" },
+  { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-11-02" },
 ];
 
 /**

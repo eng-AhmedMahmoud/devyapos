@@ -12,9 +12,10 @@ import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vite
  * arranged inside.
  *
  * It covers validation and the rate limit (X-Ray QEN-F1, AIN-F5) and the
- * delivery paths: the versioned forward contract, a 4xx that is final, a
- * transient failure retried once, and the one loud, PII-free log line every
- * unforwarded lead must produce (ARC-F6, REQ-F5, ARC-F1, AIN-F9).
+ * delivery paths: the versioned forward contract (v2, the ops console's lead
+ * intake), the receiver's answer about the first reply email, a 4xx that is
+ * final, a transient failure retried once, and the one loud, PII-free log
+ * line every unforwarded lead must produce (ARC-F6, REQ-F5, ARC-F1, AIN-F9).
  *
  * The module is re-imported for every test: the rate limiter, the outbox's
  * write queue and the forward timeout are module state, read once at import.
@@ -26,10 +27,14 @@ const IP = "203.0.113.7";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const asRoot = process.getuid?.() === 0;
 
-/** A lead as the browser posts it: Egyptian mobile typed with spaces, extra attribution junk. */
+/**
+ * A lead as the browser posts it: Egyptian mobile typed with spaces, an email
+ * in mixed case, extra attribution junk.
+ */
 const LEAD = {
   name: "  Ahmed   Mahmoud ",
   restaurant: "Koshary El Tahrir",
+  email: " Test@Devya.dev ",
   phone: "0105 593 0032",
   branches: "3",
   message: "  We need a POS for three branches.  ",
@@ -48,6 +53,8 @@ const PII = [
   "Ahmed",
   "Mahmoud",
   "Koshary",
+  "test@devya.dev",
+  "Test@Devya.dev",
   "1055930032",
   "0105 593 0032",
   "three branches",
@@ -176,13 +183,27 @@ function answers(...statuses: number[]) {
   fetchMock.mockImplementation(async () => new Response(null, { status: statuses[i++] ?? 500 }));
 }
 
+/**
+ * The ops console's intake answering 200 the way the contract says
+ * (bohub-pos docs/specs/lead-follow-up.md §2), with `firstReply` as given.
+ */
+function intakeAnswer(firstReply: unknown, extra: Record<string, unknown> = {}) {
+  return (_url: string | URL | Request, init?: RequestInit) => {
+    const { id } = JSON.parse(String(init?.body)) as { id: string };
+    return Promise.resolve(
+      Response.json({ ok: true, id, duplicate: false, firstReply, sequence: "pos-default", ...extra }),
+    );
+  };
+}
+
 describe("POST /api/lead — accepted", () => {
   it("forwards a valid lead in the documented, versioned shape, with the bearer token", async () => {
     const before = Date.now();
     const { res, json } = await send(LEAD);
 
     expect(res.status).toBe(200);
-    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"] });
+    // The stub answers an empty 202: delivered, but nobody said an email went out.
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"], emailed: false });
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
@@ -193,14 +214,27 @@ describe("POST /api/lead — accepted", () => {
     expect(headers.get("content-type")).toMatch(/^application\/json/);
 
     const [payload] = forwarded();
-    expect(payload).toMatchObject({ type: "lead", version: 1, id: json.id, site: "pos.devya.dev" });
+    expect(Object.keys(payload).sort()).toEqual(
+      ["attribution", "channel", "context", "id", "lead", "product", "receivedAt", "site", "type", "version"],
+    );
+    expect(payload).toMatchObject({
+      type: "lead",
+      version: 2,
+      id: json.id,
+      site: "pos.movingsystems.tech",
+      product: "pos",
+      channel: "form",
+    });
+    // The intake's field names: `company`, not v1's `restaurant`.
     expect(payload.lead).toEqual({
       name: "Ahmed Mahmoud",
-      restaurant: "Koshary El Tahrir",
+      email: "test@devya.dev",
       phone: "+201055930032",
+      company: "Koshary El Tahrir",
       branches: 3,
       message: "We need a POS for three branches.",
       locale: "en",
+      country: null,
     });
     // Whitelisted and trimmed; an unknown key the client slipped in is gone.
     expect(payload.attribution).toEqual({
@@ -250,11 +284,146 @@ describe("POST /api/lead — accepted", () => {
     const { res, json } = await send(hostile);
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch(/^application\/json/);
-    expect(Object.keys(json).sort()).toEqual(["delivered", "id", "ok"]);
+    expect(Object.keys(json).sort()).toEqual(["delivered", "emailed", "id", "ok"]);
     const lead = forwarded()[0].lead as Record<string, string>;
     expect(lead.name).toBe(hostile.name);
-    expect(lead.restaurant).toBe(hostile.restaurant);
+    expect(lead.company).toBe(hostile.restaurant);
     expect(lead.message).toBe(hostile.message);
+  });
+});
+
+describe("POST /api/lead — the receiver's answer about the first reply", () => {
+  it("answers emailed: true when the intake has queued the first reply", async () => {
+    fetchMock.mockImplementation(intakeAnswer("queued"));
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"], emailed: true });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(errorCalls()).toEqual([]);
+  });
+
+  it("answers emailed: true for a duplicate the intake says was already emailed", async () => {
+    fetchMock.mockImplementation(intakeAnswer("queued", { duplicate: true }));
+    const { json } = await send(LEAD);
+    expect(json.emailed).toBe(true);
+  });
+
+  it.each([
+    ["not_sent", "not_sent"],
+    ["a capitalised value", "QUEUED"],
+    ["a boolean", true],
+    ["nothing", undefined],
+  ])("answers emailed: false when firstReply is %s", async (_label, firstReply) => {
+    fetchMock.mockImplementation(intakeAnswer(firstReply));
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"], emailed: false });
+  });
+
+  it.each([
+    ["an empty body", null],
+    ["HTML from a proxy", "<html><body>OK</body></html>"],
+    ["JSON null", "null"],
+    ["a JSON array", '[{"firstReply":"queued"}]'],
+    ["a JSON string", '"queued"'],
+  ])("treats %s on a 2xx as delivered, not emailed, and does not retry", async (_label, body) => {
+    fetchMock.mockImplementation(async () => new Response(body, { status: 200 }));
+    const { json } = await send(LEAD);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"], emailed: false });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(errorCalls()).toEqual([]);
+  });
+
+  it("reads the answer of the retry that landed", async () => {
+    let calls = 0;
+    const queued = intakeAnswer("queued");
+    fetchMock.mockImplementation((url, init) =>
+      calls++ === 0 ? Promise.resolve(new Response(null, { status: 502 })) : queued(url, init),
+    );
+    const { json } = await send(LEAD);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(json).toMatchObject({ delivered: ["forward"], emailed: true });
+  });
+
+  it("does not hang on an answer whose body never ends: delivered, not emailed, not retried", async () => {
+    vi.stubEnv("LEAD_FORWARD_TIMEOUT_MS", "40");
+    fetchMock.mockImplementation(async (_url, init) => {
+      const signal = init!.signal!;
+      const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('{"ok":true,"firstReply":"que'));
+          // A real fetch errors the body when its signal aborts; so does this one.
+          signal.addEventListener("abort", () => controller.error(signal.reason));
+        },
+      });
+      return new Response(body, { status: 200, headers: { "content-type": "application/json" } });
+    });
+
+    const started = Date.now();
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["forward"], emailed: false });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(Date.now() - started).toBeLessThan(3_500);
+  });
+});
+
+describe("POST /api/lead — only this site's own pages may post", () => {
+  const SITE = "https://pos.movingsystems.tech";
+
+  it("takes the JSON type in any case, with parameters", async () => {
+    const { res } = await send(LEAD, { headers: { "content-type": "Application/JSON ; charset=utf-8" } });
+    expect(res.status).toBe(200);
+  });
+
+  it.each([
+    ["this site's origin", { origin: SITE }],
+    ["this site's origin, same-origin fetch metadata", { origin: SITE, "sec-fetch-site": "same-origin" }],
+    ["no origin at all (not a page on another site)", {}],
+    ["a loopback port outside production", { origin: "http://localhost:3100" }],
+    ["127.0.0.1 outside production", { origin: "http://127.0.0.1:3197" }],
+    ["a portless route outside production", { origin: "https://devyapos.localhost:1358" }],
+  ])("accepts %s", async (_label, headers) => {
+    const { res, json } = await send(LEAD, { headers });
+    expect(res.status).toBe(200);
+    expect(json.delivered).toEqual(["forward"]);
+  });
+
+  it.each([
+    ["another site", { origin: "https://attacker.example" }],
+    ["a sibling Moving site", { origin: "https://stores.movingsystems.tech" }],
+    ["a look-alike host", { origin: "https://pos.movingsystems.tech.attacker.example" }],
+    ["this host over http", { origin: "http://pos.movingsystems.tech" }],
+    ["this host on another port", { origin: "https://pos.movingsystems.tech:8443" }],
+    ["an opaque origin", { origin: "null" }],
+    ["cross-site fetch metadata without an origin", { "sec-fetch-site": "cross-site" }],
+    ["cross-site fetch metadata with this site's origin", { origin: SITE, "sec-fetch-site": "Cross-Site" }],
+    ["the old text/plain trick from another site", { origin: "https://attacker.example", "content-type": "text/plain" }],
+  ])("answers 403 forbidden_origin to %s, and keeps nothing", async (_label, headers) => {
+    const dir = outboxDir();
+    const { res, json } = await send(LEAD, { headers });
+    expect(res.status).toBe(403);
+    expect(json).toEqual({ ok: false, error: "forbidden_origin" });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(outboxLines(dir)).toEqual([]);
+  });
+
+  it("refuses loopback origins in production, and still takes this site's", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    for (const origin of ["http://localhost:3100", "http://127.0.0.1:3197", "https://devyapos.localhost"]) {
+      const { res } = await send(LEAD, { headers: { origin } });
+      expect(res.status, origin).toBe(403);
+    }
+    const { res } = await send(LEAD, { headers: { origin: SITE } });
+    expect(res.status).toBe(200);
+  });
+
+  it("does not spend the visitor's rate limit on a post forged from another site", async () => {
+    const { POST } = await route();
+    const forged = { origin: "https://attacker.example", "x-real-ip": "198.51.100.80" };
+    for (let i = 0; i < 13; i++) expect((await POST(request(LEAD, { headers: forged }))).status).toBe(403);
+    const own = await POST(request(LEAD, { headers: { origin: SITE, "x-real-ip": "198.51.100.80" } }));
+    expect(own.status).toBe(200);
   });
 });
 
@@ -263,6 +432,10 @@ describe("POST /api/lead — refused before anything leaves the box", () => {
     ["text/plain", "text/plain;charset=UTF-8"],
     ["a form post", "application/x-www-form-urlencoded"],
     ["multipart", "multipart/form-data; boundary=x"],
+    // A substring test passed this one, and text/plain needs no preflight.
+    ["JSON named in a text/plain parameter", "text/plain; x=application/json"],
+    ["a JSON-suffixed type", "application/json-patch+json"],
+    ["no content type", ""],
   ])("answers 415 to %s", async (_label, type) => {
     const { res, json } = await send(LEAD, { headers: { "content-type": type } });
     expect(res.status).toBe(415);
@@ -291,6 +464,14 @@ describe("POST /api/lead — refused before anything leaves the box", () => {
     ["missing restaurant", { restaurant: "" }, { restaurant: "required" }],
     ["one-letter restaurant", { restaurant: "K" }, { restaurant: "too_short" }],
     ["121-char restaurant", { restaurant: "r".repeat(121) }, { restaurant: "too_long" }],
+    ["missing email", { email: undefined }, { email: "required" }],
+    ["blank email", { email: "  " }, { email: "required" }],
+    ["email without a domain", { email: "test@" }, { email: "invalid_email" }],
+    ["email without a dot", { email: "test@devya" }, { email: "invalid_email" }],
+    ["email with a display name", { email: "name<test@devya.dev>" }, { email: "invalid_email" }],
+    ["email with a comment", { email: "test@devya.dev(1)" }, { email: "invalid_email" }],
+    ["email with a list", { email: "a,test@devya.dev" }, { email: "invalid_email" }],
+    ["255-char email", { email: `${"a".repeat(245)}@devya.dev` }, { email: "invalid_email" }],
     ["missing phone", { phone: "" }, { phone: "required" }],
     ["Egyptian landline", { phone: "02 2345 6789" }, { phone: "invalid_phone" }],
     ["013 prefix", { phone: "01355930032" }, { phone: "invalid_phone" }],
@@ -309,7 +490,7 @@ describe("POST /api/lead — refused before anything leaves the box", () => {
   it("reports every bad field at once", async () => {
     const { res, json } = await send({});
     expect(res.status).toBe(400);
-    expect(json.fields).toEqual({ name: "required", restaurant: "required", phone: "required" });
+    expect(json.fields).toEqual({ name: "required", restaurant: "required", email: "required", phone: "required" });
   });
 
   it("refuses an oversized body and forwards nothing", async () => {
@@ -325,7 +506,7 @@ describe("POST /api/lead — refused before anything leaves the box", () => {
     const dir = outboxDir();
     const { res, json } = await send({ ...LEAD, company: "Acme Bots Ltd" });
     expect(res.status).toBe(200);
-    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: [] });
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: [], emailed: false });
     expect(fetchMock).not.toHaveBeenCalled();
     expect(outboxLines(dir)).toEqual([]);
   });
@@ -361,28 +542,56 @@ describe("POST /api/lead — when the forward fails", () => {
     answers(500, 502);
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(200);
-    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"] });
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"], emailed: false });
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
-    // One line, carrying the lead under the id the visitor was given.
+    // One line, carrying the lead under the id the visitor was given, in the
+    // shape it would have been forwarded in.
     const lines = outboxLines(dir);
     expect(lines).toHaveLength(1);
-    expect(lines[0]).toMatchObject({ type: "lead", version: 1, id: json.id, lead: { phone: "+201055930032" } });
+    expect(lines[0]).toMatchObject({
+      type: "lead",
+      version: 2,
+      id: json.id,
+      lead: { phone: "+201055930032", email: "test@devya.dev", company: "Koshary El Tahrir" },
+    });
 
     const { message, fields } = loudLine();
     expect(message).toMatch(/NOT FORWARDED/);
     expect(fields).toMatchObject({ id: json.id, reason: "failed", pending: "1" });
   });
 
-  it("does not retry a 4xx: the receiver's no is final, and the lead goes to the outbox", async () => {
+  it.each([
+    [400, { ok: false, code: "validation_failed", fields: { email: "invalid" } }],
+    [401, { ok: false, code: "unauthenticated" }],
+    [422, null],
+  ])("does not retry a %i: the receiver's no is final, and the lead goes to the outbox", async (status, body) => {
     const dir = outboxDir();
-    answers(422, 200);
+    let calls = 0;
+    fetchMock.mockImplementation(async () =>
+      calls++ === 0
+        ? body
+          ? Response.json(body, { status })
+          : new Response(null, { status })
+        : Response.json({ ok: true, firstReply: "queued" }),
+    );
     const { res, json } = await send(LEAD);
     expect(res.status).toBe(200);
-    expect(json.delivered).toEqual(["outbox"]);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"], emailed: false });
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(outboxLines(dir)).toHaveLength(1);
-    expect(loudLine().fields).toMatchObject({ reason: "rejected", status: "422", pending: "1" });
+    expect(loudLine().fields).toMatchObject({ reason: "rejected", status: String(status), pending: "1" });
+  });
+
+  it("keeps the lead when the intake is closed (503), after one retry", async () => {
+    const dir = outboxDir();
+    fetchMock.mockImplementation(async () => Response.json({ ok: false, code: "intake_closed" }, { status: 503 }));
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"], emailed: false });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ reason: "failed", pending: "1" });
   });
 
   it("retries a network failure once, then keeps the lead in the outbox", async () => {
@@ -438,6 +647,20 @@ describe("POST /api/lead — when the forward fails", () => {
     expect(outboxLines(dir)).toHaveLength(2);
   });
 
+  it.each([
+    ["an http URL", "http://crm.example.test/hooks/lead", "not_https"],
+    ["something that is not a URL", "crm.example.test/hooks/lead", "not_a_url"],
+  ])("never posts to %s: the lead goes to the outbox instead", async (_label, url, reason) => {
+    const dir = outboxDir();
+    vi.stubEnv("LEAD_FORWARD_URL", url);
+    const { res, json } = await send(LEAD);
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ ok: true, id: expect.stringMatching(UUID), delivered: ["outbox"], emailed: false });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(outboxLines(dir)).toHaveLength(1);
+    expect(loudLine().fields).toMatchObject({ id: json.id, reason, pending: "1" });
+  });
+
   it("answers 503 when the lead can be neither forwarded nor kept", async () => {
     answers(500, 500);
     const { res, json } = await send(LEAD);
@@ -485,6 +708,8 @@ describe("POST /api/lead — when the forward fails", () => {
   it("never puts the lead itself in the logs, whichever way it went", async () => {
     const dir = outboxDir();
     await send(LEAD); // forwarded
+    fetchMock.mockImplementation(intakeAnswer("queued"));
+    await send(LEAD); // forwarded, and emailed
     answers(500, 500);
     await send({ ...LEAD, phone: "+20 115 593 0032" }); // outbox
     vi.stubEnv("LEAD_OUTBOX_DIR", "");

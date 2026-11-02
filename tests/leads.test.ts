@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   LEAD_LIMITS,
   coarseTimestamp,
+  normaliseEmail,
   normalizeEgyptMobile,
   sanitizeAttribution,
   validateLead,
@@ -76,6 +77,7 @@ describe("validateLead", () => {
   const VALID: LeadSubmission = {
     name: "Ahmed Mahmoud",
     restaurant: "Koshary El Tahrir",
+    email: "test@devya.dev",
     phone: "01055930032",
   };
 
@@ -91,7 +93,7 @@ describe("validateLead", () => {
   }
 
   it("pins the limits the README promises the receiving end", () => {
-    expect(LEAD_LIMITS).toEqual({ name: 80, restaurant: 120, message: 1200, branches: 500 });
+    expect(LEAD_LIMITS).toEqual({ name: 80, restaurant: 120, email: 254, message: 1200, branches: 500 });
   });
 
   it("normalises a minimal valid lead", () => {
@@ -100,6 +102,7 @@ describe("validateLead", () => {
       lead: {
         name: "Ahmed Mahmoud",
         restaurant: "Koshary El Tahrir",
+        email: "test@devya.dev",
         phone: E164,
         branches: null,
         message: null,
@@ -111,7 +114,7 @@ describe("validateLead", () => {
   it("reports every missing required field at once", () => {
     expect(validateLead({})).toEqual({
       ok: false,
-      errors: { name: "required", restaurant: "required", phone: "required" },
+      errors: { name: "required", restaurant: "required", email: "required", phone: "required" },
     });
   });
 
@@ -140,6 +143,76 @@ describe("validateLead", () => {
       ["over the cap only before collapsing", `a${" ".repeat(max)}b`, "a b"],
     ])("accepts %s", (_label, value, expected) => {
       expect(leadFor({ [field]: value })[field]).toBe(expected);
+    });
+  });
+
+  describe("email", () => {
+    // 244 + "@devya.dev" (10) is exactly the cap.
+    const AT_CAP = `${"a".repeat(LEAD_LIMITS.email - 10)}@devya.dev`;
+
+    it.each([
+      ["missing", undefined, "required"],
+      ["empty", "", "required"],
+      ["blank", " \t ", "required"],
+      ["not a string", 42, "required"],
+      ["without an @", "test.devya.dev", "invalid_email"],
+      ["with two @", "test@@devya.dev", "invalid_email"],
+      ["without a local part", "@devya.dev", "invalid_email"],
+      ["without a domain", "test@", "invalid_email"],
+      ["without a dot in the domain", "test@devya", "invalid_email"],
+      ["with a one-letter top-level label", "test@devya.d", "invalid_email"],
+      ["with an empty domain label", "test@devya..dev", "invalid_email"],
+      ["with an inner space", "te st@devya.dev", "invalid_email"],
+      ["with a control character", "test\u0000@devya.dev", "invalid_email"],
+      ["with a bidi override", "test\u202E@devya.dev", "invalid_email"],
+      ["with a bidi isolate", "\u2066test@devya.dev", "invalid_email"],
+      ["one over the cap", `a${AT_CAP}`, "invalid_email"],
+    ])("is %s → %s", (_label, value, code) => {
+      expect(errorsFor({ email: value })).toEqual({ email: code });
+    });
+
+    // Each of these has one @ and passes the store's shape, and a mailer reads
+    // each as a display name, a comment or a list around test@devya.dev: the
+    // reply would reach that mailbox under a string the store's unsubscribe
+    // and one-sequence-per-address checks have never seen.
+    it.each([
+      ["a display name", "name<test@devya.dev>"],
+      ["angle brackets", "<test@devya.dev>"],
+      ["a trailing bracket", "test@devya.dev>"],
+      ["a trailing comment", "test@devya.dev(1)"],
+      ["a leading comment", "(2)test@devya.dev"],
+      ["a comma list", "a,test@devya.dev"],
+      ["a semicolon list", "a;test@devya.dev"],
+      ["a group", "team:test@devya.dev"],
+      ["a quoted part", '"q"test@devya.dev'],
+      ["a domain literal", "test@[devya.dev]"],
+      ["a backslash", "te\\st@devya.dev"],
+      ["a leading dot", ".test@devya.dev"],
+      ["a double dot in the local part", "te..st@devya.dev"],
+    ])("refuses %s, which a mailer would rewrite", (_label, value) => {
+      expect(errorsFor({ email: value })).toEqual({ email: "invalid_email" });
+    });
+
+    it.each([
+      ["lowercased", "Test@Devya.DEV", "test@devya.dev"],
+      ["trimmed", "  test@devya.dev \n", "test@devya.dev"],
+      ["with a plus tag", "test+lead@devya.dev", "test+lead@devya.dev"],
+      ["on a subdomain", "test@mail.devya.dev", "test@mail.devya.dev"],
+      ["with RFC 5322 symbols", "o'brien_&-x@devya.dev", "o'brien_&-x@devya.dev"],
+      ["with a hyphenated label", "test@mail-1.devya.dev", "test@mail-1.devya.dev"],
+      ["with an Arabic local part", "أحمد@devya.dev", "أحمد@devya.dev"],
+      ["exactly the cap", AT_CAP, AT_CAP],
+    ])("takes an address %s", (_label, value, expected) => {
+      expect(leadFor({ email: value }).email).toBe(expected);
+    });
+
+    it("normaliseEmail answers null for anything that is not an address", () => {
+      expect(normaliseEmail(undefined)).toBeNull();
+      expect(normaliseEmail(null)).toBeNull();
+      expect(normaliseEmail(["test@devya.dev"])).toBeNull();
+      expect(normaliseEmail("")).toBeNull();
+      expect(normaliseEmail("test@devya")).toBeNull();
+      expect(normaliseEmail(" TEST@devya.dev ")).toBe("test@devya.dev");
     });
   });
 

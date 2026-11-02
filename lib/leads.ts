@@ -17,12 +17,14 @@ import { normalisePhone } from "@/lib/phone";
 export const LEAD_LIMITS = {
   name: 80,
   restaurant: 120,
+  /** RFC 5321's path limit, and the store's (`CLAIM_LIMITS.email`). */
+  email: 254,
   message: 1200,
   /** Nobody is onboarding 500 branches through a marketing form. */
   branches: 500,
 } as const;
 
-export type LeadField = "name" | "restaurant" | "phone" | "branches" | "message";
+export type LeadField = "name" | "restaurant" | "email" | "phone" | "branches" | "message";
 
 /**
  * Machine-readable failure reasons. The API returns these codes rather than
@@ -32,6 +34,7 @@ export type LeadErrorCode =
   | "required"
   | "too_short"
   | "too_long"
+  | "invalid_email"
   | "invalid_phone"
   | "invalid_branches";
 
@@ -56,6 +59,7 @@ export interface LeadAttribution {
 export interface LeadSubmission {
   name?: string;
   restaurant?: string;
+  email?: string;
   phone?: string;
   branches?: string | number | null;
   message?: string | null;
@@ -69,6 +73,8 @@ export interface LeadSubmission {
 export interface NormalisedLead {
   name: string;
   restaurant: string;
+  /** Trimmed and lowercased: the address the first reply goes to. */
+  email: string;
   /** E.164, e.g. `+201055930032`. */
   phone: string;
   branches: number | null;
@@ -105,6 +111,47 @@ export function normalizeEgyptMobile(raw: string): string | null {
   return normalisePhone(raw, "EG", { mobileOnly: true, lenient: true });
 }
 
+/*
+ * The email rule starts from a copy of the store's (bohub-pos
+ * `ops-store/src/trial/validate.ts`, `normaliseEmail`), which is the same rule
+ * the lead intake applies — keep that part in step. An address this form
+ * accepts and the store refuses would be a 400 on the forward: a lead in the
+ * outbox and no first reply, with the visitor told nothing went wrong.
+ */
+const EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[^\s@.]{2,}$/;
+
+/*
+ * Stricter than the store, on purpose, and only ever narrower: an address
+ * must also be a bare addr-spec — letters, digits and RFC 5322's atext symbols
+ * in the local part, letters, digits and hyphens in the domain. The store's
+ * shape alone lets through `name<someone@x.com>`, `someone@x.com(1)` and
+ * `a,someone@x.com`, which the mailer reads as display names, comments and
+ * lists: the reply lands in someone@x.com's inbox while the store's
+ * unsubscribe and one-sequence-per-address checks compare the whole string
+ * and miss. Letters are any script's, so an Arabic local part still passes.
+ */
+const ADDR_SPEC =
+  /^[\p{L}\p{M}\p{N}!#$%&'*+/=?^_`{|}~-]+(\.[\p{L}\p{M}\p{N}!#$%&'*+/=?^_`{|}~-]+)*@[\p{L}\p{M}\p{N}-]+(\.[\p{L}\p{M}\p{N}-]+)+$/u;
+
+// Control characters (C0, DEL, C1) and the bidi overrides and isolates: an
+// address is printed into the ops console and into the reply's own headers.
+const UNPRINTABLE = /[\u0000-\u001F\u007F-\u009F\u202A-\u202E\u2066-\u2069]/;
+
+/**
+ * An email address trimmed and lowercased, or null when it cannot be one.
+ *
+ * Only the shape is checked — one `@`, a dot in the domain, a top-level label
+ * of two or more, nothing a mailer would read as more than one mailbox —
+ * never whether the mailbox exists: the first reply finds that out.
+ */
+export function normaliseEmail(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const value = raw.trim().toLowerCase();
+  if (value.length === 0 || value.length > LEAD_LIMITS.email) return null;
+  if (UNPRINTABLE.test(value)) return null;
+  return EMAIL.test(value) && ADDR_SPEC.test(value) ? value : null;
+}
+
 function asText(value: unknown): string {
   return typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
 }
@@ -138,6 +185,13 @@ export function validateLead(
   const restaurant = asText(input.restaurant);
   const restaurantError = checkText(restaurant, LEAD_LIMITS.restaurant);
   if (restaurantError) errors.restaurant = restaurantError;
+
+  // Required: the receiver answers every enquiry by email straight away, and
+  // a lead without an address gets no reply until somebody notices it.
+  const rawEmail = typeof input.email === "string" ? input.email.trim() : "";
+  const email = rawEmail ? normaliseEmail(rawEmail) : null;
+  if (!rawEmail) errors.email = "required";
+  else if (!email) errors.email = "invalid_email";
 
   const rawPhone = asText(input.phone);
   const phone = rawPhone ? normalizeEgyptMobile(rawPhone) : null;
@@ -173,6 +227,7 @@ export function validateLead(
     lead: {
       name,
       restaurant,
+      email: email as string,
       phone: phone as string,
       branches,
       message,

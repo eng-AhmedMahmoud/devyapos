@@ -130,8 +130,11 @@ refuses a directory inside a git repository.
 
 Host-only settings such as `LEAD_FORWARD_URL` go in `.env.production.local`
 beside the release on the VPS; `scripts/deploy.sh` carries it from one release
-to the next. No CRM is chosen yet, so today every lead goes to the outbox
-([#36](https://github.com/eng-AhmedMahmoud/devyapos/issues/36)).
+to the next. The receiver is the lead intake of Devya's ops console
+(`https://ops-api.devya.dev/api/leads/intake`, bohub-pos `ops-store`), which
+records the lead, emails the first reply straight away and follows up around
+day 2 and day 5. Until both values are set on the VPS every lead goes to the
+outbox ([#36](https://github.com/eng-AhmedMahmoud/devyapos/issues/36)).
 
 ## Environment
 
@@ -143,8 +146,8 @@ on `/api/health` as `config: "degraded"`.
 
 | Variable | Default | What it does |
 | --- | --- | --- |
-| `LEAD_FORWARD_URL` | — | Where `POST /api/lead` forwards a validated lead. Must be `https://`. Unset is supported: the lead goes to the outbox (above) and the log line carries only its id — never the lead. |
-| `LEAD_FORWARD_TOKEN` | — | Sent as `Authorization: Bearer <token>` on the forward. |
+| `LEAD_FORWARD_URL` | — | Where `POST /api/lead` forwards a validated lead. Must be `https://`. Production: `https://ops-api.devya.dev/api/leads/intake`. Unset is supported, and right for development and tests: the lead goes to the outbox (above) and the log line carries only its id — never the lead. Never point a local run at production. |
+| `LEAD_FORWARD_TOKEN` | — | Sent as `Authorization: Bearer <token>` on the forward. In production, this site's entry in ops-store's `LEAD_INTAKE_TOKENS` (`devyapos=<token>`): the token names the source, so it can be revoked without touching the other sites. |
 | `LEAD_FORWARD_TIMEOUT_MS` | `4000` | Per-attempt timeout. A 5xx, a timeout or a network error is retried once; a 4xx is permanent and not retried. |
 | `LEAD_OUTBOX_DIR` | — (`/data` in `docker-compose.prod.yml`) | Directory of the two append-only files: `leads-outbox.jsonl` (leads that were not forwarded) and `consent-receipts.jsonl`. Unset, an unforwarded lead answers 503 (the form offers WhatsApp and email) and a consent receipt survives only in the log. |
 | `LEAD_OUTBOX_RETENTION_DAYS` | `365` | Outbox entries older than this are dropped (the privacy policy's twelve months). |
@@ -155,23 +158,28 @@ on `/api/health` as `config: "degraded"`.
 
 ### Lead forward contract
 
-This shape is defined by this site, not by an existing API — build the
-receiving endpoint against it. `POST application/json`:
+Version 2 is the intake contract of Devya's ops console (bohub-pos
+`docs/specs/lead-follow-up.md` §2), which every Moving landing site sends.
+`POST application/json`, `Authorization: Bearer <LEAD_FORWARD_TOKEN>`:
 
 ```jsonc
 {
   "type": "lead",
-  "version": 1,
+  "version": 2,
   "id": "<uuid v4, stable across the retry — dedupe on this>",
-  "site": "pos.devya.dev",   // a fixed sender tag; kept when the site moved to pos.movingsystems.tech
+  "site": "pos.movingsystems.tech",   // brand.domain
+  "product": "pos",
+  "channel": "form",
   "receivedAt": "<ISO 8601, rounded down to the minute>",
   "lead": {
     "name": "<2..80 chars>",
-    "restaurant": "<2..120 chars>",
+    "email": "<lowercased, <=254 chars, a bare addr-spec — where the first reply goes>",
     "phone": "<E.164, always +201[0125]XXXXXXXX>",
+    "company": "<2..120 chars — the restaurant's name>",
     "branches": 3,            // integer 1..500, or null
     "message": "<=1200 chars, or null",
-    "locale": "ar"            // "ar" | "en"
+    "locale": "ar",           // "ar" | "en"
+    "country": null           // the form does not ask, so always null
   },
   "attribution": {            // all keys optional, all browser-supplied
     "source": "meta", "medium": "cpc", "campaign": "eg-launch",
@@ -191,7 +199,17 @@ receiving endpoint against it. `POST application/json`:
 - A 2xx is accepted. Any 4xx is a permanent rejection and is not retried. A
   5xx, a timeout or a network error is retried once with the same `id`, then
   the lead goes to the outbox.
-- `version` changes when the shape does.
+- The receiver's 200 answer is read for one field:
+  `{ ok, id, duplicate, firstReply: "queued" | "not_sent", sequence }`. With
+  `firstReply: "queued"` the route answers the form
+  `{ ok: true, id, delivered: ["forward"], emailed: true }` and the form says a
+  reply is on its way to the visitor's address; any other answer, an empty
+  body or one that does not parse is still delivered, with `emailed: false`
+  and the plain thank-you. Outbox and honeypot answers are `emailed: false`.
+- `version` changes when the shape does. Version 1 (no email, `restaurant`
+  instead of `company`, `site: "pos.devya.dev"`, no `product` or `channel`) is
+  what the outbox holds from earlier releases; the intake still accepts it and
+  records the lead without sending anything.
 - **Every string field is raw user input.** It is validated for shape and
   length, never escaped. A receiver must neutralise spreadsheet formulas
   (a leading `=`, `+`, `-`, `@`) before writing to a sheet, escape HTML before

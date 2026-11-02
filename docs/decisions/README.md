@@ -15,6 +15,7 @@ old one, and the old one's status says so.
 | [0005](0005-product-renames.md) | The product is Moving POS; renames change the visible name only | 2026-10-19 | Accepted (Arabic name unconfirmed) |
 | [0006](0006-protected-main-and-ci-gated-deploys.md) | `main` is protected, and a deploy ships only what CI passed | 2026-10-22 | Accepted |
 | [0007](0007-moving-support-assistant.md) | The Moving support assistant, through a same-origin rewrite | 2026-10-27 | Accepted |
+| [0008](0008-leads-forward-to-the-ops-console.md) | Leads forward to the ops console's intake, and the form asks for an email | 2026-11-02 | Accepted |
 
 0001–0005 were backfilled on 2026-10-22 from commits, pull requests and code
 comments; each says where its context came from.
