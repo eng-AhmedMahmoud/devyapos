@@ -104,7 +104,7 @@ export default function PricingCompare({
           role="region"
           aria-labelledby={captionId}
           tabIndex={0}
-          className="card mt-8 overflow-x-auto overscroll-x-contain p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-caramel"
+          className="card relative mt-8 overflow-x-auto overscroll-x-contain p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-caramel"
         >
           <table className="w-full min-w-[43rem] border-separate border-spacing-0 text-sm">
             <caption id={captionId} className="sr-only">
