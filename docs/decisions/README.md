@@ -27,7 +27,7 @@ each, newest first; the link is where the reasoning lives.
 
 | Date | Decision | Where |
 | --- | --- | --- |
-| 2026-11-03 | The theme toggle has two themes, Light and Dark, and the site never follows the OS theme: light is the default, a stored `system` opens light | `tests/theme.test.ts`, `e2e/theme.spec.ts` |
+| 2026-11-03 | The theme toggle has two themes, Light and Dark, and the site never follows the OS theme: light is the default, a stored `system` opens light | PR #92, `tests/theme.test.ts`, `e2e/theme.spec.ts` |
 | 2026-10-22 | The site moves to `pos.movingsystems.tech`; `pos.devya.dev` answers with a 301; the lead payload's `site` tag stays `pos.devya.dev` | PR #15, `deploy/nginx.conf` |
 | 2026-10-22 | Every page names Moving Systems as a subsidiary of Devya Solutions, in copy shared across Moving properties | PR #44, `tests/parent.test.ts` |
 | 2026-10-22 | Competitor figures are "our own dated record", never "published", and expire after 90 days | PR #49, `tests/content.test.ts` |
