@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/routing";
 import type { ConsentCopy } from "@/lib/consent/copy";
 import type { AccountingCardId } from "@/lib/accounting-plans";
+import type { CompareRowId } from "@/lib/plan-compare";
 import type { AiTierId, OfferCode, PlanCurrency, PlanId } from "@/lib/plans";
 
 /**
@@ -188,6 +189,38 @@ export interface AddOn {
    */
   href?: string;
   linkLabel?: string;
+}
+
+/**
+ * The plan comparison on /pricing (`#compare-plans`), under the plan cards.
+ * Its cells come from `lib/plan-compare.ts`; only the words are here: a name
+ * for each row, and the few words a cell is printed with. Plan names and
+ * Group's "Quoted" are the cards' own (`pricing.plans`).
+ */
+export interface PlanCompareCopy {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  /** The table's caption and its scroll region's name, read by screen readers. */
+  caption: string;
+  /** The head over the row names, read by screen readers. */
+  corner: string;
+  /** One name per row, keyed as `COMPARE_ROWS` keys them. */
+  rows: Record<CompareRowId, string>;
+  /** Spoken for a tick and for a dash. */
+  included: string;
+  excluded: string;
+  /** A cap the plan does not have. */
+  unlimited: string;
+  /** A per-branch plan's branches: as many as are paid for. */
+  paidBranches: string;
+  /** The storage units, after a figure. */
+  mb: string;
+  gb: string;
+  /** A trial's length: interpolates {days}. */
+  days: string;
+  /** Under the table: what "Unlimited" means on Group. */
+  note: string;
 }
 
 /** One plan-fee offer's words; its percents and dates are in `lib/plans.ts`. */
@@ -497,6 +530,8 @@ export interface SiteContent {
       note: string;
     };
     plans: Plan[];
+    /** The four plans in one table, under the plan grid (`/pricing#compare-plans`). */
+    comparePlans: PlanCompareCopy;
     /** The AI credits block under the plan grid (`/pricing#ai-credits`). */
     ai: AiCreditsCopy;
     /**

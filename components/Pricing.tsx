@@ -19,6 +19,7 @@ import {
 } from "@/lib/plans";
 import { Check } from "./icons";
 import PricingAi from "./PricingAi";
+import PricingCompare from "./PricingCompare";
 import PricingToggle from "./PricingToggle";
 import Reveal from "./Reveal";
 import { Container, SectionHead } from "./Section";
@@ -67,6 +68,7 @@ export default function Pricing({
   copy,
   compact = false,
   builtAt,
+  withCompare = false,
   withAi = false,
 }: {
   /** `pricing` from the page's content tree, passed down by the server page. */
@@ -74,6 +76,8 @@ export default function Pricing({
   compact?: boolean;
   /** `Date.now()` when the server page was rendered. */
   builtAt: number;
+  /** Render the plan comparison table under the grid (/pricing). */
+  withCompare?: boolean;
   /** Render the AI credits block under the grid (/pricing). */
   withAi?: boolean;
 }) {
@@ -282,6 +286,16 @@ export default function Pricing({
         <Reveal delay={140}>
           <p className="mt-8 max-w-3xl text-xs leading-relaxed text-ink-dim">{copy.note}</p>
         </Reveal>
+
+        {withCompare ? (
+          <PricingCompare
+            copy={copy}
+            plans={copy.plans}
+            locale={locale}
+            currency={currency}
+            interval={interval}
+          />
+        ) : null}
 
         {withAi ? (
           <PricingAi
