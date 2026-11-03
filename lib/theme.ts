@@ -6,10 +6,15 @@ export const THEME_KEY = "devyapos-theme";
 /**
  * Inlined in <head> so the stored theme is applied before first paint.
  *
- * Without this the page would render in the OS theme and then snap to the
- * stored one on hydration — a full-page flash on every navigation. Kept as a
- * string constant so the script and ThemeToggle can never drift on the
+ * Without this the page would render in the light default and then snap to a
+ * stored dark theme on hydration — a full-page flash on every navigation. Kept
+ * as a string constant so the script and ThemeToggle can never drift on the
  * storage key or the attribute they agree on.
+ *
+ * There are two themes and the OS is never asked. Only a stored "light" or
+ * "dark" is applied; anything else (nothing stored, a "system" or any other
+ * stale value) leaves the server's light default, and the next press of the
+ * toggle stores a real choice over it.
  *
  * It lives here, in a plain module, and not in ThemeToggle.tsx, on purpose.
  * Anything a server component imports from a "use client" module is a client

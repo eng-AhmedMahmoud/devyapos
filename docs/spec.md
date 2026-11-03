@@ -482,13 +482,17 @@ colour in devya-commerce first, then here.
 
 ### Token-driven palette, light + dark
 
-Every color is a CSS custom property defined **twice** — `:root[data-theme="light"]`
-and `:root[data-theme="dark"]` in `app/globals.css` — plus a third
-`@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }`
-block that mirrors the dark set for a page without the attribute (none ships
-without it). Because the theme *default* is light (`data-theme="light"`
-hardcoded in `app/[locale]/layout.tsx`, as the umbrella site boots), dark
-mode is the one visitors opt into, and the toggle remembers it.
+Every color is a CSS custom property defined **twice** — `:root,
+:root[data-theme="light"]` and `:root[data-theme="dark"]` in
+`app/globals.css`. There are two themes and the OS is never asked: no
+`prefers-color-scheme` block, so a page without the attribute is light.
+Because the theme *default* is light (`data-theme="light"` hardcoded in
+`app/[locale]/layout.tsx`, as the umbrella site boots), dark mode is the one
+visitors opt into, and the toggle remembers it. A stored value other than
+`light` or `dark` (an old `system`) leaves the light default until the next
+press stores a real choice (`tests/theme.test.ts`, `e2e/theme.spec.ts`). The
+standalone `app/global-error.tsx` and `app/global-not-found.tsx` use the
+system colours in their light scheme for the same reason.
 
 The token *names* predate the palette and were kept so the rebrand was a
 change of values, not of every component: `--bg/--surface/--surface-2/
@@ -508,8 +512,8 @@ mock) keep their curves. `tests/tokens.test.ts` recomputes the WCAG contrast
 of every text pair from `globals.css` in both themes.
 
 Custom `@custom-variant dark` (`app/globals.css`) makes `dark:` follow the
-explicit `data-theme` choice first, OS preference only as fallback — same
-precedence as the token blocks. Used almost nowhere except `ThemeToggle`'s
+`data-theme` choice only, never the OS — the same rule as the token blocks.
+Used almost nowhere except `ThemeToggle`'s
 own sun/moon SVG swap (both icons always render; CSS hides the wrong one, so
 it's correct even pre-hydration).
 
