@@ -565,7 +565,7 @@ export const en: SiteContent = {
           "A taste of the AI assistant",
           "Full Arabic/English",
         ],
-        excludes: "Not on Free: kitchen display, online shop, delivery, loyalty, promotions, inventory, more branches, API and e-invoicing.",
+        excludes: "Not on Free: kitchen display, online shop, delivery, loyalty, promotions, inventory, more branches and API.",
         cta: "Start free",
       },
       {
