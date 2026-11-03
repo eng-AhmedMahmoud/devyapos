@@ -20,16 +20,17 @@ function subscribe(onChange: () => void) {
   };
 }
 
+/* Two themes, light and dark, and never the OS's: only an explicit "dark"
+   counts, so a missing attribute is the light default. */
 function isDark() {
-  const attr = document.documentElement.getAttribute("data-theme");
-  if (attr) return attr === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return document.documentElement.getAttribute("data-theme") === "dark";
 }
 
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const t = useTranslations("a11y");
-  // Server snapshot is `false`: the markup is theme-agnostic (both glyphs ship,
-  // CSS picks one), so the initial value only matters for the aria label.
+  // Server snapshot is `false`, the server-rendered default (light): the markup
+  // is theme-agnostic (both glyphs ship, CSS picks one), so the initial value
+  // only matters for the aria label.
   const dark = useSyncExternalStore(subscribe, isDark, () => false);
 
   function toggle() {

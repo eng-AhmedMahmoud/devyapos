@@ -136,63 +136,6 @@
   --shadow-lift: 0 28px 48px -28px rgb(0 0 0 / 0.8);
 }
 
-/* Visitors who never touch the toggle follow their OS. The toggle writes
-   data-theme, and the rule above wins over this one by specificity. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    color-scheme: dark;
-
-    /* The night ground of the Moving family, not a neutral grey. */
-    --bg: #15120f;
-    --surface: #211c17;
-    --surface-2: #1c1814;
-    --surface-3: #27221c;
-    --line: rgb(239 232 218 / 0.14);
-    --line-soft: rgb(239 232 218 / 0.08);
-    --line-strong: rgb(239 232 218 / 0.7);
-
-    --ink: #efe8da;
-    --ink-2: #d9d0c1;
-    --ink-dim: #aba294;
-
-    /* Primary — bone on night. */
-    --brand: #efe8da;
-    --brand-hover: #ffffff;
-    --brand-soft: #3a2d14;
-    --on-brand: #15120f;
-
-    /* On the night ground saffron reads as type too. */
-    --saffron: #f0ae35;
-    --on-saffron: #15120f;
-    --caramel: #f0ae35;
-    --gold: #f0ae35;
-    --pink: #b9b0a2;
-    --mint: #4fbf86;
-
-    /* Bands go deeper than the page so they still separate. */
-    --espresso: #0d0b09;
-    --espresso-2: #191511;
-    --espresso-line: #2e2822;
-    --on-espresso: #efe8da;
-    --on-espresso-dim: #aba294;
-    --on-espresso-mint: #4fbf86;
-    --on-espresso-danger: #e2695c;
-
-    --grid-line: rgb(239 232 218 / 0.07);
-
-    /* Dark: a bone tile, ink letter, saffron window — the plain mark. */
-    --mark-tile: #efe8da;
-    --mark-glyph: #15120f;
-    --mark-accent: #f0ae35;
-
-    --ok: #4fbf86;
-    --danger: #e2695c;
-
-    --shadow-warm: 0 1px 0 rgb(0 0 0 / 0.3);
-    --shadow-lift: 0 28px 48px -28px rgb(0 0 0 / 0.8);
-  }
-}
-
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -240,21 +183,11 @@
 }
 
 /*
- * `dark:` follows the explicit choice first and the OS only when no choice has
- * been made — the same precedence the custom properties above use. Almost
- * nothing needs it (theming happens through the tokens), but the theme toggle's
- * own icon has to swap without JS.
+ * `dark:` follows the chosen theme only, never the OS — the same rule the
+ * custom properties above use. Almost nothing needs it (theming happens
+ * through the tokens), but the theme toggle's own icon has to swap without JS.
  */
-@custom-variant dark {
-  &:where([data-theme="dark"], [data-theme="dark"] *) {
-    @slot;
-  }
-  @media (prefers-color-scheme: dark) {
-    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
-      @slot;
-    }
-  }
-}
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 html {
   scroll-behavior: smooth;
@@ -381,12 +314,6 @@ html[lang="ar"] .text-band {
 :root[data-theme="dark"] .text-band {
   background-image: none;
   color: var(--saffron);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .text-band {
-    background-image: none;
-    color: var(--saffron);
-  }
 }
 @media (forced-colors: active) {
   .text-band {

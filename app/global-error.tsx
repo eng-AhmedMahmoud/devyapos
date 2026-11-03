@@ -5,9 +5,10 @@
  * renders its own document with nothing from the app: no fonts, no
  * globals.css, no content module, no locale (the [locale] segment is what
  * failed). It says the same thing in Arabic first and English second, uses
- * the system's colours so it reads in light and dark, and never shows the
- * error's message or stack, only Next's digest, which matches the server's
- * `request_error` log line (instrumentation.ts).
+ * the system's colours in their light scheme (the site's default theme, never
+ * the OS's), and never shows the error's message or stack, only Next's
+ * digest, which matches the server's `request_error` log line
+ * (instrumentation.ts).
  */
 export default function GlobalError({ error, retry }: { error: unknown; retry: () => void }) {
   const digest =
@@ -25,7 +26,7 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
           placeItems: "center",
           padding: "24px 16px",
           boxSizing: "border-box",
-          colorScheme: "light dark",
+          colorScheme: "light",
           background: "Canvas",
           color: "CanvasText",
           fontFamily: "system-ui, sans-serif",

@@ -19,10 +19,11 @@ import { brand } from "@/lib/brand";
  *
  * Next serves it without any layout, so it renders its own document and,
  * like app/global-error.tsx, carries nothing it does not need: no fonts and no
- * globals.css, system colours so it reads in light and dark. The URL's locale
- * is unknown to a static page, so it says the same thing in Arabic first (the
- * default locale) and English second, each with its own lang and dir, and
- * links to both home pages and both pricing pages.
+ * globals.css, the system's colours in their light scheme (the site's default
+ * theme, never the OS's, and the one the baked mark below is drawn for). The
+ * URL's locale is unknown to a static page, so it says the same thing in
+ * Arabic first (the default locale) and English second, each with its own
+ * lang and dir, and links to both home pages and both pricing pages.
  */
 const ar = getContent("ar");
 const en = getContent("en");
@@ -49,7 +50,7 @@ export default function GlobalNotFound() {
           placeItems: "center",
           padding: "24px 16px",
           boxSizing: "border-box",
-          colorScheme: "light dark",
+          colorScheme: "light",
           background: "Canvas",
           color: "CanvasText",
           fontFamily: "system-ui, sans-serif",
