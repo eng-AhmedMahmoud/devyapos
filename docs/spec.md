@@ -137,7 +137,8 @@ The FAQ deliberately does **not** appear here — see FAQ placement note below.
 "what kind of restaurant are you?" tabs, each pointing at a package) →
 `Pricing` (`components/Pricing.tsx`, `compact` mode — no duplicate section
 head: the billing and currency switches (`components/PricingToggle.tsx`),
-the open offers band, the four plans, and the AI credits block
+the open offers band, the four plans, the plan comparison
+`components/PricingCompare.tsx` at `#compare-plans`, and the AI credits block
 `components/PricingAi.tsx` at `#ai-credits`) → `PricingAddOns` (`components/PricingAddOns.tsx`, modules sold on top of any
 package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
 market-anchor competitor table) → `MovingStoresBand`
@@ -165,6 +166,21 @@ branch any more: its add-on card quotes the cheapest accounting plan
 (EGP 699 / SAR 119 a company) and links to `/accounting-trial`, where the POS
 link is included in every paid plan. `tests/pricing.test.ts` pins every figure
 against the product's file.
+
+The plan comparison sets the four plans side by side in one table: the price
+per branch (following the billing and currency switches; Group prints the
+card's "Quoted"), branches, staff per branch, menu items, sales a month,
+storage, AI credits a month and once, and the trial; then table service,
+coursing, split bills, ZATCA e-invoicing, the offline till, digital receipts,
+API keys and brands. Every cell comes from `lib/plan-compare.ts`, which reads
+`lib/plans.ts`: the caps and the flags each plan may switch on mirror bohub-pos
+`packages/shared/src/plans.ts`, and the dine-in pack (tables, courses, split
+bills) is marked only on the packages whose ops-console tier preset carries
+it, Dining room and Group (`ops-app/lib/plans.ts`). It is a captioned
+`<table>` with row and column heads and spoken words behind every tick and
+dash, and on a phone it scrolls sideways inside a focusable region with the
+row heads held at the inline start (`tests/plan-compare.test.ts`,
+`e2e/pricing.spec.ts`).
 
 ### `/compare` (`app/[locale]/compare/page.tsx`)
 

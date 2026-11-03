@@ -10,11 +10,15 @@ import {
   AI_TIERS,
   AI_TIER_IDS,
   DEFAULT_CURRENCY,
+  DINE_IN_FEATURES,
+  FREE_PLAN_FEATURES,
   GRACE_DAYS,
   MONTHS_CHARGED_PER_YEAR,
   OFFER_CODES,
   PLANS,
+  PLAN_ALWAYS_ALLOWED_FEATURES,
   PLAN_CURRENCIES,
+  PLAN_FEATURE_KEYS,
   PLAN_IDS,
   PLAN_OFFERS,
   TRIAL_DAYS,
@@ -22,6 +26,8 @@ import {
   discounted,
   offerOpen,
   openOffers,
+  planAllowsFeature,
+  planIncludes,
   planNumbers,
   planPrice,
   type PlanCurrency,
@@ -36,7 +42,9 @@ import { routes } from "@/lib/routes";
  * plans, their prices per currency, caps, AI allowances and the two offers;
  * decision docs/decisions/2026-10-27-pos-plans-prices-and-limits.md) and
  * `packages/shared/src/ai-credits.ts` (the AI tiers and packs; decision
- * 2026-10-26-ai-credits-and-usage-limits.md). The product's file is in minor
+ * 2026-10-26-ai-credits-and-usage-limits.md). Which package carries the
+ * dine-in pack is the ops console's tier presets (`ops-app/lib/plans.ts`, the
+ * `dinein` module in Dining room and Group). The product's file is in minor
  * units; these are whole units. Change a price there first, then
  * `lib/plans.ts` and the table below in the same pull request — the product's
  * own tests pin the same figures, so a drift on either side fails a test.
@@ -98,10 +106,22 @@ describe("pricing: the plans", () => {
     expect(GRACE_DAYS).toBe(7);
     const caps = Object.fromEntries(PLANS.map((p) => [p.id, p.limits]));
     expect(caps).toEqual({
-      free: { branches: 1, staffPerBranch: 2, products: 30, ordersPerMonth: 300, storageMb: 100 },
-      counter: { branches: null, staffPerBranch: 10, products: null, ordersPerMonth: null, storageMb: 2_048 },
-      dining: { branches: null, staffPerBranch: 25, products: null, ordersPerMonth: null, storageMb: 5_120 },
-      group: { branches: null, staffPerBranch: null, products: null, ordersPerMonth: null, storageMb: null },
+      free: {
+        branches: 1, staffPerBranch: 2, products: 30, ordersPerMonth: 300, storageMb: 100,
+        brands: 1, apiKeys: 0,
+      },
+      counter: {
+        branches: null, staffPerBranch: 10, products: null, ordersPerMonth: null, storageMb: 2_048,
+        brands: 1, apiKeys: 0,
+      },
+      dining: {
+        branches: null, staffPerBranch: 25, products: null, ordersPerMonth: null, storageMb: 5_120,
+        brands: 1, apiKeys: 0,
+      },
+      group: {
+        branches: null, staffPerBranch: null, products: null, ordersPerMonth: null, storageMb: null,
+        brands: null, apiKeys: null,
+      },
     });
     expect(PLANS.map((p) => [p.id, p.trialDays, p.aiCreditsMonthly, p.aiTrialCredits])).toEqual([
       ["free", 0, 0, 10],
@@ -109,6 +129,47 @@ describe("pricing: the plans", () => {
       ["dining", 14, 30, 10],
       ["group", 14, 300, 10],
     ]);
+  });
+
+  it("lets each plan switch on what the product lets it, and sells the room with two", () => {
+    // packages/shared/src/plans.ts: FREE_PLAN_FEATURES, PLAN_ALWAYS_ALLOWED_FEATURES, `features`.
+    expect(FREE_PLAN_FEATURES).toEqual(["digitalReceipt", "aiCompanion"]);
+    expect(PLAN_ALWAYS_ALLOWED_FEATURES).toEqual(["zatcaEInvoicing", "offlinePos"]);
+    expect(PLANS.map((p) => [p.id, p.features])).toEqual([
+      ["free", ["digitalReceipt", "aiCompanion"]],
+      ["counter", "all"],
+      ["dining", "all"],
+      ["group", "all"],
+    ]);
+    // ops-app/lib/plans.ts: the `dinein` module's flags, and the packages that carry it.
+    expect(DINE_IN_FEATURES).toEqual(["tableService", "coursing", "splitBill"]);
+    expect(PLANS.map((p) => [p.id, p.dineIn])).toEqual([
+      ["free", false],
+      ["counter", false],
+      ["dining", true],
+      ["group", true],
+    ]);
+  });
+
+  it("allows a flag as the product's planAllowsFeature does, and includes the room only where it is sold", () => {
+    // Free: its own two, plus the two no plan masks; nothing else.
+    for (const key of PLAN_FEATURE_KEYS) {
+      const allowed = ["digitalReceipt", "aiCompanion", "zatcaEInvoicing", "offlinePos"].includes(key);
+      expect(planAllowsFeature("free", key), `free ${key}`).toBe(allowed);
+      expect(planIncludes("free", key), `free ${key}`).toBe(allowed);
+    }
+    // The paid plans may switch every flag on; Counter is not sold the room.
+    for (const id of ["counter", "dining", "group"] as const) {
+      for (const key of PLAN_FEATURE_KEYS) expect(planAllowsFeature(id, key), `${id} ${key}`).toBe(true);
+    }
+    for (const key of DINE_IN_FEATURES) {
+      expect(planIncludes("counter", key), `counter ${key}`).toBe(false);
+      expect(planIncludes("dining", key), `dining ${key}`).toBe(true);
+      expect(planIncludes("group", key), `group ${key}`).toBe(true);
+    }
+    for (const key of ["zatcaEInvoicing", "offlinePos", "digitalReceipt"] as const) {
+      expect(planIncludes("counter", key), `counter ${key}`).toBe(true);
+    }
   });
 
   it("starts the currency switch on EGP in both languages", () => {

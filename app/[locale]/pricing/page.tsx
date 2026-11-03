@@ -51,12 +51,13 @@ export default async function PricingPage({
           restaurant they run before a number is on screen, and each one points
           at the package built for it. */}
       <PricingSegments copy={c.pricing.segments} />
-      {/* The plan grid carries its own billing and currency switches, and
-          the AI credits block under it (#ai-credits, which the AI add-on
-          links to) shares the currency; the page hero already said
-          everything a section head would have repeated. */}
+      {/* The plan grid carries its own billing and currency switches; the
+          plan comparison under it (#compare-plans) follows both, and the AI
+          credits block under that (#ai-credits, which the AI add-on links
+          to) shares the currency. The page hero already said everything a
+          section head would have repeated. */}
       <div className="bg-bg pt-10 pb-20 sm:pb-24">
-        <Pricing copy={c.pricing} compact builtAt={BUILT_AT} withAi />
+        <Pricing copy={c.pricing} compact builtAt={BUILT_AT} withCompare withAi />
       </div>
       <PricingAddOns copy={c.pricing.addOns} />
       <MarketAnchor />

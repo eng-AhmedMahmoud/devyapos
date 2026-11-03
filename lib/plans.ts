@@ -5,9 +5,11 @@
  * bohub-pos `packages/shared/src/plans.ts` (prices, caps, AI allowances and
  * the two offers; decision `docs/decisions/2026-10-27-pos-plans-prices-and-limits.md`)
  * and `packages/shared/src/ai-credits.ts` (the AI add-on tiers and packs;
- * decision `2026-10-26-ai-credits-and-usage-limits.md`). Change them there
- * first, then here; `tests/pricing.test.ts` pins every figure so a drift on
- * either side fails a test.
+ * decision `2026-10-26-ai-credits-and-usage-limits.md`). Which package
+ * carries the dine-in pack is the ops console's (`ops-app/lib/plans.ts`, the
+ * `dinein` module). Change them there first, then here;
+ * `tests/pricing.test.ts` pins every figure so a drift on either side fails a
+ * test.
  *
  * Two differences from the product's file, both because this is a page and
  * not a bill:
@@ -50,6 +52,41 @@ export const TRIAL_DAYS = 14;
 /** Days an unpaid period or an expired trial keeps its plan before the account falls to Free. */
 export const GRACE_DAYS = 7;
 
+/**
+ * The product's feature flags this site names, by their keys in bohub-pos
+ * `packages/shared/src/feature-flags.ts`. Not the whole catalogue: only the
+ * flags the lists below and the plan comparison on /pricing read.
+ */
+export const PLAN_FEATURE_KEYS = [
+  "digitalReceipt",
+  "aiCompanion",
+  "zatcaEInvoicing",
+  "offlinePos",
+  "tableService",
+  "coursing",
+  "splitBill",
+] as const;
+export type PlanFeatureKey = (typeof PLAN_FEATURE_KEYS)[number];
+
+/** What a Free account may switch on: the receipt and a taste of the assistant (`FREE_PLAN_FEATURES`). */
+export const FREE_PLAN_FEATURES: readonly PlanFeatureKey[] = ["digitalReceipt", "aiCompanion"];
+
+/**
+ * Flags no plan masks (`PLAN_ALWAYS_ALLOWED_FEATURES`): ZATCA e-invoicing is
+ * the law on a Saudi stack, and the offline till keeps a counter selling
+ * through an outage.
+ */
+export const PLAN_ALWAYS_ALLOWED_FEATURES: readonly PlanFeatureKey[] = [
+  "zatcaEInvoicing",
+  "offlinePos",
+];
+
+/**
+ * The dine-in pack: the flags of the ops console's `dinein` module (tables,
+ * courses held back and fired, one check split between guests).
+ */
+export const DINE_IN_FEATURES: readonly PlanFeatureKey[] = ["tableService", "coursing", "splitBill"];
+
 export interface PlanNumbers {
   id: PlanId;
   /**
@@ -65,11 +102,28 @@ export interface PlanNumbers {
     products: number | null;
     ordersPerMonth: number | null;
     storageMb: number | null;
+    /** Brands in one account. */
+    brands: number | null;
+    /** Keys for the product's public API; 0 is none. */
+    apiKeys: number | null;
   };
   /** AI credits granted each month. */
   aiCreditsMonthly: number;
   /** AI credits granted once, on the account's first plan. */
   aiTrialCredits: number;
+  /**
+   * The flags this plan may switch on, as the API enforces them: a list, or
+   * "all". Read through `planAllowsFeature`, which adds the flags no plan masks.
+   */
+  features: "all" | readonly PlanFeatureKey[];
+  /**
+   * Whether the plan's package includes the dine-in pack (`DINE_IN_FEATURES`).
+   * This is not an API cap: Counter's flags are "all", so the API would let
+   * them on. What a plan is sold is its tier preset in the ops console
+   * (`ops-app/lib/plans.ts`), and only Dining room's and Group's include the
+   * `dinein` module.
+   */
+  dineIn: boolean;
 }
 
 const FREE_PRICES = { EGP: [0, 0], SAR: [0, 0], AED: [0, 0], USD: [0, 0] } as const;
@@ -85,9 +139,13 @@ export const PLANS: readonly PlanNumbers[] = [
       products: 30,
       ordersPerMonth: 300,
       storageMb: 100,
+      brands: 1,
+      apiKeys: 0,
     },
     aiCreditsMonthly: 0,
     aiTrialCredits: 10,
+    features: FREE_PLAN_FEATURES,
+    dineIn: false,
   },
   {
     id: "counter",
@@ -104,9 +162,13 @@ export const PLANS: readonly PlanNumbers[] = [
       products: null,
       ordersPerMonth: null,
       storageMb: 2_048,
+      brands: 1,
+      apiKeys: 0,
     },
     aiCreditsMonthly: 10,
     aiTrialCredits: 10,
+    features: "all",
+    dineIn: false,
   },
   {
     id: "dining",
@@ -123,9 +185,13 @@ export const PLANS: readonly PlanNumbers[] = [
       products: null,
       ordersPerMonth: null,
       storageMb: 5_120,
+      brands: 1,
+      apiKeys: 0,
     },
     aiCreditsMonthly: 30,
     aiTrialCredits: 10,
+    features: "all",
+    dineIn: true,
   },
   {
     id: "group",
@@ -137,10 +203,14 @@ export const PLANS: readonly PlanNumbers[] = [
       products: null,
       ordersPerMonth: null,
       storageMb: null,
+      brands: null,
+      apiKeys: null,
     },
     // AI Plus is part of the Group package.
     aiCreditsMonthly: 300,
     aiTrialCredits: 10,
+    features: "all",
+    dineIn: true,
   },
 ];
 
@@ -159,6 +229,23 @@ export function planPrice(
   const pair = planNumbers(id).prices?.[currency];
   if (!pair) return null;
   return interval === "yearly" ? pair[1] : pair[0];
+}
+
+/** Whether the plan lets the flag be on — the product's `planAllowsFeature`. */
+export function planAllowsFeature(id: PlanId, key: PlanFeatureKey): boolean {
+  const { features } = planNumbers(id);
+  return (
+    features === "all" || PLAN_ALWAYS_ALLOWED_FEATURES.includes(key) || features.includes(key)
+  );
+}
+
+/**
+ * Whether the plan's package includes the flag: the plan allows it and, for
+ * the dine-in pack, sells it. What the comparison on /pricing marks as included.
+ */
+export function planIncludes(id: PlanId, key: PlanFeatureKey): boolean {
+  if (!planAllowsFeature(id, key)) return false;
+  return !DINE_IN_FEATURES.includes(key) || planNumbers(id).dineIn;
 }
 
 // ── Offers ───────────────────────────────────────────────────────────────
