@@ -584,6 +584,11 @@ export interface SiteContent {
     legal: string;
     /** Group label for the social icon row — read by screen readers only. */
     social: string;
+    /**
+     * The label over the row of links to the rest of the Moving family
+     * (`movingFamily` in lib/brand.ts): shown, and the list's accessible name.
+     */
+    family: string;
   };
   about: {
     badge: string;
@@ -789,8 +794,6 @@ export interface SiteContent {
     points: string[];
     note: string;
     cta: string;
-    /** The footer's one-line link to the sister product. */
-    footerLink: string;
   };
 
   /**

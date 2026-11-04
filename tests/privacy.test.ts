@@ -32,8 +32,11 @@ const sources = SOURCE_DIRS.flatMap((d) => files(join(root, d))).map((path) => (
 /** Hosts the source may name: this site, its family, and plain navigation targets. */
 const ALLOWED_HOSTS = new Set([
   "pos.movingsystems.tech",
-  // The sister product, Moving Stores: a plain link, never loaded by the page.
+  // The sister products, Moving Stores, Moving Accounting and Moving Loyalty:
+  // plain links in the footer's family row, never loaded by the page.
   "stores.movingsystems.tech",
+  "accounting.movingsystems.tech",
+  "loyalty.movingsystems.tech",
   // The umbrella site, where the support assistant answers: reached only
   // through this site's own /moving-support rewrite, never by the browser.
   "movingsystems.tech",

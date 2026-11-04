@@ -894,6 +894,7 @@ export const ar: SiteContent = {
     ],
     legal: "جميع الحقوق محفوظة.",
     social: "موفينج POS على السوشيال ميديا",
+    family: "عائلة موفينج",
   },
 
   about: {
@@ -1298,7 +1299,6 @@ export const ar: SiteContent = {
     ],
     note: "الربط مخصص للمطاعم والكافيهات على موفينج POS. اسألنا عن الاثنين معاً حين تشترك في موفينج POS.",
     cta: "تعرّف على موفينج ستورز",
-    footerLink: "موفينج ستورز — متجرك الإلكتروني",
   },
 
   parentCompany: {

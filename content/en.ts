@@ -902,6 +902,7 @@ export const en: SiteContent = {
     ],
     legal: "All rights reserved.",
     social: "Moving POS on social media",
+    family: "The Moving family",
   },
 
   about: {
@@ -1306,7 +1307,6 @@ export const en: SiteContent = {
     ],
     note: "The connection is for restaurants and cafés on Moving POS. Ask about both together when you take Moving POS.",
     cta: "See Moving Stores",
-    footerLink: "Moving Stores — your online store",
   },
 
   parentCompany: {

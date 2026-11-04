@@ -14,10 +14,11 @@
  * (deploy/nginx.conf). The studio behind it is Devya Solutions, whose domain
  * is devya.dev, never devya.solutions.
  *
- * Moving is a product family — Moving Stores (devya-commerce) and the umbrella
- * site at movingsystems.tech (moving-landing) — and the family writes its name
- * in Arabic on Arabic pages: موفينج ستورز, موفينج POS. "POS" stays Latin, the
- * way the term is set in Arabic technical prose.
+ * Moving is a product family — Moving Stores (devya-commerce), Moving
+ * Accounting, Moving Loyalty and the umbrella site at movingsystems.tech
+ * (moving-landing) — and the family writes its name in Arabic on Arabic
+ * pages: موفينج ستورز, موفينج POS. "POS" stays Latin, the way the term is set
+ * in Arabic technical prose.
  *
  * Rename the product here and the whole site follows.
  */
@@ -54,6 +55,25 @@ export const brand = {
   stores: {
     name: { ar: "موفينج ستورز", en: "Moving Stores" },
     url: "https://stores.movingsystems.tech",
+  },
+  /**
+   * The rest of the Moving family, each on its own host: the umbrella site
+   * (moving-landing), Moving Accounting (moving-accounting) and Moving
+   * Loyalty (wallet-loyalty). The footer links every one of them, with
+   * Moving Stores, on every page (`movingFamily` below). The Arabic names are
+   * the ones those sites print (moving-landing content/ar.ts).
+   */
+  umbrella: {
+    name: { ar: "موفينج سيستمز", en: "Moving Systems" },
+    url: "https://movingsystems.tech",
+  },
+  accounting: {
+    name: { ar: "موفينج للمحاسبة", en: "Moving Accounting" },
+    url: "https://accounting.movingsystems.tech",
+  },
+  loyalty: {
+    name: { ar: "موفينج لويالتي", en: "Moving Loyalty" },
+    url: "https://loyalty.movingsystems.tech",
   },
   /**
    * The Moving support assistant answers on the umbrella site
@@ -101,6 +121,21 @@ export function brandName(locale: string) {
 /** The sister store builder's name as a page in `locale` prints it. */
 export function storesName(locale: string) {
   return locale === "ar" ? brand.stores.name.ar : brand.stores.name.en;
+}
+
+/**
+ * The Moving family's other sites, in the order the footer lists them: the
+ * umbrella first, then the products. Each link goes to the same language's
+ * home on that site (`/ar`, `/en`), which all four serve, so an Arabic
+ * reader lands on an Arabic page without a redirect.
+ */
+export function movingFamily(locale: string) {
+  const lang = locale === "en" ? "en" : "ar";
+  return (["umbrella", "stores", "accounting", "loyalty"] as const).map((key) => ({
+    key,
+    name: brand[key].name[lang],
+    href: `${brand[key].url}/${lang}`,
+  }));
 }
 
 /** The social profiles as a flat list, in the order the footer renders them. */

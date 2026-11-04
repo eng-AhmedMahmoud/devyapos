@@ -1,4 +1,4 @@
-import { brandName } from "@/lib/brand";
+import { brandName, movingFamily } from "@/lib/brand";
 import { NOINDEX_PATHS, routes } from "@/lib/routes";
 import { getContent } from "./content";
 import { expect, hydrated, LOCALES, test } from "./fixtures";
@@ -34,6 +34,17 @@ for (const locale of LOCALES) {
   test(`${locale}: the footer adds no headings`, async ({ request }) => {
     const html = await (await request.get(`/${locale}/pricing`)).text();
     expect(section(html, "footer")).not.toMatch(/<h[1-6][\s>]/);
+  });
+
+  test(`${locale}: every page's footer links the rest of the Moving family, followed`, async ({ request }) => {
+    for (const path of PATHS) {
+      const footer = section(await (await request.get(`/${locale}${path}`)).text(), "footer");
+      for (const site of movingFamily(locale)) {
+        const link = footer.match(new RegExp(`<a[^>]*href="${site.href}"[^>]*>([^<]*)</a>`));
+        expect(link?.[1], `${locale}${path} → ${site.href}`).toBe(site.name);
+        expect(link?.[0], `${locale}${path} → ${site.href}`).not.toMatch(/nofollow|target=/);
+      }
+    }
   });
 
   test(`${locale}: home preloads the hero face only, and no image`, async ({ request }) => {
