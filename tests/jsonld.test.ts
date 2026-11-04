@@ -6,18 +6,23 @@ import { brand } from "@/lib/brand";
 import {
   APP_ID,
   APP_PATHS,
+  CURRENCY_COUNTRY,
   FAQ_PATHS,
   ORG_ID,
   PARENT_ID,
+  PRODUCT_ID,
+  PRODUCT_PATHS,
   WEBSITE_ID,
   type JsonLdNode,
   breadcrumbJsonLd,
   organizationJsonLd,
   pageJsonLd,
+  productJsonLd,
   siteJsonLd,
   softwareApplicationJsonLd,
 } from "@/lib/jsonld";
 import { NOINDEX_PATHS, routes } from "@/lib/meta";
+import { PLAN_CURRENCIES, planPrice, type PlanCurrency } from "@/lib/plans";
 
 /**
  * The structured data, as search engines and assistants read it. The graph
@@ -86,8 +91,23 @@ describe("site-wide graph (siteJsonLd)", () => {
     expect(size.width).toBeGreaterThanOrEqual(112);
   });
 
-  it.each(LOCALES)("%s: serves Egypt, by name", (locale) => {
-    expect(organizationJsonLd(locale).areaServed).toEqual({ "@type": "Country", name: "Egypt" });
+  it.each(LOCALES)("%s: serves the countries the site prices in, by name, and its sales line serves the same", (locale) => {
+    const org = organizationJsonLd(locale);
+    expect(org.areaServed).toEqual([
+      { "@type": "Country", name: "Egypt" },
+      { "@type": "Country", name: "Saudi Arabia" },
+      { "@type": "Country", name: "United Arab Emirates" },
+    ]);
+    const [sales] = org.contactPoint as { areaServed: unknown }[];
+    expect(sales.areaServed).toEqual(["EG", "SA", "AE"]);
+  });
+
+  it("places every currency the switch shows: a country, or none for USD (everywhere else)", () => {
+    expect(Object.keys(CURRENCY_COUNTRY).sort()).toEqual([...PLAN_CURRENCIES].sort());
+    expect(CURRENCY_COUNTRY.USD).toBeNull();
+    // The mapping is the one the pricing note prints, in both languages.
+    expect(getContent("en").pricing.note).toMatch(/EGP for Egypt, SAR for Saudi Arabia, AED for the UAE and USD everywhere else/);
+    expect(getContent("ar").pricing.note).toMatch(/بالجنيه في مصر، وبالريال في السعودية، وبالدرهم في الإمارات، وبالدولار في باقي الدول/);
   });
 
   it.each(LOCALES)("%s: the WebSite is the origin, in both languages, published by the Organization", (locale) => {
@@ -122,23 +142,46 @@ describe("SoftwareApplication", () => {
     }
   });
 
-  it.each(LOCALES)("%s: offers are valid and match the published plans", (locale) => {
+  it.each(LOCALES)("%s: one AggregateOffer per price list the switch shows, each matching the published plans", (locale) => {
     const c = getContent(locale);
-    const app = softwareApplicationJsonLd(locale);
-    const agg = app.offers as Record<string, unknown> & { offers: Record<string, unknown>[] };
-    expect(agg["@type"]).toBe("AggregateOffer");
-    // `unitText` is not an Offer property; it lives on each UnitPriceSpecification.
-    expect(agg).not.toHaveProperty("unitText");
-    expect(Number(agg.lowPrice)).toBeLessThanOrEqual(Number(agg.highPrice));
-    expect(agg.offerCount).toBe(c.pricing.plans.length);
-    expect(agg.offers).toHaveLength(c.pricing.plans.length);
+    const aggs = softwareApplicationJsonLd(locale).offers as (Record<string, unknown> & {
+      offers: Record<string, unknown>[];
+    })[];
+    expect(aggs.map((a) => a.priceCurrency)).toEqual([...PLAN_CURRENCIES]);
 
-    for (const offer of agg.offers) {
-      expect(offer.seller).toEqual({ "@id": ORG_ID });
-      if (offer.price === undefined) continue;
-      const spec = offer.priceSpecification as Record<string, unknown>;
-      expect(spec).toMatchObject({ "@type": "UnitPriceSpecification", price: offer.price, priceCurrency: "EGP" });
-      expect(spec.unitText).toEqual(expect.any(String));
+    for (const agg of aggs) {
+      const currency = agg.priceCurrency as PlanCurrency;
+      const prices = c.pricing.plans.map((plan) => planPrice(plan.id, currency, "monthly"));
+      const priced = prices.filter((p): p is number => p !== null);
+      expect(agg["@type"]).toBe("AggregateOffer");
+      // `unitText` is not an Offer property; it lives on each UnitPriceSpecification.
+      expect(agg).not.toHaveProperty("unitText");
+      expect(agg.lowPrice, currency).toBe(Math.min(...priced));
+      expect(agg.highPrice, currency).toBe(Math.max(...priced));
+      expect(agg.offerCount).toBe(c.pricing.plans.length);
+      expect(agg.offers).toHaveLength(c.pricing.plans.length);
+
+      agg.offers.forEach((offer, i) => {
+        const label = `${locale} ${currency} ${c.pricing.plans[i].id}`;
+        expect(offer.name, label).toBe(c.pricing.plans[i].name);
+        expect(offer.priceCurrency, label).toBe(currency);
+        expect(offer.seller, label).toEqual({ "@id": ORG_ID });
+        if (prices[i] === null) {
+          // Group is quoted: no number is invented for it.
+          expect(offer, label).not.toHaveProperty("price");
+          expect(offer, label).not.toHaveProperty("priceSpecification");
+          return;
+        }
+        expect(offer.price, label).toBe(prices[i]);
+        const spec = offer.priceSpecification as Record<string, unknown>;
+        expect(spec, label).toMatchObject({
+          "@type": "UnitPriceSpecification",
+          price: prices[i],
+          priceCurrency: currency,
+          valueAddedTaxIncluded: false,
+        });
+        expect(spec.unitText, label).toEqual(expect.any(String));
+      });
     }
   });
 
@@ -155,6 +198,64 @@ describe("SoftwareApplication", () => {
     const list = softwareApplicationJsonLd(locale).featureList as string[];
     expect(list).toEqual(c.features.items.map((f) => f.listName ?? f.title));
     for (const name of list) expect(name).not.toMatch(UNSHIPPED);
+  });
+});
+
+describe("Product (price snippets on /pricing)", () => {
+  it("has one stable, site-level @id, the same in both languages", () => {
+    expect(PRODUCT_ID).toBe(`${brand.url}/#product`);
+    for (const locale of LOCALES) expect(productJsonLd(locale)["@id"]).toBe(PRODUCT_ID);
+  });
+
+  it("is on /pricing only, once", () => {
+    expect([...PRODUCT_PATHS]).toEqual(["/pricing"]);
+    for (const locale of LOCALES) {
+      expect(ofType(siteJsonLd(locale), "Product")).toEqual([]);
+      for (const path of PATHS) {
+        expect(ofType(pageJsonLd(locale, path), "Product").length, `${locale} ${path || "/"}`).toBe(
+          path === "/pricing" ? 1 : 0,
+        );
+      }
+    }
+  });
+
+  it.each(LOCALES)("%s: names the product, its brand and maker by the Organization's @id, and real images on this host", (locale) => {
+    const product = productJsonLd(locale);
+    expect(product.name).toBe(locale === "ar" ? brand.name.ar : brand.name.en);
+    expect(product.brand).toEqual({ "@id": ORG_ID });
+    expect(product.manufacturer).toEqual({ "@id": ORG_ID });
+    expect(product.url).toBe(`${brand.url}/${locale}/pricing`);
+    expect(String(product.description).length).toBeGreaterThan(0);
+    const images = product.image as string[];
+    expect(images.length).toBeGreaterThan(0);
+    for (const url of images) {
+      expect(url.startsWith(`${brand.url}/`), url).toBe(true);
+      expect(() => readFileSync(join(process.cwd(), "public", new URL(url).pathname)), url).not.toThrow();
+    }
+    // No rating or review exists, so none is marked up.
+    expect(product).not.toHaveProperty("aggregateRating");
+    expect(product).not.toHaveProperty("review");
+  });
+
+  it.each(LOCALES)("%s: offers one priced Offer per plan and currency, at the published monthly price", (locale) => {
+    const c = getContent(locale);
+    const offers = productJsonLd(locale).offers as Record<string, unknown>[];
+    const expected = PLAN_CURRENCIES.flatMap((currency) =>
+      c.pricing.plans.flatMap((plan) => {
+        const price = planPrice(plan.id, currency, "monthly");
+        return price === null ? [] : [{ name: plan.name, priceCurrency: currency, price }];
+      }),
+    );
+    expect(offers.map((o) => ({ name: o.name, priceCurrency: o.priceCurrency, price: o.price }))).toEqual(expected);
+    // Free, Counter and Dining room in four currencies; Group is quoted.
+    expect(offers).toHaveLength(3 * PLAN_CURRENCIES.length);
+    for (const offer of offers) {
+      expect(offer["@type"]).toBe("Offer");
+      expect(offer.availability).toBe("https://schema.org/InStock");
+      expect(offer.seller).toEqual({ "@id": ORG_ID });
+      expect(offer.url).toBe(`${brand.url}/${locale}/pricing`);
+      expect(offer.priceSpecification).toMatchObject({ valueAddedTaxIncluded: false, priceCurrency: offer.priceCurrency });
+    }
   });
 });
 

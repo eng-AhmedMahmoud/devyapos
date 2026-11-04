@@ -1,7 +1,7 @@
 import { getContent, type SiteContent } from "@/content";
 import { brand, brandName, socialLinks } from "./brand";
 import { localeHref, ogImageUrl, routes } from "./meta";
-import { planPrice } from "./plans";
+import { PLAN_CURRENCIES, planPrice, type PlanCurrency } from "./plans";
 import { SHOTS } from "./screenshots";
 
 /**
@@ -29,7 +29,34 @@ export interface JsonLdNode {
 export const ORG_ID = `${brand.url}/#organization`;
 export const WEBSITE_ID = `${brand.url}/#website`;
 export const APP_ID = `${brand.url}/#software`;
+/**
+ * The product as something sold (the Product node on /pricing). Site-level,
+ * like the two above, rather than `/{locale}/pricing#product`: it is one
+ * product in two languages, so the Arabic and English pages describe the same
+ * node instead of two products that compete with each other, and the @id
+ * survives if the node is ever emitted on a second page.
+ */
+export const PRODUCT_ID = `${brand.url}/#product`;
 export const PARENT_ID = `${brand.parent.url}/#organization`;
+
+/**
+ * The countries the site prices in, from the currency switch: the pricing
+ * note says EGP is for Egypt, SAR for Saudi Arabia and AED for the UAE, and
+ * USD for everywhere else — which is not a country, so it adds none. A
+ * currency added to `PLAN_CURRENCIES` must be placed here (tests/jsonld.test.ts).
+ */
+export const CURRENCY_COUNTRY: Record<PlanCurrency, { name: string; code: string } | null> = {
+  EGP: { name: "Egypt", code: "EG" },
+  SAR: { name: "Saudi Arabia", code: "SA" },
+  AED: { name: "United Arab Emirates", code: "AE" },
+  USD: null,
+};
+
+/** The priced countries, in the switch's order (Egypt, the home market, first). */
+export const PRICED_COUNTRIES = PLAN_CURRENCIES.flatMap((currency) => {
+  const country = CURRENCY_COUNTRY[currency];
+  return country ? [country] : [];
+});
 
 /**
  * The logo as a raster on this host. Google reads `logo` for the knowledge
@@ -80,7 +107,9 @@ export function organizationJsonLd(locale: string): JsonLdNode {
     email: brand.email,
     telephone: tel,
     sameAs: socialLinks.map((s) => s.href),
-    areaServed: { "@type": "Country", name: "Egypt" },
+    // Where the site sells, not where it markets: one Country per priced
+    // currency's country (the pricing note's own mapping).
+    areaServed: PRICED_COUNTRIES.map(({ name }) => ({ "@type": "Country", name })),
     parentOrganization: {
       "@type": "Organization",
       "@id": PARENT_ID,
@@ -94,7 +123,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
         telephone: tel,
         email: brand.email,
         url: `https://wa.me/${brand.whatsapp}`,
-        areaServed: "EG",
+        areaServed: PRICED_COUNTRIES.map(({ code }) => code),
         availableLanguage: ["ar", "en"],
       },
     ],
@@ -102,28 +131,24 @@ export function organizationJsonLd(locale: string): JsonLdNode {
 }
 
 /**
- * The product itself, priced from the real plans.
- *
- * `AggregateOffer` spans the four plans at their EGP monthly list prices
- * (`lib/plans.ts`), Free's 0 included; Group carries no `price` because it is
- * quoted, so it contributes to `offerCount` but not to the low/high band. EGP
- * only: it is the home price, and the page's other price lists are a switch
- * away rather than separate offers.
+ * One Offer per plan in one currency, at its monthly list price
+ * (`lib/plans.ts`), Free's 0 included. Group is quoted, so its Offer carries
+ * no `price` and says so in its description rather than inventing a number.
+ * VAT is excluded from every list price, as the pricing note says, so the
+ * price specification says it too.
  */
-export function softwareApplicationJsonLd(locale: string): JsonLdNode {
+function planOffers(locale: string, currency: PlanCurrency): JsonLdNode[] {
   const c = getContent(locale);
   const unit = unitText(c);
-  const prices = c.pricing.plans.map((plan) => planPrice(plan.id, "EGP", "monthly"));
-  const priced = prices.filter((p): p is number => p !== null);
 
-  const offers = c.pricing.plans.map((plan, i) => {
-    const price = prices[i];
+  return c.pricing.plans.map((plan) => {
+    const price = planPrice(plan.id, currency, "monthly");
     const offer: JsonLdNode = {
       "@type": "Offer",
       name: plan.name,
       description: plan.tagline,
       url: localeHref(locale, "/pricing"),
-      priceCurrency: "EGP",
+      priceCurrency: currency,
       availability: "https://schema.org/InStock",
       seller: { "@id": ORG_ID },
     };
@@ -133,7 +158,8 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
       offer.priceSpecification = {
         "@type": "UnitPriceSpecification",
         price,
-        priceCurrency: "EGP",
+        priceCurrency: currency,
+        valueAddedTaxIncluded: false,
         unitText: unit,
         referenceQuantity: {
           "@type": "QuantitativeValue",
@@ -147,6 +173,35 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
     }
 
     return offer;
+  });
+}
+
+/**
+ * The product itself, priced from the real plans.
+ *
+ * One `AggregateOffer` per price list the currency switch shows (EGP, SAR,
+ * AED, USD — `PLAN_CURRENCIES`), each spanning the four plans at their monthly
+ * list prices in that currency. Group carries no `price`, so it counts in
+ * `offerCount` but not in the low/high band. Until 2026-11-04 only EGP was
+ * marked up, which told search engines the product is sold in Egypt alone
+ * while the page sells it in four currencies.
+ */
+export function softwareApplicationJsonLd(locale: string): JsonLdNode {
+  const c = getContent(locale);
+
+  const offers = PLAN_CURRENCIES.map((currency) => {
+    const plans = planOffers(locale, currency);
+    const priced = plans.flatMap((o) => (typeof o.price === "number" ? [o.price] : []));
+    return {
+      "@type": "AggregateOffer",
+      priceCurrency: currency,
+      lowPrice: Math.min(...priced),
+      highPrice: Math.max(...priced),
+      offerCount: plans.length,
+      // No `unitText` here: it is not an Offer property. The billing unit is
+      // on each plan's UnitPriceSpecification.
+      offers: plans,
+    };
   });
 
   return {
@@ -165,18 +220,44 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
     screenshot: `${brand.url}${SHOTS.posOrder.src}`,
     publisher: { "@id": ORG_ID },
     featureList: c.features.items.map((f) => f.listName ?? f.title),
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: "EGP",
-      lowPrice: Math.min(...priced),
-      highPrice: Math.max(...priced),
-      offerCount: c.pricing.plans.length,
-      // No `unitText` here: it is not an Offer property. The billing unit is
-      // on each plan's UnitPriceSpecification above.
-      offers,
-    },
+    offers,
   };
 }
+
+/**
+ * The product as Google's product snippets read it, on /pricing only.
+ *
+ * SoftwareApplication's rich result needs a rating or a review, and there are
+ * none to mark up (none are invented). A `Product` with `offers` is eligible
+ * for price snippets without either. Its offers are the plans that have a
+ * price — Free, Counter and Dining room in every currency the switch shows —
+ * as plain Offers, one per plan and currency: Google asks for `Offer`, not
+ * `AggregateOffer`, when the offers are variants of one product. Group is
+ * quoted, and an Offer without a price is not one, so it is left out here and
+ * stays in the SoftwareApplication's list.
+ */
+export function productJsonLd(locale: string): JsonLdNode {
+  const c = getContent(locale);
+
+  return {
+    "@type": "Product",
+    "@id": PRODUCT_ID,
+    name: brandName(locale),
+    alternateName: brandName(locale === "ar" ? "en" : "ar"),
+    description: c.meta.home.description,
+    url: localeHref(locale, "/pricing"),
+    image: [`${brand.url}${SHOTS.posOrder.src}`, ogImageUrl(locale, "/pricing")],
+    brand: { "@id": ORG_ID },
+    manufacturer: { "@id": ORG_ID },
+    category: "Point of Sale software",
+    offers: PLAN_CURRENCIES.flatMap((currency) =>
+      planOffers(locale, currency).filter((offer) => typeof offer.price === "number"),
+    ),
+  };
+}
+
+/** Routes whose page is the price list, so carry the Product node. */
+export const PRODUCT_PATHS = ["/pricing"] as const;
 
 /** The site itself: one WebSite in both languages, published by Moving POS. */
 export function webSiteJsonLd(locale: string): JsonLdNode {
@@ -290,6 +371,9 @@ export function pageJsonLd(locale: string, path: string): JsonLdNode[] {
   const nodes: JsonLdNode[] = [];
   if ((APP_PATHS as readonly string[]).includes(path)) {
     nodes.push(softwareApplicationJsonLd(locale));
+  }
+  if ((PRODUCT_PATHS as readonly string[]).includes(path)) {
+    nodes.push(productJsonLd(locale));
   }
   const crumbs = breadcrumbJsonLd(locale, path);
   if (crumbs) nodes.push(crumbs);
