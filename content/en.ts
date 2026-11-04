@@ -223,10 +223,9 @@ export const en: SiteContent = {
       },
       {
         icon: "loyalty",
-        title: "Loyalty, points and tiers",
-        listName: "Loyalty points",
-        body: "Bronze → Silver → Gold → Platinum. Customers earn, come back to spend, and bring friends — with notifications and campaigns that reach them directly.",
-        badge: "+50% retention",
+        title: "Loyalty points",
+        body: "Customers earn points on what they order and spend them on a later visit. Every balance is rebuilt from a ledger of each point earned and spent, so it adds up like the cash drawer.",
+        badge: "Counted like cash",
         hue: "rose",
       },
       {
@@ -341,7 +340,7 @@ export const en: SiteContent = {
     them: "Enterprise POS platforms",
     rows: [
       { label: "Digital QR menu", us: true, them: true },
-      { label: "Loyalty, points and tiers", us: true, them: true },
+      { label: "Loyalty points", us: true, them: true },
       { label: "Push notifications and campaigns", us: true, them: true },
       { label: "Online ordering under your brand", us: true, them: "partial" },
       { label: "Full point of sale (register)", us: true, them: false },
@@ -1133,7 +1132,7 @@ export const en: SiteContent = {
     items: [
       {
         title: "Your brand, never ours",
-        body: "The ordering site, the receipt, the loyalty tiers and the notifications all carry your name. Our name appears nowhere your customer looks.",
+        body: "The ordering site, the receipt, the loyalty points and the notifications all carry your name. Our name appears nowhere your customer looks.",
       },
       {
         title: "Fitted to how you already work",
@@ -1205,8 +1204,8 @@ export const en: SiteContent = {
           },
           {
             icon: "loyalty",
-            title: "Loyalty and tiers",
-            body: "Points, rewards and a Bronze-to-Platinum climb that drives repeat visits.",
+            title: "Loyalty points",
+            body: "Points on every order, spent on the next visit: a reason to come back.",
             badge: "Retention",
             hue: "rose",
           },

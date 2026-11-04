@@ -219,7 +219,7 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
     image: ogImageUrl(locale),
     screenshot: `${brand.url}${SHOTS.posOrder.src}`,
     publisher: { "@id": ORG_ID },
-    featureList: c.features.items.map((f) => f.listName ?? f.title),
+    featureList: c.features.items.map((f) => f.title),
     offers,
   };
 }

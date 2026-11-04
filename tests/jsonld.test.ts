@@ -196,7 +196,7 @@ describe("SoftwareApplication", () => {
   it.each(LOCALES)("%s: lists the features the page shows, without unshipped loyalty claims", (locale) => {
     const c = getContent(locale);
     const list = softwareApplicationJsonLd(locale).featureList as string[];
-    expect(list).toEqual(c.features.items.map((f) => f.listName ?? f.title));
+    expect(list).toEqual(c.features.items.map((f) => f.title));
     for (const name of list) expect(name).not.toMatch(UNSHIPPED);
   });
 });
