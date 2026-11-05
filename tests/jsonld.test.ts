@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import JsonLd from "@/components/JsonLd";
 import { getContent } from "@/content";
 import { brand } from "@/lib/brand";
 import {
@@ -21,6 +24,8 @@ import {
   siteJsonLd,
   softwareApplicationJsonLd,
 } from "@/lib/jsonld";
+import { DOCS_BASE, docsPaths } from "@/lib/docs";
+import { articlePageJsonLd, docsPageJsonLd } from "@/lib/docs/jsonld";
 import { NOINDEX_PATHS, routes } from "@/lib/meta";
 import { PLAN_CURRENCIES, planPrice, type PlanCurrency } from "@/lib/plans";
 
@@ -326,5 +331,89 @@ describe("the whole graph, every page", () => {
       }
       for (const path of NOINDEX_PATHS) expect(breadcrumbJsonLd(locale, path)).toBeNull();
     }
+  });
+});
+
+/**
+ * Every page's JSON-LD as the browser receives it: rendered by the same
+ * component the layout and the pages mount, then parsed back. A block that
+ * does not parse is dropped whole by search engines, and an Organization
+ * under a private @id splits Devya or Moving into a second entity nobody
+ * links to. The production HTML of every marketing page gets the same check
+ * in e2e/seo.spec.ts.
+ */
+describe("every page's JSON-LD blocks", () => {
+  /** The identities the family shares: Devya on devya.dev, Moving Systems on the umbrella, this site's own. */
+  const SHARED_ORG_IDS = new Set([ORG_ID, PARENT_ID, "https://movingsystems.tech/#organization"]);
+
+  /** The page's own nodes, from the builder its page.tsx mounts. */
+  function pageGraph(locale: string, path: string): JsonLdNode[] {
+    if (path === DOCS_BASE) return docsPageJsonLd(locale);
+    if (path.startsWith(`${DOCS_BASE}/`)) {
+      const [category, slug] = path.slice(DOCS_BASE.length + 1).split("/");
+      return slug ? articlePageJsonLd(locale, category, slug) : docsPageJsonLd(locale, category);
+    }
+    return pageJsonLd(locale, path);
+  }
+
+  /** The `<script type="application/ld+json">` bodies in a fragment of HTML. */
+  function blocks(html: string): string[] {
+    return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  }
+
+  /** Every object in a parsed tree. */
+  function objects(value: unknown): Record<string, unknown>[] {
+    if (Array.isArray(value)) return value.flatMap(objects);
+    if (value && typeof value === "object") {
+      return [value as Record<string, unknown>, ...Object.values(value).flatMap(objects)];
+    }
+    return [];
+  }
+
+  const pages = LOCALES.flatMap((locale) =>
+    [...PATHS, ...docsPaths(locale).map((p) => p.path).filter((p) => p !== DOCS_BASE)].map((path) => {
+      const html = [siteJsonLd(locale), pageGraph(locale, path)]
+        .map((data) => renderToStaticMarkup(createElement(JsonLd, { data })))
+        .join("");
+      return { label: `${locale} ${path || "/"}`, html };
+    }),
+  );
+
+  it("parses every block, each a schema.org graph with nothing unescaped in it", () => {
+    expect(pages.length).toBeGreaterThan(PATHS.length * LOCALES.length);
+    for (const { label, html } of pages) {
+      const found = blocks(html);
+      expect(found.length, label).toBeGreaterThanOrEqual(1);
+      for (const body of found) {
+        expect(body, label).not.toContain("<");
+        const parsed = JSON.parse(body) as Record<string, unknown>;
+        expect(parsed["@context"], label).toBe("https://schema.org");
+      }
+    }
+  });
+
+  it("names Devya and Moving only by their shared Organization @ids", () => {
+    for (const { label, html } of pages) {
+      for (const node of blocks(html).flatMap((b) => objects(JSON.parse(b)))) {
+        const id = node["@id"];
+        if (node["@type"] === "Organization") {
+          expect(SHARED_ORG_IDS.has(String(id)), `${label} Organization ${String(id)}`).toBe(true);
+          const name = String(node.name ?? "");
+          if (/devya|ديفيا/i.test(name)) expect(id, label).toBe("https://devya.dev/#organization");
+          if (/moving systems|موفينج سيستمز/i.test(name)) expect(id, label).toBe("https://movingsystems.tech/#organization");
+        }
+        // A reference to an organization elsewhere uses one of the same ids.
+        if (typeof id === "string" && id.endsWith("#organization")) {
+          expect(SHARED_ORG_IDS.has(id), `${label} ${id}`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("would catch a block that does not parse, and a private Devya @id", () => {
+    const broken = `<script type="application/ld+json">{"@context":"https://schema.org",</script>`;
+    expect(() => blocks(broken).map((b) => JSON.parse(b))).toThrow();
+    const stray = { "@type": "Organization", "@id": "https://www.devya.dev/#organization", name: "Devya Solutions" };
+    expect(SHARED_ORG_IDS.has(stray["@id"])).toBe(false);
   });
 });

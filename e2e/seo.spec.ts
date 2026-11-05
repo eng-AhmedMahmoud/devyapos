@@ -47,6 +47,23 @@ for (const locale of LOCALES) {
     }
   });
 
+  test(`${locale}: every page's JSON-LD parses, and names Devya and Moving by their shared @ids`, async ({ request }) => {
+    const shared = new Set([
+      "https://pos.movingsystems.tech/#organization",
+      "https://devya.dev/#organization",
+      "https://movingsystems.tech/#organization",
+    ]);
+    for (const path of PATHS) {
+      const html = await (await request.get(`/${locale}${path}`)).text();
+      const bodies = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+      expect(bodies.length, `${locale}${path}`).toBeGreaterThanOrEqual(1);
+      for (const body of bodies) {
+        const ids = [...JSON.stringify(JSON.parse(body)).matchAll(/"@id":"([^"]*#organization)"/g)].map((m) => m[1]);
+        for (const id of ids) expect(shared.has(id), `${locale}${path} ${id}`).toBe(true);
+      }
+    }
+  });
+
   test(`${locale}: home preloads the hero face only, and no image`, async ({ request }) => {
     const html = await (await request.get(`/${locale}`)).text();
     const preloads = html.match(/<link[^>]*rel="preload"[^>]*>/g) ?? [];

@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { Metadata } from "next";
 import { NextRequest } from "next/server";
 import { describe, expect, it } from "vitest";
 import robots from "@/app/robots";
@@ -7,6 +8,7 @@ import sitemap from "@/app/sitemap";
 import { getContent } from "@/content";
 import { brand } from "@/lib/brand";
 import { allArticles, articleHref, DOCS_BASE, docsPaths, getDocs } from "@/lib/docs";
+import { articleMetadata, categoryMetadata } from "@/lib/docs/meta";
 import { llmsTxt } from "@/lib/llms";
 import { NOINDEX_PATHS, buildMetadata, localeHref, ogImagePath, routes } from "@/lib/meta";
 import { proxy } from "@/proxy";
@@ -218,6 +220,79 @@ describe("sitemap.xml", () => {
     const text = JSON.stringify(entries);
     expect(text).not.toMatch(FOREIGN_HOST);
     for (const entry of entries) expect(entry.url.startsWith(`${brand.url}/`)).toBe(true);
+  });
+});
+
+/**
+ * Every URL the sitemap hands a search engine, read through the same builders
+ * its page uses: marketing routes through buildMetadata, help-centre
+ * categories and articles through lib/docs/meta. What one page gets wrong
+ * here, the crawler would find on the live site.
+ */
+describe("every sitemap URL", () => {
+  /** The page's metadata, from the builder its page.tsx calls. */
+  function metadataFor(url: string): Metadata {
+    const [, locale, path] = url.match(/^https:\/\/[^/]+\/(ar|en)(.*)$/)!;
+    const route = routes.find((r) => r.path === path);
+    if (route) return buildMetadata(locale, route.key, route.path);
+    const [category, slug] = path.slice(`${DOCS_BASE}/`.length).split("/");
+    return slug ? articleMetadata(locale, category, slug) : categoryMetadata(locale, category);
+  }
+
+  const pages = sitemap().map((entry) => ({ entry, url: entry.url, meta: metadataFor(entry.url) }));
+  const byUrl = new Map(pages.map((p) => [p.url, p]));
+
+  it("covers both languages, help centre included", () => {
+    expect(pages.length).toBeGreaterThan(routes.length * LOCALES.length);
+    for (const locale of LOCALES) {
+      expect(pages.some((p) => p.url.startsWith(`${brand.url}/${locale}${DOCS_BASE}/`)), locale).toBe(true);
+    }
+  });
+
+  it("gives every page a title of 30-65 characters and a description of 70-160, both unique in its language", () => {
+    for (const locale of LOCALES) {
+      const mine = pages.filter((p) => p.url.startsWith(`${brand.url}/${locale}`));
+      const titles = mine.map((p) => String(p.meta.title));
+      const descriptions = mine.map((p) => String(p.meta.description));
+      for (const [i, title] of titles.entries()) {
+        const where = `${mine[i].url}: ${title}`;
+        expect([...title].length, where).toBeGreaterThanOrEqual(30);
+        expect([...title].length, where).toBeLessThanOrEqual(65);
+        expect([...descriptions[i]].length, where).toBeGreaterThanOrEqual(70);
+        expect([...descriptions[i]].length, where).toBeLessThanOrEqual(160);
+      }
+      const dupes = (list: string[]) => list.filter((v, i) => list.indexOf(v) !== i);
+      expect(dupes(titles), `${locale} duplicate titles`).toEqual([]);
+      expect(dupes(descriptions), `${locale} duplicate descriptions`).toEqual([]);
+    }
+  });
+
+  it("is indexable and canonical to itself, as an absolute URL on this host", () => {
+    for (const { url, meta } of pages) {
+      expect(meta.robots, url).toBeUndefined();
+      const canonical = String(meta.alternates?.canonical);
+      expect(canonical, url).toBe(url);
+      expect(new URL(canonical).origin, url).toBe(brand.url);
+    }
+  });
+
+  it("declares ar, en and x-default, names itself, and is named back by the page it names", () => {
+    for (const { url, entry, meta } of pages) {
+      const languages = meta.alternates?.languages as Record<string, string>;
+      expect(Object.keys(languages).sort(), url).toEqual(["ar", "en", "x-default"]);
+      expect(languages["x-default"], url).toBe(languages.ar);
+      // The head and the sitemap say the same thing.
+      expect(entry.alternates?.languages, url).toEqual(languages);
+
+      const locale = url.match(/^https:\/\/[^/]+\/(ar|en)/)![1];
+      expect(languages[locale], `${url} names itself`).toBe(url);
+      for (const other of LOCALES.filter((l) => l !== locale)) {
+        const target = byUrl.get(languages[other]);
+        expect(target, `${url} → ${languages[other]} is in the sitemap`).toBeDefined();
+        const back = target!.meta.alternates?.languages as Record<string, string>;
+        expect(back[locale], `${languages[other]} names ${url} back`).toBe(url);
+      }
+    }
   });
 });
 
