@@ -9,6 +9,7 @@ import {
   FAQ_PATHS,
   ORG_ID,
   PARENT_ID,
+  SERVED_COUNTRIES,
   WEBSITE_ID,
   type JsonLdNode,
   breadcrumbJsonLd,
@@ -86,8 +87,16 @@ describe("site-wide graph (siteJsonLd)", () => {
     expect(size.width).toBeGreaterThanOrEqual(112);
   });
 
-  it.each(LOCALES)("%s: serves Egypt, by name", (locale) => {
-    expect(organizationJsonLd(locale).areaServed).toEqual({ "@type": "Country", name: "Egypt" });
+  it.each(LOCALES)("%s: serves the live markets only, Egypt and Saudi Arabia", (locale) => {
+    const org = organizationJsonLd(locale);
+    expect(org.areaServed).toEqual([
+      { "@type": "Country", name: "Egypt" },
+      { "@type": "Country", name: "Saudi Arabia" },
+    ]);
+    expect((org.contactPoint as JsonLdNode[]).map((c) => c.areaServed)).toEqual([["EG", "SA"]]);
+    // The planned markets are "coming soon" on the price lists, never a served area.
+    expect(SERVED_COUNTRIES.map((c) => c.code)).toEqual(["EG", "SA"]);
+    expect(JSON.stringify(siteJsonLd(locale))).not.toMatch(/Emirates|Qatar|Kuwait|Bahrain|Oman|"(AE|QA|KW|BH|OM)"/);
   });
 
   it.each(LOCALES)("%s: the WebSite is the origin, in both languages, published by the Organization", (locale) => {

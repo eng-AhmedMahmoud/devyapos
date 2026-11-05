@@ -27,8 +27,20 @@
 export const PLAN_IDS = ["free", "counter", "dining", "group"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
-/** The price lists, in the order the currency switch shows them. EGP is the home price. */
-export const PLAN_CURRENCIES = ["EGP", "SAR", "AED", "USD"] as const;
+/**
+ * The price lists, in the order the currency switch shows them. EGP is the home price.
+ * Only the live markets have one: Egypt (EGP) and Saudi Arabia (SAR). The rest of the
+ * region is "coming soon" copy (`pricing.markets`), never a list a visitor can pick.
+ */
+export const PLAN_CURRENCIES = [
+  "EGP",
+  "SAR",
+  // ── PLANNED: not launched yet ──────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; to launch a list, uncomment it here and every
+  // `PLANNED:` comment for it. The platform's catalogue is bohub-pos `packages/shared/src/markets.ts`.
+  // "AED", // the UAE
+  // "USD", // Global: every other country
+] as const;
 export type PlanCurrency = (typeof PLAN_CURRENCIES)[number];
 
 export const BILLING_INTERVALS = ["monthly", "yearly"] as const;
@@ -126,7 +138,7 @@ export interface PlanNumbers {
   dineIn: boolean;
 }
 
-const FREE_PRICES = { EGP: [0, 0], SAR: [0, 0], AED: [0, 0], USD: [0, 0] } as const;
+const FREE_PRICES = { EGP: [0, 0], SAR: [0, 0], /* PLANNED: AED: [0, 0], USD: [0, 0], */ } as const;
 
 export const PLANS: readonly PlanNumbers[] = [
   {
@@ -152,8 +164,8 @@ export const PLANS: readonly PlanNumbers[] = [
     prices: {
       EGP: [799, 7_990],
       SAR: [149, 1_490],
-      AED: [149, 1_490],
-      USD: [29, 290],
+      // PLANNED: AED: [149, 1_490],
+      // PLANNED: USD: [29, 290],
     },
     trialDays: TRIAL_DAYS,
     limits: {
@@ -175,8 +187,8 @@ export const PLANS: readonly PlanNumbers[] = [
     prices: {
       EGP: [1_499, 14_990],
       SAR: [299, 2_990],
-      AED: [299, 2_990],
-      USD: [59, 590],
+      // PLANNED: AED: [299, 2_990],
+      // PLANNED: USD: [59, 590],
     },
     trialDays: TRIAL_DAYS,
     limits: {
@@ -358,9 +370,9 @@ export function discounted(price: number, percent: number): number {
 // ── AI credits ───────────────────────────────────────────────────────────
 
 /**
- * Every currency's price for one AI tier or pack. AED carries the SAR figure
- * and USD the SAR figure at 3.75 rounded up to a whole dollar, as the product
- * prices them.
+ * Every currency's price for one AI tier or pack. The planned lists follow
+ * SAR, as the product prices them: AED carries the SAR figure and USD the SAR
+ * figure at 3.75 rounded up to a whole dollar.
  */
 export type CurrencyPrices = Record<PlanCurrency, number>;
 
@@ -373,17 +385,17 @@ export type AiTierId = (typeof AI_TIER_IDS)[number];
  * only the suffix.
  */
 export const AI_TIERS: readonly { id: AiTierId; credits: number; price: CurrencyPrices }[] = [
-  { id: "lite", credits: 25, price: { EGP: 369, SAR: 25, AED: 25, USD: 7 } },
-  { id: "basic", credits: 100, price: { EGP: 1_179, SAR: 79, AED: 79, USD: 22 } },
-  { id: "plus", credits: 300, price: { EGP: 3_399, SAR: 229, AED: 229, USD: 62 } },
-  { id: "pro", credits: 800, price: { EGP: 8_929, SAR: 599, AED: 599, USD: 160 } },
+  { id: "lite", credits: 25, price: { EGP: 369, SAR: 25, /* PLANNED: AED: 25, USD: 7, */ } },
+  { id: "basic", credits: 100, price: { EGP: 1_179, SAR: 79, /* PLANNED: AED: 79, USD: 22, */ } },
+  { id: "plus", credits: 300, price: { EGP: 3_399, SAR: 229, /* PLANNED: AED: 229, USD: 62, */ } },
+  { id: "pro", credits: 800, price: { EGP: 8_929, SAR: 599, /* PLANNED: AED: 599, USD: 160, */ } },
 ];
 
 /** One-off credit packs (`AI_PACKS`, `pack-100` …), valid for twelve months. */
 export const AI_PACKS: readonly { credits: number; price: CurrencyPrices }[] = [
-  { credits: 100, price: { EGP: 1_499, SAR: 99, AED: 99, USD: 27 } },
-  { credits: 500, price: { EGP: 6_699, SAR: 449, AED: 449, USD: 120 } },
-  { credits: 2_000, price: { EGP: 23_899, SAR: 1_599, AED: 1_599, USD: 427 } },
+  { credits: 100, price: { EGP: 1_499, SAR: 99, /* PLANNED: AED: 99, USD: 27, */ } },
+  { credits: 500, price: { EGP: 6_699, SAR: 449, /* PLANNED: AED: 449, USD: 120, */ } },
+  { credits: 2_000, price: { EGP: 23_899, SAR: 1_599, /* PLANNED: AED: 1_599, USD: 427, */ } },
 ];
 
 /** How long a pack's credits last. */

@@ -16,6 +16,13 @@ append-only files on a data volume. There is no database and no visitor
 account. Every screenshot and the four-second register recording in `public/`
 are captures of the real product running.
 
+**Markets:** Egypt (EGP) and Saudi Arabia (SAR) are live, and are the only
+price lists on the site. The UAE, Qatar, Kuwait, Bahrain and Oman are planned,
+not launched: the pricing pages name them as "coming soon" («قريبًا») and never
+price them, and the Global (USD) list is not shown. Their lists are commented
+out as `PLANNED` in the code; the table is in [`docs/spec.md`](docs/spec.md)
+§1, "Markets".
+
 | Read this | For |
 | --- | --- |
 | [`docs/architecture.md`](docs/architecture.md) | One page: request path, the two POST routes and their sinks, the data volume, deploy and rollback, CI gates, what lives in other repos |

@@ -44,6 +44,7 @@ boot-time config check and health route, and the deploy and leads scripts.
 | Sinks (`lib/jsonl-sink.ts`, `lib/lead-outbox.ts`, `lib/consent-receipts.ts`) | `jsonl-sink` (injected fs faults), `lead-outbox`, `consent-receipt` |
 | Consent (`lib/consent/*`, `app/api/consent`, `components/Attribution.tsx`) | `consent` (the shared core), `consent-route`, `attribution`, `e2e/consent.spec.ts` (nothing stored before an answer; reject and accept survive a reload) |
 | Accounting trial (`lib/trial.ts`) | `trial` (EG/SA phones, every claim-answer branch, `credentials: "omit"`, the 20 s abort), `e2e/trial.spec.ts` (the paused state) |
+| Markets and price lists (`lib/plans.ts`, `lib/accounting-plans.ts`, `components/MarketsNote.tsx`) | `markets` (EGP and SAR the only lists; every planned market named as coming soon and priced nowhere; JSON-LD and llms.txt claim the live two), `pricing`, `accounting-pricing`, `plan-compare` (every figure against the product), `e2e/pricing.spec.ts` (at 320 px in both locales the switch offers EGP and SAR only, the planned markets are plain text, nothing scrolls sideways) |
 | Headers, CSP, routing | `headers` (production CSP and HSTS through Next's own matching), `proxy` (`/` → `/ar`, no locale cookie, matcher), `ops` (no `/api` rewrite, standalone image, security.txt), `e2e/smoke.spec.ts` |
 | Boot check and health | `env`, `ops` |
 | Deploy and operator tools | `deploy` (CI gate, smoke, backups, tags, rollback), `leads-script`, `hooks` (the `prepare` hook) |

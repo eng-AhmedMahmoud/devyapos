@@ -11,7 +11,8 @@
  * same numbers and pins them too.
  *
  * The same family as the POS plans in `lib/plans.ts`, on purpose: the same
- * four currencies, a year at ten months, a 14-day trial on every paid plan,
+ * price lists (`PLAN_CURRENCIES`: EGP and SAR live, the rest PLANNED), a year
+ * at ten months, a 14-day trial on every paid plan,
  * the same two offers (`PLAN_OFFERS`, the 500 accounts counted per product)
  * and the same AI credit packs (`AI_PACKS`). What differs:
  *
@@ -88,7 +89,10 @@ export interface AccountingPlanNumbers {
   features: readonly AccountingFeature[];
 }
 
-const FREE_PRICES = { EGP: [0, 0], SAR: [0, 0], AED: [0, 0], USD: [0, 0] } as const;
+// ── PLANNED: not launched yet ────────────────────────────────────────────────
+// Only Saudi Arabia and Egypt are live; the UAE (AED) and Global (USD) figures stay below
+// as `PLANNED:` comments, to uncomment with `PLAN_CURRENCIES` in lib/plans.ts to launch.
+const FREE_PRICES = { EGP: [0, 0], SAR: [0, 0], /* PLANNED: AED: [0, 0], USD: [0, 0], */ } as const;
 const UNLIMITED_VOLUME = { invoicesPerMonth: null, entriesPerMonth: null, contacts: null } as const;
 
 export const ACCOUNTING_PLANS: readonly AccountingPlanNumbers[] = [
@@ -115,8 +119,8 @@ export const ACCOUNTING_PLANS: readonly AccountingPlanNumbers[] = [
     prices: {
       EGP: [699, 6_990],
       SAR: [119, 1_190],
-      AED: [119, 1_190],
-      USD: [29, 290],
+      // PLANNED: AED: [119, 1_190],
+      // PLANNED: USD: [29, 290],
     },
     trialDays: ACCOUNTING_TRIAL_DAYS,
     limits: {
@@ -136,8 +140,8 @@ export const ACCOUNTING_PLANS: readonly AccountingPlanNumbers[] = [
     prices: {
       EGP: [1_199, 11_990],
       SAR: [229, 2_290],
-      AED: [229, 2_290],
-      USD: [59, 590],
+      // PLANNED: AED: [229, 2_290],
+      // PLANNED: USD: [59, 590],
     },
     trialDays: ACCOUNTING_TRIAL_DAYS,
     limits: {
@@ -157,8 +161,8 @@ export const ACCOUNTING_PLANS: readonly AccountingPlanNumbers[] = [
     prices: {
       EGP: [2_199, 21_990],
       SAR: [349, 3_490],
-      AED: [349, 3_490],
-      USD: [89, 890],
+      // PLANNED: AED: [349, 3_490],
+      // PLANNED: USD: [89, 890],
     },
     trialDays: ACCOUNTING_TRIAL_DAYS,
     limits: {
@@ -196,20 +200,21 @@ export const ACCOUNTING_PLANS: readonly AccountingPlanNumbers[] = [
  * `PLAN_EXTRAS`): an extra user, and an extra branch with its e-invoicing unit.
  */
 export const ACCOUNTING_EXTRAS: Record<"user" | "branch", Record<PlanCurrency, number>> = {
-  user: { EGP: 99, SAR: 25, AED: 25, USD: 7 },
-  branch: { EGP: 249, SAR: 49, AED: 49, USD: 13 },
+  user: { EGP: 99, SAR: 25, /* PLANNED: AED: 25, USD: 7, */ },
+  branch: { EGP: 249, SAR: 49, /* PLANNED: AED: 49, USD: 13, */ },
 };
 
 /**
  * Which e-invoicing system a price list's card names. The product files to
- * the ETA in Egypt and to ZATCA in Saudi Arabia; a company billed in AED or
- * USD still uses its units with one of the two, so its card names both.
+ * the ETA in Egypt and to ZATCA in Saudi Arabia. A company on a PLANNED list
+ * (AED or USD) would still use its units with one of the two, so its card
+ * would name both: `either`, commented out with the lists.
  */
-export const EINVOICING_SYSTEM: Record<PlanCurrency, "eta" | "zatca" | "either"> = {
+export const EINVOICING_SYSTEM: Record<PlanCurrency, "eta" | "zatca" /* PLANNED: | "either" */> = {
   EGP: "eta",
   SAR: "zatca",
-  AED: "either",
-  USD: "either",
+  // PLANNED: AED: "either",
+  // PLANNED: USD: "either",
 };
 
 export function accountingPlan(id: AccountingPlanId): AccountingPlanNumbers {

@@ -72,8 +72,8 @@ describe("plan comparison: the model", () => {
     // The cards' figures, as a reader sees them.
     expect(row("price", "EGP", "monthly").counter).toEqual({ kind: "price", amount: 799 });
     expect(row("price", "SAR", "yearly").dining).toEqual({ kind: "price", amount: 2_990 });
-    expect(row("price", "USD", "monthly").free).toEqual({ kind: "price", amount: 0 });
-    expect(row("price", "AED", "yearly").group).toEqual({ kind: "quoted" });
+    expect(row("price", "SAR", "monthly").free).toEqual({ kind: "price", amount: 0 });
+    expect(row("price", "EGP", "yearly").group).toEqual({ kind: "quoted" });
   });
 
   it("gives Free the product's caps", () => {

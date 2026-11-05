@@ -43,6 +43,26 @@ const LOGO = {
   height: 512,
 } as const;
 
+/**
+ * The countries the site claims to serve: the live markets, Egypt and Saudi
+ * Arabia, by name on the Organization and by ISO code on its sales contact.
+ * The planned markets are "coming soon" copy on the price lists
+ * (`pricing.markets`), never a served area.
+ */
+export const SERVED_COUNTRIES = [
+  { code: "EG", name: "Egypt" },
+  { code: "SA", name: "Saudi Arabia" },
+  // ── PLANNED: not launched yet ──────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; uncomment a market here, with its price list
+  // (`PLAN_CURRENCIES`, lib/plans.ts), to launch it. The platform's catalogue is
+  // bohub-pos `packages/shared/src/markets.ts`.
+  // { code: "AE", name: "United Arab Emirates" },
+  // { code: "QA", name: "Qatar" },
+  // { code: "KW", name: "Kuwait" },
+  // { code: "BH", name: "Bahrain" },
+  // { code: "OM", name: "Oman" },
+] as const;
+
 /** E.164 with the plus back on — `brand.whatsapp` stores it bare for wa.me. */
 const tel = `+${brand.whatsapp}`;
 
@@ -80,7 +100,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
     email: brand.email,
     telephone: tel,
     sameAs: socialLinks.map((s) => s.href),
-    areaServed: { "@type": "Country", name: "Egypt" },
+    areaServed: SERVED_COUNTRIES.map(({ name }) => ({ "@type": "Country", name })),
     parentOrganization: {
       "@type": "Organization",
       "@id": PARENT_ID,
@@ -94,7 +114,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
         telephone: tel,
         email: brand.email,
         url: `https://wa.me/${brand.whatsapp}`,
-        areaServed: "EG",
+        areaServed: SERVED_COUNTRIES.map(({ code }) => code),
         availableLanguage: ["ar", "en"],
       },
     ],
