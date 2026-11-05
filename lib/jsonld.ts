@@ -40,25 +40,6 @@ export const PRODUCT_ID = `${brand.url}/#product`;
 export const PARENT_ID = `${brand.parent.url}/#organization`;
 
 /**
- * The countries the site prices in, from the currency switch: the pricing
- * note says EGP is for Egypt, SAR for Saudi Arabia and AED for the UAE, and
- * USD for everywhere else — which is not a country, so it adds none. A
- * currency added to `PLAN_CURRENCIES` must be placed here (tests/jsonld.test.ts).
- */
-export const CURRENCY_COUNTRY: Record<PlanCurrency, { name: string; code: string } | null> = {
-  EGP: { name: "Egypt", code: "EG" },
-  SAR: { name: "Saudi Arabia", code: "SA" },
-  AED: { name: "United Arab Emirates", code: "AE" },
-  USD: null,
-};
-
-/** The priced countries, in the switch's order (Egypt, the home market, first). */
-export const PRICED_COUNTRIES = PLAN_CURRENCIES.flatMap((currency) => {
-  const country = CURRENCY_COUNTRY[currency];
-  return country ? [country] : [];
-});
-
-/**
  * The logo as a raster on this host. Google reads `logo` for the knowledge
  * panel and wants a bitmap of at least 112 px; the SVG mark it pointed at
  * before is not one. The PNG is rendered from the mark by
@@ -69,6 +50,26 @@ const LOGO = {
   width: 512,
   height: 512,
 } as const;
+
+/**
+ * The countries the site claims to serve: the live markets, Egypt and Saudi
+ * Arabia, by name on the Organization and by ISO code on its sales contact.
+ * The planned markets are "coming soon" copy on the price lists
+ * (`pricing.markets`), never a served area.
+ */
+export const SERVED_COUNTRIES = [
+  { code: "EG", name: "Egypt" },
+  { code: "SA", name: "Saudi Arabia" },
+  // ── PLANNED: not launched yet ──────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; uncomment a market here, with its price list
+  // (`PLAN_CURRENCIES`, lib/plans.ts), to launch it. The platform's catalogue is
+  // bohub-pos `packages/shared/src/markets.ts`.
+  // { code: "AE", name: "United Arab Emirates" },
+  // { code: "QA", name: "Qatar" },
+  // { code: "KW", name: "Kuwait" },
+  // { code: "BH", name: "Bahrain" },
+  // { code: "OM", name: "Oman" },
+] as const;
 
 /** E.164 with the plus back on — `brand.whatsapp` stores it bare for wa.me. */
 const tel = `+${brand.whatsapp}`;
@@ -107,9 +108,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
     email: brand.email,
     telephone: tel,
     sameAs: socialLinks.map((s) => s.href),
-    // Where the site sells, not where it markets: one Country per priced
-    // currency's country (the pricing note's own mapping).
-    areaServed: PRICED_COUNTRIES.map(({ name }) => ({ "@type": "Country", name })),
+    areaServed: SERVED_COUNTRIES.map(({ name }) => ({ "@type": "Country", name })),
     parentOrganization: {
       "@type": "Organization",
       "@id": PARENT_ID,
@@ -123,7 +122,7 @@ export function organizationJsonLd(locale: string): JsonLdNode {
         telephone: tel,
         email: brand.email,
         url: `https://wa.me/${brand.whatsapp}`,
-        areaServed: PRICED_COUNTRIES.map(({ code }) => code),
+        areaServed: SERVED_COUNTRIES.map(({ code }) => code),
         availableLanguage: ["ar", "en"],
       },
     ],
@@ -179,12 +178,12 @@ function planOffers(locale: string, currency: PlanCurrency): JsonLdNode[] {
 /**
  * The product itself, priced from the real plans.
  *
- * One `AggregateOffer` per price list the currency switch shows (EGP, SAR,
- * AED, USD — `PLAN_CURRENCIES`), each spanning the four plans at their monthly
- * list prices in that currency. Group carries no `price`, so it counts in
- * `offerCount` but not in the low/high band. Until 2026-11-04 only EGP was
+ * One `AggregateOffer` per price list the currency switch shows (EGP and SAR,
+ * the live markets — `PLAN_CURRENCIES`), each spanning the four plans at their
+ * monthly list prices in that currency. Group carries no `price`, so it counts
+ * in `offerCount` but not in the low/high band. Until 2026-11-04 only EGP was
  * marked up, which told search engines the product is sold in Egypt alone
- * while the page sells it in four currencies.
+ * while the page also sells it in riyals.
  */
 export function softwareApplicationJsonLd(locale: string): JsonLdNode {
   const c = getContent(locale);
@@ -230,7 +229,7 @@ export function softwareApplicationJsonLd(locale: string): JsonLdNode {
  * SoftwareApplication's rich result needs a rating or a review, and there are
  * none to mark up (none are invented). A `Product` with `offers` is eligible
  * for price snippets without either. Its offers are the plans that have a
- * price — Free, Counter and Dining room in every currency the switch shows —
+ * price — Free, Counter and Dining room in each live price list (EGP, SAR) —
  * as plain Offers, one per plan and currency: Google asks for `Offer`, not
  * `AggregateOffer`, when the offers are variants of one product. Group is
  * quoted, and an Offer without a price is not one, so it is left out here and

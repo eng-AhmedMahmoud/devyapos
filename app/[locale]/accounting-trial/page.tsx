@@ -127,6 +127,7 @@ export default async function AccountingTrialPage({
           currencyLabel: c.pricing.currencyLabel,
           currencyNames: c.pricing.currencyNames,
           currencies: c.pricing.currencies,
+          markets: c.pricing.markets,
           per: c.pricing.per,
           perYear: c.pricing.perYear,
           offers: c.pricing.offers,

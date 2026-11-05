@@ -41,3 +41,36 @@ for (const locale of LOCALES) {
     expect(after?.x).toBe(before?.x);
   });
 }
+
+/*
+ * Only Egypt and Saudi Arabia are live (lib/plans.ts, PLANNED). On both price
+ * lists, at the narrowest phone, the currency switch offers their two lists
+ * and nothing else, and the planned markets are named under it as coming soon:
+ * plain text, never a button, and the page still never scrolls sideways.
+ */
+const PLANNED = /UAE|Qatar|Kuwait|Bahrain|Oman|AED|USD|الإمارات|قطر|الكويت|البحرين|عُمان|درهم|دولار/;
+
+for (const locale of LOCALES) {
+  for (const path of ["/pricing", "/accounting-trial"]) {
+    test(`${locale} at 320px: ${path} sells Egypt and Saudi Arabia, the rest only as coming soon`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 720 });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(`/${locale}${path}`);
+      await hydrated(page);
+
+      const p = getContent(locale).pricing;
+      const currency = page.getByRole("group", { name: p.currencyLabel }).first();
+      await expect(currency.getByRole("button")).toHaveText([p.currencyNames.EGP, p.currencyNames.SAR]);
+
+      // One line under the switch: the live markets, the badge, the planned ones.
+      const note = page.locator("p", { hasText: p.markets.planned }).first();
+      await expect(note).toBeVisible();
+      await expect(note).toContainText(p.markets.live);
+      await expect(note).toContainText(p.markets.soon);
+      await expect(page.getByRole("button", { name: PLANNED })).toHaveCount(0);
+
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, "the page scrolls sideways").toBeLessThanOrEqual(0);
+    });
+  }
+}

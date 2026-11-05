@@ -9,12 +9,12 @@ import { brand } from "@/lib/brand";
 import {
   APP_ID,
   APP_PATHS,
-  CURRENCY_COUNTRY,
   FAQ_PATHS,
   ORG_ID,
   PARENT_ID,
   PRODUCT_ID,
   PRODUCT_PATHS,
+  SERVED_COUNTRIES,
   WEBSITE_ID,
   type JsonLdNode,
   breadcrumbJsonLd,
@@ -96,23 +96,16 @@ describe("site-wide graph (siteJsonLd)", () => {
     expect(size.width).toBeGreaterThanOrEqual(112);
   });
 
-  it.each(LOCALES)("%s: serves the countries the site prices in, by name, and its sales line serves the same", (locale) => {
+  it.each(LOCALES)("%s: serves the live markets only, Egypt and Saudi Arabia", (locale) => {
     const org = organizationJsonLd(locale);
     expect(org.areaServed).toEqual([
       { "@type": "Country", name: "Egypt" },
       { "@type": "Country", name: "Saudi Arabia" },
-      { "@type": "Country", name: "United Arab Emirates" },
     ]);
-    const [sales] = org.contactPoint as { areaServed: unknown }[];
-    expect(sales.areaServed).toEqual(["EG", "SA", "AE"]);
-  });
-
-  it("places every currency the switch shows: a country, or none for USD (everywhere else)", () => {
-    expect(Object.keys(CURRENCY_COUNTRY).sort()).toEqual([...PLAN_CURRENCIES].sort());
-    expect(CURRENCY_COUNTRY.USD).toBeNull();
-    // The mapping is the one the pricing note prints, in both languages.
-    expect(getContent("en").pricing.note).toMatch(/EGP for Egypt, SAR for Saudi Arabia, AED for the UAE and USD everywhere else/);
-    expect(getContent("ar").pricing.note).toMatch(/بالجنيه في مصر، وبالريال في السعودية، وبالدرهم في الإمارات، وبالدولار في باقي الدول/);
+    expect((org.contactPoint as JsonLdNode[]).map((c) => c.areaServed)).toEqual([["EG", "SA"]]);
+    // The planned markets are "coming soon" on the price lists, never a served area.
+    expect(SERVED_COUNTRIES.map((c) => c.code)).toEqual(["EG", "SA"]);
+    expect(JSON.stringify(siteJsonLd(locale))).not.toMatch(/Emirates|Qatar|Kuwait|Bahrain|Oman|"(AE|QA|KW|BH|OM)"/);
   });
 
   it.each(LOCALES)("%s: the WebSite is the origin, in both languages, published by the Organization", (locale) => {
@@ -252,7 +245,7 @@ describe("Product (price snippets on /pricing)", () => {
       }),
     );
     expect(offers.map((o) => ({ name: o.name, priceCurrency: o.priceCurrency, price: o.price }))).toEqual(expected);
-    // Free, Counter and Dining room in four currencies; Group is quoted.
+    // Free, Counter and Dining room in each live price list (EGP, SAR); Group is quoted.
     expect(offers).toHaveLength(3 * PLAN_CURRENCIES.length);
     for (const offer of offers) {
       expect(offer["@type"]).toBe("Offer");

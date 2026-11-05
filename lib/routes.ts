@@ -36,8 +36,8 @@ export const routes: readonly SiteRoute[] = [
   { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly", updated: "2026-11-04" },
   { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
   { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-11-04" },
-  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-10-27" },
-  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-11-05" },
+  { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-11-05" },
   { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-11-02" },
   /* Search-entry pages: each answers a query the home page cannot. */
   { path: "/eta-einvoicing", key: "etaInvoicing", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-19" },
@@ -50,7 +50,7 @@ export const routes: readonly SiteRoute[] = [
   /* The partner programmes: a channel page, indexed so a dealer or an accountant searching for one finds it. */
   { path: "/partners", key: "partners", priority: 0.6, changeFrequency: "monthly", updated: "2026-10-27" },
   /* The self-serve accounting trial — a sign-up, so it is indexed like one. */
-  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/accounting-trial", key: "accountingTrial", priority: 0.7, changeFrequency: "monthly", updated: "2026-11-05" },
   /* The privacy policy describes what the site already does, so it is indexed
      and linked; its date is the "Last updated" line the page prints. */
   { path: "/privacy", key: "privacy", priority: 0.3, changeFrequency: "yearly", updated: "2026-11-02" },

@@ -58,8 +58,11 @@ const locales = ["ar", "en"] as const;
 
 /** Per-branch [monthly, yearly], whole units, VAT excluded — bohub-pos plans.ts ÷ 100. */
 const PRICES: Record<"counter" | "dining", Record<PlanCurrency, [number, number]>> = {
-  counter: { EGP: [799, 7_990], SAR: [149, 1_490], AED: [149, 1_490], USD: [29, 290] },
-  dining: { EGP: [1_499, 14_990], SAR: [299, 2_990], AED: [299, 2_990], USD: [59, 590] },
+  // ── PLANNED: not launched yet ─────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; the UAE (AED) and Global (USD) figures, here and on
+  // every `PLANNED:` line in this file, uncomment with `PLAN_CURRENCIES` (lib/plans.ts) to launch.
+  counter: { EGP: [799, 7_990], SAR: [149, 1_490], /* PLANNED: AED: [149, 1_490], USD: [29, 290], */ },
+  dining: { EGP: [1_499, 14_990], SAR: [299, 2_990], /* PLANNED: AED: [299, 2_990], USD: [59, 590], */ },
 };
 
 /** Digits as ASCII and thousands separators gone, so "٢٬٠٠٠" reads as "2000". */
@@ -78,8 +81,8 @@ describe("pricing: the plans", () => {
     }
   });
 
-  it("are priced per branch in EGP, SAR, AED and USD at the product's prices", () => {
-    expect(PLAN_CURRENCIES).toEqual(["EGP", "SAR", "AED", "USD"]);
+  it("are priced per branch in the live markets' lists, EGP and SAR, at the product's prices", () => {
+    expect(PLAN_CURRENCIES).toEqual(["EGP", "SAR"]);
     for (const id of ["counter", "dining"] as const) {
       for (const currency of PLAN_CURRENCIES) {
         expect(planNumbers(id).prices?.[currency], `${id} ${currency}`).toEqual(PRICES[id][currency]);
@@ -277,8 +280,6 @@ describe("pricing: the offers", () => {
 });
 
 describe("pricing: AI credits", () => {
-  /** SAR at 3.75 to the dollar, rounded up: the product's USD rule. */
-  const usd = (sar: number) => Math.ceil(sar / 3.75);
 
   it("sells the product's tiers and packs", () => {
     expect(AI_TIERS.map((t) => [t.id, t.credits, t.price.SAR, t.price.EGP])).toEqual([
@@ -297,12 +298,20 @@ describe("pricing: AI credits", () => {
     expect(planNumbers("group").aiCreditsMonthly).toBe(AI_TIERS.find((t) => t.id === "plus")!.credits);
   });
 
-  it("prices AED as SAR and USD as SAR at 3.75, rounded up", () => {
+  it("prices the live lists only, EGP and SAR: no planned list carries a figure", () => {
     for (const { price } of [...AI_TIERS, ...AI_PACKS]) {
-      expect(price.AED).toBe(price.SAR);
-      expect(price.USD).toBe(usd(price.SAR));
+      expect(Object.keys(price)).toEqual(["EGP", "SAR"]);
     }
   });
+
+  // PLANNED: with the AED and USD lists back (`PLAN_CURRENCIES`), the product's rule is
+  // AED at the SAR figure and USD at SAR ÷ 3.75, rounded up to a whole dollar:
+  // it("prices AED as SAR and USD as SAR at 3.75, rounded up", () => {
+  //   for (const { price } of [...AI_TIERS, ...AI_PACKS]) {
+  //     expect(price.AED).toBe(price.SAR);
+  //     expect(price.USD).toBe(Math.ceil(price.SAR / 3.75));
+  //   }
+  // });
 
   it.each(locales)("%s: names every tier, and the add-on quotes the cheapest", (locale) => {
     const c = getContent(locale).pricing;

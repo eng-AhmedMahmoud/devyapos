@@ -54,9 +54,12 @@ const locales = ["ar", "en"] as const;
 
 /** Per-company [monthly, yearly], whole units, VAT excluded — bohub-pos plans.ts ÷ 100. */
 const PRICES: Record<"starter" | "business" | "professional", Record<PlanCurrency, [number, number]>> = {
-  starter: { EGP: [699, 6_990], SAR: [119, 1_190], AED: [119, 1_190], USD: [29, 290] },
-  business: { EGP: [1_199, 11_990], SAR: [229, 2_290], AED: [229, 2_290], USD: [59, 590] },
-  professional: { EGP: [2_199, 21_990], SAR: [349, 3_490], AED: [349, 3_490], USD: [89, 890] },
+  // ── PLANNED: not launched yet ─────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; the UAE (AED) and Global (USD) figures, here and on
+  // every `PLANNED:` line in this file, uncomment with `PLAN_CURRENCIES` (lib/plans.ts) to launch.
+  starter: { EGP: [699, 6_990], SAR: [119, 1_190], /* PLANNED: AED: [119, 1_190], USD: [29, 290], */ },
+  business: { EGP: [1_199, 11_990], SAR: [229, 2_290], /* PLANNED: AED: [229, 2_290], USD: [59, 590], */ },
+  professional: { EGP: [2_199, 21_990], SAR: [349, 3_490], /* PLANNED: AED: [349, 3_490], USD: [89, 890], */ },
 };
 const PAID = ["starter", "business", "professional"] as const;
 
@@ -80,7 +83,8 @@ describe("accounting pricing: the plans", () => {
     }
   });
 
-  it("are priced per company in EGP, SAR, AED and USD at the product's prices", () => {
+  it("are priced per company in the live markets' lists, EGP and SAR, at the product's prices", () => {
+    expect(PLAN_CURRENCIES).toEqual(["EGP", "SAR"]);
     for (const id of PAID) {
       for (const currency of PLAN_CURRENCIES) {
         expect(accountingPlan(id).prices?.[currency], `${id} ${currency}`).toEqual(PRICES[id][currency]);
@@ -148,13 +152,13 @@ describe("accounting pricing: the plans", () => {
 
   it("sells the product's extras: a user, and a branch with its unit", () => {
     expect(ACCOUNTING_EXTRAS).toEqual({
-      user: { EGP: 99, SAR: 25, AED: 25, USD: 7 },
-      branch: { EGP: 249, SAR: 49, AED: 49, USD: 13 },
+      user: { EGP: 99, SAR: 25 /* PLANNED: AED: 25, USD: 7 */ },
+      branch: { EGP: 249, SAR: 49 /* PLANNED: AED: 49, USD: 13 */ },
     });
   });
 
-  it("names ETA on the EGP list, ZATCA on the SAR list and either on AED and USD", () => {
-    expect(EINVOICING_SYSTEM).toEqual({ EGP: "eta", SAR: "zatca", AED: "either", USD: "either" });
+  it("names ETA on the EGP list and ZATCA on the SAR list, and no system for a planned list", () => {
+    expect(EINVOICING_SYSTEM).toEqual({ EGP: "eta", SAR: "zatca" /* PLANNED: AED: "either", USD: "either" */ });
   });
 });
 
@@ -242,10 +246,11 @@ describe("accounting pricing: the copy", () => {
 
 describe("accounting pricing: AI credit packs", () => {
   it("are the shared packs, at the shared prices", () => {
-    expect(AI_PACKS.map((p) => [p.credits, p.price.EGP, p.price.SAR, p.price.AED, p.price.USD])).toEqual([
-      [100, 1_499, 99, 99, 27],
-      [500, 6_699, 449, 449, 120],
-      [2_000, 23_899, 1_599, 1_599, 427],
+    // PLANNED: AED and USD (99/27, 449/120, 1,599/427) come back with their lists.
+    expect(AI_PACKS.map((p) => [p.credits, p.price.EGP, p.price.SAR])).toEqual([
+      [100, 1_499, 99],
+      [500, 6_699, 449],
+      [2_000, 23_899, 1_599],
     ]);
   });
 });

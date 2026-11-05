@@ -269,8 +269,11 @@ export interface PerEinvoicingSystem<T> {
   eta: T;
   /** Saudi Arabia: ZATCA Phase 2. */
   zatca: T;
-  /** A company billed in AED or USD: its units file with either. */
-  either: T;
+  // ── PLANNED: not launched yet ──────────────────────────────────────────────
+  // Only Saudi Arabia and Egypt are live; uncomment with the AED and USD lists
+  // (`PLAN_CURRENCIES` in lib/plans.ts) to launch.
+  // /** A company billed in AED or USD: its units file with either. */
+  // either: T;
 }
 
 /**
@@ -474,6 +477,16 @@ export interface SiteContent {
     currencyNames: Record<PlanCurrency, string>;
     /** The unit printed after a figure ("799 EGP", "٧٩٩ ج.م"). */
     currencies: Record<PlanCurrency, string>;
+    /**
+     * Under the currency switch (`components/MarketsNote.tsx`): `live` names the
+     * markets sold today, Egypt and Saudi Arabia; `soon` is the badge before
+     * `planned`, the markets that are coming — named, never priced or picked.
+     */
+    markets: {
+      live: string;
+      soon: string;
+      planned: string;
+    };
     /** After a monthly figure; also the billing unit in the JSON-LD. */
     per: string;
     /** After a yearly figure. */

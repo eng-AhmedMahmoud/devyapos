@@ -24,7 +24,7 @@ export const en: SiteContent = {
     pricing: {
       title: "POS pricing in Egypt — free, or 799 EGP a branch | Moving POS",
       description:
-        "A free plan to try the till, and Counter at 799 EGP per branch per month after a 14-day trial. Prices in EGP, SAR, AED and USD, and zero commission on orders.",
+        "A free plan to try the till, and Counter at 799 EGP per branch per month after a 14-day trial. Prices in EGP and SAR, and zero commission on orders.",
     },
     about: {
       title: "About Moving POS | Why we built this",
@@ -460,8 +460,16 @@ export const en: SiteContent = {
     yearly: "Yearly",
     save: "2 months free",
     currencyLabel: "Currency",
-    currencyNames: { EGP: "EGP", SAR: "SAR", AED: "AED", USD: "USD" },
-    currencies: { EGP: "EGP", SAR: "SAR", AED: "AED", USD: "USD" },
+    // ── PLANNED: not launched yet ─────────────────────────────────────────────
+    // Only Saudi Arabia and Egypt are live; the UAE (AED) and Global (USD) words, here and on
+    // every `PLANNED:` line in this file, uncomment with `PLAN_CURRENCIES` (lib/plans.ts) to launch.
+    currencyNames: { EGP: "EGP", SAR: "SAR", /* PLANNED: AED: "AED", USD: "USD", */ },
+    currencies: { EGP: "EGP", SAR: "SAR", /* PLANNED: AED: "AED", USD: "USD", */ },
+    markets: {
+      live: "Available now in Egypt and Saudi Arabia",
+      soon: "Coming soon",
+      planned: "the UAE, Qatar, Kuwait, Bahrain and Oman",
+    },
     per: "/mo",
     perYear: "/yr",
     perBranch: "per branch",
@@ -720,7 +728,7 @@ export const en: SiteContent = {
       note: "Competitor figures are our own record from the date above, not a public price list you can look up, and may have changed — ask them for a current quote before deciding. Ours is the Counter package: register, kitchen display, your own ordering site, loyalty points, inventory and reporting, with no per-terminal fee.",
       retrievedAt: "2026-10-27",
     },
-    note: "Prices are per branch and exclude VAT: in EGP for Egypt, SAR for Saudi Arabia, AED for the UAE and USD everywhere else. A year costs ten months, and every paid plan starts with a 14-day trial with all of its features and no credit card. Change or cancel your plan any time, and export all of your data before you go.",
+    note: "Prices are per branch and exclude VAT: in EGP for Egypt and SAR for Saudi Arabia. A year costs ten months, and every paid plan starts with a 14-day trial with all of its features and no credit card. Change or cancel your plan any time, and export all of your data before you go.",
     addOns: {
       title: "Add-ons",
       sub: "Sold on top of any package. Accounting and the AI assistant have published prices; the rest we price per restaurant — ask and we quote it.",
@@ -1926,8 +1934,8 @@ export const en: SiteContent = {
       vat: {
         EGP: "VAT not included (14%)",
         SAR: "VAT not included (15%)",
-        AED: "VAT not included, where it applies",
-        USD: "VAT not included, where it applies",
+        // PLANNED: AED: "VAT not included, where it applies",
+        // PLANNED: USD: "VAT not included, where it applies",
       },
       orYearly: "or {amount} a year — 2 months free",
       billedYearly: "Paid once a year, so you save {saved} against paying monthly.",
@@ -1962,7 +1970,7 @@ export const en: SiteContent = {
           einvoicing: {
             eta: "ETA e-invoice, and e-receipt on 1 point of sale",
             zatca: "ZATCA Phase 2 on 1 e-invoicing unit",
-            either: "1 e-invoicing unit, with ZATCA Phase 2 or the Egyptian Tax Authority",
+            // PLANNED: either: "1 e-invoicing unit, with ZATCA Phase 2 or the Egyptian Tax Authority",
           },
         },
         {
@@ -1981,7 +1989,7 @@ export const en: SiteContent = {
           einvoicing: {
             eta: "ETA e-invoice, and e-receipt on 3 points of sale",
             zatca: "ZATCA Phase 2 on 3 e-invoicing units",
-            either: "3 e-invoicing units, with ZATCA Phase 2 or the Egyptian Tax Authority",
+            // PLANNED: either: "3 e-invoicing units, with ZATCA Phase 2 or the Egyptian Tax Authority",
           },
         },
         {
@@ -1998,7 +2006,7 @@ export const en: SiteContent = {
           einvoicing: {
             eta: "ETA e-invoice, and e-receipt on 10 points of sale",
             zatca: "ZATCA Phase 2 on 10 e-invoicing units",
-            either: "10 e-invoicing units, with ZATCA Phase 2 or the Egyptian Tax Authority",
+            // PLANNED: either: "10 e-invoicing units, with ZATCA Phase 2 or the Egyptian Tax Authority",
           },
         },
       ],
@@ -2006,7 +2014,7 @@ export const en: SiteContent = {
       einvoicingIncluded: {
         eta: "E-invoicing is included in every paid plan: ETA e-invoice and e-receipt, at no extra cost.",
         zatca: "E-invoicing is included in every paid plan: ZATCA Phase 2 clearance and reporting, at no extra cost.",
-        either: "E-invoicing is included in every paid plan, with ZATCA in Saudi Arabia or the Egyptian Tax Authority, at no extra cost.",
+        // PLANNED: either: "E-invoicing is included in every paid plan, with ZATCA in Saudi Arabia or the Egyptian Tax Authority, at no extra cost.",
       },
       withPos: {
         title: "Already on Moving POS?",
@@ -2073,7 +2081,7 @@ export const en: SiteContent = {
     terms: {
       title: "Terms of service",
       sub: "The agreement behind a Moving POS subscription, in the plainest language we can write it in.",
-      updated: "Last updated 27 October 2026",
+      updated: "Last updated 5 November 2026",
       sections: [
         {
           title: "1. Who you are contracting with",
@@ -2092,7 +2100,7 @@ export const en: SiteContent = {
         {
           title: "3. Subscription and billing",
           body: [
-            "Paid plans are priced per branch, in Egyptian pounds, Saudi riyals, UAE dirhams or US dollars according to your price list and the plan you choose, and are billed either monthly or once a year in advance. Published prices exclude VAT, which is added where it applies.",
+            "Paid plans are priced per branch, in Egyptian pounds or Saudi riyals according to your price list and the plan you choose, and are billed either monthly or once a year in advance. Published prices exclude VAT, which is added where it applies.",
             "Yearly billing is charged once for twelve months at the price of ten, as shown on the pricing page. An unpaid period keeps its plan for 7 days; after that the account falls to the Free plan's limits until the payment is recorded, and nothing in it is deleted.",
             "We may change published prices. An existing subscriber's price does not change during a period already paid for, and we will give at least thirty days' notice before a change takes effect at the next renewal. An offer shown on the pricing page applies once per account, to the periods it names, from when the plan starts; the list price applies after them. Restaurants that signed on the founding offer, which closed on 27 October 2026, keep the price they signed at for as long as their subscription runs without a break.",
           ],
