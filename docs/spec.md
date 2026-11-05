@@ -582,6 +582,16 @@ not from which className actually renders, so with preload on, every Arabic
 page (default locale, most of the traffic) fetched Latin files for a handful
 of Latin words. `display: "swap"` covers the one-beat-later cost.
 
+**Plex Arabic's fallbacks are sized on Arabic**
+([ADR 0009](decisions/0009-arabic-fallback-metrics.md)). next/font's own
+fallback for it is local Arial sized from Latin letters, which set Arabic
+about 15 % narrower than the face, so the swap re-wrapped the hero. The layout
+turns that off (`adjustFontFallback: false`) and lists three families from
+`app/plex-arabic-fallbacks.css`, which `pnpm fonts:fallbacks`
+(`scripts/font-fallbacks.mjs`) measures and writes: Arial and Noto Naskh
+Arabic for the Arabic blocks, per weight, then next/font's Arial fallback,
+unchanged, for everything else (`tests/fonts.test.ts`).
+
 ### Mark, icons and OG cards
 
 The mark is Moving Stores' (`components/Logo.tsx` `MARK`): on an 8 × 8 grid

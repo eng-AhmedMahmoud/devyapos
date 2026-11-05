@@ -23,6 +23,7 @@ import JsonLd from "@/components/JsonLd";
 import PageTransition from "@/components/PageTransition";
 import { themeBootScript } from "@/lib/theme";
 import "../globals.css";
+import "../plex-arabic-fallbacks.css";
 
 /* Moving Stores' type (devya-commerce apps/admin/app/[locale]/layout.tsx):
    IBM Plex Sans Arabic and IBM Plex Sans for text, Reem Kufi for display in
@@ -38,12 +39,25 @@ import "../globals.css";
    element, so its two subsets keep the hint. Everything else is `preload:
    false`: the @font-face still resolves the moment a page uses it, and
    `display: "swap"` covers the beat. */
+/* Its fallbacks are measured on Arabic, not Latin. next/font's own fallback
+   (local Arial, sized from Latin letters) set Arabic about 15 % narrower than
+   the face, so when the face swapped in after a fast first paint the hero
+   re-wrapped (mobile CLS 0.135 on /ar). The three families listed instead are
+   in ../plex-arabic-fallbacks.css, written by scripts/font-fallbacks.mjs:
+   Arial and Noto Naskh Arabic sized per weight to the face's Arabic, then
+   next/font's Arial fallback, unchanged, for everything that is not Arabic.
+   (docs/decisions/0009-arabic-fallback-metrics.md) */
 const plexArabic = IBM_Plex_Sans_Arabic({
   weight: ["400", "500", "600", "700"],
   subsets: ["arabic"],
   variable: "--font-plex-arabic",
   display: "swap",
   preload: false,
+  adjustFontFallback: false,
+  // Literals: next/font reads its options at build time, not from variables.
+  // tests/fonts.test.ts holds them to the families the stylesheet defines.
+  // Single quotes inside: the list lands in a double-quoted JS string too.
+  fallback: ["'IBM Plex Sans Arabic AR'", "'IBM Plex Sans Arabic AR Android'", "'IBM Plex Sans Arabic Rest'"],
 });
 
 const reemKufi = Reem_Kufi({
