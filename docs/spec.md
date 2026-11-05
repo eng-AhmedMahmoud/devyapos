@@ -144,7 +144,8 @@ package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
 market-anchor competitor table) → `MovingStoresBand`
 (`components/MovingStoresBand.tsx`, the sister product Moving Stores and what
 its POS link does; copy in `movingStores`, address in `lib/brand.ts`) → `Faq`
-→ `CtaBand`. The footer also links Moving Stores, under the contacts.
+→ `CtaBand`. The footer's family row links Moving Stores too, with the rest of
+the Moving family.
 
 The plans are the product's own, priced on 2026-10-27 (bohub-pos
 `packages/shared/src/plans.ts`, decision
@@ -444,8 +445,10 @@ inside `lib/brand.ts`.
 The file's own comment records the naming decisions worth preserving. The
 studio is **Devya Solutions**, whose domain is **devya.dev**, never
 `devya.solutions`. Since 2026-10-19 Moving POS is a member of the **Moving**
-family (Moving Stores in devya-commerce, the umbrella site at
-movingsystems.tech), and since 2026-10-22 it lives on that family's domain,
+family (Moving Stores in devya-commerce, Moving Accounting, Moving Loyalty and
+the umbrella site at movingsystems.tech; `movingFamily(locale)` is the
+footer's row of links to them, each at the same language's home), and since
+2026-10-22 it lives on that family's domain,
 `pos.movingsystems.tech`; Moving Systems is a subsidiary of Devya Solutions.
 The family writes its name in Arabic on Arabic pages — موفينج POS, as موفينج
 ستورز — so `name` differs per locale and `brandName(locale)` is what titles,
