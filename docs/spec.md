@@ -66,6 +66,38 @@ answers with a 301 to the same path and query there (`deploy/nginx.conf`).
   WhatsApp button tags its message with a placement code instead
   (`whatsappSources` in `lib/brand.ts`).
 
+### Markets: Egypt and Saudi Arabia live, the rest planned
+
+Only two markets are live (since 2026-11-05), and only they are priced or
+selectable anywhere on the site. The others are named under each currency
+switch as "coming soon" («قريبًا»; `pricing.markets`,
+`components/MarketsNote.tsx`): plain text, never an option, never a price.
+Their price lists stay in the code, commented out under a
+`PLANNED: not launched yet` header (`lib/plans.ts`, `lib/accounting-plans.ts`,
+`content/{types,ar,en}.ts`, `lib/jsonld.ts`, and the tests that pin them);
+launching one means uncommenting its `PLANNED:` lines and moving its row
+below. The platform's market catalogue is bohub-pos
+`packages/shared/src/markets.ts`.
+
+| Market | Currency | On this site |
+| --- | --- | --- |
+| Egypt | EGP | **Supported**: the home price list, the switch's default |
+| Saudi Arabia | SAR | **Supported**: a price list; ZATCA on the accounting cards |
+| United Arab Emirates | AED | Planned, shown as coming soon; list commented out |
+| Qatar | QAR | Planned, shown as coming soon; no list on this site yet |
+| Kuwait | KWD | Planned, shown as coming soon; no list on this site yet |
+| Bahrain | BHD | Planned, shown as coming soon; no list on this site yet |
+| Oman | OMR | Planned, shown as coming soon; no list on this site yet |
+| Global (every other country) | USD | Planned and not shown; list commented out |
+
+The structured data claims the two live markets only (`SERVED_COUNTRIES` in
+`lib/jsonld.ts`: the Organization's `areaServed` is Egypt and Saudi Arabia,
+its sales contact's `EG` and `SA`), and `llms.txt` names the planned ones as
+coming. The terms of service price a plan in Egyptian pounds or Saudi riyals
+("Subscription and billing").
+`tests/markets.test.ts` and the 320 px journey in `e2e/pricing.spec.ts` hold
+all of it.
+
 ## 2. Page inventory
 
 All routes live under `app/[locale]/`, locale always prefixed
@@ -151,12 +183,14 @@ The plans are the product's own, priced on 2026-10-27 (bohub-pos
 `docs/decisions/2026-10-27-pos-plans-prices-and-limits.md`), and their
 numbers live once on this site, in `lib/plans.ts`: **Free** (a taster — one
 branch, two staff, 30 items, 300 sales a month, 100 MB, 10 AI credits once),
-**Counter** (EGP 799 / SAR 149 / AED 149 / USD 29 per branch per month),
-**Dining room** (EGP 1,499 / SAR 299 / AED 299 / USD 59: Counter plus tables,
+**Counter** (EGP 799 / SAR 149 per branch per month),
+**Dining room** (EGP 1,499 / SAR 299: Counter plus tables,
 courses, split bills, pay at the table, the waiter flow and gift cards) and
 **Group** (quoted: every module, AI Plus included). Prices exclude VAT; a
-year is ten months; every paid plan has a 14-day trial. The switch starts on
-EGP in both languages and never looks up the visitor's location. The
+year is ten months; every paid plan has a 14-day trial. The switch offers the
+two live lists, EGP and SAR, starts on EGP in both languages and never looks
+up the visitor's location; the planned markets are the coming-soon line under
+it (§1, Markets). The
 LAUNCH26 and WHITEFRIDAY26 offers show only while open, judged in the browser
 from their dates (the server renders with the build's clock, so hydration
 matches). A plan card lists only what the product ships; the AI assistant
@@ -256,10 +290,10 @@ its own WhatsApp source code, then the `CtaBand`.
 `PageHero` → the sign-up section (`#start`): `TrialForm`
 (`components/TrialForm.tsx`) beside what the trial includes and its steps →
 `AccountingPricing` (`components/AccountingPricing.tsx`, `#plans`: the
-monthly/yearly and EGP/SAR/AED/USD switches and the offers band of
-`/pricing`, worded once in `pricing`; cards for Free, Starter, Business and
-Professional, each naming the e-invoicing system of the chosen price list —
-the ETA for EGP, ZATCA for SAR, either for AED and USD; the e-invoicing
+monthly/yearly and EGP/SAR switches, the coming-soon markets line and the
+offers band of `/pricing`, worded once in `pricing`; cards for Free, Starter,
+Business and Professional, each naming the e-invoicing system of the chosen
+price list — the ETA for EGP, ZATCA for SAR; the e-invoicing
 banner, the Moving POS line, the extras and the quoted Enterprise line; every
 card's button scrolls back to the form) → `AccountingAi`
 (`components/AccountingAi.tsx`, `#ai-credits`: each plan's monthly credits and
@@ -272,10 +306,10 @@ numbers live once on this site, in `lib/accounting-plans.ts`: **Free** (a
 taster a trial drops to when it ends — one user, one branch, 20 invoices and
 bills and 50 manual entries a month, 25 customers and suppliers, 100 MB, no
 e-invoicing, bank import, POS link or API, 10 AI credits once for 30 days),
-**Starter** (EGP 699 / SAR 119 / AED 119 / USD 29 a company a month: 3 users,
+**Starter** (EGP 699 / SAR 119 a company a month: 3 users,
 1 branch, 1 e-invoicing unit, 50 bill captures, 1 GB, 5 AI credits),
-**Business** (EGP 1,199 / SAR 229 / AED 229 / USD 59: 8, 3, 3, 200, 5 GB, 10),
-**Professional** (EGP 2,199 / SAR 349 / AED 349 / USD 89: 15, 10, 10, 500,
+**Business** (EGP 1,199 / SAR 229: 8, 3, 3, 200, 5 GB, 10),
+**Professional** (EGP 2,199 / SAR 349: 15, 10, 10, 500,
 10 GB, 25) and **Enterprise** (quoted). Every paid plan has every feature,
 e-invoicing and onboarding included, invoices, entries and contacts
 unlimited, a 14-day trial with no card; a year is ten months; prices exclude
@@ -409,7 +443,8 @@ content, `src`/`poster` from `PROMO_CLIP` in `lib/screenshots.ts`).
 
 The trees carry real, specific figures, and each lives in exactly one block,
 so look there rather than here: the hero numbers (`hero.stats`), the POS
-packages and prices (`pricing.plans`) and add-ons (`pricing.addOns`), the dated competitor rows (`pricing.marketAnchor`
+packages and prices (`pricing.plans`), the live and coming markets
+(`pricing.markets`) and add-ons (`pricing.addOns`), the dated competitor rows (`pricing.marketAnchor`
 and `foodicsAlternative.facts`, each with a `retrievedAt` the page renders and
 a test keeps under 90 days old), the accounting plans' words
 (`accountingTrial.pricing`, their numbers in `lib/accounting-plans.ts`) and the payment providers, with only the live ones

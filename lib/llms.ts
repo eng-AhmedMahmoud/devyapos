@@ -24,8 +24,10 @@ export function llmsTxt(): string {
     "",
     `> ${en.meta.home.description}`,
     "",
-    `${brand.name.en} (${brand.name.ar}) is a restaurant point-of-sale system for Egypt, priced per branch in EGP ` +
-      `(with SAR, AED and USD price lists), with a free plan to try it on. ` +
+    `${brand.name.en} (${brand.name.ar}) is a restaurant point-of-sale system for Egypt and Saudi Arabia, ` +
+      `priced per branch in EGP and SAR, with a free plan to try it on. ` +
+      // The live markets only: the planned ones are named as coming, never priced.
+      `Coming soon: ${en.pricing.markets.planned}. ` +
       `Its accounting product, ${brand.name.en} Accounting, is priced per company, not per branch: a free plan, ` +
       `then from EGP ${accountingFromPrice("EGP")} or SAR ${accountingFromPrice("SAR")} a month, with the point-of-sale ` +
       `link included and a 14-day trial at ${localeHref("en", "/accounting-trial")}. ` +

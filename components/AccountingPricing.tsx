@@ -23,6 +23,7 @@ import {
 } from "@/lib/plans";
 import AccountingAi from "./AccountingAi";
 import { Check } from "./icons";
+import MarketsNote from "./MarketsNote";
 import PricingToggle from "./PricingToggle";
 import Reveal from "./Reveal";
 import { Container, SectionHead } from "./Section";
@@ -30,7 +31,7 @@ import WhatsappLink from "./WhatsappLink";
 
 /**
  * The words this block shares with the POS price list (`pricing`): the two
- * switches, the currency units and the offers. Both products run the same
+ * switches, the currency units, the live and coming markets, and the offers. Both products run the same
  * offers on the same terms, so they are worded once.
  */
 export type SharedPricingCopy = Pick<
@@ -42,6 +43,7 @@ export type SharedPricingCopy = Pick<
   | "currencyLabel"
   | "currencyNames"
   | "currencies"
+  | "markets"
   | "per"
   | "perYear"
   | "offers"
@@ -141,6 +143,7 @@ export default function AccountingPricing({
               onChange={setCurrency}
             />
           </div>
+          <MarketsNote copy={shared.markets} className="mt-4" />
         </Reveal>
 
         {open.length > 0 ? (

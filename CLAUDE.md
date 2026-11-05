@@ -64,6 +64,11 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
   `devyapos` ([ADR 0005](docs/decisions/0005-product-renames.md)).
 - Never name the reference client: the copy says "a 25-branch Egyptian
   chain" (the `flagship` comment in `lib/brand.ts`).
+- **Only Egypt and Saudi Arabia are live.** EGP and SAR are the only price
+  lists; the UAE, Qatar, Kuwait, Bahrain and Oman are "coming soon" text
+  (`pricing.markets`), never priced or selectable, and Global (USD) is not
+  shown. Their lists stay commented out as `PLANNED:` (`lib/plans.ts`);
+  launch one only when asked, by uncommenting them (`docs/spec.md` §1, "Markets").
 - WhatsApp links only through `whatsappLink(message, source)` with a key of
   `whatsappSources`.
 - Competitor figures carry a `retrievedAt` date and are "our own record",

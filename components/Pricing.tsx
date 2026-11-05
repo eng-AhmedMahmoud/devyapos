@@ -18,6 +18,7 @@ import {
   type PlanCurrency,
 } from "@/lib/plans";
 import { Check } from "./icons";
+import MarketsNote from "./MarketsNote";
 import PricingAi from "./PricingAi";
 import PricingCompare from "./PricingCompare";
 import PricingToggle from "./PricingToggle";
@@ -127,6 +128,12 @@ export default function Pricing({
             />
             {currencyToggle}
           </div>
+          {/* The live markets, and the planned ones as "coming soon" only:
+              they have no list on the switch above. */}
+          <MarketsNote
+            copy={copy.markets}
+            className={`mt-4 ${compact ? "justify-center text-center" : ""}`}
+          />
         </Reveal>
 
         {open.length > 0 ? (
