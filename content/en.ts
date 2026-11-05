@@ -5,7 +5,7 @@ import type { SiteContent } from "./types";
 export const en: SiteContent = {
   meta: {
     home: {
-      title: "Moving POS | The restaurant OS — register, kitchen, online, stock",
+      title: "Restaurant & cafe POS system: kitchen, online, stock | Moving POS",
       description:
         "One system runs your restaurant: POS, live kitchen display, your own online ordering, loyalty and recipe-costed stock. Arabic and English, EGP, multi-branch.",
     },
