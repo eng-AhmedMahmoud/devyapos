@@ -23,7 +23,7 @@
 // next/font's fallback exactly: the face's Arabic file has no space or Latin,
 // so those characters never come from the face and do not move at the swap.
 //
-//   pnpm exec node scripts/font-fallbacks.mjs
+//   pnpm fonts:fallbacks
 //
 // Measuring fetches the face and Noto Naskh Arabic from Google Fonts, the
 // source next/font builds from; the site itself still loads nothing from a
