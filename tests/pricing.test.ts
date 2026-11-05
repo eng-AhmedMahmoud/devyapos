@@ -365,14 +365,23 @@ describe("pricing: every claim elsewhere on the site", () => {
     expect(plain(JSON.stringify(legal))).not.toMatch(/(^|\D)199(\D|$)/);
   });
 
-  it("marks up the four plans in EGP, from 0 to Dining room's price", () => {
+  it("marks up the four plans once per live price list, from 0 to Dining room's price", () => {
     for (const locale of locales) {
-      const offers = softwareApplicationJsonLd(locale).offers as Record<string, unknown>;
-      expect(offers).toMatchObject({
+      const offers = softwareApplicationJsonLd(locale).offers as Record<string, unknown>[];
+      // EGP first, the home price, then SAR: the lists the currency switch shows.
+      expect(offers.map((o) => o.priceCurrency)).toEqual([...PLAN_CURRENCIES]);
+      expect(offers[0]).toMatchObject({
         "@type": "AggregateOffer",
         priceCurrency: "EGP",
         lowPrice: 0,
         highPrice: 1_499,
+        offerCount: 4,
+      });
+      expect(offers[1]).toMatchObject({
+        "@type": "AggregateOffer",
+        priceCurrency: "SAR",
+        lowPrice: 0,
+        highPrice: 299,
         offerCount: 4,
       });
     }

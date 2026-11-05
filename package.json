@@ -17,6 +17,7 @@
     "e2e": "playwright test",
     "check:bundle": "node scripts/check-bundle.mjs",
     "capture:docs": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/capture-docs.mjs",
+    "fonts:fallbacks": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/font-fallbacks.mjs",
     "prepare": "[ ! -f scripts/install-hooks.sh ] || sh scripts/install-hooks.sh"
   },
   "dependencies": {

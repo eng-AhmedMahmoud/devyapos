@@ -56,9 +56,9 @@ E2E_BASE_URL=$(portless get devyapos) pnpm e2e
   you were not asked to change. `messages/*.json` holds accessibility strings
   only.
 - **Brand facts only in `lib/brand.ts`**: the name per locale, domain, URL,
-  email, WhatsApp number, parent company, social profiles. Never type a
-  domain, phone number or email anywhere else. The studio is Devya Solutions
-  at `devya.dev` — never `devya.solutions`.
+  email, WhatsApp number, parent company, the Moving family's sites, social
+  profiles. Never type a domain, phone number or email anywhere else. The
+  studio is Devya Solutions at `devya.dev` — never `devya.solutions`.
 - The product is Moving POS (موفينج POS on Arabic pages). Retired names
   (DevyaPOS, Drinki POS) must not appear in content; identifiers keep
   `devyapos` ([ADR 0005](docs/decisions/0005-product-renames.md)).

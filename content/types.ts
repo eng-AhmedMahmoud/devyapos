@@ -37,14 +37,6 @@ export interface Card {
 export interface Feature extends Card {
   badge: string;
   hue: Hue;
-  /**
-   * The feature's name in the structured data's `featureList` (lib/jsonld.ts),
-   * where it differs from the card `title`. Set only on the loyalty card: its
-   * title says tiers, the product ships points only, and markup must not
-   * repeat a claim the product does not back. Drop it once the visible title
-   * is corrected (docs/seo/audit-2026-10-22.md, follow-ups).
-   */
-  listName?: string;
 }
 
 /** A problem paired with the line that cancels it, for the before/after ledger. */
@@ -597,6 +589,11 @@ export interface SiteContent {
     legal: string;
     /** Group label for the social icon row — read by screen readers only. */
     social: string;
+    /**
+     * The label over the row of links to the rest of the Moving family
+     * (`movingFamily` in lib/brand.ts): shown, and the list's accessible name.
+     */
+    family: string;
   };
   about: {
     badge: string;
@@ -802,8 +799,6 @@ export interface SiteContent {
     points: string[];
     note: string;
     cta: string;
-    /** The footer's one-line link to the sister product. */
-    footerLink: string;
   };
 
   /**

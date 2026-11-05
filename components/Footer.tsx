@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { getContent } from "@/content";
 import { Link } from "@/i18n/navigation";
-import { brand, brandName, mailtoLink, socialLinks, telLink } from "@/lib/brand";
+import { brand, brandName, mailtoLink, movingFamily, socialLinks, telLink } from "@/lib/brand";
 import { CookieSettingsButton } from "./consent/ConsentManager";
 import { Icon } from "./icons";
 import Logo from "./Logo";
@@ -63,16 +63,6 @@ export default async function Footer() {
                 </li>
               ))}
             </ul>
-            {/* The sister product, one line under the contacts: the family's
-                online store, which connects to the POS for restaurants. */}
-            <a
-              href={brand.stores.url}
-              target="_blank"
-              rel="noopener"
-              className="w-fit text-sm font-bold text-on-espresso-dim underline-offset-2 transition-colors hover:text-gold hover:underline"
-            >
-              {c.movingStores.footerLink}
-            </a>
           </div>
 
           {c.footer.cols.map((col) => (
@@ -97,13 +87,40 @@ export default async function Footer() {
         </div>
 
         {/*
+          The rest of the Moving family, on every page in both locales: the
+          umbrella site and the sister products, each at the same language's
+          home on its own host. Plain, followed links in the same tab — they
+          are how search engines learn the sites belong together, and how the
+          family's pages pass weight to each other. Moving Stores used to be a
+          lone link under the contacts; it is one of the four now.
+        */}
+        <div className="mt-12 flex flex-col gap-3 border-t border-espresso-line pt-6 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-8">
+          <p id="footer-family" className="text-sm font-bold text-on-espresso">
+            {c.footer.family}
+          </p>
+          <ul aria-labelledby="footer-family" className="flex flex-wrap gap-x-6 gap-y-2">
+            {movingFamily(locale).map((site) => (
+              <li key={site.key}>
+                <a
+                  href={site.href}
+                  hrefLang={locale}
+                  className="inline-block py-0.5 text-sm text-on-espresso-dim transition-colors hover:text-gold"
+                >
+                  {site.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/*
           Who operates the product, in one sentence, on every page in both
           locales. `trustLine.withCr` says the same thing with a commercial
           registration number, but it still carries the literal `{cr}`
           placeholder — shipping that token is worse than shipping no number,
           so `short` is what renders until a real CR replaces it.
         */}
-        <p className="mt-12 max-w-3xl border-t border-espresso-line pt-6 text-xs leading-relaxed text-on-espresso-dim">
+        <p className="mt-6 max-w-3xl text-xs leading-relaxed text-on-espresso-dim">
           {c.trustLine.short}
         </p>
 

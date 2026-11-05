@@ -176,7 +176,8 @@ package) → **`MarketAnchor`** (`components/MarketAnchor.tsx`, the
 market-anchor competitor table) → `MovingStoresBand`
 (`components/MovingStoresBand.tsx`, the sister product Moving Stores and what
 its POS link does; copy in `movingStores`, address in `lib/brand.ts`) → `Faq`
-→ `CtaBand`. The footer also links Moving Stores, under the contacts.
+→ `CtaBand`. The footer's family row links Moving Stores too, with the rest of
+the Moving family.
 
 The plans are the product's own, priced on 2026-10-27 (bohub-pos
 `packages/shared/src/plans.ts`, decision
@@ -479,8 +480,10 @@ inside `lib/brand.ts`.
 The file's own comment records the naming decisions worth preserving. The
 studio is **Devya Solutions**, whose domain is **devya.dev**, never
 `devya.solutions`. Since 2026-10-19 Moving POS is a member of the **Moving**
-family (Moving Stores in devya-commerce, the umbrella site at
-movingsystems.tech), and since 2026-10-22 it lives on that family's domain,
+family (Moving Stores in devya-commerce, Moving Accounting, Moving Loyalty and
+the umbrella site at movingsystems.tech; `movingFamily(locale)` is the
+footer's row of links to them, each at the same language's home), and since
+2026-10-22 it lives on that family's domain,
 `pos.movingsystems.tech`; Moving Systems is a subsidiary of Devya Solutions.
 The family writes its name in Arabic on Arabic pages — موفينج POS, as موفينج
 ستورز — so `name` differs per locale and `brandName(locale)` is what titles,
@@ -613,6 +616,16 @@ oversight. next/font emits preload hints per *route* from the module graph,
 not from which className actually renders, so with preload on, every Arabic
 page (default locale, most of the traffic) fetched Latin files for a handful
 of Latin words. `display: "swap"` covers the one-beat-later cost.
+
+**Plex Arabic's fallbacks are sized on Arabic**
+([ADR 0009](decisions/0009-arabic-fallback-metrics.md)). next/font's own
+fallback for it is local Arial sized from Latin letters, which set Arabic
+about 15 % narrower than the face, so the swap re-wrapped the hero. The layout
+turns that off (`adjustFontFallback: false`) and lists three families from
+`app/plex-arabic-fallbacks.css`, which `pnpm fonts:fallbacks`
+(`scripts/font-fallbacks.mjs`) measures and writes: Arial and Noto Naskh
+Arabic for the Arabic blocks, per weight, then next/font's Arial fallback,
+unchanged, for everything else (`tests/fonts.test.ts`).
 
 ### Mark, icons and OG cards
 

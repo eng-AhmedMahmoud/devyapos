@@ -32,10 +32,10 @@ export interface SiteRoute {
 }
 
 export const routes: readonly SiteRoute[] = [
-  { path: "", key: "home", priority: 1, changeFrequency: "weekly", updated: "2026-10-27" },
-  { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
+  { path: "", key: "home", priority: 1, changeFrequency: "weekly", updated: "2026-11-04" },
+  { path: "/features", key: "features", priority: 0.8, changeFrequency: "monthly", updated: "2026-11-04" },
   { path: "/how-it-works", key: "howItWorks", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-19" },
-  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-10-27" },
+  { path: "/compare", key: "compare", priority: 0.8, changeFrequency: "monthly", updated: "2026-11-04" },
   { path: "/pricing", key: "pricing", priority: 0.9, changeFrequency: "weekly", updated: "2026-11-05" },
   { path: "/about", key: "about", priority: 0.6, changeFrequency: "monthly", updated: "2026-11-05" },
   { path: "/contact", key: "contact", priority: 0.7, changeFrequency: "monthly", updated: "2026-11-02" },

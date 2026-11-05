@@ -74,6 +74,75 @@ describe("content", () => {
 });
 
 /*
+ * Loyalty in Moving POS is points only: earned on orders, spent on later ones,
+ * every balance replayed from an append-only ledger. There is no tier column
+ * and no referral code (bohub-pos origin/main 42403c2c5:
+ * backend/src/loyalty/loyalty-ledger-append-only.spec.ts, "gives Customer no
+ * points, balance or tier column"), and nothing in the platform sends
+ * marketing (backend/src/marketing/marketing-consent.service.ts). The copy
+ * claimed a Bronze-to-Platinum climb, bring-a-friend and campaigns until
+ * 2026-11-04 (#63). Re-check the product before loosening either pattern.
+ */
+describe("loyalty claims", () => {
+  /**
+   * A word on its own in either script: no letter or mark either side. An
+   * Arabic word may carry the proclitics written joined to it (و ف ب ل ك,
+   * then ال), so "ومستويات" and "الذهبي" are caught, while a longer word that
+   * merely contains one ("يُفضي") is not.
+   */
+  const word = (latin: string, arabic: string) =>
+    new RegExp(
+      `(?<![\\p{L}\\p{M}])(?:${latin}|[وفبلك]?(?:ال)?(?:${arabic}))(?![\\p{L}\\p{M}])`,
+      "iu",
+    );
+
+  /** Tier names and bring-a-friend, anywhere on the site. */
+  const TIER_NAMES = word(
+    "bronze|silver|gold|platinum|bring (?:a )?friends?",
+    "برونزي?|فضي|ذهبي|بلاتيني|أصدقاء(?:ه|ك|هم)?",
+  );
+  /** In anything about loyalty, also tiers, levels, referrals and campaigns. */
+  const LOYALTY_EXTRAS = word(
+    "tiers?|levels?|referr\\p{L}*|campaigns?",
+    "مستوى|مستويات|إحالة|إحالات|حملة|حملات",
+  );
+
+  /** Every string under a node whose icon is the loyalty one (the feature and tour cards). */
+  function loyaltyCards(value: unknown): string[] {
+    if (Array.isArray(value)) return value.flatMap(loyaltyCards);
+    if (value && typeof value === "object") {
+      if ((value as { icon?: unknown }).icon === "loyalty") return strings(value);
+      return Object.values(value).flatMap(loyaltyCards);
+    }
+    return [];
+  }
+
+  it.each([["ar", ar], ["en", en]] as const)("%s: names no tier and no bring-a-friend anywhere", (locale, c) => {
+    for (const s of strings(c)) expect(s, `${locale}: "${s}"`).not.toMatch(TIER_NAMES);
+  });
+
+  it.each([["ar", ar], ["en", en]] as const)("%s: says points, and only points, wherever it talks about loyalty", (locale, c) => {
+    const cards = loyaltyCards(c);
+    // The features card and the tour card, both points-only.
+    expect(cards.length).toBeGreaterThanOrEqual(2);
+    const about = [...cards, ...strings(c).filter((s) => /loyal|ولاء/i.test(s))];
+    for (const s of about) expect(s, `${locale}: "${s}"`).not.toMatch(LOYALTY_EXTRAS);
+    expect(cards.join("\n")).toMatch(locale === "ar" ? /نقاط/ : /points/i);
+  });
+
+  it("would catch the claims it replaced", () => {
+    expect("Bronze → Silver → Gold → Platinum").toMatch(TIER_NAMES);
+    expect("ويجلب أصدقاءه").toMatch(TIER_NAMES);
+    expect("تدرّج من برونز إلى بلاتيني").toMatch(TIER_NAMES);
+    expect("Loyalty, points and tiers").toMatch(LOYALTY_EXTRAS);
+    expect("ومستويات الولاء").toMatch(LOYALTY_EXTRAS);
+    // A word that merely contains a tier name is not one ("لا يُفضي", "golden").
+    expect("الطلب الذي لا يُفضي إلى شيء").not.toMatch(TIER_NAMES);
+    expect("golden hour").not.toMatch(TIER_NAMES);
+  });
+});
+
+/*
  * The Foodics figures on /pricing and /foodics-alternative are our own dated
  * record. Foodics publishes no prices (docs/social-launch-plan.md §1.5), so
  * calling them published is a claim nobody can back, and an undated or stale
