@@ -16,6 +16,7 @@ old one, and the old one's status says so.
 | [0006](0006-protected-main-and-ci-gated-deploys.md) | `main` is protected, and a deploy ships only what CI passed | 2026-10-22 | Accepted |
 | [0007](0007-moving-support-assistant.md) | The Moving support assistant, through a same-origin rewrite | 2026-10-27 | Accepted |
 | [0008](0008-leads-forward-to-the-ops-console.md) | Leads forward to the ops console's intake, and the form asks for an email | 2026-11-02 | Accepted |
+| [0009](0009-arabic-fallback-metrics.md) | Plex Arabic's fallbacks are sized on Arabic | 2026-11-05 | Accepted |
 
 0001–0005 were backfilled on 2026-10-22 from commits, pull requests and code
 comments; each says where its context came from.
