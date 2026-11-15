@@ -63,7 +63,7 @@ No accounts, database, analytics, error monitoring or session replay exist on th
 | JS/CSS chunks, images, product video | request `/_next/static/*`, `public/*` | 1st | necessary | n/a | — | prod: every `<script src>` is `/_next/static/...`; `components/IpadVideo.tsx:122-132` (`preload="none"`, self-hosted) |
 | `POST /api/lead` | request | 1st | necessary (user action) | Only on submit | — | `ContactForm.tsx:136` |
 | `POST https://ops-api.devya.dev/api/trial/claim` | request | other origin, same controller | necessary (user action) | Only on submit | — | `lib/trial.ts:193`; prod: host present in bundle |
-| `wa.me`, `facebook.com`, `instagram.com`, `devya.dev`, `bohub-c4.vercel.app` | outbound links only | 3rd | — | No request until the visitor clicks | — | `lib/brand.ts:63-91`, `components/CaseStudy.tsx:14`; prod: href only, no embeds/iframes |
+| `wa.me`, `facebook.com`, `instagram.com`, `devya.dev`, `pos-c4.devya.dev` | outbound links only | 3rd | — | No request until the visitor clicks | — | `lib/brand.ts:63-91`, `components/CaseStudy.tsx:14`; prod: href only, no embeds/iframes |
 | Analytics / pixels / gtag / GTM / Meta Pixel / Sentry / replay / maps / reCAPTCHA | — | — | — | **None present** | — | prod: no such hosts or snippets in the HTML of all 10 pages or in the 13 JS chunks fetched (one chunk fetch timed out); `/_vercel/insights/script.js` returns 404; `lib/analytics.ts:1-18,66-75` (`track()` is a no-op) |
 
 Future risk: `docs/social-launch-plan.md:738-742,909-910` plans a **Meta Pixel + Conversions API "in week 0"**. The current single yes/no consent has no marketing category to gate that, and CAPI sends server-side, which would also need a consent check on the server.
