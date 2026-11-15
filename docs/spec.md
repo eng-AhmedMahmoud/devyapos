@@ -492,7 +492,7 @@ bold, the product regular at 70%. Comments also document fields that were
 *removed* — `flagship` (the client's withdrawal, above), and `signupUrl`,
 `loginUrl` and `demoUrl`, which had no live consumer once the hero's "see it
 running" CTA moved to the on-page `#promo` recording (the old demo URL pointed
-at a C4 architecture diagram, `https://bohub-c4.vercel.app`) — and why
+at a C4 architecture diagram, `https://pos-c4.devya.dev`) — and why
 `social` came back on 2026-09-20 with the real profiles.
 
 ### `lib/screenshots.ts` — screenshot manifest

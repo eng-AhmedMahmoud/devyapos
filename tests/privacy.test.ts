@@ -47,7 +47,7 @@ const ALLOWED_HOSTS = new Set([
   // Plain links, never loaded by the page.
   "www.instagram.com",
   "www.facebook.com",
-  "bohub-c4.vercel.app",
+  "pos-c4.devya.dev",
 ]);
 
 /** The one `<script src>` in the source: the support widget's loader, on this origin. */

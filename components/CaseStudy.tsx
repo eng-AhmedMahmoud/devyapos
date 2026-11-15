@@ -11,7 +11,7 @@ import { Container, SectionHead } from "./Section";
  * because this is the only label on the site that fits it ("see the system
  * architecture"); the page it opens is product-branded and names no client.
  */
-const ARCHITECTURE_URL = "https://bohub-c4.vercel.app";
+const ARCHITECTURE_URL = "https://pos-c4.devya.dev";
 
 /**
  * The anchor deployment — the site's one piece of hard proof, and for a long
