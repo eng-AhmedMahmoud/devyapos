@@ -352,7 +352,8 @@ tokens and fonts.
   their screenshots, related reading, previous/next in reading order.
 - **`/docs/search?q=`** — where the box submits without JavaScript; ranked
   in the browser, noindexed. **`/docs/search.json`** — the per-locale index
-  the box fetches on first focus, gzipped, `X-Robots-Tag: noindex`.
+  the box fetches on first focus, sent as plain JSON and gzipped by the
+  server, `X-Robots-Tag: noindex`.
 
 Content: `content/docs/{ar,en}/` (one file per category, typed by
 `content/docs/types.ts`, Arabic first; `tests/help-centre.test.ts` holds the

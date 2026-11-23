@@ -119,6 +119,8 @@ test("the search index is served gzipped, cached and kept out of search", async 
     const res = await request.get(`/${locale}/docs/search.json`);
     expect(res.status()).toBe(200);
     expect(res.headers()["x-robots-tag"]).toBe("noindex");
+    // Compressed once, by the server: the body below must still parse as JSON.
+    expect(["gzip", "br", "deflate"]).toContain(res.headers()["content-encoding"]);
     const index = (await res.json()) as { href: string }[];
     expect(index.length).toBe(allArticles(docsMap[locale]).length);
   }
