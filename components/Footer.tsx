@@ -135,10 +135,11 @@ export default async function Footer() {
               className="min-h-11 cursor-pointer underline-offset-2 transition-colors hover:text-on-espresso hover:underline"
             />
           </p>
-          {/* The parent company, in the same words on every Moving property. */}
+          {/* Who makes the product, in the same words on every Moving product site. */}
           <p>
             <ParentCompany
               sentence={c.parentCompany.credit}
+              isolate
               className="font-bold text-gold transition-colors hover:text-on-espresso"
             />
           </p>

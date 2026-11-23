@@ -1317,7 +1317,7 @@ export const en: SiteContent = {
   },
 
   parentCompany: {
-    credit: { text: "Moving Systems is a Devya Solutions company", link: "Devya Solutions" },
+    credit: { text: "A product of Devya Solutions", link: "Devya Solutions" },
     notice: {
       text: "Moving Systems is a subsidiary of Devya Solutions, its parent company.",
       link: "Devya Solutions",
