@@ -1309,7 +1309,7 @@ export const ar: SiteContent = {
   },
 
   parentCompany: {
-    credit: { text: "موفينج سيستمز إحدى شركات ديفيا سوليوشنز", link: "ديفيا سوليوشنز" },
+    credit: { text: "أحد منتجات Devya Solutions", link: "Devya Solutions" },
     notice: {
       text: "موفينج سيستمز شركة تابعة لشركة ديفيا سوليوشنز، الشركة الأم.",
       link: "ديفيا سوليوشنز",

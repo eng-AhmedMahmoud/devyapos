@@ -803,10 +803,13 @@ export interface SiteContent {
 
   /**
    * Moving Systems, the company behind Moving POS, is a subsidiary of Devya
-   * Solutions. Both sentences are word for word the same on every Moving
-   * property (movingsystems.tech, Moving Stores): `text` is the sentence,
-   * `link` the part of it that links to devya.dev. `credit` closes every
-   * footer; `notice` sits on /about and on the legal pages.
+   * Solutions. `text` is the sentence, `link` the part of it that links to
+   * devya.dev. `notice` sits on /about and on the legal pages, word for word
+   * the same on every Moving property (movingsystems.tech, Moving Stores).
+   * `credit` closes every footer: a product site credits Devya Solutions as
+   * the maker of the product ("A product of Devya Solutions", the same words
+   * on Moving Accounting), with the name in Latin letters in both languages;
+   * the company line stays on the umbrella, movingsystems.tech.
    */
   parentCompany: {
     credit: { text: string; link: string };
