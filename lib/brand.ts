@@ -108,7 +108,7 @@ export const brand = {
    * the /contact route the nav already links, and `demoUrl` pointed the
    * hero's "See it running" button at a C4 architecture diagram. Neither had
    * a live consumer once the hero moved to the on-page #promo recording.
-   * The architecture diagram still lives at https://bohub-c4.vercel.app if it
+   * The architecture diagram lives at https://pos-c4.devya.dev if it
    * is ever wanted somewhere the label actually fits.
    */
 } as const;
